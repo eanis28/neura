@@ -69,3 +69,4 @@ Testing/
 .cache/
 config.ini
 config.ini
+ggml-base.en.bin
