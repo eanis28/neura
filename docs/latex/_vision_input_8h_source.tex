@@ -1,0 +1,27 @@
+\doxysection{Vision\+Input.\+h}
+\hypertarget{_vision_input_8h_source}{}\label{_vision_input_8h_source}\doxymbox{\hyperlink{_vision_input_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cstdio>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <sys/types.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_vision_input_aaea2418176f6766cfd7ae09f333d176a}{VisionInput}}\ \{}
+\DoxyCodeLine{00023\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00024\ \ \ \ \ FILE*\ \doxymbox{\hyperlink{class_vision_input_ac890e4121c71b731f6c94c0f5748b45b}{pipe}};\ \ }
+\DoxyCodeLine{00025\ \ \ \ \ pid\_t\ \doxymbox{\hyperlink{class_vision_input_a04ad85190a315c515396f0e076077aab}{pid}};\ \ \ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ \ \ \doxymbox{\hyperlink{class_vision_input_aaea2418176f6766cfd7ae09f333d176a}{VisionInput}}();}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00036\ \ \ \ \ \doxymbox{\hyperlink{class_vision_input_ab7800dddb115d9ba6da676b496b03259}{\string~VisionInput}}();}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_vision_input_a7cb6ee0db013a06ffc2d74a2843ac5c6}{startListening}}();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_vision_input_a1f9bae68fff075c03c15d7b489bfe8c5}{stopListening}}();}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_vision_input_a415cb88e71ca4c1c88d5c941e5d8c9b2}{getInput}}(std::string\&\ gesture,\ \textcolor{keywordtype}{float}\&\ nx,\ \textcolor{keywordtype}{float}\&\ ny);}
+\DoxyCodeLine{00073\ \};}
+
+\end{DoxyCode}

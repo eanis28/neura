@@ -1,0 +1,43 @@
+\doxysection{httplib::\+detail::\+mmap Class Reference}
+\hypertarget{classhttplib_1_1detail_1_1mmap}{}\label{classhttplib_1_1detail_1_1mmap}\index{httplib::detail::mmap@{httplib::detail::mmap}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_aa82a1caa3de42e547abf2984168fd4f1}\label{classhttplib_1_1detail_1_1mmap_aa82a1caa3de42e547abf2984168fd4f1} 
+{\bfseries mmap} (const char \texorpdfstring{$\ast$}{*}path)
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_a3c8fa87bd587ce78c137993655e3d0bb}\label{classhttplib_1_1detail_1_1mmap_a3c8fa87bd587ce78c137993655e3d0bb} 
+bool {\bfseries open} (const char \texorpdfstring{$\ast$}{*}path)
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_ac3df1466bcaef2a654d7ed11637df167}\label{classhttplib_1_1detail_1_1mmap_ac3df1466bcaef2a654d7ed11637df167} 
+void {\bfseries close} ()
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_aaa2acc0ec01483dd6670f026c078febc}\label{classhttplib_1_1detail_1_1mmap_aaa2acc0ec01483dd6670f026c078febc} 
+bool {\bfseries is\+\_\+open} () const
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_a6dddf03fd12f4f9e3f274fa98325a5fe}\label{classhttplib_1_1detail_1_1mmap_a6dddf03fd12f4f9e3f274fa98325a5fe} 
+size\+\_\+t {\bfseries size} () const
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_a366212354c79e83f64a453f892857159}\label{classhttplib_1_1detail_1_1mmap_a366212354c79e83f64a453f892857159} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries data} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_a51bd39355316bff04f802c78fb7f5ef4}\label{classhttplib_1_1detail_1_1mmap_a51bd39355316bff04f802c78fb7f5ef4} 
+int {\bfseries fd\+\_\+} = -\/1
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_ae91900950f748bc6b11fc53e3dec3beb}\label{classhttplib_1_1detail_1_1mmap_ae91900950f748bc6b11fc53e3dec3beb} 
+size\+\_\+t {\bfseries size\+\_\+} = 0
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_a8a1688a01d22434fafece3f372e6b84f}\label{classhttplib_1_1detail_1_1mmap_a8a1688a01d22434fafece3f372e6b84f} 
+void \texorpdfstring{$\ast$}{*} {\bfseries addr\+\_\+} = nullptr
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1mmap_a40379095594a668ee06113df33f0424c}\label{classhttplib_1_1detail_1_1mmap_a40379095594a668ee06113df33f0424c} 
+bool {\bfseries is\+\_\+open\+\_\+empty\+\_\+file} = false
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+server/\+httplib.\+h\end{DoxyCompactItemize}

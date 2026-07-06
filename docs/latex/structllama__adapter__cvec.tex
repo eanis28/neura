@@ -1,0 +1,44 @@
+\doxysection{llama\+\_\+adapter\+\_\+cvec Struct Reference}
+\hypertarget{structllama__adapter__cvec}{}\label{structllama__adapter__cvec}\index{llama\_adapter\_cvec@{llama\_adapter\_cvec}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__adapter__cvec_acc781c64d50fada76934dfea19472bdf}\label{structllama__adapter__cvec_acc781c64d50fada76934dfea19472bdf} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries tensor\+\_\+for} (int il) const
+\item 
+\Hypertarget{structllama__adapter__cvec_a03c159ddf3e5f57773f0ed765f3b197a}\label{structllama__adapter__cvec_a03c159ddf3e5f57773f0ed765f3b197a} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries apply\+\_\+to} (\doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur, int il) const
+\item 
+\Hypertarget{structllama__adapter__cvec_a7829ee9b7e0c6951884deb72001a53a4}\label{structllama__adapter__cvec_a7829ee9b7e0c6951884deb72001a53a4} 
+bool {\bfseries apply} (const \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \&model, const float \texorpdfstring{$\ast$}{*}data, size\+\_\+t len, int32\+\_\+t n\+\_\+embd, int32\+\_\+t il\+\_\+start, int32\+\_\+t il\+\_\+end)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__adapter__cvec_a42511122a02d20cc13725746650f19f4}\label{structllama__adapter__cvec_a42511122a02d20cc13725746650f19f4} 
+bool {\bfseries init} (const \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \&model)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__adapter__cvec_ad249d23881a0567930c900094c6df27d}\label{structllama__adapter__cvec_ad249d23881a0567930c900094c6df27d} 
+int32\+\_\+t {\bfseries layer\+\_\+start} = -\/1
+\item 
+\Hypertarget{structllama__adapter__cvec_aa7289a222bd2e3acd1b9f0b40d7dd5cf}\label{structllama__adapter__cvec_aa7289a222bd2e3acd1b9f0b40d7dd5cf} 
+int32\+\_\+t {\bfseries layer\+\_\+end} = -\/1
+\item 
+\Hypertarget{structllama__adapter__cvec_a44f04313d56acac6079dd5d4470e3a05}\label{structllama__adapter__cvec_a44f04313d56acac6079dd5d4470e3a05} 
+std::\+vector$<$ ggml\+\_\+context\+\_\+ptr $>$ {\bfseries ctxs}
+\item 
+\Hypertarget{structllama__adapter__cvec_a4e9f2153c5a8a5788d6bafd1ce36042d}\label{structllama__adapter__cvec_a4e9f2153c5a8a5788d6bafd1ce36042d} 
+std::\+vector$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+ptr $>$ {\bfseries bufs}
+\item 
+\Hypertarget{structllama__adapter__cvec_a1e441ecf87cd4239fb0f206bda6ba2b8}\label{structllama__adapter__cvec_a1e441ecf87cd4239fb0f206bda6ba2b8} 
+std::\+vector$<$ \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries tensors}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/adapter.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/adapter.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,325 @@
+\doxysection{common.\+h}
+\hypertarget{examples_2common_8h_source}{}\label{examples_2common_8h_source}\index{whisper.cpp/examples/common.h@{whisper.cpp/examples/common.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Various\ helper\ functions\ and\ utilities}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <ctime>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ GPT\ CLI\ argument\ parsing}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgpt__params}{gpt\_params}}\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ int32\_t\ seed\ \ \ \ \ \ \ \ \ =\ -\/1;\ \ \ \textcolor{comment}{//\ RNG\ seed}}
+\DoxyCodeLine{00020\ \ \ \ \ int32\_t\ n\_threads\ \ \ \ =\ std::min(4,\ (int32\_t)\ std::thread::hardware\_concurrency());}
+\DoxyCodeLine{00021\ \ \ \ \ int32\_t\ n\_predict\ \ \ \ =\ 200;\ \ \textcolor{comment}{//\ new\ tokens\ to\ predict}}
+\DoxyCodeLine{00022\ \ \ \ \ int32\_t\ n\_parallel\ \ \ =\ 1;\ \ \ \ \textcolor{comment}{//\ number\ of\ parallel\ streams}}
+\DoxyCodeLine{00023\ \ \ \ \ int32\_t\ n\_batch\ \ \ \ \ \ =\ 32;\ \ \ \textcolor{comment}{//\ batch\ size\ for\ prompt\ processing}}
+\DoxyCodeLine{00024\ \ \ \ \ int32\_t\ n\_ctx\ \ \ \ \ \ \ \ =\ 2048;\ \textcolor{comment}{//\ context\ size\ (this\ is\ the\ KV\ cache\ max\ size)}}
+\DoxyCodeLine{00025\ \ \ \ \ int32\_t\ n\_gpu\_layers\ =\ 0;\ \ \ \ \textcolor{comment}{//\ number\ of\ layers\ to\ offlload\ to\ the\ GPU}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{bool}\ ignore\_eos\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ ignore\ EOS\ token\ when\ generating\ text}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ sampling\ parameters}}
+\DoxyCodeLine{00030\ \ \ \ \ int32\_t\ top\_k\ \ \ \ \ \ \ \ \ \ =\ 40;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ top\_p\ \ \ \ \ \ \ \ \ \ =\ 0.9f;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ temp\ \ \ \ \ \ \ \ \ \ \ =\ 0.9f;}
+\DoxyCodeLine{00033\ \ \ \ \ int32\_t\ repeat\_last\_n\ \ =\ 64;}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ repeat\_penalty\ =\ 1.00f;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ std::string\ model\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}models/gpt-\/2-\/117M/ggml-\/model.bin"{}};\ \textcolor{comment}{//\ model\ path}}
+\DoxyCodeLine{00037\ \ \ \ \ std::string\ prompt\ \ \ \ \ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00038\ \ \ \ \ std::string\ token\_test\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ interactive\ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00041\ \ \ \ \ int32\_t\ interactive\_port\ =\ -\/1;}
+\DoxyCodeLine{00042\ \};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{bool}\ gpt\_params\_parse(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ **\ argv,\ \doxymbox{\hyperlink{structgpt__params}{gpt\_params}}\ \&\ params);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keywordtype}{void}\ gpt\_print\_usage(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ **\ argv,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structgpt__params}{gpt\_params}}\ \&\ params);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ std::string\ gpt\_random\_prompt(std::mt19937\ \&\ rng);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//}}
+\DoxyCodeLine{00051\ \textcolor{comment}{//\ Vocab\ utils}}
+\DoxyCodeLine{00052\ \textcolor{comment}{//}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ std::string\ trim(\textcolor{keyword}{const}\ std::string\ \&\ s);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ std::string\ replace(}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ s,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ from,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ to);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgpt__vocab}{gpt\_vocab}}\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{using\ }id\ \ \ \ =\ int32\_t;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{using\ }token\ =\ std::string;}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ std::map<token,\ id>\ token\_to\_id;}
+\DoxyCodeLine{00066\ \ \ \ \ std::map<id,\ token>\ id\_to\_token;}
+\DoxyCodeLine{00067\ \ \ \ \ std::vector<std::string>\ special\_tokens;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ add\_special\_token(\textcolor{keyword}{const}\ std::string\ \&\ token);}
+\DoxyCodeLine{00070\ \};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ poor-\/man's\ JSON\ parsing}}
+\DoxyCodeLine{00073\ std::map<std::string,\ int32\_t>\ json\_parse(\textcolor{keyword}{const}\ std::string\ \&\ fname);}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ std::string\ convert\_to\_utf8(\textcolor{keyword}{const}\ std::wstring\ \&\ input);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ std::wstring\ convert\_to\_wstring(\textcolor{keyword}{const}\ std::string\ \&\ input);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keywordtype}{void}\ gpt\_split\_words(std::string\ str,\ std::vector<std::string>\&\ words);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{//\ split\ text\ into\ tokens}}
+\DoxyCodeLine{00082\ \textcolor{comment}{//}}
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ ref:\ https://github.com/openai/gpt-\/2/blob/a74da5d99abaaba920de8131d64da2862a8f213b/src/encoder.py\#L53}}
+\DoxyCodeLine{00084\ \textcolor{comment}{//}}
+\DoxyCodeLine{00085\ \textcolor{comment}{//\ Regex\ (Python):}}
+\DoxyCodeLine{00086\ \textcolor{comment}{//\ r"{}"{}"{}'s|'t|'re|'ve|'m|'ll|'d|\ ?\(\backslash\)p\{L\}+|\ ?\(\backslash\)p\{N\}+|\ ?[\string^\(\backslash\)s\(\backslash\)p\{L\}\(\backslash\)p\{N\}]+|\(\backslash\)s+(?!\(\backslash\)S)|\(\backslash\)s+"{}"{}"{}}}
+\DoxyCodeLine{00087\ \textcolor{comment}{//}}
+\DoxyCodeLine{00088\ \textcolor{comment}{//\ Regex\ (C++):}}
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ R"{}('s|'t|'re|'ve|'m|'ll|'d|\ ?[[:alpha:]]+|\ ?[[:digit:]]+|\ ?[\string^\(\backslash\)s[:alpha:][:digit:]]+|\(\backslash\)s+(?!\(\backslash\)S)|\(\backslash\)s+)"{}}}
+\DoxyCodeLine{00090\ \textcolor{comment}{//}}
+\DoxyCodeLine{00091\ std::vector<gpt\_vocab::id>\ gpt\_tokenize(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structgpt__vocab}{gpt\_vocab}}\ \&\ vocab,\ \textcolor{keyword}{const}\ std::string\ \&\ text);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{comment}{//\ test\ outputs\ of\ gpt\_tokenize}}
+\DoxyCodeLine{00094\ \textcolor{comment}{//}}
+\DoxyCodeLine{00095\ \textcolor{comment}{//\ \ \ -\/\ compare\ with\ tokens\ generated\ by\ the\ huggingface\ tokenizer}}
+\DoxyCodeLine{00096\ \textcolor{comment}{//\ \ \ -\/\ test\ cases\ are\ chosen\ based\ on\ the\ model's\ main\ language\ (under\ 'prompt'\ directory)}}
+\DoxyCodeLine{00097\ \textcolor{comment}{//\ \ \ -\/\ if\ all\ sentences\ are\ tokenized\ identically,\ print\ 'All\ tests\ passed.'}}
+\DoxyCodeLine{00098\ \textcolor{comment}{//\ \ \ -\/\ otherwise,\ print\ sentence,\ huggingface\ tokens,\ ggml\ tokens}}
+\DoxyCodeLine{00099\ \textcolor{comment}{//}}
+\DoxyCodeLine{00100\ \textcolor{keywordtype}{void}\ test\_gpt\_tokenizer(\doxymbox{\hyperlink{structgpt__vocab}{gpt\_vocab}}\ \&\ vocab,\ \textcolor{keyword}{const}\ std::string\ \&\ fpath\_test);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{comment}{//\ load\ the\ tokens\ from\ encoder.json}}
+\DoxyCodeLine{00103\ \textcolor{keywordtype}{bool}\ gpt\_vocab\_init(\textcolor{keyword}{const}\ std::string\ \&\ fname,\ \doxymbox{\hyperlink{structgpt__vocab}{gpt\_vocab}}\ \&\ vocab);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{comment}{//\ sample\ next\ token\ given\ probabilities\ for\ each\ embedding}}
+\DoxyCodeLine{00106\ \textcolor{comment}{//}}
+\DoxyCodeLine{00107\ \textcolor{comment}{//\ \ \ -\/\ consider\ only\ the\ top\ K\ tokens}}
+\DoxyCodeLine{00108\ \textcolor{comment}{//\ \ \ -\/\ from\ them,\ consider\ only\ the\ top\ tokens\ with\ cumulative\ probability\ >\ P}}
+\DoxyCodeLine{00109\ \textcolor{comment}{//}}
+\DoxyCodeLine{00110\ \textcolor{comment}{//\ TODO:\ not\ sure\ if\ this\ implementation\ is\ correct}}
+\DoxyCodeLine{00111\ \textcolor{comment}{//\ TODO:\ temperature\ is\ not\ implemented}}
+\DoxyCodeLine{00112\ \textcolor{comment}{//}}
+\DoxyCodeLine{00113\ gpt\_vocab::id\ gpt\_sample\_top\_k\_top\_p(}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structgpt__vocab}{gpt\_vocab}}\ \&\ vocab,}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ logits,}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ top\_k,}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ top\_p,}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ temp,}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ std::mt19937\ \&\ rng);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ gpt\_vocab::id\ gpt\_sample\_top\_k\_top\_p\_repeat(}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structgpt__vocab}{gpt\_vocab}}\ \&\ vocab,}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ logits,}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ *\ last\_n\_tokens\_data,}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ last\_n\_tokens\_data\_size,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ top\_k,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ top\_p,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ temp,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ repeat\_last\_n,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ repeat\_penalty,}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ std::mt19937\ \&\ rng);}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{comment}{//}}
+\DoxyCodeLine{00134\ \textcolor{comment}{//\ Audio\ utils}}
+\DoxyCodeLine{00135\ \textcolor{comment}{//}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{comment}{//\ Write\ PCM\ data\ into\ WAV\ audio\ file}}
+\DoxyCodeLine{00138\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classwav__writer}{wav\_writer}}\ \{}
+\DoxyCodeLine{00139\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00140\ \ \ \ \ std::ofstream\ file;}
+\DoxyCodeLine{00141\ \ \ \ \ uint32\_t\ dataSize\ =\ 0;}
+\DoxyCodeLine{00142\ \ \ \ \ std::string\ wav\_filename;}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{bool}\ write\_header(\textcolor{keyword}{const}\ uint32\_t\ sample\_rate,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ bits\_per\_sample,}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ channels)\ \{}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ file.write(\textcolor{stringliteral}{"{}RIFF"{}},\ 4);}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ file.write(\textcolor{stringliteral}{"{}\(\backslash\)0\(\backslash\)0\(\backslash\)0\(\backslash\)0"{}},\ 4);\ \ \ \ \textcolor{comment}{//\ Placeholder\ for\ file\ size}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ file.write(\textcolor{stringliteral}{"{}WAVE"{}},\ 4);}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ file.write(\textcolor{stringliteral}{"{}fmt\ "{}},\ 4);}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ sub\_chunk\_size\ =\ 16;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ audio\_format\ =\ 1;\ \ \ \ \ \ \textcolor{comment}{//\ PCM\ format}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ byte\_rate\ =\ sample\_rate\ *\ channels\ *\ bits\_per\_sample\ /\ 8;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ block\_align\ =\ channels\ *\ bits\_per\_sample\ /\ 8;}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&sub\_chunk\_size),\ 4);}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&audio\_format),\ 2);}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&channels),\ 2);}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&sample\_rate),\ 4);}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&byte\_rate),\ 4);}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&block\_align),\ 2);}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&bits\_per\_sample),\ 2);}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ file.write(\textcolor{stringliteral}{"{}data"{}},\ 4);}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ file.write(\textcolor{stringliteral}{"{}\(\backslash\)0\(\backslash\)0\(\backslash\)0\(\backslash\)0"{}},\ 4);\ \ \ \ \textcolor{comment}{//\ Placeholder\ for\ data\ size}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{//\ It\ is\ assumed\ that\ PCM\ data\ is\ normalized\ to\ a\ range\ from\ -\/1\ to\ 1}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordtype}{bool}\ write\_audio(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ length)\ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ length;\ ++i)\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int16\_t\ intSample\ =\ int16\_t(data[i]\ *\ 32767);}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&intSample),\ \textcolor{keyword}{sizeof}(int16\_t));}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ dataSize\ +=\ \textcolor{keyword}{sizeof}(int16\_t);}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (file.is\_open())\ \{}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ file.seekp(4,\ std::ios::beg);}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ fileSize\ =\ 36\ +\ dataSize;}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&fileSize),\ 4);}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ file.seekp(40,\ std::ios::beg);}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ file.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&dataSize),\ 4);}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ file.seekp(0,\ std::ios::end);}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00187\ \ \ \ \ \}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keywordtype}{bool}\ open\_wav(\textcolor{keyword}{const}\ std::string\ \&\ filename)\ \{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (filename\ !=\ wav\_filename)\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (file.is\_open())\ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file.close();}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!file.is\_open())\ \{}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ file.open(filename,\ std::ios::binary);}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ wav\_filename\ =\ filename;}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ dataSize\ =\ 0;}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ file.is\_open();}
+\DoxyCodeLine{00201\ \ \ \ \ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordtype}{bool}\ open(\textcolor{keyword}{const}\ std::string\ \&\ filename,}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \ \ \ uint32\_t\ \ \ sample\_rate,}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \ \ \ uint16\_t\ \ \ bits\_per\_sample,}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \ \ \ uint16\_t\ \ \ channels)\ \{}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (open\_wav(filename))\ \{}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ write\_header(sample\_rate,\ bits\_per\_sample,\ channels);}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00216\ \ \ \ \ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordtype}{bool}\ close()\ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ file.close();}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00221\ \ \ \ \ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keywordtype}{bool}\ write(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ length)\ \{}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ write\_audio(data,\ length);}
+\DoxyCodeLine{00225\ \ \ \ \ \}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \doxymbox{\hyperlink{classwav__writer}{\string~wav\_writer}}()\ \{}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (file.is\_open())\ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ file.close();}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00231\ \ \ \ \ \}}
+\DoxyCodeLine{00232\ \};}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{comment}{//\ Apply\ a\ high-\/pass\ frequency\ filter\ to\ PCM\ audio}}
+\DoxyCodeLine{00236\ \textcolor{comment}{//\ Suppresses\ frequencies\ below\ cutoff\ Hz}}
+\DoxyCodeLine{00237\ \textcolor{keywordtype}{void}\ high\_pass\_filter(}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ std::vector<float>\ \&\ data,}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cutoff,}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ sample\_rate);}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{comment}{//\ Basic\ voice\ activity\ detection\ (VAD)\ using\ audio\ energy\ adaptive\ threshold}}
+\DoxyCodeLine{00243\ \textcolor{keywordtype}{bool}\ vad\_simple(}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ std::vector<float>\ \&\ pcmf32,}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ sample\_rate,}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ last\_ms,}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ vad\_thold,}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ freq\_thold,}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ verbose);}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \textcolor{comment}{//\ compute\ similarity\ between\ two\ strings\ using\ Levenshtein\ distance}}
+\DoxyCodeLine{00252\ \textcolor{keywordtype}{float}\ similarity(\textcolor{keyword}{const}\ std::string\ \&\ s0,\ \textcolor{keyword}{const}\ std::string\ \&\ s1);}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{comment}{//}}
+\DoxyCodeLine{00255\ \textcolor{comment}{//\ Terminal\ utils}}
+\DoxyCodeLine{00256\ \textcolor{comment}{//}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ SQR(X)\ \ \ \ ((X)\ *\ (X))}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ UNCUBE(x)\ x\ <\ 48\ ?\ 0\ :\ x\ <\ 115\ ?\ 1\ :\ (x\ -\/\ 35)\ /\ 40}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00264\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ rgb2xterm256(\textcolor{keywordtype}{int}\ r,\ \textcolor{keywordtype}{int}\ g,\ \textcolor{keywordtype}{int}\ b)\ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ cube[]\ =\ \{0,\ 0137,\ 0207,\ 0257,\ 0327,\ 0377\};}
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keywordtype}{int}\ av,\ ir,\ ig,\ ib,\ il,\ qr,\ qg,\ qb,\ ql;}
+\DoxyCodeLine{00267\ \ \ \ \ av\ =\ r\ *\ .299\ +\ g\ *\ .587\ +\ b\ *\ .114\ +\ .5;}
+\DoxyCodeLine{00268\ \ \ \ \ ql\ =\ (il\ =\ av\ >\ 238\ ?\ 23\ :\ (av\ -\/\ 3)\ /\ 10)\ *\ 10\ +\ 8;}
+\DoxyCodeLine{00269\ \ \ \ \ qr\ =\ cube[(ir\ =\ UNCUBE(r))];}
+\DoxyCodeLine{00270\ \ \ \ \ qg\ =\ cube[(ig\ =\ UNCUBE(g))];}
+\DoxyCodeLine{00271\ \ \ \ \ qb\ =\ cube[(ib\ =\ UNCUBE(b))];}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keywordflow}{if}\ (SQR(qr\ -\/\ r)\ +\ SQR(qg\ -\/\ g)\ +\ SQR(qb\ -\/\ b)\ <=}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ SQR(ql\ -\/\ r)\ +\ SQR(ql\ -\/\ g)\ +\ SQR(ql\ -\/\ b))}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ir\ *\ 36\ +\ ig\ *\ 6\ +\ ib\ +\ 020;}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keywordflow}{return}\ il\ +\ 0350;}
+\DoxyCodeLine{00276\ \}}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{keyword}{static}\ std::string\ set\_xterm256\_foreground(\textcolor{keywordtype}{int}\ r,\ \textcolor{keywordtype}{int}\ g,\ \textcolor{keywordtype}{int}\ b)\ \{}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordtype}{int}\ x\ =\ rgb2xterm256(r,\ g,\ b);}
+\DoxyCodeLine{00280\ \ \ \ \ std::ostringstream\ oss;}
+\DoxyCodeLine{00281\ \ \ \ \ oss\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[38;5;"{}}\ <<\ x\ <<\ \textcolor{stringliteral}{"{}m"{}};}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordflow}{return}\ oss.str();}
+\DoxyCodeLine{00283\ \}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \textcolor{comment}{//\ Lowest\ is\ red,\ middle\ is\ yellow,\ highest\ is\ green.\ Color\ scheme\ from}}
+\DoxyCodeLine{00286\ \textcolor{comment}{//\ Paul\ Tol;\ it\ is\ colorblind\ friendly\ https://sronpersonalpages.nl/\string~pault}}
+\DoxyCodeLine{00287\ \textcolor{keyword}{const}\ std::vector<std::string>\ k\_colors\ =\ \{}
+\DoxyCodeLine{00288\ \ \ \ \ set\_xterm256\_foreground(220,\ \ \ 5,\ \ 12),}
+\DoxyCodeLine{00289\ \ \ \ \ set\_xterm256\_foreground(232,\ \ 96,\ \ 28),}
+\DoxyCodeLine{00290\ \ \ \ \ set\_xterm256\_foreground(241,\ 147,\ \ 45),}
+\DoxyCodeLine{00291\ \ \ \ \ set\_xterm256\_foreground(246,\ 193,\ \ 65),}
+\DoxyCodeLine{00292\ \ \ \ \ set\_xterm256\_foreground(247,\ 240,\ \ 86),}
+\DoxyCodeLine{00293\ \ \ \ \ set\_xterm256\_foreground(144,\ 201,\ 135),}
+\DoxyCodeLine{00294\ \ \ \ \ set\_xterm256\_foreground(\ 78,\ 178,\ 101),}
+\DoxyCodeLine{00295\ \};}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \textcolor{comment}{//\ ANSI\ formatting\ codes}}
+\DoxyCodeLine{00298\ \textcolor{keyword}{static}\ std::string\ set\_inverse()\ \{}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}\(\backslash\)033[7m"{}};}
+\DoxyCodeLine{00300\ \}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \textcolor{keyword}{static}\ std::string\ set\_underline()\ \{}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}\(\backslash\)033[4m"{}};}
+\DoxyCodeLine{00304\ \}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \textcolor{keyword}{static}\ std::string\ set\_dim()\ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}\(\backslash\)033[2m"{}};}
+\DoxyCodeLine{00308\ \}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \textcolor{comment}{//\ Style\ scheme\ for\ different\ confidence\ levels}}
+\DoxyCodeLine{00311\ \textcolor{keyword}{const}\ std::vector<std::string>\ k\_styles\ =\ \{}
+\DoxyCodeLine{00312\ \ \ \ \ set\_inverse(),\ \ \ \textcolor{comment}{//\ Low\ confidence\ -\/\ inverse\ (highlighted)}}
+\DoxyCodeLine{00313\ \ \ \ \ set\_underline(),\ \textcolor{comment}{//\ Medium\ confidence\ -\/\ underlined}}
+\DoxyCodeLine{00314\ \ \ \ \ set\_dim(),\ \ \ \ \ \ \ \textcolor{comment}{//\ High\ confidence\ -\/\ dim}}
+\DoxyCodeLine{00315\ \};}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \textcolor{comment}{//}}
+\DoxyCodeLine{00318\ \textcolor{comment}{//\ Other\ utils}}
+\DoxyCodeLine{00319\ \textcolor{comment}{//}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{comment}{//\ check\ if\ file\ exists\ using\ ifstream}}
+\DoxyCodeLine{00322\ \textcolor{keywordtype}{bool}\ is\_file\_exist(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filename);}
+
+\end{DoxyCode}

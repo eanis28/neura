@@ -1,0 +1,41 @@
+\doxysection{unary-\/ops.h}
+\hypertarget{unary-ops_8h_source}{}\label{unary-ops_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/unary-\/ops.h@{whisper.cpp/ggml/src/ggml-\/cpu/unary-\/ops.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}common.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00006\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_abs(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00010\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_sgn(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00011\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_neg(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00012\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_step(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00013\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_tanh(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00014\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_elu(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00015\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_relu(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_sigmoid(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_hardsigmoid(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00018\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_exp(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_hardswish(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_sqr(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00021\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_sqrt(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_sin(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_cos(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_log(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_expm1(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00026\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_softplus(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00027\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_floor(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00028\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_ceil(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00029\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_round(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00030\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_trunc(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ ggml\_compute\_forward\_xielu(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00034\ \}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

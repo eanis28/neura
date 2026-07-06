@@ -1,0 +1,60 @@
+\doxysection{whisper.\+cpp/\+examples/\+wchess/\+wchess.wasm/\+chessboardjs-\/1.0.0/\+js/\+chessboard-\/1.0.0 Directory Reference}
+\hypertarget{dir_19ef4fd288cc90b1dde2c8e188f87f19}{}\label{dir_19ef4fd288cc90b1dde2c8e188f87f19}\index{whisper.cpp/examples/wchess/wchess.wasm/chessboardjs-\/1.0.0/js/chessboard-\/1.0.0 Directory Reference@{whisper.cpp/examples/wchess/wchess.wasm/chessboardjs-\/1.0.0/js/chessboard-\/1.0.0 Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md109}{}\doxysubsection{\texorpdfstring{chessboard.\+js}{chessboard.\+js}}\label{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md109}
+chessboard.\+js is a Java\+Script chessboard component. It depends on \href{https://jquery.com/}{\texttt{j\+Query}}.
+
+Please see \href{http://chessboardjs.com}{\texttt{chessboardjs.\+com}} for documentation and examples.\hypertarget{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md110}{}\doxysubsection{\texorpdfstring{What is chessboard.\+js?}{What is chessboard.\+js?}}\label{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md110}
+chessboard.\+js is a Java\+Script chessboard component with a flexible "{}just a board"{} API that
+
+chessboard.\+js is a standalone Java\+Script Chess Board. It is designed to be "{}just a board"{} and expose a powerful API so that it can be used in different ways. Here\textquotesingle{}s a non-\/exhaustive list of things you can do with chessboard.\+js:\+
+
+
+\begin{DoxyItemize}
+\item Use chessboard.\+js to show game positions alongside your expert commentary.
+\item Use chessboard.\+js to have a tactics website where users have to guess the best move.
+\item Integrate chessboard.\+js and \href{https://github.com/jhlywa/chess.js}{\texttt{chess.\+js}} with a PGN database and allow people to search and playback games (see \href{http://chessboardjs.com/examples\#5000}{\texttt{Example 5000}})
+\item Build a chess server and have users play their games out using the chessboard.\+js board.
+\end{DoxyItemize}
+
+chessboard.\+js is flexible enough to handle any of these situations with relative ease.\hypertarget{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md111}{}\doxysubsection{\texorpdfstring{What can chessboard.\+js {\bfseries{not}} do?}{What can chessboard.\+js {\bfseries{not}} do?}}\label{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md111}
+\doxylink{requirements_The}{The} scope of chessboard.\+js is limited to "{}just a board."{} This is intentional and makes chessboard.\+js flexible for handling a multitude of chess-\/related problems.
+
+This is a common source of confusion for new users. \+[remove?]\+
+
+Specifically, chessboard.\+js does not understand anything about how the game of chess is played:\+ how a knight moves, who\textquotesingle{}s turn is it, is White in check?, etc.
+
+Fortunately, the powerful \href{https://github.com/jhlywa/chess.js}{\texttt{chess.\+js}} library deals with exactly this sort of problem domain and plays nicely with chessboard.\+js\textquotesingle{}s flexible API. Some examples of chessboard.\+js combined with chess.\+js:\+ 5000, 5001, 5002
+
+Please see the powerful \href{https://github.com/jhlywa/chess.js}{\texttt{chess.\+js}} library for an API to deal with these sorts of questions.
+
+This logic is distinct from the logic of the board. Please see the powerful \href{https://github.com/jhlywa/chess.js}{\texttt{chess.\+js}} library for this aspect of your application.
+
+Here is a list of things that chessboard.\+js is {\bfseries{not}}:\+
+
+
+\begin{DoxyItemize}
+\item A chess engine
+\item A legal move validator
+\item A PGN parser
+\end{DoxyItemize}
+
+chessboard.\+js is designed to work well with any of those things, but the idea behind chessboard.\+js is that the logic that controls the board should be independent of those other problems.\hypertarget{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md112}{}\doxysubsection{\texorpdfstring{Docs and Examples}{Docs and Examples}}\label{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md112}
+
+\begin{DoxyItemize}
+\item Docs -\/ \href{http://chessboardjs.com/docs}{\texttt{http:\+/\+/\+chessboardjs.\+com/\+docs}}
+\item Examples -\/ \href{http://chessboardjs.com/examples}{\texttt{http:\+/\+/\+chessboardjs.\+com/\+examples}}
+\end{DoxyItemize}\hypertarget{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md113}{}\doxysubsection{\texorpdfstring{Developer Tools}{Developer Tools}}\label{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md113}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ create\ a\ build\ in\ the\ build/\ directory}
+\DoxyCodeLine{npm\ run\ build}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ re-\/build\ the\ website}
+\DoxyCodeLine{npm\ run\ website}
+
+\end{DoxyCode}
+\hypertarget{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md114}{}\doxysubsection{\texorpdfstring{License}{License}}\label{dir_19ef4fd288cc90b1dde2c8e188f87f19_autotoc_md114}
+\doxysectlink{md_whisper_8cpp_2examples_2wchess_2wchess_8wasm_2chessboardjs-1_80_80_2js_2chessboard-1_80_80_2_l_i_c_e_n_s_e}{MIT License}{0} 

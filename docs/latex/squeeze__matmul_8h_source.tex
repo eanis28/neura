@@ -1,0 +1,23 @@
+\doxysection{squeeze\+\_\+matmul.\+h}
+\hypertarget{squeeze__matmul_8h_source}{}\label{squeeze__matmul_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/openvino/pass/squeeze\_matmul.h@{whisper.cpp/ggml/src/ggml-\/openvino/openvino/pass/squeeze\_matmul.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}openvino/pass/matcher\_pass.hpp"{}}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }ov\ \{}
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }frontend\ \{}
+\DoxyCodeLine{00005\ \textcolor{keyword}{namespace\ }ggml\ \{}
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }pass\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{class\ }SqueezeMatmul\ :\ \textcolor{keyword}{public}\ ov::pass::MatcherPass\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00010\ \ \ \ \ OPENVINO\_MATCHER\_PASS\_RTTI(\textcolor{stringliteral}{"{}ov::frontend::ggml::pass::SqueezeMatmul"{}})}
+\DoxyCodeLine{00011\ \ \ \ \ SqueezeMatmul();}
+\DoxyCodeLine{00012\ \};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \}\ \ \textcolor{comment}{//\ namespace\ pass}}
+\DoxyCodeLine{00015\ \}\ \ \textcolor{comment}{//\ namespace\ ggml}}
+\DoxyCodeLine{00016\ \}\ \ \textcolor{comment}{//\ namespace\ frontend}}
+\DoxyCodeLine{00017\ \}\ \ \textcolor{comment}{//\ namespace\ ov}}
+
+\end{DoxyCode}

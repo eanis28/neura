@@ -1,0 +1,41 @@
+\doxysection{ov::\+frontend::\+ggml::\+Translate\+Session Class Reference}
+\hypertarget{classov_1_1frontend_1_1ggml_1_1_translate_session}{}\label{classov_1_1frontend_1_1ggml_1_1_translate_session}\index{ov::frontend::ggml::TranslateSession@{ov::frontend::ggml::TranslateSession}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_translate_session_a8660b205b50736f0f72ba5995941a03c}\label{classov_1_1frontend_1_1ggml_1_1_translate_session_a8660b205b50736f0f72ba5995941a03c} 
+{\bfseries Translate\+Session} (const frontend::\+\+Input\+Model::\+\+Ptr \&input\+\_\+model, const std::\+unordered\+\_\+map$<$ std::\+string, Creator\+Function $>$ \&translator\+\_\+map, bool naive=false)
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_translate_session_aee73913fe785d89afe7a4122e53f9446}\label{classov_1_1frontend_1_1ggml_1_1_translate_session_aee73913fe785d89afe7a4122e53f9446} 
+std::\+shared\+\_\+ptr$<$ Model $>$ {\bfseries get\+\_\+converted\+\_\+model} ()
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_translate_session_a8ab7d62b74f477494257c267f373295c}\label{classov_1_1frontend_1_1ggml_1_1_translate_session_a8ab7d62b74f477494257c267f373295c} 
+std::\+shared\+\_\+ptr$<$ Model $>$ {\bfseries translate\+\_\+graph} (const frontend::\+\+Input\+Model::\+\+Ptr \&input\+\_\+model)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_translate_session_a0723c682117177a03525a912d9c60935}\label{classov_1_1frontend_1_1ggml_1_1_translate_session_a0723c682117177a03525a912d9c60935} 
+std::\+shared\+\_\+ptr$<$ Model $>$ {\bfseries apply\+\_\+transformations} (std::\+shared\+\_\+ptr$<$ Model $>$ model)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_translate_session_a4dcedf4c2206bafdac30eeb6f1f2a46c}\label{classov_1_1frontend_1_1ggml_1_1_translate_session_a4dcedf4c2206bafdac30eeb6f1f2a46c} 
+const frontend::\+\+Input\+Model::\+\+Ptr {\bfseries m\+\_\+input\+\_\+model}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_translate_session_ae87b9008c361d88f9adf3aa42c0bf8ba}\label{classov_1_1frontend_1_1ggml_1_1_translate_session_ae87b9008c361d88f9adf3aa42c0bf8ba} 
+const std::\+unordered\+\_\+map$<$ std::\+string, Creator\+Function $>$ \& {\bfseries m\+\_\+translator\+\_\+map}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_translate_session_ac5e990c2cf718e353c1919e005df2d02}\label{classov_1_1frontend_1_1ggml_1_1_translate_session_ac5e990c2cf718e353c1919e005df2d02} 
+std::\+shared\+\_\+ptr$<$ Model $>$ {\bfseries m\+\_\+ov\+\_\+model}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_translate_session_aaa98cd5fbf5830aac175651beefd78c3}\label{classov_1_1frontend_1_1ggml_1_1_translate_session_aaa98cd5fbf5830aac175651beefd78c3} 
+bool {\bfseries m\+\_\+naive}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/openvino/\+openvino/\+translate\+\_\+session.\+h\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/openvino/\+openvino/\+translate\+\_\+session.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,171 @@
+\doxysection{htp-\/msg.h}
+\hypertarget{htp-msg_8h_source}{}\label{htp-msg_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/htp-\/msg.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/htp-\/msg.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HTP\_MSG\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HTP\_MSG\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ ggml-\/common.h\ must\ be\ included\ prio\ to\ this\ header}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Mask\ to\ enable\ various\ stages\ of\ the\ Ops.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ Used\ for\ debugging\ and\ profiling.}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ HTP\_OPMASK\_QUEUE\ \ \ \ =\ (1\ <<\ 0),\ \ \textcolor{comment}{//\ Enable\ Queueing\ (ie\ calls\ into\ the\ DSP)}}
+\DoxyCodeLine{00012\ \ \ \ \ HTP\_OPMASK\_QUANTIZE\ =\ (1\ <<\ 1),\ \ \textcolor{comment}{//\ Enable\ Quantize}}
+\DoxyCodeLine{00013\ \ \ \ \ HTP\_OPMASK\_COMPUTE\ \ =\ (1\ <<\ 2),\ \ \textcolor{comment}{//\ Enable\ Compute}}
+\DoxyCodeLine{00014\ \};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Op\ flags}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ HTP\_OPFLAGS\_SKIP\_QUANTIZE\ =\ (1\ <<\ 0),\ \ \textcolor{comment}{//\ Skip\ dynamic\ quantization\ (reuse\ quantized\ tensors)}}
+\DoxyCodeLine{00019\ \ \ \ \ HTP\_OPFLAGS\_SKIP\_COMPUTE\ \ =\ (1\ <<\ 1),\ \ \textcolor{comment}{//\ Skip\ actual\ computation\ (used\ for\ profiling)}}
+\DoxyCodeLine{00020\ \ \ \ \ HTP\_OPFLAGS\_EARLY\_WAKEUP\ \ =\ (1\ <<\ 2)\ \ \ \textcolor{comment}{//\ Send\ early\ wakeup\ notification}}
+\DoxyCodeLine{00021\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{enum}\ htp\_status\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ HTP\_STATUS\_OK\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00025\ \ \ \ \ HTP\_STATUS\_INTERNAL\_ERR\ \ \ =\ 2,}
+\DoxyCodeLine{00026\ \ \ \ \ HTP\_STATUS\_NO\_SUPPORT\ \ \ \ \ =\ 3,}
+\DoxyCodeLine{00027\ \ \ \ \ HTP\_STATUS\_INVAL\_PARAMS\ \ \ =\ 4,}
+\DoxyCodeLine{00028\ \ \ \ \ HTP\_STATUS\_VTCM\_TOO\_SMALL\ =\ 5,}
+\DoxyCodeLine{00029\ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ The\ values\ must\ match\ the\ ggml\_type.}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ Duplicated\ here\ because\ we\ can't\ include\ full\ ggml.h\ in\ the\ htp\ build.}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ We\ have\ some\ static\_asserts\ in\ the\ cpp\ code\ to\ ensure\ things\ are\ in\ sync.}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{enum}\ htp\_data\_type\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ HTP\_TYPE\_F32\ \ \ \ =\ 0,}
+\DoxyCodeLine{00036\ \ \ \ \ HTP\_TYPE\_F16\ \ \ \ =\ 1,}
+\DoxyCodeLine{00037\ \ \ \ \ HTP\_TYPE\_Q4\_0\ \ \ =\ 2,}
+\DoxyCodeLine{00038\ \ \ \ \ HTP\_TYPE\_Q8\_0\ \ \ =\ 8,}
+\DoxyCodeLine{00039\ \ \ \ \ HTP\_TYPE\_IQ4\_NL\ =\ 20,}
+\DoxyCodeLine{00040\ \ \ \ \ HTP\_TYPE\_I32\ \ \ \ =\ 26,}
+\DoxyCodeLine{00041\ \ \ \ \ HTP\_TYPE\_I64\ \ \ \ =\ 27,}
+\DoxyCodeLine{00042\ \ \ \ \ HTP\_TYPE\_MXFP4\ \ =\ 39,}
+\DoxyCodeLine{00043\ \ \ \ \ HTP\_TYPE\_COUNT}
+\DoxyCodeLine{00044\ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Do\ not\ reorder\ first\ 4\ (used\ as\ an\ index)}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{enum}\ htp\_op\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ HTP\_OP\_MUL\ =\ 0,}
+\DoxyCodeLine{00049\ \ \ \ \ HTP\_OP\_ADD\ =\ 1,}
+\DoxyCodeLine{00050\ \ \ \ \ HTP\_OP\_SUB\ =\ 2,}
+\DoxyCodeLine{00051\ \ \ \ \ HTP\_OP\_DIV\ =\ 3,}
+\DoxyCodeLine{00052\ \ \ \ \ HTP\_OP\_MUL\_MAT,}
+\DoxyCodeLine{00053\ \ \ \ \ HTP\_OP\_MUL\_MAT\_ID,}
+\DoxyCodeLine{00054\ \ \ \ \ HTP\_OP\_RMS\_NORM,}
+\DoxyCodeLine{00055\ \ \ \ \ HTP\_OP\_UNARY\_SILU,}
+\DoxyCodeLine{00056\ \ \ \ \ HTP\_OP\_UNARY\_GELU,}
+\DoxyCodeLine{00057\ \ \ \ \ HTP\_OP\_UNARY\_SIGMOID,}
+\DoxyCodeLine{00058\ \ \ \ \ HTP\_OP\_UNARY\_EXP,}
+\DoxyCodeLine{00059\ \ \ \ \ HTP\_OP\_UNARY\_NEG,}
+\DoxyCodeLine{00060\ \ \ \ \ HTP\_OP\_UNARY\_SOFTPLUS,}
+\DoxyCodeLine{00061\ \ \ \ \ HTP\_OP\_GLU\_SWIGLU,}
+\DoxyCodeLine{00062\ \ \ \ \ HTP\_OP\_GLU\_SWIGLU\_OAI,}
+\DoxyCodeLine{00063\ \ \ \ \ HTP\_OP\_GLU\_GEGLU,}
+\DoxyCodeLine{00064\ \ \ \ \ HTP\_OP\_SOFTMAX,}
+\DoxyCodeLine{00065\ \ \ \ \ HTP\_OP\_ADD\_ID,}
+\DoxyCodeLine{00066\ \ \ \ \ HTP\_OP\_ROPE,}
+\DoxyCodeLine{00067\ \ \ \ \ HTP\_OP\_FLASH\_ATTN\_EXT,}
+\DoxyCodeLine{00068\ \ \ \ \ HTP\_OP\_SET\_ROWS,}
+\DoxyCodeLine{00069\ \ \ \ \ HTP\_OP\_GET\_ROWS,}
+\DoxyCodeLine{00070\ \ \ \ \ HTP\_OP\_SCALE,}
+\DoxyCodeLine{00071\ \ \ \ \ HTP\_OP\_CPY,}
+\DoxyCodeLine{00072\ \ \ \ \ HTP\_OP\_ARGSORT,}
+\DoxyCodeLine{00073\ \ \ \ \ HTP\_OP\_SQR,}
+\DoxyCodeLine{00074\ \ \ \ \ HTP\_OP\_SQRT,}
+\DoxyCodeLine{00075\ \ \ \ \ HTP\_OP\_SUM\_ROWS,}
+\DoxyCodeLine{00076\ \ \ \ \ HTP\_OP\_SSM\_CONV,}
+\DoxyCodeLine{00077\ \ \ \ \ HTP\_OP\_REPEAT,}
+\DoxyCodeLine{00078\ \ \ \ \ INVALID}
+\DoxyCodeLine{00079\ \};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ htp\_t\_block\_size(uint32\_t\ t)\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordflow}{switch}\ (t)\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_F32:}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_F16:}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_Q4\_0:}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ QK4\_0;}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_Q8\_0:}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ QK8\_0;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_IQ4\_NL:}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ QK4\_NL;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_MXFP4:}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ QK\_MXFP4;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ assert(0\ \&\&\ \textcolor{stringliteral}{"{}unsupported\ HTP\ data\ type"{}});}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00099\ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ htp\_type\_nbytes(uint32\_t\ t)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordflow}{switch}\ (t)\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_F32:}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 4;}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_F16:}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 2;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_Q4\_0:}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{sizeof}(block\_q4\_0);}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_Q8\_0:}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{sizeof}(block\_q8\_0);}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_IQ4\_NL:}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{sizeof}(block\_iq4\_nl);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ HTP\_TYPE\_MXFP4:}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{sizeof}(block\_mxfp4);}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ assert(0\ \&\&\ \textcolor{stringliteral}{"{}unsupported\ HTP\ data\ type"{}});}
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00119\ \}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{comment}{//\ Internal\ types}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ QK\_Q4\_0x4x2\ \ 256\ \ }\textcolor{comment}{//\ 4x\ Q4\_0\ blocks\ packed\ with\ next\ 4x\ Q4\_0\ blocks\ (size\ in\ bytes\ 128)}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ QK\_Q8\_0x4x2\ \ 256\ \ }\textcolor{comment}{//\ 4x\ Q8\_0\ blocks\ concat\ with\ next\ 4x\ Q8\_0\ blocks}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ QK\_MXFP4x4x2\ 256\ \ }\textcolor{comment}{//\ 4x\ MXFP4\ blocks\ concat\ with\ next\ 4x\ MXFP4\ blocks}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ HTP\_MAX\_DIMS\ 4}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ uint32\_t\ data;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Buffer\ offset\ in\ the\ messages,\ and\ data\ pointer\ on\ the\ NSP}}
+\DoxyCodeLine{00130\ \ \ \ \ uint32\_t\ type;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Data\ type}}
+\DoxyCodeLine{00131\ \ \ \ \ uint32\_t\ ne[HTP\_MAX\_DIMS];\ \ \ \ \textcolor{comment}{//\ Number\ of\ elements}}
+\DoxyCodeLine{00132\ \ \ \ \ uint32\_t\ nb[HTP\_MAX\_DIMS];\ \ \ \ \textcolor{comment}{//\ Stride\ in\ bytes\ (see\ ggml.h\ ggml\_tensor)}}
+\DoxyCodeLine{00133\ \};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ HTP\_MAX\_OP\_PARAMS\ 64}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__general__req}{htp\_general\_req}}\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ uint32\_t\ op;\ \ \textcolor{comment}{//\ GGML/HTP\ Op}}
+\DoxyCodeLine{00139\ \ \ \ \ int32\_t\ \ op\_params[HTP\_MAX\_OP\_PARAMS\ /\ \textcolor{keyword}{sizeof}(int32\_t)];}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//\ Params\ for\ the\ op,\ e.g.\ epsilon\ of\ RMS\ norm}}
+\DoxyCodeLine{00141\ \ \ \ \ uint32\_t\ flags;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Request\ flags}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src0;\ \ \textcolor{comment}{//\ Input0\ tensor}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src1;\ \ \textcolor{comment}{//\ Input1\ tensor}}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src2;\ \ \textcolor{comment}{//\ Input2\ tensor}}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src3;\ \ \textcolor{comment}{//\ Input3\ tensor}}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src4;\ \ \textcolor{comment}{//\ Input4\ tensor}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ dst;\ \ \ \textcolor{comment}{//\ Output\ tensor}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{//\ should\ be\ multiple\ of\ 64\ bytes\ (cacheline)}}
+\DoxyCodeLine{00151\ \};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__general__rsp}{htp\_general\_rsp}}\ \{}
+\DoxyCodeLine{00154\ \ \ \ \ uint32\_t\ op;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ GGML/HTP\ Op}}
+\DoxyCodeLine{00155\ \ \ \ \ uint32\_t\ status;\ \ \ \ \ \ \ \textcolor{comment}{//\ HTP\_STATUS\_...}}
+\DoxyCodeLine{00156\ \ \ \ \ uint32\_t\ prof\_usecs;\ \ \ \textcolor{comment}{//\ Number\ of\ usec\ per\ request}}
+\DoxyCodeLine{00157\ \ \ \ \ uint32\_t\ prof\_cycles;\ \ \textcolor{comment}{//\ Number\ of\ cycles\ per\ request}}
+\DoxyCodeLine{00158\ \ \ \ \ uint32\_t\ prof\_pkts;\ \ \ \ \textcolor{comment}{//\ Number\ of\ instruction\ packets\ per\ request}}
+\DoxyCodeLine{00159\ \ \ \ \ uint8\_t\ \ unused[44];\ \ \ \textcolor{comment}{//\ Pad\ to\ 64\ bytes}}
+\DoxyCodeLine{00160\ \};}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ HTP\_MAX\_MESSAGE\_SIZE\ \ \ sizeof(struct\ htp\_general\_req)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ HTP\_MAX\_PACKET\_BUFFERS\ 8}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HTP\_MSG\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

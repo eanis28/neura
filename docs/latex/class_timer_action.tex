@@ -1,0 +1,57 @@
+\doxysection{Timer\+Action Class Reference}
+\hypertarget{class_timer_action}{}\label{class_timer_action}\index{TimerAction@{TimerAction}}
+
+
+Handles setting and managing a countdown timer.  
+
+
+
+
+{\ttfamily \+\#include $<$Timer\+Action.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{class_timer_action_ad8568101ac0b512d3332791a00232eea}{set\+Timer}} (int seconds)
+\begin{DoxyCompactList}\small\item\em Sets a countdown timer for the specified duration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles setting and managing a countdown timer. 
+
+\doxylink{requirements_The}{The} \doxylink{class_timer_action}{Timer\+Action} class provides an interface for initiating a countdown timer of a specified duration. It uses global atomic variables to safely track timer state across threads, ensuring only one timer runs at a time.
+
+\begin{DoxyAuthor}{Author}
+Eliza Anis 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{class_timer_action_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_timer_action_ad8568101ac0b512d3332791a00232eea}\index{TimerAction@{TimerAction}!setTimer@{setTimer}}
+\index{setTimer@{setTimer}!TimerAction@{TimerAction}}
+\doxysubsubsection{\texorpdfstring{setTimer()}{setTimer()}}
+{\footnotesize\ttfamily \label{class_timer_action_ad8568101ac0b512d3332791a00232eea} 
+bool Timer\+Action::\+set\+Timer (\begin{DoxyParamCaption}\item[{int}]{seconds}{}\end{DoxyParamCaption})}
+
+
+
+Sets a countdown timer for the specified duration. 
+
+Attempts to start a new countdown timer for the given number of seconds. If a timer is already running (i.\+e., g\+\_\+timer\+Active is true), the request is rejected and false is returned. Otherwise, the timer is started in a background thread, decrementing g\+\_\+timer\+Remaining each second until it reaches zero.
+
+
+\begin{DoxyParams}{Parameters}
+{\em seconds} & \doxylink{requirements_The}{The} duration of the timer in seconds. Must be a positive integer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the timer was successfully started, false if a timer is already active. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_timer_action_8h}{Timer\+Action.\+h}}\item 
+Timer\+Action.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,98 @@
+\doxysection{whisper.\+cpp/\+bindings/\+java Directory Reference}
+\hypertarget{dir_946e96e6d88c6117b49e4a6a376f866f}{}\label{dir_946e96e6d88c6117b49e4a6a376f866f}\index{whisper.cpp/bindings/java Directory Reference@{whisper.cpp/bindings/java Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_946e96e6d88c6117b49e4a6a376f866f_autotoc_md24}{}\doxysubsection{\texorpdfstring{Java JNI bindings for Whisper}{Java JNI bindings for Whisper}}\label{dir_946e96e6d88c6117b49e4a6a376f866f_autotoc_md24}
+This package provides Java JNI bindings for whisper.\+cpp. They have been tested on:\+
+
+
+\begin{DoxyItemize}
+\item \sout{Darwin (OS X) 12.\+6 on x64\+\_\+64}
+\item Ubuntu on x86\+\_\+64
+\item Windows on x86\+\_\+64
+\end{DoxyItemize}
+
+\doxylink{requirements_The}{The} "{}low level"{} bindings are in {\ttfamily Whisper\+Cpp\+Jna\+Library}. \doxylink{requirements_The}{The} most simple usage is as follows:\+
+
+JNA will attempt to load the {\ttfamily whispercpp} shared library from:\+
+
+
+\begin{DoxyItemize}
+\item jna.\+library.\+path
+\item jna.\+platform.\+library
+\item \texorpdfstring{$\sim$}{\string~}/\+\+Library/\+\+Frameworks
+\item /\+\+Library/\+\+Frameworks
+\item /\+\+System/\+\+Library/\+\+Frameworks
+\item classpath
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import}\ io.github.ggerganov.whispercpp.WhisperCpp;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{public}\ \textcolor{keyword}{class\ }Example\ \{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ main(String[]\ args)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ WhisperCpp\ whisper\ =\ \textcolor{keyword}{new}\ WhisperCpp();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ By\ default,\ models\ are\ loaded\ from\ \string~/.cache/whisper/\ and\ are\ usually\ named\ "{}ggml-\/\$\{name\}.bin"{}}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ or\ you\ can\ provide\ the\ absolute\ path\ to\ the\ model\ file.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ whisper.initContext(\textcolor{stringliteral}{"{}../ggml-\/base.en.bin"{}});\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ WhisperFullParams.ByValue\ whisperParams\ =\ whisper.getFullDefaultParams(WhisperSamplingStrategy.WHISPER\_SAMPLING\_BEAM\_SEARCH);\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ custom\ configuration\ if\ required\ \ \ \ \ \ }}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//whisperParams.n\_threads\ =\ 8;}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ whisperParams.temperature\ =\ 0.0f;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ whisperParams.temperature\_inc\ =\ 0.2f;}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//whisperParams.language\ =\ "{}en"{};}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}[]\ samples\ =\ readAudio();\ \textcolor{comment}{//\ divide\ each\ value\ by\ 32767.0f}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ List<WhisperSegment>\ whisperSegmentList\ =\ whisper.fullTranscribeWithTime(whisperParams,\ samples);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (WhisperSegment\ whisperSegment\ :\ whisperSegmentList)\ \{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ start\ =\ whisperSegment.getStart();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ end\ =\ whisperSegment.getEnd();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ String\ text\ =\ whisperSegment.getSentence();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ System.out.println(\textcolor{stringliteral}{"{}start:\ "{}}+start);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ System.out.println(\textcolor{stringliteral}{"{}end:\ "{}}+end);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ System.out.println(\textcolor{stringliteral}{"{}text:\ "{}}+text);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (IOException\ e)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ e.printStackTrace();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{finally}\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ whisper.close();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{dir_946e96e6d88c6117b49e4a6a376f866f_autotoc_md25}{}\doxysubsection{\texorpdfstring{Building \& Testing}{Building \& Testing}}\label{dir_946e96e6d88c6117b49e4a6a376f866f_autotoc_md25}
+In order to build, you need to have the JDK 8 or higher installed. Run the tests with:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/ggml-\/org/whisper.cpp.git}
+\DoxyCodeLine{cd\ whisper.cpp/bindings/java}
+\DoxyCodeLine{}
+\DoxyCodeLine{./gradlew\ build}
+
+\end{DoxyCode}
+
+
+You need to have the {\ttfamily whisper} library in your \href{https://java-native-access.github.io/jna/4.2.1/com/sun/jna/NativeLibrary.html}{\texttt{JNA library path}}. On Windows the dll is included in the jar and you can update it:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{copy\ /y\ ..\(\backslash\)..\(\backslash\)build\(\backslash\)bin\(\backslash\)Release\(\backslash\)whisper.dll\ build\(\backslash\)generated\(\backslash\)resources\(\backslash\)main\(\backslash\)win32-\/x86-\/64\(\backslash\)whisper.dll}
+
+\end{DoxyCode}
+\hypertarget{dir_946e96e6d88c6117b49e4a6a376f866f_autotoc_md26}{}\doxysubsection{\texorpdfstring{License}{License}}\label{dir_946e96e6d88c6117b49e4a6a376f866f_autotoc_md26}
+\doxylink{requirements_The}{The} license for the Java bindings is the same as the license for the rest of the whisper.\+cpp project, which is the MIT License. See the {\ttfamily LICENSE} file for more details. 

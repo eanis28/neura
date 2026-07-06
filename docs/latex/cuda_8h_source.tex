@@ -1,0 +1,30 @@
+\doxysection{cuda.\+h}
+\hypertarget{cuda_8h_source}{}\label{cuda_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cuda/vendors/cuda.h@{whisper.cpp/ggml/src/ggml-\/cuda/vendors/cuda.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cuda\_runtime.h>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cuda.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cublas\_v2.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cuda\_bf16.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cuda\_fp16.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#if\ CUDART\_VERSION\ >=\ 11080}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cuda\_fp8.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ FP8\_AVAILABLE}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ CUDART\_VERSION\ >=\ 11080}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#if\ CUDART\_VERSION\ >=\ 12080}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <cuda\_fp4.h>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ CUDART\_VERSION\ >=\ 12080}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#if\ CUDART\_VERSION\ <\ 11020}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ CU\_DEVICE\_ATTRIBUTE\_VIRTUAL\_MEMORY\_MANAGEMENT\_SUPPORTED\ CU\_DEVICE\_ATTRIBUTE\_VIRTUAL\_ADDRESS\_MANAGEMENT\_SUPPORTED}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ CUBLAS\_TF32\_TENSOR\_OP\_MATH\ CUBLAS\_TENSOR\_OP\_MATH}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_16F\ CUDA\_R\_16F}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_32F\ CUDA\_R\_32F}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ cublasComputeType\_t\ cudaDataType\_t}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ CUDART\_VERSION\ <\ 11020}}
+
+\end{DoxyCode}

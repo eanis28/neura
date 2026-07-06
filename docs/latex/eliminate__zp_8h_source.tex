@@ -1,0 +1,23 @@
+\doxysection{eliminate\+\_\+zp.\+h}
+\hypertarget{eliminate__zp_8h_source}{}\label{eliminate__zp_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/openvino/pass/eliminate\_zp.h@{whisper.cpp/ggml/src/ggml-\/openvino/openvino/pass/eliminate\_zp.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}openvino/pass/matcher\_pass.hpp"{}}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }ov\ \{}
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }frontend\ \{}
+\DoxyCodeLine{00005\ \textcolor{keyword}{namespace\ }ggml\ \{}
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }pass\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{class\ }EliminateZeroPoints\ :\ \textcolor{keyword}{public}\ ov::pass::MatcherPass\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00010\ \ \ \ \ OPENVINO\_MATCHER\_PASS\_RTTI(\textcolor{stringliteral}{"{}ov::frontend::ggml::pass::EliminateZeroPoints"{}})}
+\DoxyCodeLine{00011\ \ \ \ \ EliminateZeroPoints();}
+\DoxyCodeLine{00012\ \};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \}\ \ \textcolor{comment}{//\ namespace\ pass}}
+\DoxyCodeLine{00015\ \}\ \ \textcolor{comment}{//\ namespace\ ggml}}
+\DoxyCodeLine{00016\ \}\ \ \textcolor{comment}{//\ namespace\ frontend}}
+\DoxyCodeLine{00017\ \}\ \ \textcolor{comment}{//\ namespace\ ov}}
+
+\end{DoxyCode}

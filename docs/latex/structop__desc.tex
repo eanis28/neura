@@ -1,0 +1,58 @@
+\doxysection{op\+\_\+desc Struct Reference}
+\hypertarget{structop__desc}{}\label{structop__desc}\index{op\_desc@{op\_desc}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structop__desc_a704f802a9319ca5335cc3a8a4bf1a214}\label{structop__desc_a704f802a9319ca5335cc3a8a4bf1a214} 
+int {\bfseries format\+\_\+tensor\+\_\+dims} (char \texorpdfstring{$\ast$}{*}str, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\Hypertarget{structop__desc_a7965c9b36f317c4019800754b6f53e6d}\label{structop__desc_a7965c9b36f317c4019800754b6f53e6d} 
+void {\bfseries format\+\_\+op\+\_\+dims} (char \texorpdfstring{$\ast$}{*}str, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\Hypertarget{structop__desc_a456c6983c7cd6648e9d74f1bae6858e0}\label{structop__desc_a456c6983c7cd6648e9d74f1bae6858e0} 
+int {\bfseries format\+\_\+tensor\+\_\+strides} (char \texorpdfstring{$\ast$}{*}str, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\Hypertarget{structop__desc_a2c62f83347d5c6852d00c0677cb7f939}\label{structop__desc_a2c62f83347d5c6852d00c0677cb7f939} 
+void {\bfseries format\+\_\+op\+\_\+strides} (char \texorpdfstring{$\ast$}{*}str, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\Hypertarget{structop__desc_a38332e99a242f74c2916481cb008cce1}\label{structop__desc_a38332e99a242f74c2916481cb008cce1} 
+void {\bfseries format\+\_\+op\+\_\+types} (char \texorpdfstring{$\ast$}{*}str, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\Hypertarget{structop__desc_afd979430757b308295794c55c4a7cab0}\label{structop__desc_afd979430757b308295794c55c4a7cab0} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries tensor\+\_\+buff\+\_\+name} (const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\Hypertarget{structop__desc_a9e4f272fa16afca3af202e8d68ca66c6}\label{structop__desc_a9e4f272fa16afca3af202e8d68ca66c6} 
+void {\bfseries format\+\_\+op\+\_\+buffs} (char \texorpdfstring{$\ast$}{*}str, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\Hypertarget{structop__desc_a250d9760dce65da542566fcccbb9ac85}\label{structop__desc_a250d9760dce65da542566fcccbb9ac85} 
+void {\bfseries format\+\_\+op\+\_\+names} (char \texorpdfstring{$\ast$}{*}str, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\Hypertarget{structop__desc_a243630f2c5f1d82bfa1688cfce418783}\label{structop__desc_a243630f2c5f1d82bfa1688cfce418783} 
+void {\bfseries format} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{structop__desc_ab74f793f86358c9ee9a666dce4a85cdd}\label{structop__desc_ab74f793f86358c9ee9a666dce4a85cdd} 
+{\bfseries op\+\_\+desc} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structop__desc_a69e3b9232e042e9a9bdcbafe44995dba}\label{structop__desc_a69e3b9232e042e9a9bdcbafe44995dba} 
+char {\bfseries strides} \+[64 \texorpdfstring{$\ast$}{*}GGML\+\_\+\+MAX\+\_\+\+SRC]\+
+\item 
+\Hypertarget{structop__desc_a17b39d888dec02706186bc61105bfc17}\label{structop__desc_a17b39d888dec02706186bc61105bfc17} 
+char {\bfseries dims} \+[64 \texorpdfstring{$\ast$}{*}GGML\+\_\+\+MAX\+\_\+\+SRC]\+
+\item 
+\Hypertarget{structop__desc_a2113109da1c06dee432750af72dc379d}\label{structop__desc_a2113109da1c06dee432750af72dc379d} 
+char {\bfseries types} \+[16 \texorpdfstring{$\ast$}{*}GGML\+\_\+\+MAX\+\_\+\+SRC]\+
+\item 
+\Hypertarget{structop__desc_a7628e6545982e6b25f8f944ead717ed4}\label{structop__desc_a7628e6545982e6b25f8f944ead717ed4} 
+char {\bfseries buffs} \+[64 \texorpdfstring{$\ast$}{*}GGML\+\_\+\+MAX\+\_\+\+SRC]\+
+\item 
+\Hypertarget{structop__desc_a3b6ed4c62b0f0996374931e6496bf197}\label{structop__desc_a3b6ed4c62b0f0996374931e6496bf197} 
+char {\bfseries names} \+[64 \texorpdfstring{$\ast$}{*}GGML\+\_\+\+MAX\+\_\+\+SRC]\+
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/hexagon/\+op-\/desc.\+h\end{DoxyCompactItemize}

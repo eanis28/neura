@@ -1,0 +1,237 @@
+\doxysection{aclnn\+\_\+ops.\+h}
+\hypertarget{aclnn__ops_8h_source}{}\label{aclnn__ops_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cann/aclnn\_ops.h@{whisper.cpp/ggml/src/ggml-\/cann/aclnn\_ops.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ CANN\_ACLNN\_OPS}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ CANN\_ACLNN\_OPS}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}acl\_tensor.h"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}common.h"{}}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_abs.h>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_arange.h>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_argsort.h>}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_cat.h>}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_clamp.h>}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_cos.h>}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_exp.h>}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_gelu.h>}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_gelu\_v2.h>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_hardsigmoid.h>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_hardswish.h>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_leaky\_relu.h>}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_log.h>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_logsoftmax.h>}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_neg.h>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_norm.h>}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_relu.h>}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_sigmoid.h>}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_sign.h>}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_silu.h>}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_sin.h>}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_slice.h>}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_sqrt.h>}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ <aclnnop/aclnn\_tanh.h>}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#include\ <unordered\_set>}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00070\ \textcolor{keywordtype}{void}\ ggml\_cann\_repeat(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{void}\ ggml\_cann\_leaky\_relu(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00105\ \textcolor{keywordtype}{void}\ ggml\_cann\_concat(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00121\ \textcolor{keywordtype}{void}\ ggml\_cann\_arange(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00139\ \textcolor{keywordtype}{void}\ ggml\_cann\_clamp(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00156\ \textcolor{keywordtype}{void}\ ggml\_cann\_scale(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00171\ \textcolor{keywordtype}{void}\ ggml\_cann\_argsort(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00193\ \textcolor{keywordtype}{void}\ ggml\_cann\_norm(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00216\ \textcolor{keywordtype}{void}\ ggml\_cann\_l2\_norm(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00253\ \textcolor{keywordtype}{void}\ ggml\_cann\_cross\_entropy\_loss(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00277\ \textcolor{keywordtype}{void}\ ggml\_cann\_group\_norm(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00296\ \textcolor{keywordtype}{void}\ ggml\_cann\_acc(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00312\ \textcolor{keywordtype}{void}\ ggml\_cann\_sum\_rows(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{keywordtype}{void}\ ggml\_cann\_sum(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00342\ \textcolor{keywordtype}{void}\ ggml\_cann\_upsample\_nearest2d(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00357\ \textcolor{keywordtype}{void}\ ggml\_cann\_pad(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00374\ \textcolor{keywordtype}{void}\ ggml\_cann\_pool2d(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00393\ \textcolor{keywordtype}{void}\ ggml\_cann\_dup(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00415\ \textcolor{keywordtype}{void}\ ggml\_cann\_rms\_norm(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00430\ \textcolor{keywordtype}{void}\ ggml\_cann\_diag\_mask(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst,\ \textcolor{keywordtype}{float}\ value);}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00445\ \textcolor{keywordtype}{void}\ ggml\_cann\_im2col(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00459\ \textcolor{keywordtype}{void}\ ggml\_cann\_timestep\_embedding(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \textcolor{comment}{//\ @see\ ggml\_cann\_dup.}}
+\DoxyCodeLine{00462\ \textcolor{keywordtype}{void}\ ggml\_cann\_cpy(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00484\ \textcolor{keywordtype}{void}\ ggml\_cann\_softmax(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00496\ \textcolor{keywordtype}{void}\ ggml\_cann\_get\_rows(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00508\ \textcolor{keywordtype}{void}\ ggml\_cann\_set\_rows(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00521\ \textcolor{keywordtype}{void}\ ggml\_cann\_mul\_mat(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00544\ \textcolor{keywordtype}{void}\ ggml\_cann\_rope(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00559\ \textcolor{keywordtype}{void}\ ggml\_cann\_rope\_cache\_preload(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00574\ \textcolor{keywordtype}{void}\ ggml\_cann\_argmax(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00575\ }
+\DoxyCodeLine{00591\ \textcolor{keywordtype}{void}\ aclnn\_add(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_src0,}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_src1,}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_dst\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00595\ }
+\DoxyCodeLine{00611\ \textcolor{keywordtype}{void}\ aclnn\_sub(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_src0,}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_src1,}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_dst\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00632\ \textcolor{keywordtype}{void}\ aclnn\_mul(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_src,}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_other,}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_dst\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00655\ \textcolor{keywordtype}{void}\ aclnn\_div(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_src,}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_other,}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclTensor\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_dst\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00659\ }
+\DoxyCodeLine{00674\ \textcolor{keywordtype}{void}\ aclnn\_cos(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ aclTensor\ *\ acl\_src,\ aclTensor\ *\ acl\_dst);}
+\DoxyCodeLine{00675\ }
+\DoxyCodeLine{00691\ \textcolor{keywordtype}{void}\ aclnn\_sin(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ aclTensor\ *\ acl\_src,\ aclTensor\ *\ acl\_dst);}
+\DoxyCodeLine{00692\ }
+\DoxyCodeLine{00709\ \textcolor{keywordtype}{void}\ bcast\_shape(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ src0,}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ src1,}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ dst,}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_tensor\_ptr\ \&\ acl\_src0,}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_tensor\_ptr\ \&\ acl\_src1,}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_tensor\_ptr\ \&\ acl\_dst);}
+\DoxyCodeLine{00715\ }
+\DoxyCodeLine{00729\ \textcolor{keywordtype}{void}\ ggml\_cann\_conv\_transpose\_1d(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00730\ }
+\DoxyCodeLine{00754\ \textcolor{keywordtype}{void}\ ggml\_cann\_elu(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00755\ }
+\DoxyCodeLine{00769\ \textcolor{keywordtype}{void}\ ggml\_cann\_mean(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00770\ }
+\DoxyCodeLine{00784\ \textcolor{keywordtype}{void}\ ggml\_cann\_pad\_reflect\_1d(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00785\ }
+\DoxyCodeLine{00800\ \textcolor{keywordtype}{void}\ ggml\_cann\_count\_equal(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00815\ \textcolor{keywordtype}{void}\ ggml\_cann\_step(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00816\ }
+\DoxyCodeLine{00830\ \textcolor{keywordtype}{void}\ ggml\_cann\_flash\_attn\_ext(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00831\ }
+\DoxyCodeLine{00845\ \textcolor{keywordtype}{void}\ ggml\_cann\_gated\_linear\_attn(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00846\ }
+\DoxyCodeLine{00864\ }
+\DoxyCodeLine{00865\ \textcolor{preprocessor}{\#\ \ \ \ define\ GGML\_CANN\_CALL\_ACLNN\_OP(CTX,\ OP\_NAME,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00866\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00867\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ \ \ \ \ \ \ \ workspaceSize\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00868\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ aclOpExecutor\ *\ executor;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00869\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ void\ *\ \ \ \ \ \ \ \ \ \ workspaceAddr\ =\ nullptr;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00870\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclnn\#\#OP\_NAME\#\#GetWorkspaceSize(\_\_VA\_ARGS\_\_,\ \&workspaceSize,\ \&executor));\ \(\backslash\)}}
+\DoxyCodeLine{00871\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ workspace\ should\ alloced\ in\ main\ thread\ to\ keep\ malloc\ order\ when\ using\ vmm.\ */}\textcolor{preprocessor}{\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00872\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (workspaceSize\ >\ 0)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00873\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_cann\_pool\_alloc\ workspace\_allocator(CTX.pool(),\ workspaceSize);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00874\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ workspaceAddr\ =\ workspace\_allocator.get();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00875\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00876\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclnn\#\#OP\_NAME(workspaceAddr,\ workspaceSize,\ executor,\ CTX.stream()));\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00877\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00878\ }
+\DoxyCodeLine{00904\ \textcolor{keywordtype}{void}\ ggml\_cann\_mul\_mat\_id(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00905\ }
+\DoxyCodeLine{00918\ \textcolor{keywordtype}{void}\ ggml\_cann\_op\_add\_rms\_norm\_fused(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ add\_node,}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rms\_norm\_node);}
+\DoxyCodeLine{00921\ }
+\DoxyCodeLine{00932\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ is\_matmul\_weight(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor)\ \{}
+\DoxyCodeLine{00933\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name\ =\ ggml\_get\_name(tensor);}
+\DoxyCodeLine{00934\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::unordered\_set<std::string>\ weight\_suffixes\{\ \textcolor{stringliteral}{"{}output.weight"{}},\ \ \ \ \ \ \textcolor{stringliteral}{"{}attn\_q.weight"{}},}
+\DoxyCodeLine{00935\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}attn\_k.weight"{}},\ \ \ \ \ \ \textcolor{stringliteral}{"{}attn\_v.weight"{}},}
+\DoxyCodeLine{00936\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}attn\_output.weight"{}},\ \textcolor{stringliteral}{"{}ffn\_gate.weight"{}},}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ffn\_up.weight"{}},\ \ \ \ \ \ \textcolor{stringliteral}{"{}ffn\_down.weight"{}}\ \};}
+\DoxyCodeLine{00938\ }
+\DoxyCodeLine{00939\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ suffix\ :\ weight\_suffixes)\ \{}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (name.find(suffix)\ !=\ std::string::npos)\ \{}
+\DoxyCodeLine{00941\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00943\ \ \ \ \ \}}
+\DoxyCodeLine{00944\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00945\ \}}
+\DoxyCodeLine{00946\ }
+\DoxyCodeLine{00963\ \textcolor{keyword}{template}\ <auto\ binary\_op>\ \textcolor{keywordtype}{void}\ ggml\_cann\_binary\_op(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst)\ \{}
+\DoxyCodeLine{00964\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src0\ =\ dst-\/>src[0];}
+\DoxyCodeLine{00965\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src1\ =\ dst-\/>src[1];}
+\DoxyCodeLine{00966\ }
+\DoxyCodeLine{00967\ \ \ \ \ acl\_tensor\_ptr\ acl\_src0,\ acl\_src1,\ acl\_dst;}
+\DoxyCodeLine{00968\ }
+\DoxyCodeLine{00969\ \ \ \ \ \textcolor{comment}{//\ Need\ bcast}}
+\DoxyCodeLine{00970\ \ \ \ \ bcast\_shape(src0,\ src1,\ dst,\ acl\_src0,\ acl\_src1,\ acl\_dst);}
+\DoxyCodeLine{00971\ \ \ \ \ binary\_op(ctx,\ acl\_src0.get(),\ acl\_src1.get(),\ acl\_dst.get());}
+\DoxyCodeLine{00972\ \}}
+\DoxyCodeLine{00973\ }
+\DoxyCodeLine{00986\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{void}\ unary\_op(ggml\_backend\_cann\_context\ \&,\ aclTensor\ *,\ aclTensor\ *)>}
+\DoxyCodeLine{00987\ \textcolor{keywordtype}{void}\ ggml\_cann\_op\_unary(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst)\ \{}
+\DoxyCodeLine{00988\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src\ =\ dst-\/>src[0];}
+\DoxyCodeLine{00989\ }
+\DoxyCodeLine{00990\ \ \ \ \ acl\_tensor\_ptr\ acl\_src\ =\ ggml\_cann\_create\_tensor(src);}
+\DoxyCodeLine{00991\ \ \ \ \ acl\_tensor\_ptr\ acl\_dst\ =\ ggml\_cann\_create\_tensor(dst);}
+\DoxyCodeLine{00992\ }
+\DoxyCodeLine{00993\ \ \ \ \ unary\_op(ctx,\ acl\_src.get(),\ acl\_dst.get());}
+\DoxyCodeLine{00994\ \}}
+\DoxyCodeLine{00995\ }
+\DoxyCodeLine{01016\ \textcolor{keywordtype}{void}\ ggml\_cann\_op\_unary(std::function<\textcolor{keywordtype}{void}(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&,\ aclTensor\ *,\ aclTensor\ *)>\ unary\_op,}
+\DoxyCodeLine{01017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ctx,}
+\DoxyCodeLine{01018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dst);}
+\DoxyCodeLine{01019\ }
+\DoxyCodeLine{01020\ \textcolor{keywordtype}{void}\ ggml\_cann\_ssm\_conv(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{01021\ }
+\DoxyCodeLine{01052\ \textcolor{keywordtype}{void}\ ggml\_cann\_op\_unary\_gated(std::function<\textcolor{keywordtype}{void}(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&,\ aclTensor\ *,\ aclTensor\ *)>\ unary\_op,}
+\DoxyCodeLine{01053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ctx,}
+\DoxyCodeLine{01054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dst);}
+\DoxyCodeLine{01055\ }
+\DoxyCodeLine{01077\ \textcolor{preprocessor}{\#\ \ \ \ define\ GGML\_CANN\_CALL\_OP\_UNARY(OP\_NAME)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01078\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01079\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ auto\ lambda\ =\ [](ggml\_backend\_cann\_context\ \&\ ctx,\ aclTensor\ *\ acl\_src,\ aclTensor\ *\ acl\_dst)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{01080\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_CANN\_CALL\_ACLNN\_OP(ctx,\ OP\_NAME,\ acl\_src,\ acl\_dst);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01081\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01082\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ ggml\_cann\_op\_unary(lambda,\ ctx,\ dst);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01083\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{01084\ }
+\DoxyCodeLine{01106\ \textcolor{preprocessor}{\#\ \ \ \ define\ GGML\_CANN\_CALL\_OP\_UNARY\_GATED(OP\_NAME)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01107\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01108\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ auto\ lambda\ =\ [](ggml\_backend\_cann\_context\ \&\ ctx,\ aclTensor\ *\ acl\_src,\ aclTensor\ *\ acl\_dst)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{01109\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_CANN\_CALL\_ACLNN\_OP(ctx,\ OP\_NAME,\ acl\_src,\ acl\_dst);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01110\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01111\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ ggml\_cann\_op\_unary\_gated(lambda,\ ctx,\ dst);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01112\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{01113\ }
+\DoxyCodeLine{01114\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ CANN\_ACLNN\_OPS}}
+\DoxyCodeLine{01115\ }
+\DoxyCodeLine{01134\ \textcolor{keywordtype}{void}\ ggml\_cann\_out\_prod(\doxymbox{\hyperlink{structggml__backend__cann__context}{ggml\_backend\_cann\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+
+\end{DoxyCode}

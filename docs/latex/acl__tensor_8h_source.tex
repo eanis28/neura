@@ -1,0 +1,154 @@
+\doxysection{acl\+\_\+tensor.\+h}
+\hypertarget{acl__tensor_8h_source}{}\label{acl__tensor_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cann/acl\_tensor.h@{whisper.cpp/ggml/src/ggml-\/cann/acl\_tensor.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2023-\/2026\ The\ ggml\ authors}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ Permission\ is\ hereby\ granted,\ free\ of\ charge,\ to\ any\ person\ obtaining\ a\ copy}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ of\ this\ software\ and\ associated\ documentation\ files\ (the\ "{}Software"{}),\ to}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ deal\ in\ the\ Software\ without\ restriction,\ including\ without\ limitation\ the}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ rights\ to\ use,\ copy,\ modify,\ merge,\ publish,\ distribute,\ sublicense,\ and/or}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ sell\ copies\ of\ the\ Software,\ and\ to\ permit\ persons\ to\ whom\ the\ Software\ is}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ furnished\ to\ do\ so,\ subject\ to\ the\ following\ conditions:}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ The\ above\ copyright\ notice\ and\ this\ permission\ notice\ shall\ be\ included\ in}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ all\ copies\ or\ substantial\ portions\ of\ the\ Software.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ THE\ SOFTWARE\ IS\ PROVIDED\ "{}AS\ IS"{},\ WITHOUT\ WARRANTY\ OF\ ANY\ KIND,\ EXPRESS\ OR}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ IMPLIED,\ INCLUDING\ BUT\ NOT\ LIMITED\ TO\ THE\ WARRANTIES\ OF\ MERCHANTABILITY,}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ AND\ NONINFRINGEMENT.\ IN\ NO\ EVENT\ SHALL\ THE}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ AUTHORS\ OR\ COPYRIGHT\ HOLDERS\ BE\ LIABLE\ FOR\ ANY\ CLAIM,\ DAMAGES\ OR\ OTHER}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ LIABILITY,\ WHETHER\ IN\ AN\ ACTION\ OF\ CONTRACT,\ TORT\ OR\ OTHERWISE,\ ARISING}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ FROM,\ OUT\ OF\ OR\ IN\ CONNECTION\ WITH\ THE\ SOFTWARE\ OR\ THE\ USE\ OR\ OTHER\ DEALINGS}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ IN\ THE\ SOFTWARE.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ CANN\_ACL\_TENSOR\_H}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ CANN\_ACL\_TENSOR\_H}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}common.h"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <aclnn/aclnn\_base.h>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00045\ aclDataType\ ggml\_cann\_type\_mapping(ggml\_type\ type);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ Deleter\ for\ acl\ objects.}}
+\DoxyCodeLine{00048\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ aclError\ (*DestroyFunc)(const\ T\ *)>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structacl__deleter}{acl\_deleter}}\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ operator()(T\ *\ ptr)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ptr)\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(DestroyFunc(ptr));}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{using\ }acl\_tensor\_ptr\ \ \ \ \ \ =\ std::unique\_ptr<aclTensor,\ acl\_deleter<aclTensor,\ aclDestroyTensor>>;}
+\DoxyCodeLine{00057\ \textcolor{keyword}{using\ }acl\_int\_array\_ptr\ \ \ =\ std::unique\_ptr<aclIntArray,\ acl\_deleter<aclIntArray,\ aclDestroyIntArray>>;}
+\DoxyCodeLine{00058\ \textcolor{keyword}{using\ }acl\_scalar\_ptr\ \ \ \ \ \ =\ std::unique\_ptr<aclScalar,\ acl\_deleter<aclScalar,\ aclDestroyScalar>>;}
+\DoxyCodeLine{00059\ \textcolor{keyword}{using\ }acl\_tensor\_list\_ptr\ =\ std::unique\_ptr<aclTensorList,\ acl\_deleter<aclTensorList,\ aclDestroyTensorList>>;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00080\ acl\_tensor\_ptr\ ggml\_cann\_create\_tensor(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ *\ \ \ \ \ \ \ \ \ \ \ ne\ \ \ \ \ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ \ \ \ \ \ \ \ \ \ \ \ nb\ \ \ \ \ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ dims\ \ \ =\ 0,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclFormat\ \ \ \ \ \ \ \ \ \ \ format\ =\ ACL\_FORMAT\_ND,}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ offset\ =\ 0);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TYPE>}
+\DoxyCodeLine{00108\ acl\_tensor\_ptr\ ggml\_cann\_create\_tensor(\textcolor{keywordtype}{void}\ *\ \ \ \ \ \ data\_ptr,}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclDataType\ dtype,}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TYPE\ \ \ \ \ \ \ \ type\_size,}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ *\ \ \ ne,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TYPE\ *\ \ \ \ \ \ nb,}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ dims,}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aclFormat\ \ \ format\ =\ ACL\_FORMAT\_ND,}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ offset\ =\ 0)\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ int64\_t\ tmp\_ne[GGML\_MAX\_DIMS\ *\ 2];}
+\DoxyCodeLine{00117\ \ \ \ \ int64\_t\ tmp\_stride[GGML\_MAX\_DIMS\ *\ 2];}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ memcpy(tmp\_ne,\ ne,\ dims\ *\ \textcolor{keyword}{sizeof}(int64\_t));}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ dims;\ i++)\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ tmp\_stride[i]\ =\ nb[i]\ /\ type\_size;}
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ int64\_t\ acl\_storage\_len\ =\ 1;}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ dims;\ i++)\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ acl\_storage\_len\ +=\ (tmp\_ne[i]\ -\/\ 1)\ *\ tmp\_stride[i];}
+\DoxyCodeLine{00127\ \ \ \ \ \}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ std::reverse(tmp\_ne,\ tmp\_ne\ +\ dims);}
+\DoxyCodeLine{00130\ \ \ \ \ std::reverse(tmp\_stride,\ tmp\_stride\ +\ dims);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ aclTensor\ *\ raw\ =}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ aclCreateTensor(tmp\_ne,\ dims,\ dtype,\ tmp\_stride,\ offset\ /\ type\_size,\ format,\ \&acl\_storage\_len,\ 1,\ data\_ptr);}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordflow}{return}\ acl\_tensor\_ptr(raw);}
+\DoxyCodeLine{00136\ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00151\ acl\_int\_array\_ptr\ ggml\_cann\_create\_int\_array(\textcolor{keyword}{const}\ int64\_t\ *\ value,\ uint64\_t\ size);}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00166\ acl\_scalar\_ptr\ ggml\_cann\_create\_scalar(\textcolor{keywordtype}{void}\ *\ value,\ aclDataType\ dataType);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00193\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}...\ acl\_tensor\_ptr>\ acl\_tensor\_list\_ptr\ ggml\_cann\_create\_tensor\_list(acl\_tensor\_ptr\ \&\&...\ tensors)\ \{}
+\DoxyCodeLine{00194\ \ \ \ \ aclTensor\ *\ \ \ \ \ raw\_tensors[]\ =\ \{\ tensors.get()...\ \};}
+\DoxyCodeLine{00195\ \ \ \ \ aclTensorList\ *\ raw\ \ \ \ \ \ \ \ \ \ \ =\ aclCreateTensorList(raw\_tensors,\ \textcolor{keyword}{sizeof}...(tensors));}
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{comment}{//\ aclTensor\ will\ release\ by\ aclTensorList,\ so\ release\ ownership\ without}}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{comment}{//\ destroying\ the\ tensor}}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ dummy[]\ \ \ \ \ \ \ =\ \{\ (tensors.release(),\ 0)...\ \};}
+\DoxyCodeLine{00199\ \ \ \ \ GGML\_UNUSED(dummy);}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keywordflow}{return}\ acl\_tensor\_list\_ptr(raw);}
+\DoxyCodeLine{00201\ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00219\ \textcolor{keywordtype}{bool}\ ggml\_cann\_need\_bcast(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t0,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t1);}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00274\ int64\_t\ ggml\_cann\_get\_bcast\_shape(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src0,}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src1,}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ *\ \ \ \ \ \ \ \ \ \ \ bcast\_ne\_src0,}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ *\ \ \ \ \ \ \ \ \ \ \ bcast\_ne\_src1,}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ \ \ \ \ \ \ \ \ \ \ \ bcast\_nb\_src0,}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ \ \ \ \ \ \ \ \ \ \ \ bcast\_nb\_src1);}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \textcolor{comment}{//\ Bcast\ macro\ to\ avoid\ duplicate\ code.}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#define\ BCAST\_SHAPE(src0,\ src1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\ \ \ \ int64\_t\ bcast\_\#\#src0\#\#\_ne[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\ \ \ \ int64\_t\ bcast\_\#\#src1\#\#\_ne[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\ \ \ \ size\_t\ \ bcast\_\#\#src0\#\#\_nb[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\ \ \ \ size\_t\ \ bcast\_\#\#src1\#\#\_nb[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\ \ \ \ int64\_t\ bcast\_dims\ =\ ggml\_cann\_get\_bcast\_shape(src0,\ src1,\ bcast\_\#\#src0\#\#\_ne,\ bcast\_\#\#src1\#\#\_ne,\ \(\backslash\)}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bcast\_\#\#src0\#\#\_nb,\ bcast\_\#\#src1\#\#\_nb);}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#define\ BCAST\_PARAM(tensor)\ bcast\_\#\#tensor\#\#\_ne,\ bcast\_\#\#tensor\#\#\_nb,\ bcast\_dims}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00322\ int64\_t\ ggml\_cann\_get\_mulmat\_bcast\_shape(\textcolor{keyword}{const}\ int64\_t\ *\ input\_ne,}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ *\ weight\_ne,}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ *\ dst\_ne,}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ *\ \ input\_nb,}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ *\ \ weight\_nb,}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ *\ \ dst\_nb,}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ *\ \ \ \ \ \ \ bcast\_input\_ne,}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ *\ \ \ \ \ \ \ bcast\_weight\_ne,}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ *\ \ \ \ \ \ \ bcast\_dst\_ne,}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ \ \ \ \ \ \ \ bcast\_input\_nb,}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ \ \ \ \ \ \ \ bcast\_weight\_nb,}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ \ \ \ \ \ \ \ bcast\_dst\_nb);}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \textcolor{comment}{//\ Bcast\ macro\ to\ avoid\ duplicate\ code.}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ BCAST\_MUL\_MAT\_SHAPE(input,\ weight,\ dst)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\ \ \ \ int64\_t\ bcast\_\#\#input\#\#\_ne[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\ \ \ \ int64\_t\ bcast\_\#\#weight\#\#\_ne[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\ \ \ \ int64\_t\ bcast\_\#\#dst\#\#\_ne[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\ \ \ \ size\_t\ \ bcast\_\#\#input\#\#\_nb[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\ \ \ \ size\_t\ \ bcast\_\#\#weight\#\#\_nb[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ \ \ size\_t\ \ bcast\_\#\#dst\#\#\_nb[GGML\_MAX\_DIMS\ *\ 2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ \ \ int64\_t\ bcast\_dims\ =\ ggml\_cann\_get\_mulmat\_bcast\_shape(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ input-\/>ne,\ weight-\/>ne,\ dst-\/>ne,\ input-\/>nb,\ weight-\/>nb,\ dst-\/>nb,\ bcast\_\#\#input\#\#\_ne,\ bcast\_\#\#weight\#\#\_ne,\ \(\backslash\)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ bcast\_\#\#dst\#\#\_ne,\ bcast\_\#\#input\#\#\_nb,\ bcast\_\#\#weight\#\#\_nb,\ bcast\_\#\#dst\#\#\_nb);}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ BCAST\_MUL\_MAT\_PARAM(tensor)\ bcast\_\#\#tensor\#\#\_ne,\ bcast\_\#\#tensor\#\#\_nb,\ bcast\_dims}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ CANN\_ACL\_TENSOR\_H}}
+
+\end{DoxyCode}

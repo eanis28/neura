@@ -1,0 +1,91 @@
+\doxysection{dpct::\+detail::\+mem\+\_\+mgr Class Reference}
+\hypertarget{classdpct_1_1detail_1_1mem__mgr}{}\label{classdpct_1_1detail_1_1mem__mgr}\index{dpct::detail::mem\_mgr@{dpct::detail::mem\_mgr}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structdpct_1_1detail_1_1mem__mgr_1_1allocation}{allocation}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a68008463e64dd96dbc37cb90b7e321a6}\label{classdpct_1_1detail_1_1mem__mgr_a68008463e64dd96dbc37cb90b7e321a6} 
+using {\bfseries buffer\+\_\+id\+\_\+t} = int
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a793f45c3a75fab66e577489fbed3e639}\label{classdpct_1_1detail_1_1mem__mgr_a793f45c3a75fab66e577489fbed3e639} 
+{\bfseries mem\+\_\+mgr} (const mem\+\_\+mgr \&)=delete
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_aa7acf3f5b3aa6b39e7067158cd8e987b}\label{classdpct_1_1detail_1_1mem__mgr_aa7acf3f5b3aa6b39e7067158cd8e987b} 
+mem\+\_\+mgr \& {\bfseries operator=} (const mem\+\_\+mgr \&)=delete
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_abb4f1864533dd8b1c4a4ed8a11ff8ecd}\label{classdpct_1_1detail_1_1mem__mgr_abb4f1864533dd8b1c4a4ed8a11ff8ecd} 
+{\bfseries mem\+\_\+mgr} (mem\+\_\+mgr \&\&)=delete
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a963a4d668f9610f146f07ff5ab110c82}\label{classdpct_1_1detail_1_1mem__mgr_a963a4d668f9610f146f07ff5ab110c82} 
+mem\+\_\+mgr \& {\bfseries operator=} (mem\+\_\+mgr \&\&)=delete
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a2559b13c4e2dd4244094fd5846d91193}\label{classdpct_1_1detail_1_1mem__mgr_a2559b13c4e2dd4244094fd5846d91193} 
+void \texorpdfstring{$\ast$}{*} {\bfseries mem\+\_\+alloc} (size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Allocate. \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a6be5dd235b1889feea607d3a89340ad5}\label{classdpct_1_1detail_1_1mem__mgr_a6be5dd235b1889feea607d3a89340ad5} 
+void {\bfseries mem\+\_\+free} (const void \texorpdfstring{$\ast$}{*}ptr)
+\begin{DoxyCompactList}\small\item\em Deallocate. \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a3a8ff09bcd24cf85b40fbfbb3e430d43}\label{classdpct_1_1detail_1_1mem__mgr_a3a8ff09bcd24cf85b40fbfbb3e430d43} 
+\doxymbox{\hyperlink{structdpct_1_1detail_1_1mem__mgr_1_1allocation}{allocation}} {\bfseries translate\+\_\+ptr} (const void \texorpdfstring{$\ast$}{*}ptr)
+\begin{DoxyCompactList}\small\item\em map:\+ device pointer -\/\texorpdfstring{$>$}{>} allocation(buffer, alloc\+\_\+ptr, size) \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_aaf5a62f617c6f974cfa4c3fe616be0ee}\label{classdpct_1_1detail_1_1mem__mgr_aaf5a62f617c6f974cfa4c3fe616be0ee} 
+bool {\bfseries is\+\_\+device\+\_\+ptr} (const void \texorpdfstring{$\ast$}{*}ptr) const
+\begin{DoxyCompactList}\small\item\em Check if the pointer represents device pointer or not. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_adb5350a4bcfe5ecc3bc78eab4e35e07d}\label{classdpct_1_1detail_1_1mem__mgr_adb5350a4bcfe5ecc3bc78eab4e35e07d} 
+static mem\+\_\+mgr \& {\bfseries instance} ()
+\begin{DoxyCompactList}\small\item\em Returns the instance of memory manager singleton. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a6daa857250fbde53f876c837dde94589}\label{classdpct_1_1detail_1_1mem__mgr_a6daa857250fbde53f876c837dde94589} 
+std::\+map$<$ byte\+\_\+t \texorpdfstring{$\ast$}{*}, \doxymbox{\hyperlink{structdpct_1_1detail_1_1mem__mgr_1_1allocation}{allocation}} $>$::\+iterator {\bfseries get\+\_\+map\+\_\+iterator} (const void \texorpdfstring{$\ast$}{*}ptr)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a6bec0ae331f015617f93ccbc5ebe6f7a}\label{classdpct_1_1detail_1_1mem__mgr_a6bec0ae331f015617f93ccbc5ebe6f7a} 
+std::\+map$<$ byte\+\_\+t \texorpdfstring{$\ast$}{*}, \doxymbox{\hyperlink{structdpct_1_1detail_1_1mem__mgr_1_1allocation}{allocation}} $>$ {\bfseries m\+\_\+map}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a6992d679aaba2e56c2acc4809c4a294f}\label{classdpct_1_1detail_1_1mem__mgr_a6992d679aaba2e56c2acc4809c4a294f} 
+std::\+mutex {\bfseries m\+\_\+mutex}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_aaf9ec837f3aef3e27dcdaa69aa518273}\label{classdpct_1_1detail_1_1mem__mgr_aaf9ec837f3aef3e27dcdaa69aa518273} 
+byte\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries mapped\+\_\+address\+\_\+space}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a74f5ae29e248a10fbf8dfc79c4b0037f}\label{classdpct_1_1detail_1_1mem__mgr_a74f5ae29e248a10fbf8dfc79c4b0037f} 
+byte\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries next\+\_\+free}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_ae285c947a0728ab15bd2a9e610f72147}\label{classdpct_1_1detail_1_1mem__mgr_ae285c947a0728ab15bd2a9e610f72147} 
+const size\+\_\+t {\bfseries mapped\+\_\+region\+\_\+size} = 128ull \texorpdfstring{$\ast$}{*} 1024 \texorpdfstring{$\ast$}{*} 1024 \texorpdfstring{$\ast$}{*} 1024
+\item 
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_a630664c9c42f35029872795da23a7855}\label{classdpct_1_1detail_1_1mem__mgr_a630664c9c42f35029872795da23a7855} 
+const size\+\_\+t {\bfseries alignment} = 256
+\item 
+const size\+\_\+t \doxymbox{\hyperlink{classdpct_1_1detail_1_1mem__mgr_afeb9054a1b7a73fe919271621a1266bc}{extra\+\_\+padding}} = 0
+\end{DoxyCompactItemize}
+
+
+\label{doc-variable-members}
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classdpct_1_1detail_1_1mem__mgr_afeb9054a1b7a73fe919271621a1266bc}\index{dpct::detail::mem\_mgr@{dpct::detail::mem\_mgr}!extra\_padding@{extra\_padding}}
+\index{extra\_padding@{extra\_padding}!dpct::detail::mem\_mgr@{dpct::detail::mem\_mgr}}
+\doxysubsubsection{\texorpdfstring{extra\_padding}{extra\_padding}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1mem__mgr_afeb9054a1b7a73fe919271621a1266bc} 
+const size\+\_\+t dpct::\+detail::\+mem\+\_\+mgr::\+extra\+\_\+padding = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+This padding may be defined to some positive value to debug out of bound accesses. 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+dpct/\+helper.\+hpp\end{DoxyCompactItemize}

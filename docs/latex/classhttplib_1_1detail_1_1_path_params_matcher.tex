@@ -1,0 +1,64 @@
+\doxysection{httplib::\+detail::\+Path\+Params\+Matcher Class Reference}
+\hypertarget{classhttplib_1_1detail_1_1_path_params_matcher}{}\label{classhttplib_1_1detail_1_1_path_params_matcher}\index{httplib::detail::PathParamsMatcher@{httplib::detail::PathParamsMatcher}}
+
+
+{\ttfamily \+\#include $<$httplib.\+h$>$}
+
+Inheritance diagram for httplib::\+detail::\+Path\+Params\+Matcher:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classhttplib_1_1detail_1_1_path_params_matcher}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1_path_params_matcher_a6b0b367cc4db29c2f81bd3e858da0e10}\label{classhttplib_1_1detail_1_1_path_params_matcher_a6b0b367cc4db29c2f81bd3e858da0e10} 
+{\bfseries Path\+Params\+Matcher} (const std::\+string \&pattern)
+\item 
+bool \doxymbox{\hyperlink{classhttplib_1_1detail_1_1_path_params_matcher_aa0446fa3fcb729f471f23b0e8ff71127}{match}} (\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&request) const override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1_path_params_matcher_a21664b11822b28355a290ed76a80ea00}\label{classhttplib_1_1detail_1_1_path_params_matcher_a21664b11822b28355a290ed76a80ea00} 
+std::\+vector$<$ std::\+string $>$ {\bfseries static\+\_\+fragments\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1_path_params_matcher_a9dee833daf8a8feb45889de4c8f68d79}\label{classhttplib_1_1detail_1_1_path_params_matcher_a9dee833daf8a8feb45889de4c8f68d79} 
+std::\+vector$<$ std::\+string $>$ {\bfseries param\+\_\+names\+\_\+}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1_path_params_matcher_ac3c0b3f1ee7e74e18c0f1aa7186c711f}\label{classhttplib_1_1detail_1_1_path_params_matcher_ac3c0b3f1ee7e74e18c0f1aa7186c711f} 
+static constexpr char {\bfseries separator} = \textquotesingle{}/\+\textquotesingle{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Captures parameters in request path and stores them in Request::\+path\+\_\+params
+
+Capture name is a substring of a pattern from :\+ to /\+. \doxylink{requirements_The}{The} rest of the pattern is matched against the request path directly Parameters are captured starting from the next character after the end of the last matched static pattern fragment until the next /\+.
+
+Example pattern:\+ "{}/\+path/\+fragments/\+:\+capture/\+more/\+fragments/\+:\+second\+\_\+capture"{} Static fragments:\+ "{}/\+path/\+fragments/\+"{}, "{}more/\+fragments/\+"{}
+
+Given the following request path:\+ "{}/\+path/\+fragments/\+:\+1/\+more/\+fragments/\+:\+2"{} the resulting capture will be \{\{"{}capture"{}, "{}1"{}\}, \{"{}second\+\_\+capture"{}, "{}2"{}\}\} 
+
+\label{doc-func-members}
+\Hypertarget{classhttplib_1_1detail_1_1_path_params_matcher_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classhttplib_1_1detail_1_1_path_params_matcher_aa0446fa3fcb729f471f23b0e8ff71127}\index{httplib::detail::PathParamsMatcher@{httplib::detail::PathParamsMatcher}!match@{match}}
+\index{match@{match}!httplib::detail::PathParamsMatcher@{httplib::detail::PathParamsMatcher}}
+\doxysubsubsection{\texorpdfstring{match()}{match()}}
+{\footnotesize\ttfamily \label{classhttplib_1_1detail_1_1_path_params_matcher_aa0446fa3fcb729f471f23b0e8ff71127} 
+bool httplib::\+detail::\+\+Path\+Params\+Matcher::\+match (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&}]{request}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classhttplib_1_1detail_1_1_matcher_base}{httplib::\+detail::\+\+Matcher\+Base}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+server/\+httplib.\+h\end{DoxyCompactItemize}

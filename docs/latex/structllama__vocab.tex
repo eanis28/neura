@@ -1,0 +1,204 @@
+\doxysection{llama\+\_\+vocab Struct Reference}
+\hypertarget{structllama__vocab}{}\label{structllama__vocab}\index{llama\_vocab@{llama\_vocab}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structllama__vocab_1_1token__data}{token\+\_\+data}}
+\item 
+struct \doxymbox{\hyperlink{structllama__vocab_1_1impl}{impl}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__vocab_adb7f502de49e406c7e3c63036547bbfa}\label{structllama__vocab_adb7f502de49e406c7e3c63036547bbfa} 
+void {\bfseries load} (\doxymbox{\hyperlink{structllama__model__loader}{llama\+\_\+model\+\_\+loader}} \&ml, const \doxymbox{\hyperlink{struct_l_l_m___k_v}{LLM\+\_\+\+KV}} \&kv)
+\item 
+\Hypertarget{structllama__vocab_ad298b4d44105afab9d8496871453bd07}\label{structllama__vocab_ad298b4d44105afab9d8496871453bd07} 
+std::\+string {\bfseries get\+\_\+tokenizer\+\_\+model} () const
+\item 
+\Hypertarget{structllama__vocab_ae0649d807c57e47f3c56625542161462}\label{structllama__vocab_ae0649d807c57e47f3c56625542161462} 
+std::\+string {\bfseries get\+\_\+tokenizer\+\_\+pre} () const
+\item 
+\Hypertarget{structllama__vocab_abadcfad3f1c764906974badf8988359e}\label{structllama__vocab_abadcfad3f1c764906974badf8988359e} 
+enum llama\+\_\+vocab\+\_\+type {\bfseries get\+\_\+type} () const
+\item 
+\Hypertarget{structllama__vocab_a6a048ea49af70576757ba217f54427d3}\label{structllama__vocab_a6a048ea49af70576757ba217f54427d3} 
+enum llama\+\_\+vocab\+\_\+pre\+\_\+type {\bfseries get\+\_\+pre\+\_\+type} () const
+\item 
+\Hypertarget{structllama__vocab_a5794f8b6b307b8cfe1e58d8200936d04}\label{structllama__vocab_a5794f8b6b307b8cfe1e58d8200936d04} 
+uint32\+\_\+t {\bfseries n\+\_\+tokens} () const
+\item 
+\Hypertarget{structllama__vocab_a147461bebf3a2dc39d79c4708fec09bd}\label{structllama__vocab_a147461bebf3a2dc39d79c4708fec09bd} 
+uint32\+\_\+t {\bfseries n\+\_\+token\+\_\+types} () const
+\item 
+\Hypertarget{structllama__vocab_aa41a62584966b706fcc90f1c044b08bb}\label{structllama__vocab_aa41a62584966b706fcc90f1c044b08bb} 
+std::\+string {\bfseries type\+\_\+name} () const
+\item 
+\Hypertarget{structllama__vocab_ac2011fbc9b70a8bb0e192290ebc7307b}\label{structllama__vocab_ac2011fbc9b70a8bb0e192290ebc7307b} 
+bool {\bfseries is\+\_\+normal} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_aaeb2d1a79179a23123b8a54b707d87ee}\label{structllama__vocab_aaeb2d1a79179a23123b8a54b707d87ee} 
+bool {\bfseries is\+\_\+unknown} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a13d22711ef12ef2ed2a917f25f217414}\label{structllama__vocab_a13d22711ef12ef2ed2a917f25f217414} 
+bool {\bfseries is\+\_\+control} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a42fe5b803e9282da7a0e8c51e81c2a9e}\label{structllama__vocab_a42fe5b803e9282da7a0e8c51e81c2a9e} 
+bool {\bfseries is\+\_\+byte} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a689b0824740860093e99064253a658b5}\label{structllama__vocab_a689b0824740860093e99064253a658b5} 
+bool {\bfseries is\+\_\+user\+\_\+defined} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a0206c3c4dba59dd4977d3071493f360c}\label{structllama__vocab_a0206c3c4dba59dd4977d3071493f360c} 
+bool {\bfseries is\+\_\+unused} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a9eacfaae324bd99174c95704922b334e}\label{structllama__vocab_a9eacfaae324bd99174c95704922b334e} 
+bool {\bfseries is\+\_\+eog} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a454ba0322a743b3e1d24e0258f2b8595}\label{structllama__vocab_a454ba0322a743b3e1d24e0258f2b8595} 
+uint8\+\_\+t {\bfseries token\+\_\+to\+\_\+byte} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a378d1f0ae014af0b0518917aa9e6e532}\label{structllama__vocab_a378d1f0ae014af0b0518917aa9e6e532} 
+llama\+\_\+token {\bfseries byte\+\_\+to\+\_\+token} (uint8\+\_\+t ch) const
+\item 
+\Hypertarget{structllama__vocab_a9c5dfaad35219b95de0a45595399fc50}\label{structllama__vocab_a9c5dfaad35219b95de0a45595399fc50} 
+llama\+\_\+token {\bfseries text\+\_\+to\+\_\+token} (const std::\+string \&text) const
+\item 
+\Hypertarget{structllama__vocab_af38dd6c6c4f7ef53466e63668fca7251}\label{structllama__vocab_af38dd6c6c4f7ef53466e63668fca7251} 
+const \doxymbox{\hyperlink{structllama__vocab_1_1token__data}{token\+\_\+data}} \& {\bfseries get\+\_\+token\+\_\+data} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a5dc9ea53814efeef85827d0d03d2da9f}\label{structllama__vocab_a5dc9ea53814efeef85827d0d03d2da9f} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries token\+\_\+get\+\_\+text} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_aa9615fa044e4b390596f6a3b7fb04438}\label{structllama__vocab_aa9615fa044e4b390596f6a3b7fb04438} 
+float {\bfseries token\+\_\+get\+\_\+score} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a5bfa463539458687d36b5653b37b19b1}\label{structllama__vocab_a5bfa463539458687d36b5653b37b19b1} 
+llama\+\_\+token\+\_\+attr {\bfseries token\+\_\+get\+\_\+attr} (llama\+\_\+token id) const
+\item 
+\Hypertarget{structllama__vocab_a737c4c7cf5bc6153f67d7998e768ca3a}\label{structllama__vocab_a737c4c7cf5bc6153f67d7998e768ca3a} 
+llama\+\_\+token {\bfseries token\+\_\+bos} () const
+\item 
+\Hypertarget{structllama__vocab_a63f3faad647c170442db6b4cd2776389}\label{structllama__vocab_a63f3faad647c170442db6b4cd2776389} 
+llama\+\_\+token {\bfseries token\+\_\+eos} () const
+\item 
+\Hypertarget{structllama__vocab_a26936c790a581aa53cafe66349edc0b2}\label{structllama__vocab_a26936c790a581aa53cafe66349edc0b2} 
+llama\+\_\+token {\bfseries token\+\_\+eot} () const
+\item 
+\Hypertarget{structllama__vocab_ab0e5c38408c34d26f5f6958c42cd88a5}\label{structllama__vocab_ab0e5c38408c34d26f5f6958c42cd88a5} 
+llama\+\_\+token {\bfseries token\+\_\+eom} () const
+\item 
+\Hypertarget{structllama__vocab_a913ccebae6b6cbea2cb107c28b4fd69c}\label{structllama__vocab_a913ccebae6b6cbea2cb107c28b4fd69c} 
+llama\+\_\+token {\bfseries token\+\_\+unk} () const
+\item 
+\Hypertarget{structllama__vocab_aadc7b032ff76e5a1032c0a8435039499}\label{structllama__vocab_aadc7b032ff76e5a1032c0a8435039499} 
+llama\+\_\+token {\bfseries token\+\_\+sep} () const
+\item 
+\Hypertarget{structllama__vocab_a0e5e89fb27a9f800d5319b5c48ed5113}\label{structllama__vocab_a0e5e89fb27a9f800d5319b5c48ed5113} 
+llama\+\_\+token {\bfseries token\+\_\+nl} () const
+\item 
+\Hypertarget{structllama__vocab_ab85618a320bbfb5dde6b297854220674}\label{structllama__vocab_ab85618a320bbfb5dde6b297854220674} 
+llama\+\_\+token {\bfseries token\+\_\+pad} () const
+\item 
+\Hypertarget{structllama__vocab_a3c8b6ef8145e8b71416ae0a493ccb102}\label{structllama__vocab_a3c8b6ef8145e8b71416ae0a493ccb102} 
+llama\+\_\+token {\bfseries token\+\_\+mask} () const
+\item 
+\Hypertarget{structllama__vocab_abd34816e2111557c6779dbb65f4714a6}\label{structllama__vocab_abd34816e2111557c6779dbb65f4714a6} 
+llama\+\_\+token {\bfseries token\+\_\+prefix} () const
+\item 
+\Hypertarget{structllama__vocab_a7ad4ffc4efcf75c8bfcc90e8463d1bde}\label{structllama__vocab_a7ad4ffc4efcf75c8bfcc90e8463d1bde} 
+llama\+\_\+token {\bfseries token\+\_\+middle} () const
+\item 
+\Hypertarget{structllama__vocab_a57d5e03d2730b67f498ea5639dde6d31}\label{structllama__vocab_a57d5e03d2730b67f498ea5639dde6d31} 
+llama\+\_\+token {\bfseries token\+\_\+suffix} () const
+\item 
+\Hypertarget{structllama__vocab_aebd9fa7c8e813efdf0538373527c4405}\label{structllama__vocab_aebd9fa7c8e813efdf0538373527c4405} 
+llama\+\_\+token {\bfseries token\+\_\+fim\+\_\+pre} () const
+\item 
+\Hypertarget{structllama__vocab_ad9d3f9636608cc3e6ed63268a6a2fd7f}\label{structllama__vocab_ad9d3f9636608cc3e6ed63268a6a2fd7f} 
+llama\+\_\+token {\bfseries token\+\_\+fim\+\_\+suf} () const
+\item 
+\Hypertarget{structllama__vocab_a64f1332ce78afc9504e8517c89fe4f23}\label{structllama__vocab_a64f1332ce78afc9504e8517c89fe4f23} 
+llama\+\_\+token {\bfseries token\+\_\+fim\+\_\+mid} () const
+\item 
+\Hypertarget{structllama__vocab_adee460587706f11183bd91406ab8cb5f}\label{structllama__vocab_adee460587706f11183bd91406ab8cb5f} 
+llama\+\_\+token {\bfseries token\+\_\+fim\+\_\+pad} () const
+\item 
+\Hypertarget{structllama__vocab_a9d0b3f77a786c0a3598bf7f4b4138ecb}\label{structllama__vocab_a9d0b3f77a786c0a3598bf7f4b4138ecb} 
+llama\+\_\+token {\bfseries token\+\_\+fim\+\_\+rep} () const
+\item 
+\Hypertarget{structllama__vocab_ae06e56cf92dc9b728bbf1a67faf165ea}\label{structllama__vocab_ae06e56cf92dc9b728bbf1a67faf165ea} 
+llama\+\_\+token {\bfseries token\+\_\+fim\+\_\+sep} () const
+\item 
+\Hypertarget{structllama__vocab_a5c43e6ae15c81d9c702f0d87be8e1365}\label{structllama__vocab_a5c43e6ae15c81d9c702f0d87be8e1365} 
+bool {\bfseries get\+\_\+add\+\_\+space\+\_\+prefix} () const
+\item 
+\Hypertarget{structllama__vocab_aa3afc2b10027cffbbdfe9d101af7adfd}\label{structllama__vocab_aa3afc2b10027cffbbdfe9d101af7adfd} 
+bool {\bfseries get\+\_\+add\+\_\+bos} () const
+\item 
+\Hypertarget{structllama__vocab_a5afa5e6279e3347569a6c73f466bfdff}\label{structllama__vocab_a5afa5e6279e3347569a6c73f466bfdff} 
+bool {\bfseries get\+\_\+add\+\_\+eos} () const
+\item 
+\Hypertarget{structllama__vocab_a8f4c428d8ddc9f5e6ce9384940c9324f}\label{structllama__vocab_a8f4c428d8ddc9f5e6ce9384940c9324f} 
+bool {\bfseries get\+\_\+add\+\_\+sep} () const
+\item 
+\Hypertarget{structllama__vocab_aef486e37ecaaba50f5d8bf0bcdccd8eb}\label{structllama__vocab_aef486e37ecaaba50f5d8bf0bcdccd8eb} 
+bool {\bfseries get\+\_\+ignore\+\_\+merges} () const
+\item 
+\Hypertarget{structllama__vocab_a18c2592e8b99c9a297dde705465adb81}\label{structllama__vocab_a18c2592e8b99c9a297dde705465adb81} 
+bool {\bfseries get\+\_\+clean\+\_\+spaces} () const
+\item 
+\Hypertarget{structllama__vocab_a87c400dee25ff5ea9fd388d81b5ef06d}\label{structllama__vocab_a87c400dee25ff5ea9fd388d81b5ef06d} 
+bool {\bfseries get\+\_\+remove\+\_\+extra\+\_\+whitespaces} () const
+\item 
+\Hypertarget{structllama__vocab_a5e862603f748805b140dd0e7a60d07c8}\label{structllama__vocab_a5e862603f748805b140dd0e7a60d07c8} 
+bool {\bfseries get\+\_\+escape\+\_\+whitespaces} () const
+\item 
+\Hypertarget{structllama__vocab_a2869650f8b6a8c25fcc57f690b0b8312}\label{structllama__vocab_a2869650f8b6a8c25fcc57f690b0b8312} 
+bool {\bfseries get\+\_\+treat\+\_\+whitespace\+\_\+as\+\_\+suffix} () const
+\item 
+\Hypertarget{structllama__vocab_a77b2beba6918f585c975caed2eab4f35}\label{structllama__vocab_a77b2beba6918f585c975caed2eab4f35} 
+int {\bfseries max\+\_\+token\+\_\+len} () const
+\item 
+\Hypertarget{structllama__vocab_a5dc4754dd865fe845697d88e368e95ca}\label{structllama__vocab_a5dc4754dd865fe845697d88e368e95ca} 
+int {\bfseries find\+\_\+bpe\+\_\+rank} (const std::\+string \&token\+\_\+left, const std::\+string \&token\+\_\+right) const
+\item 
+\Hypertarget{structllama__vocab_a185835f6d584f4bcf3dee61fb8870938}\label{structllama__vocab_a185835f6d584f4bcf3dee61fb8870938} 
+std::\+vector$<$ std::\+string $>$ {\bfseries get\+\_\+bpe\+\_\+merges} () const
+\item 
+\Hypertarget{structllama__vocab_add4861a62a3865b73210a75efdc284dd}\label{structllama__vocab_add4861a62a3865b73210a75efdc284dd} 
+std::\+vector$<$ char $>$ {\bfseries get\+\_\+precompiled\+\_\+charsmap} () const
+\item 
+\Hypertarget{structllama__vocab_a0da0be8895cc362de8a02e6c22aabbcd}\label{structllama__vocab_a0da0be8895cc362de8a02e6c22aabbcd} 
+int32\+\_\+t {\bfseries tokenize} (const char \texorpdfstring{$\ast$}{*}text, int32\+\_\+t text\+\_\+len, llama\+\_\+token \texorpdfstring{$\ast$}{*}tokens, int32\+\_\+t n\+\_\+tokens\+\_\+max, bool add\+\_\+special, bool parse\+\_\+special) const
+\item 
+\Hypertarget{structllama__vocab_ac234d9b69f2e860b160885f98f2c10d5}\label{structllama__vocab_ac234d9b69f2e860b160885f98f2c10d5} 
+std::\+vector$<$ llama\+\_\+token $>$ {\bfseries tokenize} (const std::\+string \&raw\+\_\+text, bool add\+\_\+special, bool parse\+\_\+special=false) const
+\item 
+\Hypertarget{structllama__vocab_a05127d8bbcb58f211072ae8fd6110c0a}\label{structllama__vocab_a05127d8bbcb58f211072ae8fd6110c0a} 
+int32\+\_\+t {\bfseries token\+\_\+to\+\_\+piece} (llama\+\_\+token token, char \texorpdfstring{$\ast$}{*}buf, int32\+\_\+t length, int32\+\_\+t lstrip, bool special) const
+\item 
+\Hypertarget{structllama__vocab_afce29a02ddbf653eb07726410cfce7b7}\label{structllama__vocab_afce29a02ddbf653eb07726410cfce7b7} 
+const std::\+string \& {\bfseries token\+\_\+to\+\_\+piece} (llama\+\_\+token token) const
+\item 
+\Hypertarget{structllama__vocab_af2b22c27ab5e0a90943f05599d96f177}\label{structllama__vocab_af2b22c27ab5e0a90943f05599d96f177} 
+int32\+\_\+t {\bfseries detokenize} (const llama\+\_\+token \texorpdfstring{$\ast$}{*}tokens, int32\+\_\+t n\+\_\+tokens, char \texorpdfstring{$\ast$}{*}text, int32\+\_\+t text\+\_\+len\+\_\+max, bool remove\+\_\+special, bool unparse\+\_\+special) const
+\item 
+\Hypertarget{structllama__vocab_af6ed8d761bedd67ae1d9f6c9fd2118bd}\label{structllama__vocab_af6ed8d761bedd67ae1d9f6c9fd2118bd} 
+std::\+string {\bfseries detokenize} (const std::\+vector$<$ llama\+\_\+token $>$ \&tokens, bool special) const
+\item 
+\Hypertarget{structllama__vocab_a7683bdf20445a6b86a7d5896f25a5265}\label{structllama__vocab_a7683bdf20445a6b86a7d5896f25a5265} 
+void {\bfseries print\+\_\+info} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__vocab_adcc4ab06313f046a897b52f6b138cfce}\label{structllama__vocab_adcc4ab06313f046a897b52f6b138cfce} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structllama__vocab_1_1impl}{impl}} $>$ {\bfseries pimpl}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/vocab.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/vocab.\+cpp\end{DoxyCompactItemize}

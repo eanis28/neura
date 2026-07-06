@@ -1,0 +1,153 @@
+\doxysection{dpct::\+detail::\+device\+\_\+memory\texorpdfstring{$<$}{<} T, Memory, Dimension \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classdpct_1_1detail_1_1device__memory}{}\label{classdpct_1_1detail_1_1device__memory}\index{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}}
+
+
+Device variable with address space of shared, global or constant.  
+
+
+
+
+{\ttfamily \+\#include $<$helper.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory_ad78e051dd1ce896b57754c4038933696}{accessor\+\_\+t}}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_ab2db2dcca452017a1d7b9ee19d176ba3}\label{classdpct_1_1detail_1_1device__memory_ab2db2dcca452017a1d7b9ee19d176ba3} 
+using {\bfseries value\+\_\+t} = typename \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits}{detail::\+memory\+\_\+traits}}$<$Memory, T$>$::\+value\+\_\+t
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a96d9d8551b67f845981b86f8875ef84c}\label{classdpct_1_1detail_1_1device__memory_a96d9d8551b67f845981b86f8875ef84c} 
+using {\bfseries dpct\+\_\+accessor\+\_\+t} = \doxymbox{\hyperlink{classdpct_1_1accessor}{dpct::\+accessor}}$<$T, Memory, Dimension$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a79037765988841c3a623eb66f10a8af2}\label{classdpct_1_1detail_1_1device__memory_a79037765988841c3a623eb66f10a8af2} 
+{\bfseries device\+\_\+memory} (const sycl::\+range$<$ Dimension $>$ \&in\+\_\+range, std::\+initializer\+\_\+list$<$ value\+\_\+t $>$ \&\&init\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Constructor of 1-\/D array with initializer list. \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a9f35f9655e8d364a6757a28d9c271bee}\label{classdpct_1_1detail_1_1device__memory_a9f35f9655e8d364a6757a28d9c271bee} 
+{\footnotesize template$<$size\+\_\+t D = Dimension$>$ }\\{\bfseries device\+\_\+memory} (const typename std::\+enable\+\_\+if$<$ D==2, sycl::\+range$<$ 2 $>$ $>$::\+type \&in\+\_\+range, std::\+initializer\+\_\+list$<$ std::\+initializer\+\_\+list$<$ value\+\_\+t $>$ $>$ \&\&init\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Constructor of 2-\/D array with initializer list. \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_af6e4823e22a5f2d1d73cbe6852d29f93}\label{classdpct_1_1detail_1_1device__memory_af6e4823e22a5f2d1d73cbe6852d29f93} 
+{\bfseries device\+\_\+memory} (const sycl::\+range$<$ Dimension $>$ \&range\+\_\+in)
+\begin{DoxyCompactList}\small\item\em Constructor with range. \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_abd8a443834ecbf1f013765be3095434b}\label{classdpct_1_1detail_1_1device__memory_abd8a443834ecbf1f013765be3095434b} 
+{\footnotesize template$<$class... Args$>$ }\\{\bfseries device\+\_\+memory} (Args... Arguments)
+\begin{DoxyCompactList}\small\item\em Constructor with range. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory_a16a88b8aad6957dab551276d969708c5}{init}} ()
+\item 
+void \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory_aa629c1c95cc2023d4e3231137b968efc}{init}} (sycl::\+queue \&q)
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a67ace7b6d377dedded5c06d5b84195b3}\label{classdpct_1_1detail_1_1device__memory_a67ace7b6d377dedded5c06d5b84195b3} 
+void {\bfseries assign} (value\+\_\+t \texorpdfstring{$\ast$}{*}src, size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} variable is assigned to a device pointer. \end{DoxyCompactList}\item 
+value\+\_\+t \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory_aa67663d79a6f9c3ba1f3272890734911}{get\+\_\+ptr}} ()
+\item 
+value\+\_\+t \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory_a6f06b692910857f1e4c41941b2e31b22}{get\+\_\+ptr}} (sycl::\+queue \&q)
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a84ba83a7e4b876dd30908fc7ab77363e}\label{classdpct_1_1detail_1_1device__memory_a84ba83a7e4b876dd30908fc7ab77363e} 
+size\+\_\+t {\bfseries get\+\_\+size} ()
+\begin{DoxyCompactList}\small\item\em Get the device memory object size in bytes. \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a79e2fcc8511f7e4e4f52a4f84ebe5a85}\label{classdpct_1_1detail_1_1device__memory_a79e2fcc8511f7e4e4f52a4f84ebe5a85} 
+{\footnotesize template$<$size\+\_\+t D = Dimension$>$ }\\std::\+enable\+\_\+if$<$ D==1, T $>$::\+type \& {\bfseries operator\+[$\,$]\+} (size\+\_\+t index)
+\item 
+{\footnotesize template$<$size\+\_\+t D = Dimension$>$ }\\std::\+enable\+\_\+if$<$ D!=1, dpct\+\_\+accessor\+\_\+t $>$::\+type \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory_a5321c3c542bacc7d9f8920985b0e02be}{get\+\_\+access}} (sycl::\+handler \&cgh)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a798463fd82b9ccc198947ea42ad57b19}\label{classdpct_1_1detail_1_1device__memory_a798463fd82b9ccc198947ea42ad57b19} 
+{\bfseries device\+\_\+memory} (value\+\_\+t \texorpdfstring{$\ast$}{*}memory\+\_\+ptr, size\+\_\+t size)
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_ac0d15e05bfcd286913a81ed3b6a150db}\label{classdpct_1_1detail_1_1device__memory_ac0d15e05bfcd286913a81ed3b6a150db} 
+void {\bfseries allocate\+\_\+device} (sycl::\+queue \&q)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a1c2d0c1b915e58eca916f5b3532c2ec1}\label{classdpct_1_1detail_1_1device__memory_a1c2d0c1b915e58eca916f5b3532c2ec1} 
+size\+\_\+t {\bfseries \+\_\+size}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a2879fce2c43bd260f95a77129658959b}\label{classdpct_1_1detail_1_1device__memory_a2879fce2c43bd260f95a77129658959b} 
+sycl::\+range$<$ Dimension $>$ {\bfseries \+\_\+range}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a573bb48a3988ee7f414222fb58d83891}\label{classdpct_1_1detail_1_1device__memory_a573bb48a3988ee7f414222fb58d83891} 
+bool {\bfseries \+\_\+reference}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a9e5d963ca4274d54b6320cc86f9b7a3e}\label{classdpct_1_1detail_1_1device__memory_a9e5d963ca4274d54b6320cc86f9b7a3e} 
+value\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries \+\_\+host\+\_\+ptr}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a35337b46d49301dc3d233bec951038c6}\label{classdpct_1_1detail_1_1device__memory_a35337b46d49301dc3d233bec951038c6} 
+value\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries \+\_\+device\+\_\+ptr}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$class T, memory\+\_\+region Memory, size\+\_\+t Dimension$>$\newline
+class dpct::\+detail::\+device\+\_\+memory$<$ T, Memory, Dimension $>$}
+Device variable with address space of shared, global or constant. 
+
+\label{doc-typedef-members}
+\Hypertarget{classdpct_1_1detail_1_1device__memory_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classdpct_1_1detail_1_1device__memory_ad78e051dd1ce896b57754c4038933696}\index{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}!accessor\_t@{accessor\_t}}
+\index{accessor\_t@{accessor\_t}!dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}}
+\doxysubsubsection{\texorpdfstring{accessor\_t}{accessor\_t}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1device__memory_ad78e051dd1ce896b57754c4038933696} 
+template$<$class T, memory\+\_\+region Memory, size\+\_\+t Dimension$>$ \\
+using \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory}{dpct::\+detail::\+device\+\_\+memory}}$<$ T, Memory, Dimension $>$::\+accessor\+\_\+t}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{typename}\ \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits}{detail::memory\_traits}}<Memory,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T>::template\ accessor\_t<Dimension>}
+
+\end{DoxyCode}
+
+
+\label{doc-func-members}
+\Hypertarget{classdpct_1_1detail_1_1device__memory_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classdpct_1_1detail_1_1device__memory_a5321c3c542bacc7d9f8920985b0e02be}\index{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}!get\_access@{get\_access}}
+\index{get\_access@{get\_access}!dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}}
+\doxysubsubsection{\texorpdfstring{get\_access()}{get\_access()}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1device__memory_a5321c3c542bacc7d9f8920985b0e02be} 
+template$<$class T, memory\+\_\+region Memory, size\+\_\+t Dimension$>$ \\
+template$<$size\+\_\+t D = Dimension$>$ \\
+std::\+enable\+\_\+if$<$ D!=1, dpct\+\_\+accessor\+\_\+t $>$::\+type \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory}{dpct::\+detail::\+device\+\_\+memory}}$<$ T, Memory, Dimension $>$::\+get\+\_\+access (\begin{DoxyParamCaption}\item[{sycl::\+handler \&}]{cgh}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Get \doxylink{classdpct_1_1accessor}{dpct::\+accessor} with dimension info for the device memory object when usm is used and dimension is greater than 1. \Hypertarget{classdpct_1_1detail_1_1device__memory_aa67663d79a6f9c3ba1f3272890734911}\index{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}!get\_ptr@{get\_ptr}}
+\index{get\_ptr@{get\_ptr}!dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ptr()}{get\_ptr()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1device__memory_aa67663d79a6f9c3ba1f3272890734911} 
+template$<$class T, memory\+\_\+region Memory, size\+\_\+t Dimension$>$ \\
+value\+\_\+t \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory}{dpct::\+detail::\+device\+\_\+memory}}$<$ T, Memory, Dimension $>$::\+get\+\_\+ptr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Get memory pointer of the memory object, which is virtual pointer when usm is not used, and device pointer when usm is used. \Hypertarget{classdpct_1_1detail_1_1device__memory_a6f06b692910857f1e4c41941b2e31b22}\index{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}!get\_ptr@{get\_ptr}}
+\index{get\_ptr@{get\_ptr}!dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ptr()}{get\_ptr()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1device__memory_a6f06b692910857f1e4c41941b2e31b22} 
+template$<$class T, memory\+\_\+region Memory, size\+\_\+t Dimension$>$ \\
+value\+\_\+t \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory}{dpct::\+detail::\+device\+\_\+memory}}$<$ T, Memory, Dimension $>$::\+get\+\_\+ptr (\begin{DoxyParamCaption}\item[{sycl::\+queue \&}]{q}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Get memory pointer of the memory object, which is virtual pointer when usm is not used, and device pointer when usm is used. \Hypertarget{classdpct_1_1detail_1_1device__memory_a16a88b8aad6957dab551276d969708c5}\index{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}!init@{init}}
+\index{init@{init}!dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1device__memory_a16a88b8aad6957dab551276d969708c5} 
+template$<$class T, memory\+\_\+region Memory, size\+\_\+t Dimension$>$ \\
+void \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory}{dpct::\+detail::\+device\+\_\+memory}}$<$ T, Memory, Dimension $>$::\+init (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Allocate memory with default queue, and init memory if has initial value. \Hypertarget{classdpct_1_1detail_1_1device__memory_aa629c1c95cc2023d4e3231137b968efc}\index{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}!init@{init}}
+\index{init@{init}!dpct::detail::device\_memory$<$ T, Memory, Dimension $>$@{dpct::detail::device\_memory$<$ T, Memory, Dimension $>$}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1device__memory_aa629c1c95cc2023d4e3231137b968efc} 
+template$<$class T, memory\+\_\+region Memory, size\+\_\+t Dimension$>$ \\
+void \doxymbox{\hyperlink{classdpct_1_1detail_1_1device__memory}{dpct::\+detail::\+device\+\_\+memory}}$<$ T, Memory, Dimension $>$::\+init (\begin{DoxyParamCaption}\item[{sycl::\+queue \&}]{q}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Allocate memory with specified queue, and init memory if has initial value. 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+dpct/\+helper.\+hpp\end{DoxyCompactItemize}

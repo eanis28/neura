@@ -1,0 +1,71 @@
+\doxysection{config.\+h}
+\hypertarget{config_8h_source}{}\label{config_8h_source}\doxymbox{\hyperlink{config_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_a_p_i_settings}{APISettings}}\ \{}
+\DoxyCodeLine{00027\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ ──\ OpenWeatherMap\ ────────────────────────────────────────────────────────}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_settings_a4aee65699f710a8452e75be8d8814f6e}{weatherApiKey}};\ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{//\ ──\ YouTube\ Data\ API\ v3\ ───────────────────────────────────────────────────}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_settings_af9146b7452ec1f79b492f0c375285f11}{youtubeApiKey}};\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ ──\ Google\ OAuth\ 2.0\ ─────────────────────────────────────────────────────}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00046\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_settings_a7523042c9fdfa5ab07a017bea3972efe}{googleClientId}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00054\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_settings_a8fdeaa4ec181dd4aa669977e5193be05}{googleClientSecret}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00067\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_settings_ac4ebb2b0678091b52c5c7964be2ba156}{googleRefreshToken}};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00076\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_settings_a3cc06037cc3a88d21f2aad6eb18d4664}{googleCalendarId}}\ =\ \textcolor{stringliteral}{"{}primary"{}};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//\ ──\ Base\ URLs\ ─────────────────────────────────────────────────────────────}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_settings_af3d6db7286e10de8760da6311facf0fc}{weatherBaseUrl}}\ \ \ \ =\ \textcolor{stringliteral}{"{}https://api.openweathermap.org/data/2.5"{}};\ }
+\DoxyCodeLine{00081\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_settings_a52cfd2f7cf9ec24dd400e0b4fb775bc1}{googleCalendarUrl}}\ =\ \textcolor{stringliteral}{"{}https://www.googleapis.com/calendar/v3"{}};\ \ }
+\DoxyCodeLine{00082\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_settings_aca47da52a869156c04e210d2d4b9d3cb}{googleTokenUrl}}\ \ \ \ =\ \textcolor{stringliteral}{"{}https://oauth2.googleapis.com/token"{}};\ \ \ \ \ }
+\DoxyCodeLine{00083\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_permissions}{Permissions}}\ \{}
+\DoxyCodeLine{00095\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_permissions_a3db1042ccf6e76cfe250cfdc44f53a1a}{allowMediaControl}}\ \ \ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_permissions_a12ca5f659600391d70a2eeb111ea3ffb}{allowWeatherLookup}}\ \ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_permissions_a9e664540253f339b2a0a0ad04bfa7321}{allowCalendarWrite}}\ \ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_permissions_aeadec92add6467ec30ded163561f6c1a}{allowLocationAccess}}\ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_permissions_ab2358a501c651dc9bcaa6c41ab06e904}{hasPermission}}(\textcolor{keyword}{const}\ std::string\&\ feature)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_permissions_af1de5079834ea2198f81f444cf050f7c}{requestPermission}}(\textcolor{keyword}{const}\ std::string\&\ feature);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00136\ \ \ \ \ std::map<std::string,\ bool*>\ \doxymbox{\hyperlink{class_permissions_a6002e5eeafaa654d8214f81f83ec3355}{fieldMap}}();}
+\DoxyCodeLine{00137\ \};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00148\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_configuration_aabdc48217656d7995a62b1f9ab34ae39}{Configuration}}\ \{}
+\DoxyCodeLine{00149\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00150\ \ \ \ \ \doxymbox{\hyperlink{class_a_p_i_settings}{APISettings}}\ \doxymbox{\hyperlink{class_configuration_a228eba6d8f5fb450d0a052f4b255ef03}{apiSettings}};\ \ \ }
+\DoxyCodeLine{00151\ \ \ \ \ \doxymbox{\hyperlink{class_permissions}{Permissions}}\ \doxymbox{\hyperlink{class_configuration_a77f82f53bcc2b383b25122848dc0c2e5}{permissions}};\ \ \ }
+\DoxyCodeLine{00152\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_configuration_af140111a604721d3c1345208c841809e}{defaultLocation}};\ }
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_configuration_aabdc48217656d7995a62b1f9ab34ae39}{Configuration}}(\textcolor{keyword}{const}\ std::string\&\ \doxymbox{\hyperlink{class_configuration_ad3f429a629bd628080bbb44325aa13a4}{configFilePath}}\ =\ \textcolor{stringliteral}{"{}config.ini"{}});}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_configuration_adf2992468f43f18aa8acb7b4b9c9cf98}{load}}();}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_configuration_a7be34e96bb4bedaac932857e2e4622cf}{save}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_configuration_af7c5a269ab8c61d77216f1a6457715a1}{print}}(\textcolor{keywordtype}{bool}\ showSecrets\ =\ \textcolor{keyword}{false})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00199\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_configuration_ad3f429a629bd628080bbb44325aa13a4}{configFilePath}};\ }
+\DoxyCodeLine{00200\ \};}
+
+\end{DoxyCode}

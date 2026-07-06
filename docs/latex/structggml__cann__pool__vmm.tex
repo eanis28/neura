@@ -1,0 +1,137 @@
+\doxysection{ggml\+\_\+cann\+\_\+pool\+\_\+vmm Struct Reference}
+\hypertarget{structggml__cann__pool__vmm}{}\label{structggml__cann__pool__vmm}\index{ggml\_cann\_pool\_vmm@{ggml\_cann\_pool\_vmm}}
+
+
+A pool of CANN buffers with virtual memory.  
+
+
+Inheritance diagram for ggml\+\_\+cann\+\_\+pool\+\_\+vmm:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{structggml__cann__pool__vmm}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{structggml__cann__pool__vmm_a7c36e0efb8333c7350a7479b9b0a7b66}{ggml\+\_\+cann\+\_\+pool\+\_\+vmm}} (int \doxymbox{\hyperlink{structggml__cann__pool__vmm_aa16e8cd09ae4e67421184be869a6f196}{device}})
+\begin{DoxyCompactList}\small\item\em Constructor to initialize the buffer pool with virtual memory for a specific device. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__vmm_a66644a7482efd8e817241769a53f1c80}\label{structggml__cann__pool__vmm_a66644a7482efd8e817241769a53f1c80} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}ggml\+\_\+cann\+\_\+pool\+\_\+vmm} ()
+\begin{DoxyCompactList}\small\item\em Destructor to free all buffers in the virtual memory pool. \end{DoxyCompactList}\item 
+void \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__cann__pool__vmm_a42d6aaaa78dc61760d437173dbc854bb}{alloc}} (size\+\_\+t size, size\+\_\+t \texorpdfstring{$\ast$}{*}actual\+\_\+size) override
+\begin{DoxyCompactList}\small\item\em Allocate a buffer of the given size in the virtual memory pool. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{structggml__cann__pool__vmm_a2cd405d8b414c265bf453f4245912979}{free}} (void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t size) override
+\begin{DoxyCompactList}\small\item\em Free a buffer and return it to the virtual memory pool. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}ggml\+\_\+cann\+\_\+pool} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the memory pool. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__pool__vmm_a4028feac41f5b29748c43166888a7acf}\label{structggml__cann__pool__vmm_a4028feac41f5b29748c43166888a7acf} 
+size\+\_\+t {\bfseries max\+\_\+size}
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} maximum size of the virtual memory pool (32 GB). \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__vmm_aa16e8cd09ae4e67421184be869a6f196}\label{structggml__cann__pool__vmm_aa16e8cd09ae4e67421184be869a6f196} 
+int {\bfseries device}
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} device ID associated with this buffer pool. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__vmm_a11442c24addf9ccd0c6b0887df454e44}\label{structggml__cann__pool__vmm_a11442c24addf9ccd0c6b0887df454e44} 
+void \texorpdfstring{$\ast$}{*} {\bfseries pool\+\_\+addr} = 0
+\begin{DoxyCompactList}\small\item\em Pointer to the start of the virtual memory pool. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__vmm_a17a5b6a70219173c7af9c081e3ded230}\label{structggml__cann__pool__vmm_a17a5b6a70219173c7af9c081e3ded230} 
+size\+\_\+t {\bfseries pool\+\_\+used} = 0
+\begin{DoxyCompactList}\small\item\em Amount of virtual memory used in the pool. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__vmm_afd265f1bc14eabab76af95398712246d}\label{structggml__cann__pool__vmm_afd265f1bc14eabab76af95398712246d} 
+size\+\_\+t {\bfseries pool\+\_\+size} = 0
+\begin{DoxyCompactList}\small\item\em Total size of the virtual memory pool. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__vmm_a73ac9abe6ca315f44c28647a73199b9b}\label{structggml__cann__pool__vmm_a73ac9abe6ca315f44c28647a73199b9b} 
+size\+\_\+t {\bfseries granularity}
+\begin{DoxyCompactList}\small\item\em Allocation granularity for the virtual memory pool. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__vmm_add3abfde87a1eaab647f24367f72a7d7}\label{structggml__cann__pool__vmm_add3abfde87a1eaab647f24367f72a7d7} 
+std::\+vector$<$ aclrt\+Drv\+Mem\+Handle $>$ {\bfseries handles}
+\begin{DoxyCompactList}\small\item\em Handles for the physical memory allocated. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__vmm_a47b3da1fdd3c292cc6e39c967658d390}\label{structggml__cann__pool__vmm_a47b3da1fdd3c292cc6e39c967658d390} 
+std::\+vector$<$ void \texorpdfstring{$\ast$}{*} $>$ {\bfseries map\+\_\+offsets}
+\begin{DoxyCompactList}\small\item\em Offsets for the mapped memory regions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A pool of CANN buffers with virtual memory. 
+
+This class manages a pool of CANN buffers with virtual memory for a specific device. 
+
+\label{doc-constructors}
+\Hypertarget{structggml__cann__pool__vmm_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structggml__cann__pool__vmm_a7c36e0efb8333c7350a7479b9b0a7b66}\index{ggml\_cann\_pool\_vmm@{ggml\_cann\_pool\_vmm}!ggml\_cann\_pool\_vmm@{ggml\_cann\_pool\_vmm}}
+\index{ggml\_cann\_pool\_vmm@{ggml\_cann\_pool\_vmm}!ggml\_cann\_pool\_vmm@{ggml\_cann\_pool\_vmm}}
+\doxysubsubsection{\texorpdfstring{ggml\_cann\_pool\_vmm()}{ggml\_cann\_pool\_vmm()}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__vmm_a7c36e0efb8333c7350a7479b9b0a7b66} 
+ggml\+\_\+cann\+\_\+pool\+\_\+vmm::\+ggml\+\_\+cann\+\_\+pool\+\_\+vmm (\begin{DoxyParamCaption}\item[{int}]{device}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Constructor to initialize the buffer pool with virtual memory for a specific device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__cann__pool__vmm_aa16e8cd09ae4e67421184be869a6f196}{device}} & \doxylink{requirements_The}{The} device ID to associate with this buffer pool. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{structggml__cann__pool__vmm_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structggml__cann__pool__vmm_a42d6aaaa78dc61760d437173dbc854bb}\index{ggml\_cann\_pool\_vmm@{ggml\_cann\_pool\_vmm}!alloc@{alloc}}
+\index{alloc@{alloc}!ggml\_cann\_pool\_vmm@{ggml\_cann\_pool\_vmm}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__vmm_a42d6aaaa78dc61760d437173dbc854bb} 
+void \texorpdfstring{$\ast$}{*} ggml\+\_\+cann\+\_\+pool\+\_\+vmm::\+alloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{, }\item[{size\+\_\+t \texorpdfstring{$\ast$}{*}}]{actual\+\_\+size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Allocate a buffer of the given size in the virtual memory pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & \doxylink{requirements_The}{The} size of the buffer to allocate. \\
+\hline
+{\em actual\+\_\+size} & A pointer to a variable to receive the actual size of the allocated buffer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the allocated buffer. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{structggml__cann__pool_a1db69310420e48bc125a435b031bdc4d}{ggml\+\_\+cann\+\_\+pool}}.
+
+\Hypertarget{structggml__cann__pool__vmm_a2cd405d8b414c265bf453f4245912979}\index{ggml\_cann\_pool\_vmm@{ggml\_cann\_pool\_vmm}!free@{free}}
+\index{free@{free}!ggml\_cann\_pool\_vmm@{ggml\_cann\_pool\_vmm}}
+\doxysubsubsection{\texorpdfstring{free()}{free()}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__vmm_a2cd405d8b414c265bf453f4245912979} 
+void ggml\+\_\+cann\+\_\+pool\+\_\+vmm::\+free (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{ptr}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Free a buffer and return it to the virtual memory pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & Pointer to the buffer to free. \\
+\hline
+{\em size} & Size of the buffer to free. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{structggml__cann__pool_a8119eb4c8490390a7ebabbb94b40d1ee}{ggml\+\_\+cann\+\_\+pool}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+ggml-\/cann.\+cpp\end{DoxyCompactItemize}

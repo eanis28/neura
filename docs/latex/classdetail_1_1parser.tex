@@ -1,0 +1,135 @@
+\doxysection{detail::\+parser\texorpdfstring{$<$}{<} Basic\+Json\+Type, Input\+Adapter\+Type \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classdetail_1_1parser}{}\label{classdetail_1_1parser}\index{detail::parser$<$ BasicJsonType, InputAdapterType $>$@{detail::parser$<$ BasicJsonType, InputAdapterType $>$}}
+
+
+syntax analysis  
+
+
+
+
+{\ttfamily \+\#include $<$json.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1parser_a0a3b037c2a4d17c26321e9c9b7894138}\label{classdetail_1_1parser_a0a3b037c2a4d17c26321e9c9b7894138} 
+\texorpdfstring{$\ast$}{*}a parser reading from an input adapter {\bfseries parser} (Input\+Adapter\+Type \&\&adapter, const parser\+\_\+callback\+\_\+t$<$ Basic\+Json\+Type $>$ cb=nullptr, const bool allow\+\_\+exceptions\+\_\+=true, const bool skip\+\_\+comments=false)
+\item 
+void \doxymbox{\hyperlink{classdetail_1_1parser_a59f4b745d4aa146bf7a60a30060f592f}{parse}} (const bool strict, Basic\+Json\+Type \&result)
+\begin{DoxyCompactList}\small\item\em public parser interface \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1parser_ac46da3262cbe66ade670c5b4782451e6}{accept}} (const bool strict=true)
+\begin{DoxyCompactList}\small\item\em public accept interface \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1parser_ae9084759356689163fee9ae37e69b050}\label{classdetail_1_1parser_ae9084759356689163fee9ae37e69b050} 
+{\footnotesize template$<$typename SAX$>$ }\\bool {\bfseries sax\+\_\+parse} (SAX \texorpdfstring{$\ast$}{*}sax, const bool strict=true)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1parser_a7683a9158ce4bce1230abf48d15c1da0}\label{classdetail_1_1parser_a7683a9158ce4bce1230abf48d15c1da0} 
+using {\bfseries number\+\_\+integer\+\_\+t} = typename Basic\+Json\+Type::\+number\+\_\+integer\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1parser_a6acd62446c1f88b574fb4d7e27b887ab}\label{classdetail_1_1parser_a6acd62446c1f88b574fb4d7e27b887ab} 
+using {\bfseries number\+\_\+unsigned\+\_\+t} = typename Basic\+Json\+Type::\+number\+\_\+unsigned\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1parser_ad763b74978590fc53a665b2a78ca766d}\label{classdetail_1_1parser_ad763b74978590fc53a665b2a78ca766d} 
+using {\bfseries number\+\_\+float\+\_\+t} = typename Basic\+Json\+Type::\+number\+\_\+float\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1parser_a89e265606bf20dc438962e81fd457e24}\label{classdetail_1_1parser_a89e265606bf20dc438962e81fd457e24} 
+using {\bfseries string\+\_\+t} = typename Basic\+Json\+Type::\+string\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1parser_abd26815b29691d1f9f28f13695e28ca4}\label{classdetail_1_1parser_abd26815b29691d1f9f28f13695e28ca4} 
+using {\bfseries lexer\+\_\+t} = \doxymbox{\hyperlink{classdetail_1_1lexer}{lexer}}$<$Basic\+Json\+Type, Input\+Adapter\+Type$>$
+\item 
+\Hypertarget{classdetail_1_1parser_a51f4e69ac70697f34de5e02e670cc057}\label{classdetail_1_1parser_a51f4e69ac70697f34de5e02e670cc057} 
+using {\bfseries token\+\_\+type} = typename lexer\+\_\+t::\+token\+\_\+type
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1parser_a362fc204b9a1027d6288deabc3b3360a}\label{classdetail_1_1parser_a362fc204b9a1027d6288deabc3b3360a} 
+{\footnotesize template$<$typename SAX$>$ }\\bool {\bfseries sax\+\_\+parse\+\_\+internal} (SAX \texorpdfstring{$\ast$}{*}sax)
+\item 
+\Hypertarget{classdetail_1_1parser_a0034261459f19cb91e253129a2500ffa}\label{classdetail_1_1parser_a0034261459f19cb91e253129a2500ffa} 
+\texorpdfstring{$\ast$}{*}get next token from \doxymbox{\hyperlink{classdetail_1_1lexer}{lexer}} token\+\_\+type {\bfseries get\+\_\+token} ()
+\item 
+\Hypertarget{classdetail_1_1parser_a13621f12e55437efd6c1af970f071a92}\label{classdetail_1_1parser_a13621f12e55437efd6c1af970f071a92} 
+std::\+string {\bfseries exception\+\_\+message} (const token\+\_\+type expected, const std::\+string \&context)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1parser_a2d0238ef8c9750606eb0f494c4449b95}\label{classdetail_1_1parser_a2d0238ef8c9750606eb0f494c4449b95} 
+\texorpdfstring{$\ast$}{*}callback function const parser\+\_\+callback\+\_\+t$<$ Basic\+Json\+Type $>$ {\bfseries callback} = nullptr
+\item 
+\Hypertarget{classdetail_1_1parser_a23bd063f34bd576ca17a9da3fc1c19b2}\label{classdetail_1_1parser_a23bd063f34bd576ca17a9da3fc1c19b2} 
+\texorpdfstring{$\ast$}{*}the type of the last read token token\+\_\+type {\bfseries last\+\_\+token} = token\+\_\+type::\+uninitialized
+\item 
+\Hypertarget{classdetail_1_1parser_ad6470e300357310bd3f1e2a674bc6e73}\label{classdetail_1_1parser_ad6470e300357310bd3f1e2a674bc6e73} 
+\texorpdfstring{$\ast$}{*}the \doxymbox{\hyperlink{classdetail_1_1lexer}{lexer}} lexer\+\_\+t {\bfseries m\+\_\+lexer}
+\item 
+\Hypertarget{classdetail_1_1parser_af4dbdb7e99b6a9afdb55206ddec77e12}\label{classdetail_1_1parser_af4dbdb7e99b6a9afdb55206ddec77e12} 
+\texorpdfstring{$\ast$}{*}whether to throw exceptions in case of errors const bool {\bfseries allow\+\_\+exceptions} = true
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$\newline
+class detail::\+parser$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$}
+syntax analysis 
+
+This class implements a recursive descent parser. 
+
+\label{doc-func-members}
+\Hypertarget{classdetail_1_1parser_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classdetail_1_1parser_ac46da3262cbe66ade670c5b4782451e6}\index{detail::parser$<$ BasicJsonType, InputAdapterType $>$@{detail::parser$<$ BasicJsonType, InputAdapterType $>$}!accept@{accept}}
+\index{accept@{accept}!detail::parser$<$ BasicJsonType, InputAdapterType $>$@{detail::parser$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{accept()}{accept()}}
+{\footnotesize\ttfamily \label{classdetail_1_1parser_ac46da3262cbe66ade670c5b4782451e6} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1parser}{detail::\+parser}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+accept (\begin{DoxyParamCaption}\item[{const bool}]{strict}{ = {\ttfamily true}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+public accept interface 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em strict} & whether to expect the last token to be EOF \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether the input is a proper JSON text 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1parser_a59f4b745d4aa146bf7a60a30060f592f}\index{detail::parser$<$ BasicJsonType, InputAdapterType $>$@{detail::parser$<$ BasicJsonType, InputAdapterType $>$}!parse@{parse}}
+\index{parse@{parse}!detail::parser$<$ BasicJsonType, InputAdapterType $>$@{detail::parser$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{parse()}{parse()}}
+{\footnotesize\ttfamily \label{classdetail_1_1parser_a59f4b745d4aa146bf7a60a30060f592f} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+void \doxymbox{\hyperlink{classdetail_1_1parser}{detail::\+parser}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+parse (\begin{DoxyParamCaption}\item[{const bool}]{strict}{, }\item[{Basic\+Json\+Type \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+public parser interface 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em strict} & whether to expect the last token to be EOF \\
+\hline
+\doxymbox{\texttt{in,out}}  & {\em result} & parsed JSON value\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em parse\+\_\+error.\+101} & in case of an unexpected token \\
+\hline
+{\em parse\+\_\+error.\+102} & if to\+\_\+unicode fails or surrogate error \\
+\hline
+{\em parse\+\_\+error.\+103} & if to\+\_\+unicode fails \\
+\hline
+\end{DoxyExceptions}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+json.\+hpp\end{DoxyCompactItemize}

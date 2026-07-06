@@ -1,0 +1,298 @@
+\doxysection{hip.\+h}
+\hypertarget{hip_8h_source}{}\label{hip_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cuda/vendors/hip.h@{whisper.cpp/ggml/src/ggml-\/cuda/vendors/hip.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#define\ HIP\_DISABLE\_WARP\_SYNC\_BUILTINS\ 1}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <hip/hip\_runtime.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <hipblas/hipblas.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <hip/hip\_fp16.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <hip/hip\_bf16.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#if\ defined(GGML\_HIP\_ROCWMMA\_FATTN)}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <rocwmma/rocwmma-\/version.hpp>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(GGML\_HIP\_ROCWMMA\_FATTN)}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ CUBLAS\_GEMM\_DEFAULT\ HIPBLAS\_GEMM\_DEFAULT}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ CUBLAS\_GEMM\_DEFAULT\_TENSOR\_OP\ HIPBLAS\_GEMM\_DEFAULT}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ CUBLAS\_OP\_N\ HIPBLAS\_OP\_N}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ CUBLAS\_OP\_T\ HIPBLAS\_OP\_T}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_SUCCESS\ HIPBLAS\_STATUS\_SUCCESS}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ CUBLAS\_TF32\_TENSOR\_OP\_MATH\ 0}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ CUDA\_R\_16F\ \ HIPBLAS\_R\_16F}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ CUDA\_R\_16BF\ HIPBLAS\_R\_16B}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ CUDA\_R\_32F\ \ HIPBLAS\_R\_32F}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ CUBLAS\_SIDE\_RIGHT\ HIPBLAS\_SIDE\_RIGHT}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ CUBLAS\_FILL\_MODE\_UPPER\ HIPBLAS\_FILL\_MODE\_UPPER}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ CUBLAS\_DIAG\_NON\_UNIT\ HIPBLAS\_DIAG\_NON\_UNIT}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ CU\_DEVICE\_ATTRIBUTE\_VIRTUAL\_MEMORY\_MANAGEMENT\_SUPPORTED\ hipDeviceAttributeVirtualMemoryManagementSupported}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ CU\_MEM\_ALLOC\_GRANULARITY\_RECOMMENDED\ hipMemAllocationGranularityRecommended}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ CU\_MEM\_ALLOCATION\_TYPE\_PINNED\ hipMemAllocationTypePinned}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ CU\_MEM\_LOCATION\_TYPE\_DEVICE\ hipMemLocationTypeDevice}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ CU\_MEM\_ACCESS\_FLAGS\_PROT\_READWRITE\ hipMemAccessFlagsProtReadWrite}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ CU\_CHECK(fn)\ \{hipError\_t\ err\ =\ fn;\ if(err\ !=\ hipSuccess)\ \{\ GGML\_ABORT("{}HipVMM\ Failure:\ \%s\(\backslash\)n"{},\ hipGetErrorString(err));\ \}\}}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ \_\_shfl\_sync(mask,\ var,\ laneMask,\ width)\ \_\_shfl(var,\ laneMask,\ width)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ \_\_shfl\_up\_sync(mask,\ var,\ laneMask,\ width)\ \_\_shfl\_up(var,\ laneMask,\ width)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ \_\_shfl\_xor\_sync(mask,\ var,\ laneMask,\ width)\ \_\_shfl\_xor(var,\ laneMask,\ width)}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ \_\_all\_sync(mask,\ var)\ \_\_all(var)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ \_\_any\_sync(mask,\ var)\ \_\_any(var)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ cublasStrsmBatched\ hipblasStrsmBatched}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ cublasCreate\ hipblasCreate}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ cublasDestroy\ hipblasDestroy}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ cublasGemmEx\ hipblasGemmEx}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ cublasGemmBatchedEx\ hipblasGemmBatchedEx}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ cublasGemmStridedBatchedEx\ hipblasGemmStridedBatchedEx}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ cublasHandle\_t\ hipblasHandle\_t}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ cublasSetMathMode(handle,\ mode)\ CUBLAS\_STATUS\_SUCCESS}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ cublasSetStream\ hipblasSetStream}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ cublasSgemm\ hipblasSgemm}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ cublasStatus\_t\ hipblasStatus\_t}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ cublasOperation\_t\ hipblasOperation\_t}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ cudaDevAttrCooperativeLaunch\ hipDeviceAttributeCooperativeLaunch}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ cudaDeviceCanAccessPeer\ hipDeviceCanAccessPeer}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ cudaDeviceDisablePeerAccess\ hipDeviceDisablePeerAccess}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ cudaDeviceEnablePeerAccess\ hipDeviceEnablePeerAccess}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ cudaDeviceGetAttribute\ hipDeviceGetAttribute}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ cudaDeviceProp\ hipDeviceProp\_t}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ cudaDeviceSynchronize\ hipDeviceSynchronize}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ cudaError\_t\ hipError\_t}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ cudaErrorPeerAccessAlreadyEnabled\ hipErrorPeerAccessAlreadyEnabled}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ cudaErrorPeerAccessNotEnabled\ hipErrorPeerAccessNotEnabled}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ cudaEventCreateWithFlags\ hipEventCreateWithFlags}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ cudaEventDisableTiming\ hipEventDisableTiming}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ cudaEventRecord\ hipEventRecord}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ cudaEventSynchronize\ hipEventSynchronize}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ cudaEvent\_t\ hipEvent\_t}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ cudaEventDestroy\ hipEventDestroy}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ cudaFree\ hipFree}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ cudaFreeHost\ hipHostFree}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ cudaGetDevice\ hipGetDevice}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ cudaGetDeviceCount\ hipGetDeviceCount}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ cudaGetDeviceProperties\ hipGetDeviceProperties}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ cudaGetErrorString\ hipGetErrorString}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ cudaGetLastError\ hipGetLastError}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ cudaHostRegister\ hipHostRegister}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ cudaHostRegisterPortable\ hipHostRegisterPortable}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ cudaHostRegisterReadOnly\ hipHostRegisterReadOnly}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ cudaHostUnregister\ hipHostUnregister}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ cudaLaunchCooperativeKernel\ hipLaunchCooperativeKernel}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ cudaLaunchHostFunc\ hipLaunchHostFunc}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ cudaMalloc\ hipMalloc}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ cudaMallocHost(ptr,\ size)\ hipHostMalloc(ptr,\ size,\ hipHostMallocDefault)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ cudaMallocManaged\ hipMallocManaged}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ cudaMemAdvise\ hipMemAdvise}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ cudaMemcpy\ hipMemcpy}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ cudaMemcpyAsync\ hipMemcpyAsync}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ cudaMemcpyPeerAsync\ hipMemcpyPeerAsync}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ cudaMemcpy2DAsync\ hipMemcpy2DAsync}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ cudaMemcpyDeviceToDevice\ hipMemcpyDeviceToDevice}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ cudaMemcpyDeviceToHost\ hipMemcpyDeviceToHost}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ cudaMemcpyHostToDevice\ hipMemcpyHostToDevice}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ cudaMemcpyKind\ hipMemcpyKind}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ cudaMemset\ hipMemset}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ cudaMemsetAsync\ hipMemsetAsync}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ cudaMemGetInfo\ hipMemGetInfo}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ cudaOccupancyMaxPotentialBlockSize\ hipOccupancyMaxPotentialBlockSize}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ cudaSetDevice\ hipSetDevice}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ cuDeviceGet\ hipDeviceGet}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ CUdevice\ hipDevice\_t}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ CUdeviceptr\ hipDeviceptr\_t}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ cuMemUnmap\ hipMemUnmap}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ CUmemAccessDesc\ hipMemAccessDesc}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ cuMemAddressFree\ hipMemAddressFree}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ cuMemRelease\ hipMemRelease}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ CUmemGenericAllocationHandle\ hipMemGenericAllocationHandle\_t}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ cuMemCreate\ hipMemCreate}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ cuMemAddressReserve\ hipMemAddressReserve}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ cuMemMap\ hipMemMap}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ cuMemSetAccess\ hipMemSetAccess}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ cuMemGetAllocationGranularity\ hipMemGetAllocationGranularity}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ CUmemAllocationProp\ hipMemAllocationProp}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ cuDeviceGetAttribute\ hipDeviceGetAttribute}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ cudaStreamCreateWithFlags\ hipStreamCreateWithFlags}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ cudaStreamDestroy\ hipStreamDestroy}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ cudaStreamFireAndForget\ hipStreamFireAndForget}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ cudaStreamNonBlocking\ hipStreamNonBlocking}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ cudaStreamPerThread\ hipStreamPerThread}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ cudaStreamSynchronize\ hipStreamSynchronize}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ cudaStreamWaitEvent\ hipStreamWaitEvent}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ cudaGraphExec\_t\ hipGraphExec\_t}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ cudaGraphNode\_t\ hipGraphNode\_t}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ cudaKernelNodeParams\ hipKernelNodeParams}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ cudaKernelNodeParams\ hipKernelNodeParams}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ cudaGraphExecDestroy\ hipGraphExecDestroy}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ cudaGraphLaunch\ hipGraphLaunch}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ cudaErrorGraphExecUpdateFailure\ hipErrorGraphExecUpdateFailure}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ cudaGraphExecUpdateResult\ hipGraphExecUpdateResult}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ cudaGraphNodeType\ hipGraphNodeType}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ cudaGraphNodeTypeKernel\ hipGraphNodeTypeKernel}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ cudaGraphInstantiate\ hipGraphInstantiate}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ cudaStreamEndCapture\ hipStreamEndCapture}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ cudaGraphDestroy\ hipGraphDestroy}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ cudaGraphKernelNodeSetParams\ hipGraphKernelNodeSetParams}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ cudaErrorInvalidDeviceFunction\ hipErrorInvalidDeviceFunction}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ cudaGraphKernelNodeGetParams\ hipGraphKernelNodeGetParams}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ cudaGraphNodeGetType\ hipGraphNodeGetType}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ cudaGraphGetNodes\ hipGraphGetNodes}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ cudaGraphExecUpdate\ hipGraphExecUpdate}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ cudaStreamCaptureModeRelaxed\ hipStreamCaptureModeRelaxed}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ cudaStreamBeginCapture\ hipStreamBeginCapture}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ cudaGraph\_t\ hipGraph\_t}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ cudaStream\_t\ hipStream\_t}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ cudaSuccess\ hipSuccess}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ cudaOccupancyMaxActiveBlocksPerMultiprocessor\ hipOccupancyMaxActiveBlocksPerMultiprocessor}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ cudaFuncSetAttribute\ hipFuncSetAttribute}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ cudaFuncAttributeMaxDynamicSharedMemorySize\ hipFuncAttributeMaxDynamicSharedMemorySize}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ \_\_trap()\ do\ \{\ abort();\ \_\_builtin\_unreachable();\ \}\ while(0)}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_SUCCESS\ HIPBLAS\_STATUS\_SUCCESS}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_NOT\_INITIALIZED\ HIPBLAS\_STATUS\_NOT\_INITIALIZED}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_ALLOC\_FAILED\ HIPBLAS\_STATUS\_ALLOC\_FAILED}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_INVALID\_VALUE\ HIPBLAS\_STATUS\_INVALID\_VALUE}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_ARCH\_MISMATCH\ HIPBLAS\_STATUS\_ARCH\_MISMATCH}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_MAPPING\_ERROR\ HIPBLAS\_STATUS\_MAPPING\_ERROR}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_EXECUTION\_FAILED\ HIPBLAS\_STATUS\_EXECUTION\_FAILED}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_INTERNAL\_ERROR\ HIPBLAS\_STATUS\_INTERNAL\_ERROR}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_NOT\_SUPPORTED\ HIPBLAS\_STATUS\_NOT\_SUPPORTED}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#if\ HIP\_VERSION\ >=\ 60500000}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_16F\ HIPBLAS\_COMPUTE\_16F}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_32F\ HIPBLAS\_COMPUTE\_32F}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_32F\_FAST\_16F\ HIPBLAS\_COMPUTE\_32F\_FAST\_16F}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ cublasComputeType\_t\ hipblasComputeType\_t}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ cudaDataType\_t\ hipDataType}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_16F\ HIPBLAS\_R\_16F}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_32F\ HIPBLAS\_R\_32F}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_32F\_FAST\_16F\ HIPBLAS\_R\_32F}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ cublasComputeType\_t\ hipblasDatatype\_t}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ cudaDataType\_t\ hipblasDatatype\_t}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HIP\_VERSION\ >=\ 6050000}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#if\ !defined(\_\_HIP\_PLATFORM\_AMD\_\_)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#error\ "{}The\ HIP\ backend\ supports\ only\ AMD\ targets"{}}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !defined(\_\_HIP\_PLATFORM\_AMD\_\_)}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ \_\_CUDA\_ARCH\_\_\ 1300}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#if\ defined(\_\_gfx900\_\_)\ ||\ defined(\_\_gfx906\_\_)}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ GCN5}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_gfx900\_\_)\ ||\ defined(\_\_gfx906\_\_)}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#if\ defined(\_\_gfx803\_\_)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ GCN4}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_gfx803\_\_)}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#if\ defined(GCN5)\ ||\ defined(GCN4)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#define\ GCN}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(GCN5)\ ||\ defined(GCN4)}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#if\ defined(\_\_gfx942\_\_)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ CDNA3}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_gfx942\_\_)}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#if\ defined(\_\_gfx90a\_\_)}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#define\ CDNA2}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_gfx90a\_\_)}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#if\ defined(\_\_gfx908\_\_)}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#define\ CDNA1}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_gfx908\_\_)}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#if\ defined(CDNA3)\ ||\ defined(CDNA2)\ ||\ defined(CDNA1)}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ CDNA\ }\textcolor{comment}{//\ For\ the\ entire\ family}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(CDNA3)\ ||\ defined(CDNA2)\ ||\ defined(CDNA1)}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#if\ defined(\_\_GFX12\_\_)}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ RDNA4}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_GFX12\_\_)}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#if\ defined(\_\_GFX11\_\_)}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ RDNA3}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_GFX11\_\_)}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#if\ defined(\_\_gfx1150\_\_)\ ||\ defined(\_\_gfx1151\_\_)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ RDNA3\_5}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_gfx1150\_\_)\ ||\ defined(\_\_gfx1151\_\_)}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#if\ defined(RDNA3)\ \&\&\ !defined(RDNA3\_5)}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ RDNA3\_0}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(RDNA3)\ \&\&\ !defined(RDNA3\_5)}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#if\ defined(\_\_gfx1030\_\_)\ ||\ defined(\_\_gfx1031\_\_)\ ||\ defined(\_\_gfx1032\_\_)\ ||\ defined(\_\_gfx1033\_\_)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\ \ \ \ defined(\_\_gfx1034\_\_)\ ||\ defined(\_\_gfx1035\_\_)\ ||\ defined(\_\_gfx1036\_\_)\ ||\ defined(\_\_gfx1037\_\_)}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ RDNA2}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#if\ defined(\_\_gfx1010\_\_)\ ||\ defined(\_\_gfx1012\_\_)}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ RDNA1}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_gfx1010\_\_)\ ||\ defined(\_\_gfx1012\_\_)}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#if\ defined(RDNA4)\ ||\ defined(RDNA3)\ ||\ defined(RDNA2)\ ||\ defined(RDNA1)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ RDNA\ }\textcolor{comment}{//\ For\ the\ entire\ family}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(RDNA4)\ ||\ defined(RDNA3)\ ||\ defined(RDNA2)\ ||\ defined(RDNA1)}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#ifndef\ \_\_has\_builtin}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_\_has\_builtin(x)\ 0}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{keyword}{typedef}\ \_\_hip\_bfloat16\ nv\_bfloat16;}
+\DoxyCodeLine{00236\ \textcolor{keyword}{typedef}\ \_\_hip\_bfloat162\ nv\_bfloat162;}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#if\ HIP\_VERSION\ >=\ 60200000}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#include\ <hip/hip\_fp8.h>}}
+\DoxyCodeLine{00240\ \textcolor{keyword}{typedef}\ \_\_hip\_fp8\_e4m3\ \_\_nv\_fp8\_e4m3;}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#define\ FP8\_AVAILABLE}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HIP\_VERSION\ >=\ 60200000}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \textcolor{keyword}{typedef}\ int8\_t\ int8x4\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((ext\_vector\_type(4)));}
+\DoxyCodeLine{00245\ \textcolor{keyword}{typedef}\ uint8\_t\ uint8x4\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((ext\_vector\_type(4)));}
+\DoxyCodeLine{00246\ \textcolor{keyword}{static}\ \_\_device\_\_\ \_\_forceinline\_\_\ \textcolor{keywordtype}{int}\ \_\_vsubss4(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ a,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ b)\ \{}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keyword}{const}\ int8x4\_t\ va\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }int8x4\_t\&\textcolor{keyword}{>}(a);}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keyword}{const}\ int8x4\_t\ vb\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }int8x4\_t\&\textcolor{keyword}{>}(b);}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#if\ \_\_has\_builtin(\_\_builtin\_elementwise\_sub\_sat)}}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keyword}{const}\ int8x4\_t\ c\ =\ \_\_builtin\_elementwise\_sub\_sat(va,\ vb);}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{int}\ \&\textcolor{keyword}{>}(c);}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00253\ \ \ \ \ int8x4\_t\ c;}
+\DoxyCodeLine{00254\ \ \ \ \ int16\_t\ tmp;}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 4;\ i++)\ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ tmp\ =\ va[i]\ -\/\ vb[i];}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(tmp\ >\ std::numeric\_limits<int8\_t>::max())\ tmp\ =\ std::numeric\_limits<int8\_t>::max();}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(tmp\ <\ std::numeric\_limits<int8\_t>::min())\ tmp\ =\ std::numeric\_limits<int8\_t>::min();}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ c[i]\ =\ tmp;}
+\DoxyCodeLine{00261\ \ \ \ \ \}}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{int}\ \&\textcolor{keyword}{>}(c);}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_has\_builtin(\_\_builtin\_elementwise\_sub\_sat)}}
+\DoxyCodeLine{00264\ \}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{keyword}{static}\ \_\_device\_\_\ \_\_forceinline\_\_\ \textcolor{keywordtype}{int}\ \_\_vsub4(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ a,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ b)\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_vsubss4(a,\ b);}
+\DoxyCodeLine{00268\ \}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{keyword}{static}\ \_\_device\_\_\ \_\_forceinline\_\_\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \_\_vcmpeq4(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ a,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ b)\ \{}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keyword}{const}\ uint8x4\_t\&\ va\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }uint8x4\_t\&\textcolor{keyword}{>}(a);}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keyword}{const}\ uint8x4\_t\&\ vb\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }uint8x4\_t\&\textcolor{keyword}{>}(b);}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ c;}
+\DoxyCodeLine{00274\ \ \ \ \ uint8x4\_t\&\ vc\ =\ \textcolor{keyword}{reinterpret\_cast<}uint8x4\_t\&\textcolor{keyword}{>}(c);}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 4;\ ++i)\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ vc[i]\ =\ va[i]\ ==\ vb[i]\ ?\ 0xff\ :\ 0x00;}
+\DoxyCodeLine{00278\ \ \ \ \ \}}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordflow}{return}\ c;}
+\DoxyCodeLine{00280\ \}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \textcolor{keyword}{static}\ \_\_device\_\_\ \_\_forceinline\_\_\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \_\_vcmpne4(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ a,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ b)\ \{}
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keyword}{const}\ uint8x4\_t\&\ va\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }uint8x4\_t\&\textcolor{keyword}{>}(a);}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{const}\ uint8x4\_t\&\ vb\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }uint8x4\_t\&\textcolor{keyword}{>}(b);}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ c;}
+\DoxyCodeLine{00286\ \ \ \ \ uint8x4\_t\&\ vc\ =\ \textcolor{keyword}{reinterpret\_cast<}uint8x4\_t\&\textcolor{keyword}{>}(c);}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 4;\ ++i)\ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ vc[i]\ =\ va[i]\ ==\ vb[i]\ ?\ 0x00\ :\ 0xff;}
+\DoxyCodeLine{00290\ \ \ \ \ \}}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keywordflow}{return}\ c;}
+\DoxyCodeLine{00292\ \}}
+
+\end{DoxyCode}

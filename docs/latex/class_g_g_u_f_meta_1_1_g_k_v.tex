@@ -1,0 +1,46 @@
+\doxysection{GGUFMeta::\+GKV\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{class_g_g_u_f_meta_1_1_g_k_v}{}\label{class_g_g_u_f_meta_1_1_g_k_v}\index{GGUFMeta::GKV$<$ T $>$@{GGUFMeta::GKV$<$ T $>$}}
+Inheritance diagram for GGUFMeta::\+GKV\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>}:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_g_g_u_f_meta_1_1_g_k_v}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_a905cb50d80972d6b0540a0ab8a7286df}\label{class_g_g_u_f_meta_1_1_g_k_v_a905cb50d80972d6b0540a0ab8a7286df} 
+static T {\bfseries get\+\_\+kv} (const \doxymbox{\hyperlink{structgguf__context}{gguf\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, const int k)
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_afcf8ef47f429183297c5976ddd658921}\label{class_g_g_u_f_meta_1_1_g_k_v_afcf8ef47f429183297c5976ddd658921} 
+static const char \texorpdfstring{$\ast$}{*} {\bfseries override\+\_\+type\+\_\+to\+\_\+str} (const llama\+\_\+model\+\_\+kv\+\_\+override\+\_\+type ty)
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_a6b4fc1b247a0c1339f44f16211344521}\label{class_g_g_u_f_meta_1_1_g_k_v_a6b4fc1b247a0c1339f44f16211344521} 
+static bool {\bfseries validate\+\_\+override} (const llama\+\_\+model\+\_\+kv\+\_\+override\+\_\+type expected\+\_\+type, const struct \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} \texorpdfstring{$\ast$}{*}ovrd)
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_a484a30da5dd4afee76d7e123f3337685}\label{class_g_g_u_f_meta_1_1_g_k_v_a484a30da5dd4afee76d7e123f3337685} 
+{\footnotesize template$<$typename OT$>$ }\\static std::\+enable\+\_\+if$<$ std::\+is\+\_\+same$<$ OT, bool $>$::\+value, bool $>$::\+type {\bfseries try\+\_\+override} (OT \&target, const struct \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} \texorpdfstring{$\ast$}{*}ovrd)
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_ae1ff7d6b813df46ab4249dac01f10728}\label{class_g_g_u_f_meta_1_1_g_k_v_ae1ff7d6b813df46ab4249dac01f10728} 
+{\footnotesize template$<$typename OT$>$ }\\static std::\+enable\+\_\+if$<$!std::\+is\+\_\+same$<$ OT, bool $>$::\+value \&\&std::\+is\+\_\+integral$<$ OT $>$::\+value, bool $>$::\+type {\bfseries try\+\_\+override} (OT \&target, const struct \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} \texorpdfstring{$\ast$}{*}ovrd)
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_a678ec59f1c6c5e42afb9cd766a0faf10}\label{class_g_g_u_f_meta_1_1_g_k_v_a678ec59f1c6c5e42afb9cd766a0faf10} 
+{\footnotesize template$<$typename OT$>$ }\\static std::\+enable\+\_\+if$<$ std::\+is\+\_\+floating\+\_\+point$<$ OT $>$::\+value, bool $>$::\+type {\bfseries try\+\_\+override} (T \&target, const struct \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} \texorpdfstring{$\ast$}{*}ovrd)
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_a7afdfb91f5225e606fc224e062633a66}\label{class_g_g_u_f_meta_1_1_g_k_v_a7afdfb91f5225e606fc224e062633a66} 
+{\footnotesize template$<$typename OT$>$ }\\static std::\+enable\+\_\+if$<$ std::\+is\+\_\+same$<$ OT, std::\+string $>$::\+value, bool $>$::\+type {\bfseries try\+\_\+override} (T \&target, const struct \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} \texorpdfstring{$\ast$}{*}ovrd)
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_a4bbeb4575e290db9d084b065acbb8669}\label{class_g_g_u_f_meta_1_1_g_k_v_a4bbeb4575e290db9d084b065acbb8669} 
+static bool {\bfseries set} (const \doxymbox{\hyperlink{structgguf__context}{gguf\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, const int k, T \&target, const struct \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} \texorpdfstring{$\ast$}{*}ovrd=nullptr)
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_abf23570159eff90485306a3a255c4e72}\label{class_g_g_u_f_meta_1_1_g_k_v_abf23570159eff90485306a3a255c4e72} 
+static bool {\bfseries set} (const \doxymbox{\hyperlink{structgguf__context}{gguf\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, const char \texorpdfstring{$\ast$}{*}key, T \&target, const struct \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} \texorpdfstring{$\ast$}{*}ovrd=nullptr)
+\item 
+\Hypertarget{class_g_g_u_f_meta_1_1_g_k_v_ab37a26a22ae051b5d93edf8ac22bb115}\label{class_g_g_u_f_meta_1_1_g_k_v_ab37a26a22ae051b5d93edf8ac22bb115} 
+static bool {\bfseries set} (const \doxymbox{\hyperlink{structgguf__context}{gguf\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, const std::\+string \&key, T \&target, const struct \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} \texorpdfstring{$\ast$}{*}ovrd=nullptr)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/model-\/loader.\+cpp\end{DoxyCompactItemize}

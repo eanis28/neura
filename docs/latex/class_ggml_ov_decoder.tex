@@ -1,0 +1,554 @@
+\doxysection{Ggml\+Ov\+Decoder Class Reference}
+\hypertarget{class_ggml_ov_decoder}{}\label{class_ggml_ov_decoder}\index{GgmlOvDecoder@{GgmlOvDecoder}}
+Inheritance diagram for Ggml\+Ov\+Decoder:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_ggml_ov_decoder}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_ggml_ov_decoder_1_1_node_info}{Node\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_ggml_ov_decoder_adcd9e07e7e1652c2ffada34f552ddb44}\label{class_ggml_ov_decoder_adcd9e07e7e1652c2ffada34f552ddb44} 
+{\bfseries Ggml\+Ov\+Decoder} (\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph, \doxymbox{\hyperlink{struct_model_params}{Model\+Params}} \&model\+\_\+params, \doxymbox{\hyperlink{struct_compute_params}{Compute\+Params}} \&compute\+\_\+params, std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \&model\+\_\+weights, bool is\+\_\+static, bool is\+\_\+stateful=false, bool is\+\_\+prefill=false, int prefill\+\_\+chunk\+\_\+size=256)
+\item 
+\Hypertarget{class_ggml_ov_decoder_aec658f3c24e28e7c204d2fe3d4ebfd39}\label{class_ggml_ov_decoder_aec658f3c24e28e7c204d2fe3d4ebfd39} 
+{\bfseries Ggml\+Ov\+Decoder} (\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph, std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \&model\+\_\+weights)
+\item 
+virtual ov::\+\+Any \doxymbox{\hyperlink{class_ggml_ov_decoder_a2da010592cd334a2efdeb8ed6fb80c57}{get\+\_\+attribute}} (const std::\+string \&name) const override
+\item 
+virtual ov::\+\+Partial\+Shape \doxymbox{\hyperlink{class_ggml_ov_decoder_a92420d365774b7307a953394f32c823e}{get\+\_\+input\+\_\+shape}} (int node\+\_\+idx, const std::\+string \&name) const override
+\item 
+virtual std::\+vector$<$ size\+\_\+t $>$ \doxymbox{\hyperlink{class_ggml_ov_decoder_ab176fb44dfeb15e01e800a6ca5adf6e5}{get\+\_\+input\+\_\+stride}} (int node\+\_\+idx, const std::\+string \&name) const override
+\item 
+virtual ov::\+element::\+\+Type \doxymbox{\hyperlink{class_ggml_ov_decoder_a982eec30861e6d73a2cf208fa2c7cc8d}{get\+\_\+input\+\_\+type}} (int node\+\_\+idx, const std::\+string \&name) const override
+\item 
+virtual size\+\_\+t \doxymbox{\hyperlink{class_ggml_ov_decoder_a816e0112619656257aec05c6b3e7edbe}{get\+\_\+input\+\_\+size}} () const override
+\item 
+virtual size\+\_\+t \doxymbox{\hyperlink{class_ggml_ov_decoder_a920d0c6260d9aa53efff1fde154b4ecf}{get\+\_\+input\+\_\+size}} (int node\+\_\+idx) const override
+\item 
+virtual void \doxymbox{\hyperlink{class_ggml_ov_decoder_aee8ae60d0a23ac6693efa89996381fbf}{get\+\_\+input\+\_\+node}} (size\+\_\+t input\+\_\+port\+\_\+idx, std::\+string \&producer\+\_\+name, std::\+string \&producer\+\_\+output\+\_\+port\+\_\+name, size\+\_\+t \&producer\+\_\+output\+\_\+port\+\_\+index) const override
+\item 
+virtual std::\+vector$<$ std::\+string $>$ \doxymbox{\hyperlink{class_ggml_ov_decoder_aa1b20bc540889e37a288b925b5c26eca}{get\+\_\+input\+\_\+names}} (int node\+\_\+idx) const override
+\item 
+virtual ov::\+\+Partial\+Shape \doxymbox{\hyperlink{class_ggml_ov_decoder_a3d0119613e6f0e21c5c01c1bc994bb36}{get\+\_\+output\+\_\+shape}} (int node\+\_\+idx) const override
+\item 
+virtual ov::\+element::\+\+Type \doxymbox{\hyperlink{class_ggml_ov_decoder_a9bc5d6f332d60a5e0c085ba57e3a41f2}{get\+\_\+output\+\_\+type}} (int node\+\_\+idx) const override
+\item 
+virtual int32\+\_\+t \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_ggml_ov_decoder_a4ea34ee3471844a5f502f07f3151afca}{get\+\_\+input\+\_\+op\+\_\+params}} (int node\+\_\+idx, const std::\+string \&name) const override
+\item 
+virtual int32\+\_\+t \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_ggml_ov_decoder_ae28aa274e01eb8aae9e69c3a0736b680}{get\+\_\+output\+\_\+op\+\_\+params}} (int node\+\_\+idx) const override
+\item 
+virtual std::\+vector$<$ std::\+string $>$ \doxymbox{\hyperlink{class_ggml_ov_decoder_a54a5cbbe7d8de8e26e930b7f7f460140}{get\+\_\+output\+\_\+names}} (int node\+\_\+idx) const override
+\item 
+virtual const std::\+string \& \doxymbox{\hyperlink{class_ggml_ov_decoder_abbc21d6f818da51bcb581f140aee15ae}{get\+\_\+op\+\_\+type}} () const override
+\item 
+virtual const std::\+string \& \doxymbox{\hyperlink{class_ggml_ov_decoder_a391bda5c62c3bc04e248f0c15f0e1399}{get\+\_\+op\+\_\+type}} (int node\+\_\+idx) const override
+\item 
+virtual const std::\+string \& \doxymbox{\hyperlink{class_ggml_ov_decoder_a79369d4f2ac9103def44d40f6a86dcf9}{get\+\_\+op\+\_\+name}} () const override
+\item 
+virtual const std::\+string \& \doxymbox{\hyperlink{class_ggml_ov_decoder_a167d78f1a0610ed3f3952943f1fb4d4f}{get\+\_\+op\+\_\+name}} (int node\+\_\+idx) const override
+\item 
+\Hypertarget{class_ggml_ov_decoder_aa90813aaa6eb7d59b2ea0bdeb3282016}\label{class_ggml_ov_decoder_aa90813aaa6eb7d59b2ea0bdeb3282016} 
+virtual void {\bfseries visit\+\_\+subgraph} (std::\+function$<$ void(std::\+shared\+\_\+ptr$<$ Ggml\+Decoder $>$, int node\+\_\+idx)$>$ node\+\_\+visitor) const override
+\item 
+\Hypertarget{class_ggml_ov_decoder_ac2032c1e5ce22949a5f30f57a7b88bb1}\label{class_ggml_ov_decoder_ac2032c1e5ce22949a5f30f57a7b88bb1} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+input\+\_\+ggml\+\_\+tensor} (const std::\+string \&name) const
+\item 
+virtual int \doxymbox{\hyperlink{class_ggml_ov_decoder_ab16eca302668dc9defdf8a69335863b9}{get\+\_\+op\+\_\+case}} (int node\+\_\+idx) const override
+\item 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \& \doxymbox{\hyperlink{class_ggml_ov_decoder_ac1b90cbcad7e3627d516fe413c4d1815}{get\+\_\+model\+\_\+inputs}} () const override
+\item 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \& \doxymbox{\hyperlink{class_ggml_ov_decoder_a024d1ce51138387bfc186fcedc625e60}{get\+\_\+model\+\_\+extra\+\_\+inputs}} () const override
+\item 
+\Hypertarget{class_ggml_ov_decoder_a5950f10d252c1c662403805a8599f737}\label{class_ggml_ov_decoder_a5950f10d252c1c662403805a8599f737} 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Tensor $>$ $>$ \& {\bfseries get\+\_\+model\+\_\+extra\+\_\+input\+\_\+values} () const
+\item 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \& \doxymbox{\hyperlink{class_ggml_ov_decoder_a1acef4385b6ab2dd8f3abc9277a03c89}{get\+\_\+model\+\_\+weights}} () const override
+\item 
+virtual std::\+vector$<$ std::\+string $>$ \doxymbox{\hyperlink{class_ggml_ov_decoder_a9d92b9cf65d569cf86bf4de39ecf843e}{get\+\_\+model\+\_\+output\+\_\+names}} () const override
+\item 
+\Hypertarget{class_ggml_ov_decoder_aea9af95fee4dd0496d35ec1cc8b3da60}\label{class_ggml_ov_decoder_aea9af95fee4dd0496d35ec1cc8b3da60} 
+const std::\+map$<$ std::\+string, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ \& {\bfseries get\+\_\+model\+\_\+outputs} () const
+\item 
+\Hypertarget{class_ggml_ov_decoder_a6bd6dc0a520fd206353f885208b9cd2c}\label{class_ggml_ov_decoder_a6bd6dc0a520fd206353f885208b9cd2c} 
+virtual int {\bfseries get\+\_\+ctx\+\_\+size} () const
+\item 
+\Hypertarget{class_ggml_ov_decoder_abe2623a49c7907991bf44d4cb10b24a7}\label{class_ggml_ov_decoder_abe2623a49c7907991bf44d4cb10b24a7} 
+virtual int {\bfseries get\+\_\+ctx\+\_\+swa\+\_\+size} () const
+\item 
+\Hypertarget{class_ggml_ov_decoder_a730c82051e33e185600aff02a69ccf1c}\label{class_ggml_ov_decoder_a730c82051e33e185600aff02a69ccf1c} 
+virtual int {\bfseries get\+\_\+ctx\+\_\+per\+\_\+seq} () const
+\item 
+\Hypertarget{class_ggml_ov_decoder_adb3ff283b97ac8e67df8b3761bdd6712}\label{class_ggml_ov_decoder_adb3ff283b97ac8e67df8b3761bdd6712} 
+virtual int {\bfseries get\+\_\+ctx\+\_\+per\+\_\+seq\+\_\+swa} () const
+\item 
+\Hypertarget{class_ggml_ov_decoder_ab8c4882593ea710c5576f6fd4c778e56}\label{class_ggml_ov_decoder_ab8c4882593ea710c5576f6fd4c778e56} 
+virtual int {\bfseries get\+\_\+n\+\_\+seq} () const
+\item 
+virtual int \doxymbox{\hyperlink{class_ggml_ov_decoder_a7cae349f062286f41e17c58e2524b98f}{is\+\_\+swa\+\_\+layer}} (int layer) const override
+\item 
+\Hypertarget{class_ggml_ov_decoder_a66912c41a5fd683c371bf608077b6f98}\label{class_ggml_ov_decoder_a66912c41a5fd683c371bf608077b6f98} 
+int {\bfseries get\+\_\+past\+\_\+kv\+\_\+len} () const
+\item 
+\Hypertarget{class_ggml_ov_decoder_a606e3925739b87748d7d4d4fe3be1158}\label{class_ggml_ov_decoder_a606e3925739b87748d7d4d4fe3be1158} 
+int {\bfseries get\+\_\+input\+\_\+len} () const
+\item 
+virtual int32\+\_\+t \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_ggml_ov_decoder_ae9e74de6b663cebfeea5aad535a0c174}{get\+\_\+rope\+\_\+params}} () const override
+\item 
+virtual std::\+map$<$ std::\+string, std::\+string $>$ \doxymbox{\hyperlink{class_ggml_ov_decoder_a6e18e654158941124b8e9e764e572d27}{get\+\_\+kv\+\_\+param\+\_\+res\+\_\+names}} () const override
+\item 
+virtual bool \doxymbox{\hyperlink{class_ggml_ov_decoder_a74e8d454a24eeaae0e819184d3a73950}{is\+\_\+static}} () const override
+\item 
+virtual bool \doxymbox{\hyperlink{class_ggml_ov_decoder_a38b57c0a412384ed9e038735c8c20f93}{is\+\_\+stateful}} () const override
+\item 
+\Hypertarget{class_ggml_ov_decoder_a943bdea9a810ebd6f4f2b06013119b82}\label{class_ggml_ov_decoder_a943bdea9a810ebd6f4f2b06013119b82} 
+ov::\+\+Partial\+Shape {\bfseries get\+\_\+graph\+\_\+input\+\_\+shape} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}input) const
+\item 
+\Hypertarget{class_ggml_ov_decoder_aa03a853749837781310e5dc718918344}\label{class_ggml_ov_decoder_aa03a853749837781310e5dc718918344} 
+const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+tensor\+\_\+used\+\_\+op} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor) const
+\item 
+\Hypertarget{class_ggml_ov_decoder_a63ef65aee595cb1dc012a64b41c281bd}\label{class_ggml_ov_decoder_a63ef65aee595cb1dc012a64b41c281bd} 
+const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+tensor\+\_\+from\+\_\+name} (const std::\+string \&name) const
+\item 
+\Hypertarget{class_ggml_ov_decoder_a2f6908bd2a0c30aa5a7097c15af749b0}\label{class_ggml_ov_decoder_a2f6908bd2a0c30aa5a7097c15af749b0} 
+void {\bfseries clear\+\_\+model\+\_\+weights} ()
+\item 
+\Hypertarget{class_ggml_ov_decoder_a550af7ac8476f01416c40a208c29b7f4}\label{class_ggml_ov_decoder_a550af7ac8476f01416c40a208c29b7f4} 
+\doxymbox{\hyperlink{struct_model_params}{Model\+Params}} {\bfseries get\+\_\+model\+\_\+params} () const
+\item 
+\Hypertarget{class_ggml_ov_decoder_a1a435fa550bb79ee8585d588011e422a}\label{class_ggml_ov_decoder_a1a435fa550bb79ee8585d588011e422a} 
+\doxymbox{\hyperlink{struct_compute_params}{Compute\+Params}} {\bfseries get\+\_\+compute\+\_\+params} () const
+\item 
+\Hypertarget{class_ggml_ov_decoder_a1ff6842dc9c1a03e1262d18a1dfebde7}\label{class_ggml_ov_decoder_a1ff6842dc9c1a03e1262d18a1dfebde7} 
+void {\bfseries set\+\_\+model\+\_\+params} (const \doxymbox{\hyperlink{struct_model_params}{Model\+Params}} \&model\+\_\+params)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a7c06fd68a775edcc2421f4839729205e}\label{class_ggml_ov_decoder_a7c06fd68a775edcc2421f4839729205e} 
+void {\bfseries set\+\_\+compute\+\_\+params} (const \doxymbox{\hyperlink{struct_compute_params}{Compute\+Params}} \&compute\+\_\+params)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a7b109b0c28f64ffa0182dfd1f1123ab9}\label{class_ggml_ov_decoder_a7b109b0c28f64ffa0182dfd1f1123ab9} 
+void {\bfseries add\+\_\+extra\+\_\+inputs} ()
+\item 
+\Hypertarget{class_ggml_ov_decoder_a3a5917de5e4d4bccddb371a492315e16}\label{class_ggml_ov_decoder_a3a5917de5e4d4bccddb371a492315e16} 
+void {\bfseries update\+\_\+io} (\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual void {\bfseries visit\+\_\+subgraph} (std::\+function$<$ void(std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{Ggml\+Decoder}} $>$, int node\+\_\+idx)$>$ node\+\_\+visitor) const =0
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_ggml_ov_decoder_a96d38c20f8a244f3c15e9009f166227e}\label{class_ggml_ov_decoder_a96d38c20f8a244f3c15e9009f166227e} 
+static void {\bfseries dump\+\_\+cgraph} (const \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph, std::\+string \&filename)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a97928d4224bc4a7312e6a76d8435af72}\label{class_ggml_ov_decoder_a97928d4224bc4a7312e6a76d8435af72} 
+static std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ {\bfseries create\+\_\+weight\+\_\+node} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, bool naive=false)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a227ed7cf04522fc1b7e84a5e5f4c381e}\label{class_ggml_ov_decoder_a227ed7cf04522fc1b7e84a5e5f4c381e} 
+static std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ {\bfseries create\+\_\+weight\+\_\+nodes} (\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph, bool naive=false)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a8cf3140cd1ee9b2631235a83a4c7daa9}\label{class_ggml_ov_decoder_a8cf3140cd1ee9b2631235a83a4c7daa9} 
+static std::\+pair$<$ \doxymbox{\hyperlink{struct_model_params}{Model\+Params}}, \doxymbox{\hyperlink{struct_compute_params}{Compute\+Params}} $>$ {\bfseries compute\+\_\+llm\+\_\+params} (\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph, bool is\+\_\+static)
+\item 
+\Hypertarget{class_ggml_ov_decoder_ade2507cd400ad98da6e1804215c9b031}\label{class_ggml_ov_decoder_ade2507cd400ad98da6e1804215c9b031} 
+static ov::\+\+Shape {\bfseries get\+\_\+shape} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a137d0acc774d3b16c02c7b9a9e67fb27}\label{class_ggml_ov_decoder_a137d0acc774d3b16c02c7b9a9e67fb27} 
+static std::\+vector$<$ size\+\_\+t $>$ {\bfseries get\+\_\+stride} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a90df3c308ffdc399763c3c26f1d31a1c}\label{class_ggml_ov_decoder_a90df3c308ffdc399763c3c26f1d31a1c} 
+static ov::\+element::\+\+Type {\bfseries get\+\_\+ov\+\_\+type} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor)
+\item 
+\Hypertarget{class_ggml_ov_decoder_aa4308e4a2d105326a3e973569ea085f5}\label{class_ggml_ov_decoder_aa4308e4a2d105326a3e973569ea085f5} 
+static std::\+string {\bfseries compute\+\_\+op\+\_\+type} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}node)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a0ccf908164701ebca7c5101cc1f82ee1}\label{class_ggml_ov_decoder_a0ccf908164701ebca7c5101cc1f82ee1} 
+static bool {\bfseries is\+\_\+inp\+\_\+tok} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a7c9a48d06c99580f15f111a99e7a817d}\label{class_ggml_ov_decoder_a7c9a48d06c99580f15f111a99e7a817d} 
+static bool {\bfseries is\+\_\+inp\+\_\+pos} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a16ad9670fb628a0e7f0affcfad9f1aa3}\label{class_ggml_ov_decoder_a16ad9670fb628a0e7f0affcfad9f1aa3} 
+static bool {\bfseries is\+\_\+inp\+\_\+emb} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{class_ggml_ov_decoder_aba966a36bb1ae786af0b81653a71533c}\label{class_ggml_ov_decoder_aba966a36bb1ae786af0b81653a71533c} 
+static bool {\bfseries is\+\_\+inp\+\_\+mask} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{class_ggml_ov_decoder_ad1f87a6e3a9d2a0a041f21d66291318b}\label{class_ggml_ov_decoder_ad1f87a6e3a9d2a0a041f21d66291318b} 
+static bool {\bfseries is\+\_\+rope\+\_\+freqs\+\_\+weight} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a1319f4fdd381b6c1b4c7bf170197c5a1}\label{class_ggml_ov_decoder_a1319f4fdd381b6c1b4c7bf170197c5a1} 
+static bool {\bfseries is\+\_\+kvcache} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a9e128b9db67fd9bb5d8718c872268c36}\label{class_ggml_ov_decoder_a9e128b9db67fd9bb5d8718c872268c36} 
+static bool {\bfseries is\+\_\+kv\+\_\+idx} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{class_ggml_ov_decoder_ae25b1cc0eba1de71af7f24fb32620258}\label{class_ggml_ov_decoder_ae25b1cc0eba1de71af7f24fb32620258} 
+static bool {\bfseries is\+\_\+output\+\_\+idx} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{class_ggml_ov_decoder_a4afcf80afdcdf279d237bcdf8a3fc315}\label{class_ggml_ov_decoder_a4afcf80afdcdf279d237bcdf8a3fc315} 
+static std::\+string {\bfseries get\+\_\+graph\+\_\+input\+\_\+ov\+\_\+name} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_ggml_ov_decoder_a181c3de10965e17ac3eff6ae864870e9}\label{class_ggml_ov_decoder_a181c3de10965e17ac3eff6ae864870e9} 
+bool {\bfseries m\+\_\+is\+\_\+static} = false
+\item 
+\Hypertarget{class_ggml_ov_decoder_ac981349934f39d7eecddbf0149a69355}\label{class_ggml_ov_decoder_ac981349934f39d7eecddbf0149a69355} 
+bool {\bfseries m\+\_\+is\+\_\+stateful} = false
+\item 
+\Hypertarget{class_ggml_ov_decoder_a5510c19d7951ef2873734c28d41b88f8}\label{class_ggml_ov_decoder_a5510c19d7951ef2873734c28d41b88f8} 
+bool {\bfseries m\+\_\+is\+\_\+prefill} = false
+\item 
+\Hypertarget{class_ggml_ov_decoder_aaebdae1476d209a000a63fa3ad8d08df}\label{class_ggml_ov_decoder_aaebdae1476d209a000a63fa3ad8d08df} 
+bool {\bfseries m\+\_\+naive} = false
+\item 
+\Hypertarget{class_ggml_ov_decoder_a48e30c6e938f8cc89eb3656eb16f7a54}\label{class_ggml_ov_decoder_a48e30c6e938f8cc89eb3656eb16f7a54} 
+int {\bfseries m\+\_\+prefill\+\_\+chunk\+\_\+size} = 0
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_ggml_ov_decoder_ac7152deaa684994ced853e890e67a792}\label{class_ggml_ov_decoder_ac7152deaa684994ced853e890e67a792} 
+void {\bfseries set\+\_\+input\+\_\+output} ()
+\item 
+\Hypertarget{class_ggml_ov_decoder_af09f420cdf34665ebcead82aa914e514}\label{class_ggml_ov_decoder_af09f420cdf34665ebcead82aa914e514} 
+int {\bfseries compute\+\_\+op\+\_\+case} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}node) const
+\item 
+\Hypertarget{class_ggml_ov_decoder_a962a4d0494057e58073dbb8eb06ab42c}\label{class_ggml_ov_decoder_a962a4d0494057e58073dbb8eb06ab42c} 
+bool {\bfseries node\+\_\+is\+\_\+used\+\_\+as\+\_\+src} (const int node\+\_\+idx)
+\item 
+\Hypertarget{class_ggml_ov_decoder_aa075368b65375f7e159a48390af646cd}\label{class_ggml_ov_decoder_aa075368b65375f7e159a48390af646cd} 
+void {\bfseries compute\+\_\+model\+\_\+inputs} ()
+\item 
+\Hypertarget{class_ggml_ov_decoder_a6a1a28328100371ed6f25552c2aabd07}\label{class_ggml_ov_decoder_a6a1a28328100371ed6f25552c2aabd07} 
+void {\bfseries compute\+\_\+model\+\_\+outputs} ()
+\item 
+\Hypertarget{class_ggml_ov_decoder_a758007ee31cfd556684a248e36a23cb9}\label{class_ggml_ov_decoder_a758007ee31cfd556684a248e36a23cb9} 
+void {\bfseries validate\+\_\+cgraph} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_ggml_ov_decoder_ae77f9442bf65697a82e0168d6d41b9b1}\label{class_ggml_ov_decoder_ae77f9442bf65697a82e0168d6d41b9b1} 
+\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*} {\bfseries m\+\_\+cgraph} = nullptr
+\item 
+\Hypertarget{class_ggml_ov_decoder_a14cdf782c84eda9fa33a97bb3ca35127}\label{class_ggml_ov_decoder_a14cdf782c84eda9fa33a97bb3ca35127} 
+std::\+map$<$ std::\+string, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries m\+\_\+inputs}
+\item 
+\Hypertarget{class_ggml_ov_decoder_aaefd75805c69def7175a5f2ee1515a84}\label{class_ggml_ov_decoder_aaefd75805c69def7175a5f2ee1515a84} 
+std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ {\bfseries m\+\_\+model\+\_\+inputs}
+\item 
+\Hypertarget{class_ggml_ov_decoder_a0cc31186c1a5657ca20431d34c005d57}\label{class_ggml_ov_decoder_a0cc31186c1a5657ca20431d34c005d57} 
+std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ {\bfseries m\+\_\+model\+\_\+extra\+\_\+inputs}
+\item 
+\Hypertarget{class_ggml_ov_decoder_a794027e7a65322e60f30cb92d3a50f70}\label{class_ggml_ov_decoder_a794027e7a65322e60f30cb92d3a50f70} 
+std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Tensor $>$ $>$ {\bfseries m\+\_\+model\+\_\+extra\+\_\+input\+\_\+values}
+\item 
+\Hypertarget{class_ggml_ov_decoder_ac977cf7e822884c71c6d36f6711e7151}\label{class_ggml_ov_decoder_ac977cf7e822884c71c6d36f6711e7151} 
+std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ {\bfseries m\+\_\+model\+\_\+weights}
+\item 
+\Hypertarget{class_ggml_ov_decoder_a98b7168bbc2655327d87adb8d3049b83}\label{class_ggml_ov_decoder_a98b7168bbc2655327d87adb8d3049b83} 
+std::\+map$<$ std::\+string, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries m\+\_\+model\+\_\+outputs}
+\item 
+\Hypertarget{class_ggml_ov_decoder_ab3580224364daed525b1c9df9447346f}\label{class_ggml_ov_decoder_ab3580224364daed525b1c9df9447346f} 
+std::\+vector$<$ std::\+string $>$ {\bfseries m\+\_\+model\+\_\+output\+\_\+names}
+\item 
+\Hypertarget{class_ggml_ov_decoder_a53bb70eb86e99c2ef532eec33ad39fce}\label{class_ggml_ov_decoder_a53bb70eb86e99c2ef532eec33ad39fce} 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_ggml_ov_decoder_1_1_node_info}{Node\+Info}} $>$ {\bfseries m\+\_\+node\+\_\+info\+\_\+list}
+\item 
+\Hypertarget{class_ggml_ov_decoder_a23ad69f35c457760e4454a58175cca56}\label{class_ggml_ov_decoder_a23ad69f35c457760e4454a58175cca56} 
+\doxymbox{\hyperlink{struct_model_params}{Model\+Params}} {\bfseries m\+\_\+model\+\_\+params}
+\item 
+\Hypertarget{class_ggml_ov_decoder_a95b6eef71faac866079ce549974310ea}\label{class_ggml_ov_decoder_a95b6eef71faac866079ce549974310ea} 
+\doxymbox{\hyperlink{struct_compute_params}{Compute\+Params}} {\bfseries m\+\_\+compute\+\_\+params}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_ggml_ov_decoder_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_ggml_ov_decoder_a2da010592cd334a2efdeb8ed6fb80c57}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_attribute@{get\_attribute}}
+\index{get\_attribute@{get\_attribute}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_attribute()}{get\_attribute()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a2da010592cd334a2efdeb8ed6fb80c57} 
+virtual ov::\+\+Any Ggml\+Ov\+Decoder::\+get\+\_\+attribute (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_aa1b20bc540889e37a288b925b5c26eca}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_input\_names@{get\_input\_names}}
+\index{get\_input\_names@{get\_input\_names}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_input\_names()}{get\_input\_names()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_aa1b20bc540889e37a288b925b5c26eca} 
+std::\+vector$<$ std::\+string $>$ Ggml\+Ov\+Decoder::\+get\+\_\+input\+\_\+names (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_aee8ae60d0a23ac6693efa89996381fbf}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_input\_node@{get\_input\_node}}
+\index{get\_input\_node@{get\_input\_node}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_input\_node()}{get\_input\_node()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_aee8ae60d0a23ac6693efa89996381fbf} 
+virtual void Ggml\+Ov\+Decoder::\+get\+\_\+input\+\_\+node (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{input\+\_\+port\+\_\+idx}{, }\item[{std::\+string \&}]{producer\+\_\+name}{, }\item[{std::\+string \&}]{producer\+\_\+output\+\_\+port\+\_\+name}{, }\item[{size\+\_\+t \&}]{producer\+\_\+output\+\_\+port\+\_\+index}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a4ea34ee3471844a5f502f07f3151afca}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_input\_op\_params@{get\_input\_op\_params}}
+\index{get\_input\_op\_params@{get\_input\_op\_params}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_input\_op\_params()}{get\_input\_op\_params()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a4ea34ee3471844a5f502f07f3151afca} 
+int32\+\_\+t \texorpdfstring{$\ast$}{*} Ggml\+Ov\+Decoder::\+get\+\_\+input\+\_\+op\+\_\+params (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{, }\item[{const std::\+string \&}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a92420d365774b7307a953394f32c823e}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_input\_shape@{get\_input\_shape}}
+\index{get\_input\_shape@{get\_input\_shape}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_input\_shape()}{get\_input\_shape()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a92420d365774b7307a953394f32c823e} 
+ov::\+\+Partial\+Shape Ggml\+Ov\+Decoder::\+get\+\_\+input\+\_\+shape (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{, }\item[{const std::\+string \&}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a816e0112619656257aec05c6b3e7edbe}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_input\_size@{get\_input\_size}}
+\index{get\_input\_size@{get\_input\_size}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_input\_size()}{get\_input\_size()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a816e0112619656257aec05c6b3e7edbe} 
+size\+\_\+t Ggml\+Ov\+Decoder::\+get\+\_\+input\+\_\+size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a920d0c6260d9aa53efff1fde154b4ecf}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_input\_size@{get\_input\_size}}
+\index{get\_input\_size@{get\_input\_size}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_input\_size()}{get\_input\_size()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a920d0c6260d9aa53efff1fde154b4ecf} 
+size\+\_\+t Ggml\+Ov\+Decoder::\+get\+\_\+input\+\_\+size (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_ab176fb44dfeb15e01e800a6ca5adf6e5}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_input\_stride@{get\_input\_stride}}
+\index{get\_input\_stride@{get\_input\_stride}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_input\_stride()}{get\_input\_stride()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_ab176fb44dfeb15e01e800a6ca5adf6e5} 
+std::\+vector$<$ size\+\_\+t $>$ Ggml\+Ov\+Decoder::\+get\+\_\+input\+\_\+stride (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{, }\item[{const std::\+string \&}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a982eec30861e6d73a2cf208fa2c7cc8d}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_input\_type@{get\_input\_type}}
+\index{get\_input\_type@{get\_input\_type}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_input\_type()}{get\_input\_type()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a982eec30861e6d73a2cf208fa2c7cc8d} 
+ov::\+element::\+\+Type Ggml\+Ov\+Decoder::\+get\+\_\+input\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{, }\item[{const std::\+string \&}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a6e18e654158941124b8e9e764e572d27}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_kv\_param\_res\_names@{get\_kv\_param\_res\_names}}
+\index{get\_kv\_param\_res\_names@{get\_kv\_param\_res\_names}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_kv\_param\_res\_names()}{get\_kv\_param\_res\_names()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a6e18e654158941124b8e9e764e572d27} 
+std::\+map$<$ std::\+string, std::\+string $>$ Ggml\+Ov\+Decoder::\+get\+\_\+kv\+\_\+param\+\_\+res\+\_\+names (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a024d1ce51138387bfc186fcedc625e60}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_model\_extra\_inputs@{get\_model\_extra\_inputs}}
+\index{get\_model\_extra\_inputs@{get\_model\_extra\_inputs}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_model\_extra\_inputs()}{get\_model\_extra\_inputs()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a024d1ce51138387bfc186fcedc625e60} 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \& Ggml\+Ov\+Decoder::\+get\+\_\+model\+\_\+extra\+\_\+inputs (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_ac1b90cbcad7e3627d516fe413c4d1815}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_model\_inputs@{get\_model\_inputs}}
+\index{get\_model\_inputs@{get\_model\_inputs}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_model\_inputs()}{get\_model\_inputs()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_ac1b90cbcad7e3627d516fe413c4d1815} 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \& Ggml\+Ov\+Decoder::\+get\+\_\+model\+\_\+inputs (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a9d92b9cf65d569cf86bf4de39ecf843e}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_model\_output\_names@{get\_model\_output\_names}}
+\index{get\_model\_output\_names@{get\_model\_output\_names}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_model\_output\_names()}{get\_model\_output\_names()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a9d92b9cf65d569cf86bf4de39ecf843e} 
+virtual std::\+vector$<$ std::\+string $>$ Ggml\+Ov\+Decoder::\+get\+\_\+model\+\_\+output\+\_\+names (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a1acef4385b6ab2dd8f3abc9277a03c89}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_model\_weights@{get\_model\_weights}}
+\index{get\_model\_weights@{get\_model\_weights}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_model\_weights()}{get\_model\_weights()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a1acef4385b6ab2dd8f3abc9277a03c89} 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \& Ggml\+Ov\+Decoder::\+get\+\_\+model\+\_\+weights (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_ab16eca302668dc9defdf8a69335863b9}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_op\_case@{get\_op\_case}}
+\index{get\_op\_case@{get\_op\_case}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_op\_case()}{get\_op\_case()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_ab16eca302668dc9defdf8a69335863b9} 
+virtual int Ggml\+Ov\+Decoder::\+get\+\_\+op\+\_\+case (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a79369d4f2ac9103def44d40f6a86dcf9}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_op\_name@{get\_op\_name}}
+\index{get\_op\_name@{get\_op\_name}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_op\_name()}{get\_op\_name()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a79369d4f2ac9103def44d40f6a86dcf9} 
+const std::\+string \& Ggml\+Ov\+Decoder::\+get\+\_\+op\+\_\+name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a167d78f1a0610ed3f3952943f1fb4d4f}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_op\_name@{get\_op\_name}}
+\index{get\_op\_name@{get\_op\_name}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_op\_name()}{get\_op\_name()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a167d78f1a0610ed3f3952943f1fb4d4f} 
+const std::\+string \& Ggml\+Ov\+Decoder::\+get\+\_\+op\+\_\+name (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_abbc21d6f818da51bcb581f140aee15ae}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_op\_type@{get\_op\_type}}
+\index{get\_op\_type@{get\_op\_type}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_op\_type()}{get\_op\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_abbc21d6f818da51bcb581f140aee15ae} 
+const std::\+string \& Ggml\+Ov\+Decoder::\+get\+\_\+op\+\_\+type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a391bda5c62c3bc04e248f0c15f0e1399}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_op\_type@{get\_op\_type}}
+\index{get\_op\_type@{get\_op\_type}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_op\_type()}{get\_op\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a391bda5c62c3bc04e248f0c15f0e1399} 
+const std::\+string \& Ggml\+Ov\+Decoder::\+get\+\_\+op\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a54a5cbbe7d8de8e26e930b7f7f460140}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_output\_names@{get\_output\_names}}
+\index{get\_output\_names@{get\_output\_names}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_output\_names()}{get\_output\_names()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a54a5cbbe7d8de8e26e930b7f7f460140} 
+std::\+vector$<$ std::\+string $>$ Ggml\+Ov\+Decoder::\+get\+\_\+output\+\_\+names (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_ae28aa274e01eb8aae9e69c3a0736b680}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_output\_op\_params@{get\_output\_op\_params}}
+\index{get\_output\_op\_params@{get\_output\_op\_params}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_output\_op\_params()}{get\_output\_op\_params()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_ae28aa274e01eb8aae9e69c3a0736b680} 
+int32\+\_\+t \texorpdfstring{$\ast$}{*} Ggml\+Ov\+Decoder::\+get\+\_\+output\+\_\+op\+\_\+params (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a3d0119613e6f0e21c5c01c1bc994bb36}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_output\_shape@{get\_output\_shape}}
+\index{get\_output\_shape@{get\_output\_shape}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_output\_shape()}{get\_output\_shape()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a3d0119613e6f0e21c5c01c1bc994bb36} 
+ov::\+\+Partial\+Shape Ggml\+Ov\+Decoder::\+get\+\_\+output\+\_\+shape (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a9bc5d6f332d60a5e0c085ba57e3a41f2}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_output\_type@{get\_output\_type}}
+\index{get\_output\_type@{get\_output\_type}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_output\_type()}{get\_output\_type()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a9bc5d6f332d60a5e0c085ba57e3a41f2} 
+ov::\+element::\+\+Type Ggml\+Ov\+Decoder::\+get\+\_\+output\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{node\+\_\+idx}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_ae9e74de6b663cebfeea5aad535a0c174}\index{GgmlOvDecoder@{GgmlOvDecoder}!get\_rope\_params@{get\_rope\_params}}
+\index{get\_rope\_params@{get\_rope\_params}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{get\_rope\_params()}{get\_rope\_params()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_ae9e74de6b663cebfeea5aad535a0c174} 
+virtual int32\+\_\+t \texorpdfstring{$\ast$}{*} Ggml\+Ov\+Decoder::\+get\+\_\+rope\+\_\+params (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a38b57c0a412384ed9e038735c8c20f93}\index{GgmlOvDecoder@{GgmlOvDecoder}!is\_stateful@{is\_stateful}}
+\index{is\_stateful@{is\_stateful}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{is\_stateful()}{is\_stateful()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a38b57c0a412384ed9e038735c8c20f93} 
+virtual bool Ggml\+Ov\+Decoder::\+is\+\_\+stateful (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a74e8d454a24eeaae0e819184d3a73950}\index{GgmlOvDecoder@{GgmlOvDecoder}!is\_static@{is\_static}}
+\index{is\_static@{is\_static}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{is\_static()}{is\_static()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a74e8d454a24eeaae0e819184d3a73950} 
+virtual bool Ggml\+Ov\+Decoder::\+is\+\_\+static (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+\Hypertarget{class_ggml_ov_decoder_a7cae349f062286f41e17c58e2524b98f}\index{GgmlOvDecoder@{GgmlOvDecoder}!is\_swa\_layer@{is\_swa\_layer}}
+\index{is\_swa\_layer@{is\_swa\_layer}!GgmlOvDecoder@{GgmlOvDecoder}}
+\doxysubsubsection{\texorpdfstring{is\_swa\_layer()}{is\_swa\_layer()}}
+{\footnotesize\ttfamily \label{class_ggml_ov_decoder_a7cae349f062286f41e17c58e2524b98f} 
+virtual int Ggml\+Ov\+Decoder::\+is\+\_\+swa\+\_\+layer (\begin{DoxyParamCaption}\item[{int}]{layer}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{ov::\+frontend::\+ggml::\+\+Ggml\+Decoder}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/openvino/\+ggml-\/decoder.\+h\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/openvino/\+ggml-\/decoder.\+cpp\end{DoxyCompactItemize}

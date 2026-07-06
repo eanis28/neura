@@ -1,0 +1,41 @@
+\doxysection{llama-\/io.h}
+\hypertarget{llama-io_8h_source}{}\label{llama-io_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/io.h@{whisper.cpp/examples/talk-\/llama/llama-\/io.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}};}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }llama\_io\_write\_i\ \{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00011\ \ \ \ \ llama\_io\_write\_i()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llama\_io\_write\_i()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ write(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ src,\ \textcolor{keywordtype}{size\_t}\ size)\ =\ 0;}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ write\_tensor(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{size\_t}\ size)\ =\ 0;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{//\ bytes\ written\ so\ far}}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{size\_t}\ n\_bytes()\ =\ 0;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ write\_string(\textcolor{keyword}{const}\ std::string\ \&\ str);}
+\DoxyCodeLine{00021\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }llama\_io\_read\_i\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ llama\_io\_read\_i()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llama\_io\_read\_i()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ uint8\_t\ *\ read(\textcolor{keywordtype}{size\_t}\ size)\ =\ 0;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ read\_to(\textcolor{keywordtype}{void}\ *\ dst,\ \textcolor{keywordtype}{size\_t}\ size)\ =\ 0;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ bytes\ read\ so\ far}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{size\_t}\ n\_bytes()\ =\ 0;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ read\_string(std::string\ \&\ str);}
+\DoxyCodeLine{00035\ \};}
+
+\end{DoxyCode}

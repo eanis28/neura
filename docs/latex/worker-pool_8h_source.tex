@@ -1,0 +1,59 @@
+\doxysection{worker-\/pool.h}
+\hypertarget{worker-pool_8h_source}{}\label{worker-pool_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/worker-\/pool.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/worker-\/pool.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HTP\_WORKER\_POOL\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HTP\_WORKER\_POOL\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ MACRO\ enables\ function\ to\ be\ visible\ in\ shared-\/library\ case.}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ WORKERPOOL\_API\ \_\_attribute\_\_((visibility("{}default"{})))}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <AEEStdDef.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <AEEStdErr.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{typedef}\ void\ (*worker\_callback\_t)(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *\ worker\_pool\_context\_t;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00023\ \ \ \ \ worker\_callback\_t\ func;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ data;}
+\DoxyCodeLine{00025\ \}\ \doxymbox{\hyperlink{structworker__pool__job__t}{worker\_pool\_job\_t}};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ MAX\_NUM\_WORKERS\ 10}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ Initialize\ worker\ pool.}}
+\DoxyCodeLine{00031\ WORKERPOOL\_API\ AEEResult\ worker\_pool\_init(worker\_pool\_context\_t\ *\ context,\ uint32\_t\ n\_threads);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Initialize\ worker\ pool\ with\ custom\ stack\ size}}
+\DoxyCodeLine{00034\ WORKERPOOL\_API\ AEEResult\ worker\_pool\_init\_with\_stack\_size(worker\_pool\_context\_t\ *\ context,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_threads,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stack\_size);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ Kill\ worker\ threads\ and\ release\ worker\ pool\ resources}}
+\DoxyCodeLine{00039\ WORKERPOOL\_API\ \textcolor{keywordtype}{void}\ worker\_pool\_release(worker\_pool\_context\_t\ *\ context);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ Run\ jobs\ with\ the\ worker\ pool.}}
+\DoxyCodeLine{00042\ WORKERPOOL\_API\ AEEResult\ worker\_pool\_run\_jobs(worker\_pool\_context\_t\ context,\ \doxymbox{\hyperlink{structworker__pool__job__t}{worker\_pool\_job\_t}}\ *\ job,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ WORKERPOOL\_API\ AEEResult\ worker\_pool\_run\_func(worker\_pool\_context\_t\ context,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ worker\_callback\_t\ \ \ \ \ func,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ n);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ WORKERPOOL\_API\ AEEResult\ worker\_pool\_set\_thread\_priority(worker\_pool\_context\_t\ context,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ prio);}
+\DoxyCodeLine{00050\ WORKERPOOL\_API\ AEEResult\ worker\_pool\_get\_thread\_priority(worker\_pool\_context\_t\ context,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *\ prio);}
+\DoxyCodeLine{00051\ WORKERPOOL\_API\ AEEResult\ worker\_pool\_retrieve\_thread\_id(worker\_pool\_context\_t\ context,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *\ tids);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00054\ \}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ \#ifndef\ HTP\_WORKER\_POOL\_H}}
+
+\end{DoxyCode}

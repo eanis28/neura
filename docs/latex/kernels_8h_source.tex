@@ -1,0 +1,96 @@
+\doxysection{kernels.\+h}
+\hypertarget{kernels_8h_source}{}\label{kernels_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/kleidiai/kernels.h@{whisper.cpp/ggml/src/ggml-\/cpu/kleidiai/kernels.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ SPDX-\/FileCopyrightText:\ Copyright\ 2025\ Arm\ Limited\ and/or\ its\ affiliates\ <open-\/source-\/office@arm.com>}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{enum}\ cpu\_feature\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ CPU\_FEATURE\_NONE\ \ \ \ =\ 0,}
+\DoxyCodeLine{00011\ \ \ \ \ CPU\_FEATURE\_DOTPROD\ =\ 1,}
+\DoxyCodeLine{00012\ \ \ \ \ CPU\_FEATURE\_I8MM\ \ \ \ =\ 2,}
+\DoxyCodeLine{00013\ \ \ \ \ CPU\_FEATURE\_SVE\ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00014\ \ \ \ \ CPU\_FEATURE\_SME\ \ \ \ \ =\ 8}
+\DoxyCodeLine{00015\ \};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{inline}\ cpu\_feature\&\ operator|=(cpu\_feature\&\ lhs,\ cpu\_feature\ rhs)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ lhs\ =\ \textcolor{keyword}{static\_cast<}cpu\_feature\textcolor{keyword}{>}(lhs\ |\ rhs);}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordflow}{return}\ lhs;}
+\DoxyCodeLine{00020\ \}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{inline}\ cpu\_feature\ operator|(cpu\_feature\ lhs,\ cpu\_feature\ rhs)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}cpu\_feature\textcolor{keyword}{>}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(lhs)\ |\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(rhs));}
+\DoxyCodeLine{00023\ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structkernel__info}{kernel\_info}}\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ size\_t\ (*get\_m\_step)(void);}
+\DoxyCodeLine{00027\ \ \ \ \ size\_t\ (*get\_n\_step)(void);}
+\DoxyCodeLine{00028\ \ \ \ \ size\_t\ (*get\_mr)(void);}
+\DoxyCodeLine{00029\ \ \ \ \ size\_t\ (*get\_nr)(void);}
+\DoxyCodeLine{00030\ \ \ \ \ size\_t\ (*get\_kr)(void);}
+\DoxyCodeLine{00031\ \ \ \ \ size\_t\ (*get\_sr)(void);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ size\_t\ (*get\_dst\_offset)(\textcolor{keywordtype}{size\_t}\ m\_idx,\ \textcolor{keywordtype}{size\_t}\ n\_idx,\ \textcolor{keywordtype}{size\_t}\ stride);}
+\DoxyCodeLine{00034\ \ \ \ \ size\_t\ (*get\_dst\_size)(\textcolor{keywordtype}{size\_t}\ m,\ \textcolor{keywordtype}{size\_t}\ n);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ size\_t\ (*get\_lhs\_offset\_ex)(\textcolor{keywordtype}{size\_t}\ m\_idx,\ \textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ bl);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ size\_t\ (*get\_rhs\_packed\_offset\_ex)(\textcolor{keywordtype}{size\_t}\ n\_idx,\ \textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ bl);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ void\ (*run\_kernel\_ex)(}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ m,\ \textcolor{keywordtype}{size\_t}\ n,\ \textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ bl,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ lhs\_packed,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ rhs\_packed,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ dst,\ \textcolor{keywordtype}{size\_t}\ dst\_stride\_row,\ \textcolor{keywordtype}{size\_t}\ dst\_stride\_col,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ clamp\_min,\ \textcolor{keywordtype}{float}\ clamp\_max);}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structlhs__packing__info}{lhs\_packing\_info}}\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ size\_t\ (*get\_offset)(\textcolor{keywordtype}{size\_t}\ m\_idx,\ \textcolor{keywordtype}{size\_t}\ lhs\_stride);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ size\_t\ (*get\_packed\_offset\_ex)(\textcolor{keywordtype}{size\_t}\ m\_idx,\ \textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ bl,\ \textcolor{keywordtype}{size\_t}\ mr,\ \textcolor{keywordtype}{size\_t}\ kr,\ \textcolor{keywordtype}{size\_t}\ sr);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ size\_t\ (*packed\_size\_ex)(\textcolor{keywordtype}{size\_t}\ m,\ \textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ bl,\ \textcolor{keywordtype}{size\_t}\ mr,\ \textcolor{keywordtype}{size\_t}\ kr,\ \textcolor{keywordtype}{size\_t}\ sr);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ void\ (*pack\_func\_ex)(\textcolor{keywordtype}{size\_t}\ m,\ \textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ bl,\ \textcolor{keywordtype}{size\_t}\ mr,\ \textcolor{keywordtype}{size\_t}\ kr,\ \textcolor{keywordtype}{size\_t}\ sr,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ m\_idx\_start,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ lhs,\ \textcolor{keywordtype}{size\_t}\ lhs\_stride,\ \textcolor{keywordtype}{void}\ *\ lhs\_packed);}
+\DoxyCodeLine{00056\ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structrhs__packing__info}{rhs\_packing\_info}}\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ size\_t\ (*packed\_stride)(\textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ nr,\ \textcolor{keywordtype}{size\_t}\ kr,\ \textcolor{keywordtype}{size\_t}\ bl);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ void\ (*to\_float)(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *packed\_data,\ int32\_t\ row\_idx,\ int64\_t\ nc,\ \textcolor{keywordtype}{float}\ *out,}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ nr\_pack,\ \textcolor{keywordtype}{size\_t}\ packed\_row\_stride,\ \textcolor{keywordtype}{size\_t}\ kr,\ \textcolor{keywordtype}{size\_t}\ bl,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ num\_bytes\_multiplier);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ size\_t\ (*packed\_size\_ex)(\textcolor{keywordtype}{size\_t}\ n,\ \textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ nr,\ \textcolor{keywordtype}{size\_t}\ kr,\ \textcolor{keywordtype}{size\_t}\ bl);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ size\_t\ (*packed\_stride\_ex)(\textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ nr,\ \textcolor{keywordtype}{size\_t}\ kr,\ \textcolor{keywordtype}{size\_t}\ bl);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ void\ (*pack\_func\_ex)(\textcolor{keywordtype}{size\_t}\ num\_groups,\ \textcolor{keywordtype}{size\_t}\ n,\ \textcolor{keywordtype}{size\_t}\ k,\ \textcolor{keywordtype}{size\_t}\ nr,\ \textcolor{keywordtype}{size\_t}\ kr,\ \textcolor{keywordtype}{size\_t}\ sr,\ \textcolor{keywordtype}{size\_t}\ bl,}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ rhs\_stride,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ rhs,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ bias,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ scale,\ \textcolor{keywordtype}{void}\ *\ rhs\_packed,\ \textcolor{keywordtype}{size\_t}\ extra\_bytes,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ params);}
+\DoxyCodeLine{00071\ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__kleidiai__kernels}{ggml\_kleidiai\_kernels}}\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \doxymbox{\hyperlink{structkernel__info}{kernel\_info}}\ \ \ \ \ \ gemm;}
+\DoxyCodeLine{00075\ \ \ \ \ \doxymbox{\hyperlink{structlhs__packing__info}{lhs\_packing\_info}}\ gemm\_lhs\_info;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \doxymbox{\hyperlink{structkernel__info}{kernel\_info}}\ \ \ \ \ \ gemv;}
+\DoxyCodeLine{00078\ \ \ \ \ \doxymbox{\hyperlink{structlhs__packing__info}{lhs\_packing\_info}}\ gemv\_lhs\_info;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \doxymbox{\hyperlink{structrhs__packing__info}{rhs\_packing\_info}}\ rhs\_info;}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ cpu\_feature\ required\_cpu;}
+\DoxyCodeLine{00083\ \ \ \ \ ggml\_type\ lhs\_type;}
+\DoxyCodeLine{00084\ \ \ \ \ ggml\_type\ rhs\_type;}
+\DoxyCodeLine{00085\ \ \ \ \ ggml\_type\ op\_type;}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \doxymbox{\hyperlink{structggml__kleidiai__kernels}{ggml\_kleidiai\_kernels}}\ *\ ggml\_kleidiai\_select\_kernels(cpu\_feature\ cpu\_features,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00089\ \doxymbox{\hyperlink{structggml__kleidiai__kernels}{ggml\_kleidiai\_kernels}}\ *\ ggml\_kleidiai\_select\_kernels\_q4\_0(cpu\_feature\ features);}
+\DoxyCodeLine{00090\ \doxymbox{\hyperlink{structggml__kleidiai__kernels}{ggml\_kleidiai\_kernels}}\ *\ ggml\_kleidiai\_select\_kernels\_q8\_0(cpu\_feature\ features);}
+
+\end{DoxyCode}

@@ -1,0 +1,43 @@
+\doxysection{htp\+\_\+matmul\+\_\+context Struct Reference}
+\hypertarget{structhtp__matmul__context}{}\label{structhtp__matmul__context}\index{htp\_matmul\_context@{htp\_matmul\_context}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structhtp__matmul__context_a127b40a999dc0cc32035cb81b9ecc978}\label{structhtp__matmul__context_a127b40a999dc0cc32035cb81b9ecc978} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries type}
+\item 
+\Hypertarget{structhtp__matmul__context_a1760d94be1e972c9efe240308f84c021}\label{structhtp__matmul__context_a1760d94be1e972c9efe240308f84c021} 
+struct \doxymbox{\hyperlink{structhtp__ops__context}{htp\+\_\+ops\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries octx}
+\item 
+\Hypertarget{structhtp__matmul__context_af3416b323700f4ea1536bfe1b564c812}\label{structhtp__matmul__context_af3416b323700f4ea1536bfe1b564c812} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries vec\+\_\+dot\+\_\+1x1} )(const int n, float \texorpdfstring{$\ast$}{*}restrict s0, const void \texorpdfstring{$\ast$}{*}restrict vx0, const void \texorpdfstring{$\ast$}{*}restrict vy0)
+\item 
+\Hypertarget{structhtp__matmul__context_aeed883add1af035a5d10418eda37605b}\label{structhtp__matmul__context_aeed883add1af035a5d10418eda37605b} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries vec\+\_\+dot\+\_\+2x1} )(const int n, float \texorpdfstring{$\ast$}{*}restrict s0, const void \texorpdfstring{$\ast$}{*}restrict vx0, const void \texorpdfstring{$\ast$}{*}restrict vx1, const void \texorpdfstring{$\ast$}{*}restrict vy0)
+\item 
+\Hypertarget{structhtp__matmul__context_a4bfee68f36b85c38720d61686d011d47}\label{structhtp__matmul__context_a4bfee68f36b85c38720d61686d011d47} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries vec\+\_\+dot\+\_\+2x2} )(const int n, float \texorpdfstring{$\ast$}{*}restrict s0, float \texorpdfstring{$\ast$}{*}restrict s1, const void \texorpdfstring{$\ast$}{*}restrict vx0, const void \texorpdfstring{$\ast$}{*}restrict vx1, const void \texorpdfstring{$\ast$}{*}restrict vy0, const void \texorpdfstring{$\ast$}{*}restrict vy1)
+\item 
+\Hypertarget{structhtp__matmul__context_a600359a4665a90ec5b0a35abb51c2607}\label{structhtp__matmul__context_a600359a4665a90ec5b0a35abb51c2607} 
+uint32\+\_\+t {\bfseries src0\+\_\+nrows\+\_\+per\+\_\+thread}
+\item 
+\Hypertarget{structhtp__matmul__context_a8b015c1c852d04507f47e84e0c6a3c18}\label{structhtp__matmul__context_a8b015c1c852d04507f47e84e0c6a3c18} 
+uint32\+\_\+t {\bfseries src1\+\_\+nrows\+\_\+per\+\_\+thread}
+\item 
+\Hypertarget{structhtp__matmul__context_a4e0f4d0046f5292dede46e6b7fe2cee8}\label{structhtp__matmul__context_a4e0f4d0046f5292dede46e6b7fe2cee8} 
+struct \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\+\_\+values}} {\bfseries mm\+\_\+div\+\_\+ne12\+\_\+ne1}
+\item 
+\Hypertarget{structhtp__matmul__context_a37a4f882a6ee588be99fa4e29ee1bce1}\label{structhtp__matmul__context_a37a4f882a6ee588be99fa4e29ee1bce1} 
+struct \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\+\_\+values}} {\bfseries mm\+\_\+div\+\_\+ne1}
+\item 
+\Hypertarget{structhtp__matmul__context_afe90e65b2100eda008ecc3ab6e2dedd0}\label{structhtp__matmul__context_afe90e65b2100eda008ecc3ab6e2dedd0} 
+struct \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\+\_\+values}} {\bfseries mm\+\_\+div\+\_\+r2}
+\item 
+\Hypertarget{structhtp__matmul__context_aa8a3347d4033bfd89a44c52bedb7795e}\label{structhtp__matmul__context_aa8a3347d4033bfd89a44c52bedb7795e} 
+struct \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\+\_\+values}} {\bfseries mm\+\_\+div\+\_\+r3}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/hexagon/\+htp/\+matmul-\/ops.\+c\end{DoxyCompactItemize}

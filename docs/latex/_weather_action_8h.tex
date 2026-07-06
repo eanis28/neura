@@ -1,0 +1,25 @@
+\doxysection{Weather\+Action.\+h File Reference}
+\hypertarget{_weather_action_8h}{}\label{_weather_action_8h}\index{WeatherAction.h@{WeatherAction.h}}
+
+
+\doxylink{class_action}{Action} that fetches current weather conditions via Open\+Weather\+Map.  
+
+
+{\ttfamily \+\#include "{}action.\+h"{}}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$optional$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_weather_data}{Weather\+Data}}
+\begin{DoxyCompactList}\small\item\em Holds the weather data returned by a successful \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{Weather\+Action::\+execute()} call. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_weather_action}{Weather\+Action}}
+\begin{DoxyCompactList}\small\item\em Fetches and exposes current weather for a given or resolved location. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_action}{Action} that fetches current weather conditions via Open\+Weather\+Map. 
+
+Requires weather\+Api\+Key to be set in config.\+ini. If no location is provided at construction, the action resolves one automatically:\+ first from config.\+default\+Location, then by falling back to IP-\/based geolocation as a last resort. \begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}

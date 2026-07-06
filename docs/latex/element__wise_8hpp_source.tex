@@ -1,0 +1,100 @@
+\doxysection{element\+\_\+wise.\+hpp}
+\hypertarget{element__wise_8hpp_source}{}\label{element__wise_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/element\_wise.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/element\_wise.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_ELEMENTWISE\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_ELEMENTWISE\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}common.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <limits>}\ \textcolor{comment}{//\ For\ std::numeric\_limits}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ SYCL\_GLU\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00011\ T\ neg\_infinity()\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/std::numeric\_limits<T>::infinity();}
+\DoxyCodeLine{00013\ \}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T\_Dst,\ \textcolor{keyword}{typename}\ T\_Src\ =\ T\_Dst>}
+\DoxyCodeLine{00016\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtyped__data}{typed\_data}}\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{const}\ T\_Src\ *\ src;}
+\DoxyCodeLine{00018\ \ \ \ \ T\_Dst\ *\ dst;}
+\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T\_Dst,\ \textcolor{keyword}{typename}\ T\_Src\ =\ T\_Dst>}
+\DoxyCodeLine{00022\ \doxymbox{\hyperlink{structtyped__data}{typed\_data<T\_Dst,\ T\_Src>}}\ cast\_data(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{return}\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ .src\ =\ */}\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }T\_Src\ *\textcolor{keyword}{>}(dst-\/>src[0]-\/>data),}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ .dst\ =\ */}\ \textcolor{keyword}{static\_cast<}T\_Dst\ *\textcolor{keyword}{>}(dst-\/>data)}
+\DoxyCodeLine{00026\ \ \ \ \ \};}
+\DoxyCodeLine{00027\ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ GELU\_QUICK\_COEF\ =\ -\/1.702f;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keywordtype}{void}\ ggml\_sycl\_sqrt(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{void}\ ggml\_sycl\_sin(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keywordtype}{void}\ ggml\_sycl\_cos(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{void}\ ggml\_sycl\_acc(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{void}\ ggml\_sycl\_gelu(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{void}\ ggml\_sycl\_silu(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{void}\ ggml\_sycl\_gelu\_quick(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keywordtype}{void}\ ggml\_sycl\_swiglu\_oai(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{void}\ ggml\_sycl\_gelu\_erf(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{void}\ ggml\_sycl\_tanh(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{void}\ ggml\_sycl\_relu(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{void}\ ggml\_sycl\_sigmoid(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keywordtype}{void}\ ggml\_sycl\_hardsigmoid(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{void}\ ggml\_sycl\_hardswish(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{void}\ ggml\_sycl\_exp(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{void}\ ggml\_sycl\_log(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keywordtype}{void}\ ggml\_sycl\_softplus(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keywordtype}{void}\ ggml\_sycl\_neg(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keywordtype}{void}\ ggml\_sycl\_step(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keywordtype}{void}\ ggml\_sycl\_leaky\_relu(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keywordtype}{void}\ ggml\_sycl\_sqr(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keywordtype}{void}\ ggml\_sycl\_clamp(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keywordtype}{void}\ ggml\_sycl\_sgn(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keywordtype}{void}\ ggml\_sycl\_abs(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{keywordtype}{void}\ ggml\_sycl\_elu(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keywordtype}{void}\ ggml\_sycl\_geglu(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00083\ \textcolor{keywordtype}{void}\ ggml\_sycl\_reglu(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00084\ \textcolor{keywordtype}{void}\ ggml\_sycl\_swiglu(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00085\ \textcolor{keywordtype}{void}\ ggml\_sycl\_geglu\_erf(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00086\ \textcolor{keywordtype}{void}\ ggml\_sycl\_geglu\_quick(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00087\ \textcolor{keywordtype}{void}\ ggml\_sycl\_floor(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00088\ \textcolor{keywordtype}{void}\ ggml\_sycl\_ceil(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00089\ \textcolor{keywordtype}{void}\ ggml\_sycl\_round(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{void}\ ggml\_sycl\_trunc(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keywordtype}{void}\ ggml\_sycl\_arange(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_ELEMENTWISE\_HPP}}
+
+\end{DoxyCode}

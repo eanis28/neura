@@ -1,0 +1,102 @@
+\doxysection{ggml-\/metal-\/ops.h}
+\hypertarget{ggml-metal-ops_8h_source}{}\label{ggml-metal-ops_8h_source}\index{whisper.cpp/ggml/src/ggml-\/metal/ggml-\/metal-\/ops.h@{whisper.cpp/ggml/src/ggml-\/metal/ggml-\/metal-\/ops.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/metal-\/device.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00006\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__op}{ggml\_metal\_op}}\ *\ ggml\_metal\_op\_t;}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ ggml\_metal\_op\_t\ ggml\_metal\_op\_init(}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ ggml\_metal\_device\_t\ dev,}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ ggml\_metal\_cmd\_buf\_t\ cmd\_buf,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ gf,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ idx\_start,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ idx\_end,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_fusion,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_concurrency,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_capture,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ debug\_graph,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ debug\_fusion);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{void}\ ggml\_metal\_op\_free(ggml\_metal\_op\_t\ ctx);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_n\_nodes(ggml\_metal\_op\_t\ ctx);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_encode(ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ available\ ops:}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ tokens\ per\ expert}}
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{size\_t}\ ggml\_metal\_op\_mul\_mat\_id\_extra\_tpe(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ id\ map\ [n\_tokens,\ n\_expert]}}
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{size\_t}\ ggml\_metal\_op\_mul\_mat\_id\_extra\_ids(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ return\ true\ if\ we\ should\ use\ the\ FA\ vector\ kernel\ for\ this\ op}}
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{bool}\ ggml\_metal\_op\_flash\_attn\_ext\_use\_vec(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{size\_t}\ ggml\_metal\_op\_flash\_attn\_ext\_extra\_pad(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00043\ \textcolor{keywordtype}{size\_t}\ ggml\_metal\_op\_flash\_attn\_ext\_extra\_blk(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{size\_t}\ ggml\_metal\_op\_flash\_attn\_ext\_extra\_tmp(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_concat\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_repeat\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_acc\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_unary\ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_glu\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_sum\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_sum\_rows\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_cumsum\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_get\_rows\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00055\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_set\_rows\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00056\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_diag\ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00057\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_soft\_max\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_ssm\_conv\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_ssm\_scan\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_rwkv\ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00061\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_gated\_delta\_net\ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_solve\_tri\ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00063\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_set\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00064\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_cpy\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00065\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_pool\_1d\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00066\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_pool\_2d\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00067\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_mul\_mat\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00068\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_mul\_mat\_id\ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00069\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_add\_id\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00070\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_flash\_attn\_ext\ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00071\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_bin\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00072\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_l2\_norm\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00073\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_group\_norm\ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00074\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_norm\ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00075\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_rope\ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00076\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_im2col\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00077\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_conv\_2d\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00078\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_conv\_3d\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00079\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_conv\_transpose\_1d\ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00080\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_conv\_transpose\_2d\ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00081\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_upscale\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00082\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_pad\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00083\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_pad\_reflect\_1d\ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00084\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_arange\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00085\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_timestep\_embedding(ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00086\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_argmax\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00087\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_argsort\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00088\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_top\_k\ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00089\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_tri\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_opt\_step\_adamw\ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_opt\_step\_sgd\ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00092\ \textcolor{keywordtype}{int}\ ggml\_metal\_op\_count\_equal\ \ \ \ \ \ \ (ggml\_metal\_op\_t\ ctx,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00095\ \}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

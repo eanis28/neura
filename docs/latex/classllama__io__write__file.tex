@@ -1,0 +1,77 @@
+\doxysection{llama\+\_\+io\+\_\+write\+\_\+file Class Reference}
+\hypertarget{classllama__io__write__file}{}\label{classllama__io__write__file}\index{llama\_io\_write\_file@{llama\_io\_write\_file}}
+Inheritance diagram for llama\+\_\+io\+\_\+write\+\_\+file:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllama__io__write__file}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__io__write__file_aae3f7a8202a8646abcbcd8c66dde5337}\label{classllama__io__write__file_aae3f7a8202a8646abcbcd8c66dde5337} 
+{\bfseries llama\+\_\+io\+\_\+write\+\_\+file} (\doxymbox{\hyperlink{structllama__file}{llama\+\_\+file}} \texorpdfstring{$\ast$}{*}f)
+\item 
+void \doxymbox{\hyperlink{classllama__io__write__file_aecca3575fbe1cb2933f5cde1ff4b54a0}{write}} (const void \texorpdfstring{$\ast$}{*}src, size\+\_\+t size) override
+\item 
+void \doxymbox{\hyperlink{classllama__io__write__file_aab3210cc1dd551057d86b3cca05efe98}{write\+\_\+tensor}} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, size\+\_\+t offset, size\+\_\+t size) override
+\item 
+size\+\_\+t \doxymbox{\hyperlink{classllama__io__write__file_af469fa9f6cfe19c842f6180726f3ee0b}{n\+\_\+bytes}} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries write\+\_\+string} (const std::\+string \&str)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__io__write__file_a0913e31008eb87d18819b81f523583f0}\label{classllama__io__write__file_a0913e31008eb87d18819b81f523583f0} 
+\doxymbox{\hyperlink{structllama__file}{llama\+\_\+file}} \texorpdfstring{$\ast$}{*} {\bfseries file}
+\item 
+\Hypertarget{classllama__io__write__file_a8e2eb9ca63a87a86bbd3c7c9415e16e4}\label{classllama__io__write__file_a8e2eb9ca63a87a86bbd3c7c9415e16e4} 
+size\+\_\+t {\bfseries size\+\_\+written} = 0
+\item 
+\Hypertarget{classllama__io__write__file_a1529aa5ce24b35e7fee829709f990da0}\label{classllama__io__write__file_a1529aa5ce24b35e7fee829709f990da0} 
+std::\+vector$<$ uint8\+\_\+t $>$ {\bfseries temp\+\_\+buffer}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllama__io__write__file_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllama__io__write__file_af469fa9f6cfe19c842f6180726f3ee0b}\index{llama\_io\_write\_file@{llama\_io\_write\_file}!n\_bytes@{n\_bytes}}
+\index{n\_bytes@{n\_bytes}!llama\_io\_write\_file@{llama\_io\_write\_file}}
+\doxysubsubsection{\texorpdfstring{n\_bytes()}{n\_bytes()}}
+{\footnotesize\ttfamily \label{classllama__io__write__file_af469fa9f6cfe19c842f6180726f3ee0b} 
+size\+\_\+t llama\+\_\+io\+\_\+write\+\_\+file::\+n\+\_\+bytes (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}}.
+
+\Hypertarget{classllama__io__write__file_aecca3575fbe1cb2933f5cde1ff4b54a0}\index{llama\_io\_write\_file@{llama\_io\_write\_file}!write@{write}}
+\index{write@{write}!llama\_io\_write\_file@{llama\_io\_write\_file}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}}
+{\footnotesize\ttfamily \label{classllama__io__write__file_aecca3575fbe1cb2933f5cde1ff4b54a0} 
+void llama\+\_\+io\+\_\+write\+\_\+file::\+write (\begin{DoxyParamCaption}\item[{const void \texorpdfstring{$\ast$}{*}}]{src}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}}.
+
+\Hypertarget{classllama__io__write__file_aab3210cc1dd551057d86b3cca05efe98}\index{llama\_io\_write\_file@{llama\_io\_write\_file}!write\_tensor@{write\_tensor}}
+\index{write\_tensor@{write\_tensor}!llama\_io\_write\_file@{llama\_io\_write\_file}}
+\doxysubsubsection{\texorpdfstring{write\_tensor()}{write\_tensor()}}
+{\footnotesize\ttfamily \label{classllama__io__write__file_aab3210cc1dd551057d86b3cca05efe98} 
+void llama\+\_\+io\+\_\+write\+\_\+file::\+write\+\_\+tensor (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}}]{tensor}{, }\item[{size\+\_\+t}]{offset}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/context.\+cpp\end{DoxyCompactItemize}

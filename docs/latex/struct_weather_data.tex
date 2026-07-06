@@ -1,0 +1,51 @@
+\doxysection{Weather\+Data Struct Reference}
+\hypertarget{struct_weather_data}{}\label{struct_weather_data}\index{WeatherData@{WeatherData}}
+
+
+Holds the weather data returned by a successful \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{Weather\+Action::\+execute()} call.  
+
+
+
+
+{\ttfamily \+\#include $<$Weather\+Action.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_weather_data_ab3f98d5b57d97a937d6a1f8caa5512d1}\label{struct_weather_data_ab3f98d5b57d97a937d6a1f8caa5512d1} 
+std::\+string {\bfseries location}
+\begin{DoxyCompactList}\small\item\em Resolved city/\+location name as returned by the API. \end{DoxyCompactList}\item 
+\Hypertarget{struct_weather_data_af0d9086be1b671068f0722bf2d578eda}\label{struct_weather_data_af0d9086be1b671068f0722bf2d578eda} 
+double {\bfseries temperature\+Celsius} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Current temperature in degrees Celsius. \end{DoxyCompactList}\item 
+\Hypertarget{struct_weather_data_a506a1bea6f5a3247c4db7847f265458e}\label{struct_weather_data_a506a1bea6f5a3247c4db7847f265458e} 
+double {\bfseries temperature\+Fahrenheit} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Current temperature in degrees Fahrenheit. \end{DoxyCompactList}\item 
+\Hypertarget{struct_weather_data_a8f4dff8c77da0d9771e8fdb455e309af}\label{struct_weather_data_a8f4dff8c77da0d9771e8fdb455e309af} 
+int {\bfseries humidity} = 0
+\begin{DoxyCompactList}\small\item\em Relative humidity as a percentage (0–100). \end{DoxyCompactList}\item 
+\Hypertarget{struct_weather_data_afc12c723a69750027630fa74aab00c2f}\label{struct_weather_data_afc12c723a69750027630fa74aab00c2f} 
+double {\bfseries wind\+Speed\+Kph} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Wind speed in kilometres per hour. \end{DoxyCompactList}\item 
+\Hypertarget{struct_weather_data_a527d09f122fc8c878fc0f5c3aa67e9c5}\label{struct_weather_data_a527d09f122fc8c878fc0f5c3aa67e9c5} 
+std::\+string {\bfseries condition}
+\begin{DoxyCompactList}\small\item\em Human-\/readable condition string (e.\+g. "{}\+Partly cloudy"{}). \end{DoxyCompactList}\item 
+\Hypertarget{struct_weather_data_ab59d5d7e8cad87ee27e8a508715f138b}\label{struct_weather_data_ab59d5d7e8cad87ee27e8a508715f138b} 
+std::\+string {\bfseries icon\+Code}
+\begin{DoxyCompactList}\small\item\em Open\+Weather\+Map icon code (e.\+g. "{}02d"{}); use to build icon URLs. \end{DoxyCompactList}\item 
+\Hypertarget{struct_weather_data_a291d9494ec66b0b6328ad11e2665fd46}\label{struct_weather_data_a291d9494ec66b0b6328ad11e2665fd46} 
+std::\+string {\bfseries fetched\+At}
+\begin{DoxyCompactList}\small\item\em ISO 8601 UTC timestamp of when the data was retrieved. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Holds the weather data returned by a successful \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{Weather\+Action::\+execute()} call. 
+
+Populated by \doxylink{class_weather_action_a1be02eed81d251de4991190802a4d616}{Weather\+Action::\+parse\+Response()} and retrievable via \doxylink{class_weather_action_a6f230a93f12322a2aaf9df48de4fc431}{Weather\+Action::\+get\+Result()}. Temperature is provided in both Celsius and Fahrenheit for convenience; all other measurements use SI-\/adjacent units as noted per field. \begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_weather_action_8h}{Weather\+Action.\+h}}\end{DoxyCompactItemize}

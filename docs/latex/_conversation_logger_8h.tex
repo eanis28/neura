@@ -1,0 +1,24 @@
+\doxysection{Conversation\+Logger.\+h File Reference}
+\hypertarget{_conversation_logger_8h}{}\label{_conversation_logger_8h}\index{ConversationLogger.h@{ConversationLogger.h}}
+
+
+Real-\/time JSON logger for command/\+response exchanges.  
+
+
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$fstream$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_conversation_logger}{Conversation\+Logger}}
+\begin{DoxyCompactList}\small\item\em Appends structured JSON log entries for every command/\+response cycle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Real-\/time JSON logger for command/\+response exchanges. 
+
+Every exchange is appended to a JSON array immediately after it occurs, so the log file is always current — even if the program exits unexpectedly. \doxylink{requirements_The}{The} output file is a valid JSON array for the entire session.
+
+Output format (conversation.\+json):\+ \begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}

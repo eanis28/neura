@@ -1,0 +1,49 @@
+\doxysection{io.\+github.\+ggerganov.\+whispercpp.\+callbacks.\+Whisper\+Logits\+Filter\+Callback Interface Reference}
+\hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_logits_filter_callback}{}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_logits_filter_callback}\index{io.github.ggerganov.whispercpp.callbacks.WhisperLogitsFilterCallback@{io.github.ggerganov.whispercpp.callbacks.WhisperLogitsFilterCallback}}
+Inheritance diagram for io.\+github.\+ggerganov.\+whispercpp.\+callbacks.\+Whisper\+Logits\+Filter\+Callback:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_logits_filter_callback}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_logits_filter_callback_ab7946b0eb217fc7aaf8ff920487c6c08}{callback}} (Pointer ctx, Pointer state, \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_token_data}{Whisper\+Token\+Data}}\+[$\,$]\+ tokens, int n\+\_\+tokens, float\+[$\,$]\+ logits, Pointer user\+\_\+data)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Callback to filter logits. Can be used to modify the logits before sampling. If not null, called after applying temperature to logits. 
+
+\label{doc-func-members}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_logits_filter_callback_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_logits_filter_callback_ab7946b0eb217fc7aaf8ff920487c6c08}\index{io.github.ggerganov.whispercpp.callbacks.WhisperLogitsFilterCallback@{io.github.ggerganov.whispercpp.callbacks.WhisperLogitsFilterCallback}!callback@{callback}}
+\index{callback@{callback}!io.github.ggerganov.whispercpp.callbacks.WhisperLogitsFilterCallback@{io.github.ggerganov.whispercpp.callbacks.WhisperLogitsFilterCallback}}
+\doxysubsubsection{\texorpdfstring{callback()}{callback()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_logits_filter_callback_ab7946b0eb217fc7aaf8ff920487c6c08} 
+void io.\+github.\+ggerganov.\+whispercpp.\+callbacks.\+Whisper\+Logits\+Filter\+Callback.\+callback (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{Pointer}]{state}{, }\item[{\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_token_data}{Whisper\+Token\+Data}}\+[$\,$]\+}]{tokens}{, }\item[{int}]{n\+\_\+tokens}{, }\item[{float\+[$\,$]\+}]{logits}{, }\item[{Pointer}]{user\+\_\+data}{}\end{DoxyParamCaption})}
+
+Callback method to filter logits.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & \doxylink{requirements_The}{The} whisper context. \\
+\hline
+{\em state} & \doxylink{requirements_The}{The} whisper state. \\
+\hline
+{\em tokens} & \doxylink{requirements_The}{The} array of \doxylink{structwhisper__token__data}{whisper\+\_\+token\+\_\+data}. \\
+\hline
+{\em n\+\_\+tokens} & \doxylink{requirements_The}{The} number of tokens. \\
+\hline
+{\em logits} & \doxylink{requirements_The}{The} array of logits. \\
+\hline
+{\em user\+\_\+data} & User data. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this interface was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+bindings/\+java/\+src/\+main/\+java/\+io/\+github/\+ggerganov/\+whispercpp/\+callbacks/\+Whisper\+Logits\+Filter\+Callback.\+java\end{DoxyCompactItemize}

@@ -1,0 +1,91 @@
+\doxysection{utils.\+h}
+\hypertarget{openvino_2utils_8h_source}{}\label{openvino_2utils_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/openvino/utils.h@{whisper.cpp/ggml/src/ggml-\/openvino/openvino/utils.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <openvino/core/node.hpp>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <openvino/op/shape\_of.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <openvino/op/slice.hpp>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}node\_context.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }ov\ \{}
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }frontend\ \{}
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }ggml\ \{}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ std::string\ getCurrentTime();}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{void}\ dump\_ov\_model(std::shared\_ptr<ov::Model>\ model);}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{void}\ num\_inputs\_check(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_node_context}{NodeContext}}\&\ context,\ \textcolor{keywordtype}{size\_t}\ min\_inputs,\ \textcolor{keywordtype}{size\_t}\ max\_inputs);}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keywordtype}{int}\ non\_cont\_dim(std::vector<size\_t>\ ne,\ std::vector<size\_t>\ nb);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00024\ std::vector<int>\ argsort\_descend(\textcolor{keyword}{const}\ std::vector<T>\&\ v)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ std::vector<int>\ idx(v.size());}
+\DoxyCodeLine{00026\ \ \ \ \ std::iota(idx.begin(),\ idx.end(),\ 0);}
+\DoxyCodeLine{00027\ \ \ \ \ std::sort(idx.begin(),\ idx.end(),\ [\&v](\textcolor{keywordtype}{int}\ i1,\ \textcolor{keywordtype}{int}\ i2)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ return\ v[i1]\ >\ v[i2];}
+\DoxyCodeLine{00029\ \ \ \ \ \});}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{return}\ idx;}
+\DoxyCodeLine{00031\ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00034\ std::vector<T>\ sorted\_descend(std::vector<T>\ v)\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ std::sort(v.begin(),\ v.end(),\ [](T\ a,\ T\ b)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ return\ a\ >\ b;}
+\DoxyCodeLine{00037\ \ \ \ \ \});}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00039\ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{bool}\ is\_permuted(\textcolor{keyword}{const}\ std::vector<T>\&\ strides)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ strides.size()\ -\/\ 1;\ ++i)\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strides[i]\ <\ strides[i\ +\ 1])\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00049\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00052\ std::vector<T>\ permute(\textcolor{keyword}{const}\ std::vector<T>\&\ x,\ \textcolor{keyword}{const}\ std::vector<int>\&\ perm)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ std::vector<T>\ result;}
+\DoxyCodeLine{00054\ \ \ \ \ result.reserve(perm.size());}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ :\ perm)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ result.push\_back(x[i]);}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ std::shared\_ptr<ov::Node>\ get\_dimensions(\textcolor{keyword}{const}\ std::shared\_ptr<ov::op::v3::ShapeOf>\&\ shape,}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<int>\&\ dims);}
+\DoxyCodeLine{00063\ std::shared\_ptr<ov::Node>\ get\_dimensions(\textcolor{keyword}{const}\ std::shared\_ptr<ov::Node>\&\ node,\ \textcolor{keyword}{const}\ std::vector<int>\&\ dims);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ OutputVector\ rename\_outputs\_with\_suffix(\textcolor{keyword}{const}\ OutputVector\&\ outputs,\ \textcolor{keyword}{const}\ std::string\&\ suffix);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ std::pair<ov::Output<Node>,\ ov::Output<Node>>\ make\_sin\_cos(int32\_t*\ rope\_params,}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<ov::Node>\ inp\_pos,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<ov::Node>\ rope\_freqs\_weight\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ stateful\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ ov::Output<ov::Node>\ process\_view\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_node_context}{NodeContext}}\&\ context,\ \textcolor{keywordtype}{int}\ input\_index,\ \textcolor{keywordtype}{int}\ slice\_len\ =\ 0);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{namespace\ }op\ \{}
+\DoxyCodeLine{00075\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00076\ OutputVector\ translate\_1to1\_match\_2\_inputs(\textcolor{keyword}{const}\ NodeContext\&\ context)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ num\_inputs\_check(context,\ 2,\ 2);}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{auto}\ res\ =\ std::make\_shared<T>(context.get\_input(0),\ context.get\_input(1));}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{return}\ rename\_outputs\_with\_suffix(\{res\},\ context.get\_name());}
+\DoxyCodeLine{00080\ \}}
+\DoxyCodeLine{00081\ \}\ \ \textcolor{comment}{//\ namespace\ op}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \}\ \ \textcolor{comment}{//\ namespace\ ggml}}
+\DoxyCodeLine{00084\ \}\ \ \textcolor{comment}{//\ namespace\ frontend}}
+\DoxyCodeLine{00085\ \}\ \ \textcolor{comment}{//\ namespace\ ov}}
+
+\end{DoxyCode}

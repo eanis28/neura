@@ -1,0 +1,203 @@
+\doxysection{whisper-\/arch.h}
+\hypertarget{whisper-arch_8h_source}{}\label{whisper-arch_8h_source}\index{whisper.cpp/src/whisper-\/arch.h@{whisper.cpp/src/whisper-\/arch.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{enum}\ asr\_tensor\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ ASR\_TENSOR\_ENC\_POS\_EMBD,}
+\DoxyCodeLine{00009\ \ \ \ \ ASR\_TENSOR\_DEC\_POS\_EMBD,}
+\DoxyCodeLine{00010\ \ \ \ \ ASR\_TENSOR\_DEC\_TOKEN\_EMBD\_WEIGHT,}
+\DoxyCodeLine{00011\ \ \ \ \ ASR\_TENSOR\_LN\_WEIGHT,}
+\DoxyCodeLine{00012\ \ \ \ \ ASR\_TENSOR\_LN\_BIAS,}
+\DoxyCodeLine{00013\ \ \ \ \ ASR\_TENSOR\_CONV1\_WEIGHT,}
+\DoxyCodeLine{00014\ \ \ \ \ ASR\_TENSOR\_CONV1\_BIAS,}
+\DoxyCodeLine{00015\ \ \ \ \ ASR\_TENSOR\_CONV2\_WEIGHT,}
+\DoxyCodeLine{00016\ \ \ \ \ ASR\_TENSOR\_CONV2\_BIAS,}
+\DoxyCodeLine{00017\ \ \ \ \ ASR\_TENSOR\_LN\_POST\_WEIGHT,}
+\DoxyCodeLine{00018\ \ \ \ \ ASR\_TENSOR\_LN\_POST\_BIAS,}
+\DoxyCodeLine{00019\ \ \ \ \ ASR\_TENSOR\_MLP\_LN\_WEIGHT,}
+\DoxyCodeLine{00020\ \ \ \ \ ASR\_TENSOR\_MLP\_LN\_BIAS,}
+\DoxyCodeLine{00021\ \ \ \ \ ASR\_TENSOR\_MLP\_0\_WEIGHT,}
+\DoxyCodeLine{00022\ \ \ \ \ ASR\_TENSOR\_MLP\_0\_BIAS,}
+\DoxyCodeLine{00023\ \ \ \ \ ASR\_TENSOR\_MLP\_2\_WEIGHT,}
+\DoxyCodeLine{00024\ \ \ \ \ ASR\_TENSOR\_MLP\_2\_BIAS,}
+\DoxyCodeLine{00025\ \ \ \ \ ASR\_TENSOR\_ATTN\_LN\_WEIGHT,}
+\DoxyCodeLine{00026\ \ \ \ \ ASR\_TENSOR\_ATTN\_LN\_BIAS,}
+\DoxyCodeLine{00027\ \ \ \ \ ASR\_TENSOR\_ATTN\_QUERY\_WEIGHT,}
+\DoxyCodeLine{00028\ \ \ \ \ ASR\_TENSOR\_ATTN\_QUERY\_BIAS,}
+\DoxyCodeLine{00029\ \ \ \ \ ASR\_TENSOR\_ATTN\_KEY\_WEIGHT,}
+\DoxyCodeLine{00030\ \ \ \ \ ASR\_TENSOR\_ATTN\_VALUE\_WEIGHT,}
+\DoxyCodeLine{00031\ \ \ \ \ ASR\_TENSOR\_ATTN\_VALUE\_BIAS,}
+\DoxyCodeLine{00032\ \ \ \ \ ASR\_TENSOR\_ATTN\_OUT\_WEIGHT,}
+\DoxyCodeLine{00033\ \ \ \ \ ASR\_TENSOR\_ATTN\_OUT\_BIAS,}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{enum}\ asr\_system\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ ASR\_SYSTEM\_ENCODER,}
+\DoxyCodeLine{00038\ \ \ \ \ ASR\_SYSTEM\_DECODER,}
+\DoxyCodeLine{00039\ \ \ \ \ ASR\_SYSTEM\_CROSS}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::map<asr\_system,\ std::map<asr\_tensor,\ const\ char\ *>>\ ASR\_TENSOR\_NAMES\ =\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ ASR\_SYSTEM\_ENCODER,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ENC\_POS\_EMBD,\ \textcolor{stringliteral}{"{}encoder.positional\_embedding"{}}\},}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_CONV1\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.conv1.weight"{}}\},}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_CONV1\_BIAS,\ \textcolor{stringliteral}{"{}encoder.conv1.bias"{}}\},}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_CONV2\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.conv2.weight"{}}\},}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_CONV2\_BIAS,\ \textcolor{stringliteral}{"{}encoder.conv2.bias"{}}\},}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_LN\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.ln\_post.weight"{}}\},}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_LN\_POST\_BIAS,\ \textcolor{stringliteral}{"{}encoder.ln\_post.bias"{}}\},}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_LN\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.mlp\_ln.weight"{}}\},}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_LN\_BIAS,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.mlp\_ln.bias"{}}\},}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_0\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.mlp.0.weight"{}}\},}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_0\_BIAS,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.mlp.0.bias"{}}\},}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_2\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.mlp.2.weight"{}}\},}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_2\_BIAS,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.mlp.2.bias"{}}\},}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_LN\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.attn\_ln.weight"{}}\},}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_LN\_BIAS,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.attn\_ln.bias"{}}\},}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_QUERY\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.attn.query.weight"{}}\},}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_QUERY\_BIAS,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.attn.query.bias"{}}\},}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_KEY\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.attn.key.weight"{}}\},}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_VALUE\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.attn.value.weight"{}}\},}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_VALUE\_BIAS,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.attn.value.bias"{}}\},}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_OUT\_WEIGHT,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.attn.out.weight"{}}\},}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_OUT\_BIAS,\ \textcolor{stringliteral}{"{}encoder.blocks.\%d.attn.out.bias"{}}\},}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00069\ \ \ \ \ \},}
+\DoxyCodeLine{00070\ \ \ \ \ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ ASR\_SYSTEM\_DECODER,}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_DEC\_POS\_EMBD,\ \textcolor{stringliteral}{"{}decoder.positional\_embedding"{}}\},}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_DEC\_TOKEN\_EMBD\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.token\_embedding.weight"{}}\},}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_LN\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.ln.weight"{}}\},}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_LN\_BIAS,\ \textcolor{stringliteral}{"{}decoder.ln.bias"{}}\},}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_LN\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.mlp\_ln.weight"{}}\},}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_LN\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.mlp\_ln.bias"{}}\},}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_0\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.mlp.0.weight"{}}\},}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_0\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.mlp.0.bias"{}}\},}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_2\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.mlp.2.weight"{}}\},}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_MLP\_2\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.mlp.2.bias"{}}\},}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_LN\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.attn\_ln.weight"{}}\},}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_LN\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.attn\_ln.bias"{}}\},}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_QUERY\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.attn.query.weight"{}}\},}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_QUERY\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.attn.query.bias"{}}\},}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_KEY\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.attn.key.weight"{}}\},}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_VALUE\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.attn.value.weight"{}}\},}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_VALUE\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.attn.value.bias"{}}\},}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_OUT\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.attn.out.weight"{}}\},}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_OUT\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.attn.out.bias"{}}\},}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00094\ \ \ \ \ \},}
+\DoxyCodeLine{00095\ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ ASR\_SYSTEM\_CROSS,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_LN\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.cross\_attn\_ln.weight"{}}\},}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_LN\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.cross\_attn\_ln.bias"{}}\},}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_QUERY\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.cross\_attn.query.weight"{}}\},}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_QUERY\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.cross\_attn.query.bias"{}}\},}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_KEY\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.cross\_attn.key.weight"{}}\},}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_VALUE\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.cross\_attn.value.weight"{}}\},}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_VALUE\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.cross\_attn.value.bias"{}}\},}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_OUT\_WEIGHT,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.cross\_attn.out.weight"{}}\},}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \{ASR\_TENSOR\_ATTN\_OUT\_BIAS,\ \textcolor{stringliteral}{"{}decoder.blocks.\%d.cross\_attn.out.bias"{}}\},}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00108\ \ \ \ \ \},}
+\DoxyCodeLine{00109\ \};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::map<asr\_tensor,\ ggml\_op>\ ASR\_TENSOR\_INFO\ =\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \{ASR\_TENSOR\_ENC\_POS\_EMBD,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00113\ \ \ \ \ \{ASR\_TENSOR\_DEC\_POS\_EMBD,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_GET\_ROWS\},}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{comment}{//\ Note:\ ASR\_TENSOR\_DEC\_TOKEN\_EMBD\_WEIGHT\ is\ also\ used\ by\ GGML\_OP\_MAT\_MUL.\ Need\ to\ figure\ out\ a\ way\ how\ to\ handle}}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ weight\ tensors\ that\ are\ used\ by\ multiple\ different\ operators\ when\ extra\_buffer\_type\ implementations\ accelerate}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{comment}{//\ more\ than\ just\ GGML\_OP\_MUL\_MAT.}}
+\DoxyCodeLine{00117\ \ \ \ \ \{ASR\_TENSOR\_DEC\_TOKEN\_EMBD\_WEIGHT,\ GGML\_OP\_GET\_ROWS\},}
+\DoxyCodeLine{00118\ \ \ \ \ \{ASR\_TENSOR\_LN\_WEIGHT,\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_OP\_MUL\},}
+\DoxyCodeLine{00119\ \ \ \ \ \{ASR\_TENSOR\_LN\_BIAS,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00120\ \ \ \ \ \{ASR\_TENSOR\_CONV1\_WEIGHT,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_IM2COL\},}
+\DoxyCodeLine{00121\ \ \ \ \ \{ASR\_TENSOR\_CONV1\_BIAS,\ \ \ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00122\ \ \ \ \ \{ASR\_TENSOR\_CONV2\_WEIGHT,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_IM2COL\},}
+\DoxyCodeLine{00123\ \ \ \ \ \{ASR\_TENSOR\_CONV2\_BIAS,\ \ \ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00124\ \ \ \ \ \{ASR\_TENSOR\_LN\_POST\_WEIGHT,\ \ \ \ \ \ \ \ GGML\_OP\_MUL\},}
+\DoxyCodeLine{00125\ \ \ \ \ \{ASR\_TENSOR\_LN\_POST\_BIAS,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00126\ \ \ \ \ \{ASR\_TENSOR\_MLP\_LN\_WEIGHT,\ \ \ \ \ \ \ \ \ GGML\_OP\_MUL\},}
+\DoxyCodeLine{00127\ \ \ \ \ \{ASR\_TENSOR\_MLP\_LN\_BIAS,\ \ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00128\ \ \ \ \ \{ASR\_TENSOR\_MLP\_0\_WEIGHT,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_MUL\_MAT\},}
+\DoxyCodeLine{00129\ \ \ \ \ \{ASR\_TENSOR\_MLP\_0\_BIAS,\ \ \ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00130\ \ \ \ \ \{ASR\_TENSOR\_MLP\_2\_WEIGHT,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_MUL\_MAT\},}
+\DoxyCodeLine{00131\ \ \ \ \ \{ASR\_TENSOR\_MLP\_2\_BIAS,\ \ \ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00132\ \ \ \ \ \{ASR\_TENSOR\_ATTN\_LN\_WEIGHT,\ \ \ \ \ \ \ \ GGML\_OP\_MUL\},}
+\DoxyCodeLine{00133\ \ \ \ \ \{ASR\_TENSOR\_ATTN\_LN\_BIAS,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00134\ \ \ \ \ \{ASR\_TENSOR\_ATTN\_QUERY\_WEIGHT,\ \ \ \ \ GGML\_OP\_MUL\_MAT\},}
+\DoxyCodeLine{00135\ \ \ \ \ \{ASR\_TENSOR\_ATTN\_QUERY\_BIAS,\ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00136\ \ \ \ \ \{ASR\_TENSOR\_ATTN\_KEY\_WEIGHT,\ \ \ \ \ \ \ GGML\_OP\_MUL\_MAT\},}
+\DoxyCodeLine{00137\ \ \ \ \ \{ASR\_TENSOR\_ATTN\_VALUE\_WEIGHT,\ \ \ \ \ GGML\_OP\_MUL\_MAT\},}
+\DoxyCodeLine{00138\ \ \ \ \ \{ASR\_TENSOR\_ATTN\_VALUE\_BIAS,\ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00139\ \ \ \ \ \{ASR\_TENSOR\_ATTN\_OUT\_WEIGHT,\ \ \ \ \ \ \ GGML\_OP\_MUL\_MAT\},}
+\DoxyCodeLine{00140\ \ \ \ \ \{ASR\_TENSOR\_ATTN\_OUT\_BIAS,\ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00141\ \};}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{keyword}{enum}\ vad\_tensor\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ VAD\_TENSOR\_STFT\_BASIS,}
+\DoxyCodeLine{00145\ \ \ \ \ VAD\_TENSOR\_ENC\_0\_WEIGHT,}
+\DoxyCodeLine{00146\ \ \ \ \ VAD\_TENSOR\_ENC\_0\_BIAS,}
+\DoxyCodeLine{00147\ \ \ \ \ VAD\_TENSOR\_ENC\_1\_WEIGHT,}
+\DoxyCodeLine{00148\ \ \ \ \ VAD\_TENSOR\_ENC\_1\_BIAS,}
+\DoxyCodeLine{00149\ \ \ \ \ VAD\_TENSOR\_ENC\_2\_WEIGHT,}
+\DoxyCodeLine{00150\ \ \ \ \ VAD\_TENSOR\_ENC\_2\_BIAS,}
+\DoxyCodeLine{00151\ \ \ \ \ VAD\_TENSOR\_ENC\_3\_WEIGHT,}
+\DoxyCodeLine{00152\ \ \ \ \ VAD\_TENSOR\_ENC\_3\_BIAS,}
+\DoxyCodeLine{00153\ \ \ \ \ VAD\_TENSOR\_LSTM\_WEIGHT\_IH,}
+\DoxyCodeLine{00154\ \ \ \ \ VAD\_TENSOR\_LSTM\_WEIGHT\_HH,}
+\DoxyCodeLine{00155\ \ \ \ \ VAD\_TENSOR\_LSTM\_BIAS\_IH,}
+\DoxyCodeLine{00156\ \ \ \ \ VAD\_TENSOR\_LSTM\_BIAS\_HH,}
+\DoxyCodeLine{00157\ \ \ \ \ VAD\_TENSOR\_FINAL\_CONV\_WEIGHT,}
+\DoxyCodeLine{00158\ \ \ \ \ VAD\_TENSOR\_FINAL\_CONV\_BIAS,}
+\DoxyCodeLine{00159\ \};}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::map<vad\_tensor,\ ggml\_op>\ VAD\_TENSOR\_OPS\ =\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \{VAD\_TENSOR\_STFT\_BASIS,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_IM2COL\},}
+\DoxyCodeLine{00163\ \ \ \ \ \{VAD\_TENSOR\_ENC\_0\_WEIGHT,\ \ \ \ \ \ \ \ GGML\_OP\_IM2COL\},}
+\DoxyCodeLine{00164\ \ \ \ \ \{VAD\_TENSOR\_ENC\_0\_BIAS,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00165\ \ \ \ \ \{VAD\_TENSOR\_ENC\_1\_WEIGHT,\ \ \ \ \ \ \ \ GGML\_OP\_IM2COL\},}
+\DoxyCodeLine{00166\ \ \ \ \ \{VAD\_TENSOR\_ENC\_1\_BIAS,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00167\ \ \ \ \ \{VAD\_TENSOR\_ENC\_2\_WEIGHT,\ \ \ \ \ \ \ \ GGML\_OP\_IM2COL\},}
+\DoxyCodeLine{00168\ \ \ \ \ \{VAD\_TENSOR\_ENC\_2\_BIAS,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00169\ \ \ \ \ \{VAD\_TENSOR\_ENC\_3\_WEIGHT,\ \ \ \ \ \ \ \ GGML\_OP\_IM2COL\},}
+\DoxyCodeLine{00170\ \ \ \ \ \{VAD\_TENSOR\_ENC\_3\_BIAS,\ \ \ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \{VAD\_TENSOR\_LSTM\_WEIGHT\_IH,\ \ \ \ \ \ GGML\_OP\_MUL\_MAT\},}
+\DoxyCodeLine{00173\ \ \ \ \ \{VAD\_TENSOR\_LSTM\_WEIGHT\_HH,\ \ \ \ \ \ GGML\_OP\_MUL\_MAT\},}
+\DoxyCodeLine{00174\ \ \ \ \ \{VAD\_TENSOR\_LSTM\_BIAS\_IH,\ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00175\ \ \ \ \ \{VAD\_TENSOR\_LSTM\_BIAS\_HH,\ \ \ \ \ \ \ \ GGML\_OP\_ADD\},}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \{VAD\_TENSOR\_FINAL\_CONV\_WEIGHT,\ \ \ GGML\_OP\_IM2COL\},}
+\DoxyCodeLine{00178\ \ \ \ \ \{VAD\_TENSOR\_FINAL\_CONV\_BIAS,\ \ \ \ \ GGML\_OP\_ADD\}}
+\DoxyCodeLine{00179\ \};}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::map<vad\_tensor,\ const\ char\ *>\ VAD\_TENSOR\_NAMES\ =\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \{VAD\_TENSOR\_STFT\_BASIS,\ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.stft.forward\_basis\_buffer"{}}\},}
+\DoxyCodeLine{00183\ \ \ \ \ \{VAD\_TENSOR\_ENC\_0\_WEIGHT,\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.encoder.0.reparam\_conv.weight"{}}\},}
+\DoxyCodeLine{00184\ \ \ \ \ \{VAD\_TENSOR\_ENC\_0\_BIAS,\ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.encoder.0.reparam\_conv.bias"{}}\},}
+\DoxyCodeLine{00185\ \ \ \ \ \{VAD\_TENSOR\_ENC\_1\_WEIGHT,\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.encoder.1.reparam\_conv.weight"{}}\},}
+\DoxyCodeLine{00186\ \ \ \ \ \{VAD\_TENSOR\_ENC\_1\_BIAS,\ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.encoder.1.reparam\_conv.bias"{}}\},}
+\DoxyCodeLine{00187\ \ \ \ \ \{VAD\_TENSOR\_ENC\_2\_WEIGHT,\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.encoder.2.reparam\_conv.weight"{}}\},}
+\DoxyCodeLine{00188\ \ \ \ \ \{VAD\_TENSOR\_ENC\_2\_BIAS,\ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.encoder.2.reparam\_conv.bias"{}}\},}
+\DoxyCodeLine{00189\ \ \ \ \ \{VAD\_TENSOR\_ENC\_3\_WEIGHT,\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.encoder.3.reparam\_conv.weight"{}}\},}
+\DoxyCodeLine{00190\ \ \ \ \ \{VAD\_TENSOR\_ENC\_3\_BIAS,\ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.encoder.3.reparam\_conv.bias"{}}\},}
+\DoxyCodeLine{00191\ \ \ \ \ \{VAD\_TENSOR\_LSTM\_WEIGHT\_IH,\ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.decoder.rnn.weight\_ih"{}}\},}
+\DoxyCodeLine{00192\ \ \ \ \ \{VAD\_TENSOR\_LSTM\_WEIGHT\_HH,\ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.decoder.rnn.weight\_hh"{}}\},}
+\DoxyCodeLine{00193\ \ \ \ \ \{VAD\_TENSOR\_LSTM\_BIAS\_IH,\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.decoder.rnn.bias\_ih"{}}\},}
+\DoxyCodeLine{00194\ \ \ \ \ \{VAD\_TENSOR\_LSTM\_BIAS\_HH,\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\_model.decoder.rnn.bias\_hh"{}}\},}
+\DoxyCodeLine{00195\ \ \ \ \ \{VAD\_TENSOR\_FINAL\_CONV\_WEIGHT,\ \ \ \textcolor{stringliteral}{"{}\_model.decoder.decoder.2.weight"{}}\},}
+\DoxyCodeLine{00196\ \ \ \ \ \{VAD\_TENSOR\_FINAL\_CONV\_BIAS,\ \ \ \ \ \textcolor{stringliteral}{"{}\_model.decoder.decoder.2.bias"{}}\}}
+\DoxyCodeLine{00197\ \};}
+
+\end{DoxyCode}

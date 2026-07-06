@@ -1,0 +1,61 @@
+\doxysection{convert-\/whisper-\/to-\/coreml.Audio\+Encoder\+ANE Class Reference}
+\hypertarget{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e}{}\label{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e}\index{convert-\/whisper-\/to-\/coreml.AudioEncoderANE@{convert-\/whisper-\/to-\/coreml.AudioEncoderANE}}
+Inheritance diagram for convert-\/whisper-\/to-\/coreml.Audio\+Encoder\+ANE:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a76f4d14d32739bfd98e6e139bfbe0a24}\label{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a76f4d14d32739bfd98e6e139bfbe0a24} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, int n\+\_\+mels, int n\+\_\+ctx, int n\+\_\+state, int n\+\_\+head, int n\+\_\+layer)
+\item 
+\doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a693b9fa355f8f34683ed41aec1aa8fd8}{forward}} (self, Tensor x)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a3bd671c7d00f2a3691bf5cb90960b397}{blocks}}
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a968c4e0def27b1406d707a0e90fc6dba}\label{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a968c4e0def27b1406d707a0e90fc6dba} 
+{\bfseries ln\+\_\+post} = \doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_layer_norm_a_n_e}{Layer\+Norm\+ANE}}(n\+\_\+state)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a693b9fa355f8f34683ed41aec1aa8fd8}\index{convert-\/whisper-\/to-\/coreml.AudioEncoderANE@{convert-\/whisper-\/to-\/coreml.AudioEncoderANE}!forward@{forward}}
+\index{forward@{forward}!convert-\/whisper-\/to-\/coreml.AudioEncoderANE@{convert-\/whisper-\/to-\/coreml.AudioEncoderANE}}
+\doxysubsubsection{\texorpdfstring{forward()}{forward()}}
+{\footnotesize\ttfamily \label{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a693b9fa355f8f34683ed41aec1aa8fd8} 
+convert-\/whisper-\/to-\/coreml.\+Audio\+Encoder\+ANE.\+forward (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{Tensor}]{x}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}x : torch.Tensor, shape = (batch_size, n_mels, n_ctx)
+    the mel spectrogram of the audio
+\end{DoxyVerb}
+ 
+
+\label{doc-variable-members}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a3bd671c7d00f2a3691bf5cb90960b397}\index{convert-\/whisper-\/to-\/coreml.AudioEncoderANE@{convert-\/whisper-\/to-\/coreml.AudioEncoderANE}!blocks@{blocks}}
+\index{blocks@{blocks}!convert-\/whisper-\/to-\/coreml.AudioEncoderANE@{convert-\/whisper-\/to-\/coreml.AudioEncoderANE}}
+\doxysubsubsection{\texorpdfstring{blocks}{blocks}}
+{\footnotesize\ttfamily \label{classconvert-whisper-to-coreml_1_1_audio_encoder_a_n_e_a3bd671c7d00f2a3691bf5cb90960b397} 
+convert-\/whisper-\/to-\/coreml.\+Audio\+Encoder\+ANE.\+blocks}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \ nn.ModuleList(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ [ResidualAttentionBlockANE(n\_state,\ n\_head)\ \textcolor{keywordflow}{for}\ \_\ \textcolor{keywordflow}{in}\ range(n\_layer)]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ )}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+models/\+convert-\/whisper-\/to-\/coreml.\+py\end{DoxyCompactItemize}

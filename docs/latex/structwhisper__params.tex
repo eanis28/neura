@@ -1,0 +1,323 @@
+\doxysection{whisper\+\_\+params Struct Reference}
+\hypertarget{structwhisper__params}{}\label{structwhisper__params}\index{whisper\_params@{whisper\_params}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structwhisper__params_aedeaf59ce44b198be6112378a1bca8a0}\label{structwhisper__params_aedeaf59ce44b198be6112378a1bca8a0} 
+int32\+\_\+t {\bfseries n\+\_\+threads} = std::\+min(4, (int32\+\_\+t) std::\+thread::\+hardware\+\_\+concurrency())
+\item 
+\Hypertarget{structwhisper__params_a31f12137ef8bdac42567f24c3a210bd8}\label{structwhisper__params_a31f12137ef8bdac42567f24c3a210bd8} 
+int32\+\_\+t {\bfseries n\+\_\+processors} = 1
+\item 
+\Hypertarget{structwhisper__params_a623115b582d9427573ac047ae549f0ad}\label{structwhisper__params_a623115b582d9427573ac047ae549f0ad} 
+int32\+\_\+t {\bfseries offset\+\_\+t\+\_\+ms} = 0
+\item 
+\Hypertarget{structwhisper__params_a96119bf62f9613ef30083aae9d241c45}\label{structwhisper__params_a96119bf62f9613ef30083aae9d241c45} 
+int32\+\_\+t {\bfseries offset\+\_\+n} = 0
+\item 
+\Hypertarget{structwhisper__params_ac8b80f4ac618133dc03be2d75c34fc45}\label{structwhisper__params_ac8b80f4ac618133dc03be2d75c34fc45} 
+int32\+\_\+t {\bfseries duration\+\_\+ms} = 0
+\item 
+\Hypertarget{structwhisper__params_a1b87aecc86599c53ad09abad712e1e48}\label{structwhisper__params_a1b87aecc86599c53ad09abad712e1e48} 
+int32\+\_\+t {\bfseries max\+\_\+context} = -\/1
+\item 
+\Hypertarget{structwhisper__params_a548fad473a85e538e3eb4e97c5605402}\label{structwhisper__params_a548fad473a85e538e3eb4e97c5605402} 
+int32\+\_\+t {\bfseries max\+\_\+len} = 0
+\item 
+\Hypertarget{structwhisper__params_ad8ca220034dc9dad914364105a44ad55}\label{structwhisper__params_ad8ca220034dc9dad914364105a44ad55} 
+int32\+\_\+t {\bfseries best\+\_\+of} = 5
+\item 
+\Hypertarget{structwhisper__params_a08058a7ddc88b772b6dc0e230ebc4984}\label{structwhisper__params_a08058a7ddc88b772b6dc0e230ebc4984} 
+int32\+\_\+t {\bfseries beam\+\_\+size} = -\/1
+\item 
+\Hypertarget{structwhisper__params_a1b245dc422c8fcf32f53b4c247dba252}\label{structwhisper__params_a1b245dc422c8fcf32f53b4c247dba252} 
+int32\+\_\+t {\bfseries audio\+\_\+ctx} = 0
+\item 
+\Hypertarget{structwhisper__params_adf5cff3bf77ca893f469be1a813c17af}\label{structwhisper__params_adf5cff3bf77ca893f469be1a813c17af} 
+float {\bfseries word\+\_\+thold} = 0.\+01f
+\item 
+\Hypertarget{structwhisper__params_a05344423db7ddb0a4f8a1256e9894778}\label{structwhisper__params_a05344423db7ddb0a4f8a1256e9894778} 
+float {\bfseries entropy\+\_\+thold} = 2.\+4f
+\item 
+\Hypertarget{structwhisper__params_a55d5d0916411f1acf23ba8585168e978}\label{structwhisper__params_a55d5d0916411f1acf23ba8585168e978} 
+float {\bfseries logprob\+\_\+thold} = -\/1.\+0f
+\item 
+\Hypertarget{structwhisper__params_a90cd3946fdf78dfa61a55d741553c899}\label{structwhisper__params_a90cd3946fdf78dfa61a55d741553c899} 
+bool {\bfseries translate} = false
+\item 
+\Hypertarget{structwhisper__params_aad85f7ea3c7154fa73b58f8748124134}\label{structwhisper__params_aad85f7ea3c7154fa73b58f8748124134} 
+bool {\bfseries diarize} = false
+\item 
+\Hypertarget{structwhisper__params_aebe283d2f171c5ed95a4f88f8251f8ff}\label{structwhisper__params_aebe283d2f171c5ed95a4f88f8251f8ff} 
+bool {\bfseries output\+\_\+txt} = false
+\item 
+\Hypertarget{structwhisper__params_a29da823d725b27f04a01f5eeb60e9599}\label{structwhisper__params_a29da823d725b27f04a01f5eeb60e9599} 
+bool {\bfseries output\+\_\+vtt} = false
+\item 
+\Hypertarget{structwhisper__params_ab3b65ca1641f02418f51ea2da6a14314}\label{structwhisper__params_ab3b65ca1641f02418f51ea2da6a14314} 
+bool {\bfseries output\+\_\+srt} = false
+\item 
+\Hypertarget{structwhisper__params_a103e96dec8f9f3a706a55d5c7f92d55b}\label{structwhisper__params_a103e96dec8f9f3a706a55d5c7f92d55b} 
+bool {\bfseries output\+\_\+wts} = false
+\item 
+\Hypertarget{structwhisper__params_abea8542fff79c9aaefdeeb84b5cff873}\label{structwhisper__params_abea8542fff79c9aaefdeeb84b5cff873} 
+bool {\bfseries output\+\_\+csv} = false
+\item 
+\Hypertarget{structwhisper__params_ad93891fe8827b7878cac6199aeb66340}\label{structwhisper__params_ad93891fe8827b7878cac6199aeb66340} 
+bool {\bfseries print\+\_\+special} = false
+\item 
+\Hypertarget{structwhisper__params_ac1b4bfec373afad62faec3f554076221}\label{structwhisper__params_ac1b4bfec373afad62faec3f554076221} 
+bool {\bfseries print\+\_\+colors} = false
+\item 
+\Hypertarget{structwhisper__params_a8c042bac8568a9036b4cdc51c996186c}\label{structwhisper__params_a8c042bac8568a9036b4cdc51c996186c} 
+bool {\bfseries print\+\_\+progress} = false
+\item 
+\Hypertarget{structwhisper__params_aeb93bcb61479eb2217275fee9ba1da50}\label{structwhisper__params_aeb93bcb61479eb2217275fee9ba1da50} 
+bool {\bfseries no\+\_\+timestamps} = false
+\item 
+\Hypertarget{structwhisper__params_a96dc25a5fa234d78ee9f38f052416b92}\label{structwhisper__params_a96dc25a5fa234d78ee9f38f052416b92} 
+bool {\bfseries no\+\_\+prints} = false
+\item 
+\Hypertarget{structwhisper__params_a435357f5b7bc4f918a4474a05f0415c6}\label{structwhisper__params_a435357f5b7bc4f918a4474a05f0415c6} 
+bool {\bfseries detect\+\_\+language} = false
+\item 
+\Hypertarget{structwhisper__params_a688b7e5f1f394250123caf55250ab6f8}\label{structwhisper__params_a688b7e5f1f394250123caf55250ab6f8} 
+bool {\bfseries use\+\_\+gpu} = true
+\item 
+\Hypertarget{structwhisper__params_a50ea958c0c01fd13baaf583a4b601ee0}\label{structwhisper__params_a50ea958c0c01fd13baaf583a4b601ee0} 
+bool {\bfseries flash\+\_\+attn} = false
+\item 
+\Hypertarget{structwhisper__params_a3404f6b1eeda93b88325dae9485297ae}\label{structwhisper__params_a3404f6b1eeda93b88325dae9485297ae} 
+bool {\bfseries comma\+\_\+in\+\_\+time} = true
+\item 
+\Hypertarget{structwhisper__params_a6acde16142d361545efbfa98aaf92dcf}\label{structwhisper__params_a6acde16142d361545efbfa98aaf92dcf} 
+std::\+string {\bfseries language} = "{}en"{}
+\item 
+\Hypertarget{structwhisper__params_a702637f4f56c57904d4463f54ef6a7b8}\label{structwhisper__params_a702637f4f56c57904d4463f54ef6a7b8} 
+std::\+string {\bfseries prompt} = "{}"{}
+\item 
+\Hypertarget{structwhisper__params_ab78acdbf2d6d881a93d33a036fd3ba49}\label{structwhisper__params_ab78acdbf2d6d881a93d33a036fd3ba49} 
+std::\+string {\bfseries model} = "{}../\+../\+ggml-\/large.\+bin"{}
+\item 
+\Hypertarget{structwhisper__params_a86d0ee414b1fe18b1272f08d5da1f291}\label{structwhisper__params_a86d0ee414b1fe18b1272f08d5da1f291} 
+std::\+vector$<$ std::\+string $>$ {\bfseries fname\+\_\+inp} = \{\}
+\item 
+\Hypertarget{structwhisper__params_a51e0b30331c28fa2e890d5f54a1c037b}\label{structwhisper__params_a51e0b30331c28fa2e890d5f54a1c037b} 
+std::\+vector$<$ std::\+string $>$ {\bfseries fname\+\_\+out} = \{\}
+\item 
+\Hypertarget{structwhisper__params_a6318160c88fb3c3b74c747d343edd68b}\label{structwhisper__params_a6318160c88fb3c3b74c747d343edd68b} 
+std::\+vector$<$ float $>$ {\bfseries pcmf32} = \{\}
+\item 
+\Hypertarget{structwhisper__params_a059ce0f8a6b5d003fbcab26266a28f60}\label{structwhisper__params_a059ce0f8a6b5d003fbcab26266a28f60} 
+bool {\bfseries vad} = false
+\item 
+\Hypertarget{structwhisper__params_ad36e798ea4c46919945e737db8d94c3d}\label{structwhisper__params_ad36e798ea4c46919945e737db8d94c3d} 
+std::\+string {\bfseries vad\+\_\+model} = "{}"{}
+\item 
+\Hypertarget{structwhisper__params_a8e429a984a3193f732ede24e87a6b759}\label{structwhisper__params_a8e429a984a3193f732ede24e87a6b759} 
+float {\bfseries vad\+\_\+threshold} = 0.\+5f
+\item 
+\Hypertarget{structwhisper__params_a037117d0f5d832256435d96783b2eec5}\label{structwhisper__params_a037117d0f5d832256435d96783b2eec5} 
+int {\bfseries vad\+\_\+min\+\_\+speech\+\_\+duration\+\_\+ms} = 250
+\item 
+\Hypertarget{structwhisper__params_a942df2679bb74891cdf60a2f1e7f2b8a}\label{structwhisper__params_a942df2679bb74891cdf60a2f1e7f2b8a} 
+int {\bfseries vad\+\_\+min\+\_\+silence\+\_\+duration\+\_\+ms} = 100
+\item 
+\Hypertarget{structwhisper__params_a439a5ad13bf00d85fc5e4e44d69dbe4c}\label{structwhisper__params_a439a5ad13bf00d85fc5e4e44d69dbe4c} 
+float {\bfseries vad\+\_\+max\+\_\+speech\+\_\+duration\+\_\+s} = FLT\+\_\+\+MAX
+\item 
+\Hypertarget{structwhisper__params_a125c7f5dce01c557dc984f1a1eb219d2}\label{structwhisper__params_a125c7f5dce01c557dc984f1a1eb219d2} 
+int {\bfseries vad\+\_\+speech\+\_\+pad\+\_\+ms} = 30
+\item 
+\Hypertarget{structwhisper__params_a63ff71b35a345047c3f87de091b631c4}\label{structwhisper__params_a63ff71b35a345047c3f87de091b631c4} 
+float {\bfseries vad\+\_\+samples\+\_\+overlap} = 0.\+1f
+\item 
+\Hypertarget{structwhisper__params_a9bb667b95a639fbb93fa8582483e1c9d}\label{structwhisper__params_a9bb667b95a639fbb93fa8582483e1c9d} 
+int32\+\_\+t {\bfseries what} = 0
+\item 
+\Hypertarget{structwhisper__params_ab10e86bf04ecf72070fbab8b4ce9a3b0}\label{structwhisper__params_ab10e86bf04ecf72070fbab8b4ce9a3b0} 
+int32\+\_\+t {\bfseries progress\+\_\+step} = 5
+\item 
+\Hypertarget{structwhisper__params_a1159c739fd30f307d09339f120c8b378}\label{structwhisper__params_a1159c739fd30f307d09339f120c8b378} 
+float {\bfseries no\+\_\+speech\+\_\+thold} = 0.\+6f
+\item 
+\Hypertarget{structwhisper__params_a77a0460636ecb1e42b7150d7040c3014}\label{structwhisper__params_a77a0460636ecb1e42b7150d7040c3014} 
+float {\bfseries grammar\+\_\+penalty} = 100.\+0f
+\item 
+\Hypertarget{structwhisper__params_a4152e87ab2ff5a3649e730ed287d0774}\label{structwhisper__params_a4152e87ab2ff5a3649e730ed287d0774} 
+float {\bfseries temperature} = 0.\+0f
+\item 
+\Hypertarget{structwhisper__params_a05e951fbc8871d95b7bd4f9d5eb73c0c}\label{structwhisper__params_a05e951fbc8871d95b7bd4f9d5eb73c0c} 
+float {\bfseries temperature\+\_\+inc} = 0.\+2f
+\item 
+\Hypertarget{structwhisper__params_a95be6cfdc8117aec0f9ccde75f5f44f5}\label{structwhisper__params_a95be6cfdc8117aec0f9ccde75f5f44f5} 
+bool {\bfseries debug\+\_\+mode} = false
+\item 
+\Hypertarget{structwhisper__params_a8123a8042cb92bbd716f30114597e9b5}\label{structwhisper__params_a8123a8042cb92bbd716f30114597e9b5} 
+bool {\bfseries tinydiarize} = false
+\item 
+\Hypertarget{structwhisper__params_af97d76527da3a37d7337a16117bc8b8e}\label{structwhisper__params_af97d76527da3a37d7337a16117bc8b8e} 
+bool {\bfseries split\+\_\+on\+\_\+word} = false
+\item 
+\Hypertarget{structwhisper__params_a97d6a2a1d243ee9b9ea1ddde4e4e6076}\label{structwhisper__params_a97d6a2a1d243ee9b9ea1ddde4e4e6076} 
+bool {\bfseries no\+\_\+fallback} = false
+\item 
+\Hypertarget{structwhisper__params_a990dd467951b800d54fdff817aace626}\label{structwhisper__params_a990dd467951b800d54fdff817aace626} 
+bool {\bfseries output\+\_\+jsn} = false
+\item 
+\Hypertarget{structwhisper__params_aa7630389e26ab90cd5fa44d032a5bc98}\label{structwhisper__params_aa7630389e26ab90cd5fa44d032a5bc98} 
+bool {\bfseries output\+\_\+jsn\+\_\+full} = false
+\item 
+\Hypertarget{structwhisper__params_ac34cc2879ed31569aea87d6876abb4c6}\label{structwhisper__params_ac34cc2879ed31569aea87d6876abb4c6} 
+bool {\bfseries output\+\_\+lrc} = false
+\item 
+\Hypertarget{structwhisper__params_acf73ccde70c6edc07cc2f8c3dd718c4e}\label{structwhisper__params_acf73ccde70c6edc07cc2f8c3dd718c4e} 
+bool {\bfseries print\+\_\+confidence} = false
+\item 
+\Hypertarget{structwhisper__params_a8388cd66cc364a6265e78b473c74a11c}\label{structwhisper__params_a8388cd66cc364a6265e78b473c74a11c} 
+bool {\bfseries log\+\_\+score} = false
+\item 
+\Hypertarget{structwhisper__params_a51ddd380c4fdea6c6298dba14ac45912}\label{structwhisper__params_a51ddd380c4fdea6c6298dba14ac45912} 
+int32\+\_\+t {\bfseries gpu\+\_\+device} = 0
+\item 
+\Hypertarget{structwhisper__params_a789058fbdef5e785d31e171115acbaa9}\label{structwhisper__params_a789058fbdef5e785d31e171115acbaa9} 
+bool {\bfseries suppress\+\_\+nst} = false
+\item 
+\Hypertarget{structwhisper__params_a036849723f916101c6c40d9b3e958e68}\label{structwhisper__params_a036849723f916101c6c40d9b3e958e68} 
+bool {\bfseries carry\+\_\+initial\+\_\+prompt} = false
+\item 
+\Hypertarget{structwhisper__params_a28e31b14fc4b8393b2e88ee64d9e67d8}\label{structwhisper__params_a28e31b14fc4b8393b2e88ee64d9e67d8} 
+std::\+string {\bfseries font\+\_\+path} = "{}/\+System/\+Library/\+Fonts/\+Supplemental/\+Courier New Bold.\+ttf"{}
+\item 
+\Hypertarget{structwhisper__params_a3aa17ca0672d42dae4e9b4bbe0669b60}\label{structwhisper__params_a3aa17ca0672d42dae4e9b4bbe0669b60} 
+std::\+string {\bfseries grammar}
+\item 
+\Hypertarget{structwhisper__params_ab00ae21697439b464ebb6b63be9d09d9}\label{structwhisper__params_ab00ae21697439b464ebb6b63be9d09d9} 
+std::\+string {\bfseries grammar\+\_\+rule}
+\item 
+\Hypertarget{structwhisper__params_afe3a575d9efa9773abe2996c63936100}\label{structwhisper__params_afe3a575d9efa9773abe2996c63936100} 
+std::\+string {\bfseries tdrz\+\_\+speaker\+\_\+turn} = "{} \+[SPEAKER\+\_\+\+TURN]\+"{}
+\item 
+\Hypertarget{structwhisper__params_afc499425b13c7f13111089f33ea785b9}\label{structwhisper__params_afc499425b13c7f13111089f33ea785b9} 
+std::\+string {\bfseries suppress\+\_\+regex}
+\item 
+\Hypertarget{structwhisper__params_a40692cdb3f3970b15162bfd03b73f714}\label{structwhisper__params_a40692cdb3f3970b15162bfd03b73f714} 
+std::\+string {\bfseries openvino\+\_\+encode\+\_\+device} = "{}CPU"{}
+\item 
+\Hypertarget{structwhisper__params_a98290cfaab9aba6bcaa21be68e9f5e0d}\label{structwhisper__params_a98290cfaab9aba6bcaa21be68e9f5e0d} 
+std::\+string {\bfseries dtw} = "{}"{}
+\item 
+\Hypertarget{structwhisper__params_a4ad9d3b810187b2d0e4a4f618179587c}\label{structwhisper__params_a4ad9d3b810187b2d0e4a4f618179587c} 
+\doxymbox{\hyperlink{structgrammar__parser_1_1parse__state}{grammar\+\_\+parser::\+parse\+\_\+state}} {\bfseries grammar\+\_\+parsed}
+\item 
+\Hypertarget{structwhisper__params_a262722d26938958043a8c83a99333391}\label{structwhisper__params_a262722d26938958043a8c83a99333391} 
+int32\+\_\+t {\bfseries prompt\+\_\+ms} = 5000
+\item 
+\Hypertarget{structwhisper__params_ac171a986b5291caec5db67c0218e16a0}\label{structwhisper__params_ac171a986b5291caec5db67c0218e16a0} 
+int32\+\_\+t {\bfseries command\+\_\+ms} = 8000
+\item 
+\Hypertarget{structwhisper__params_a8acade628a9b23ab41abe9e2b0f3258b}\label{structwhisper__params_a8acade628a9b23ab41abe9e2b0f3258b} 
+int32\+\_\+t {\bfseries capture\+\_\+id} = -\/1
+\item 
+\Hypertarget{structwhisper__params_a359a5043d288269b58596032edcb5c0a}\label{structwhisper__params_a359a5043d288269b58596032edcb5c0a} 
+int32\+\_\+t {\bfseries max\+\_\+tokens} = 32
+\item 
+\Hypertarget{structwhisper__params_a91e41defb952aae6eee39fcd26f78b3a}\label{structwhisper__params_a91e41defb952aae6eee39fcd26f78b3a} 
+float {\bfseries vad\+\_\+thold} = 0.\+6f
+\item 
+\Hypertarget{structwhisper__params_a49c7bfbc2c202ce7ff2bd7be1326c688}\label{structwhisper__params_a49c7bfbc2c202ce7ff2bd7be1326c688} 
+float {\bfseries freq\+\_\+thold} = 100.\+0f
+\item 
+\Hypertarget{structwhisper__params_a3e995b15de84af1f393ed2403dee1bf8}\label{structwhisper__params_a3e995b15de84af1f393ed2403dee1bf8} 
+bool {\bfseries print\+\_\+energy} = false
+\item 
+\Hypertarget{structwhisper__params_a51e0b30331c28fa2e890d5f54a1c037b}\label{structwhisper__params_a51e0b30331c28fa2e890d5f54a1c037b} 
+std::\+string {\bfseries fname\+\_\+out}
+\item 
+\Hypertarget{structwhisper__params_a81152a379953b8a2af90273b997b7599}\label{structwhisper__params_a81152a379953b8a2af90273b997b7599} 
+std::\+string {\bfseries commands}
+\item 
+\Hypertarget{structwhisper__params_a3c473924ad749784b3e42eb3fd4007d6}\label{structwhisper__params_a3c473924ad749784b3e42eb3fd4007d6} 
+std::\+string {\bfseries context}
+\item 
+\Hypertarget{structwhisper__params_a9dac15f28433a3a13385852d0da4041a}\label{structwhisper__params_a9dac15f28433a3a13385852d0da4041a} 
+int32\+\_\+t {\bfseries step\+\_\+ms} = 3000
+\item 
+\Hypertarget{structwhisper__params_a6b71ee2ffd62ce5940d805603e2eb736}\label{structwhisper__params_a6b71ee2ffd62ce5940d805603e2eb736} 
+int32\+\_\+t {\bfseries length\+\_\+ms} = 10000
+\item 
+\Hypertarget{structwhisper__params_a518664c9ce33a3930648083efe7c54f9}\label{structwhisper__params_a518664c9ce33a3930648083efe7c54f9} 
+int32\+\_\+t {\bfseries keep\+\_\+ms} = 200
+\item 
+\Hypertarget{structwhisper__params_a565aaf22f8d2393e9c2de73a9ef793a9}\label{structwhisper__params_a565aaf22f8d2393e9c2de73a9ef793a9} 
+bool {\bfseries no\+\_\+context} = true
+\item 
+\Hypertarget{structwhisper__params_a05141b35de97fe95e154008501eb6596}\label{structwhisper__params_a05141b35de97fe95e154008501eb6596} 
+bool {\bfseries save\+\_\+audio} = false
+\item 
+\Hypertarget{structwhisper__params_a5172cf6e35ed6cb458243f9e657fde63}\label{structwhisper__params_a5172cf6e35ed6cb458243f9e657fde63} 
+int32\+\_\+t {\bfseries voice\+\_\+ms} = 10000
+\item 
+\Hypertarget{structwhisper__params_a9ef19b2cbf63fa166837635f1ae4a694}\label{structwhisper__params_a9ef19b2cbf63fa166837635f1ae4a694} 
+int32\+\_\+t {\bfseries n\+\_\+gpu\+\_\+layers} = 999
+\item 
+\Hypertarget{structwhisper__params_ae4683204321e1dba72cf54889c539e28}\label{structwhisper__params_ae4683204321e1dba72cf54889c539e28} 
+int32\+\_\+t {\bfseries seed} = 0
+\item 
+\Hypertarget{structwhisper__params_a59ec9d513ce74c90c2cf9e5880a47524}\label{structwhisper__params_a59ec9d513ce74c90c2cf9e5880a47524} 
+int32\+\_\+t {\bfseries top\+\_\+k} = 5
+\item 
+\Hypertarget{structwhisper__params_a4c07bdda6e8ca501eca748dbd3926dd2}\label{structwhisper__params_a4c07bdda6e8ca501eca748dbd3926dd2} 
+int32\+\_\+t {\bfseries min\+\_\+keep} = 1
+\item 
+\Hypertarget{structwhisper__params_afc114db67dbc3b65932d7becb7b614f1}\label{structwhisper__params_afc114db67dbc3b65932d7becb7b614f1} 
+float {\bfseries top\+\_\+p} = 0.\+80f
+\item 
+\Hypertarget{structwhisper__params_a6267e008374c3addc8b09af326fd4acc}\label{structwhisper__params_a6267e008374c3addc8b09af326fd4acc} 
+float {\bfseries min\+\_\+p} = 0.\+01f
+\item 
+\Hypertarget{structwhisper__params_a4a237da43d84369f998878ac59749734}\label{structwhisper__params_a4a237da43d84369f998878ac59749734} 
+float {\bfseries temp} = 0.\+30f
+\item 
+\Hypertarget{structwhisper__params_ab45fe27490ea848d56763ed213299a88}\label{structwhisper__params_ab45fe27490ea848d56763ed213299a88} 
+bool {\bfseries verbose\+\_\+prompt} = false
+\item 
+\Hypertarget{structwhisper__params_a19bdae55863daa4fdf1754e4000a3ece}\label{structwhisper__params_a19bdae55863daa4fdf1754e4000a3ece} 
+std::\+string {\bfseries person} = "{}Georgi"{}
+\item 
+\Hypertarget{structwhisper__params_a9c28f7776fdadf9642b44e4cb906ce8c}\label{structwhisper__params_a9c28f7776fdadf9642b44e4cb906ce8c} 
+std::\+string {\bfseries bot\+\_\+name} = "{}LLa\+MA"{}
+\item 
+\Hypertarget{structwhisper__params_ac9e343fa88a1804182bfc77715006f78}\label{structwhisper__params_ac9e343fa88a1804182bfc77715006f78} 
+std::\+string {\bfseries wake\+\_\+cmd} = "{}"{}
+\item 
+\Hypertarget{structwhisper__params_af351144b291a554852b50c300bc194a7}\label{structwhisper__params_af351144b291a554852b50c300bc194a7} 
+std::\+string {\bfseries heard\+\_\+ok} = "{}"{}
+\item 
+\Hypertarget{structwhisper__params_a281bb880cbc4ee17e1cdc3fa47c97770}\label{structwhisper__params_a281bb880cbc4ee17e1cdc3fa47c97770} 
+std::\+string {\bfseries model\+\_\+wsp} = "{}models/\+ggml-\/base.\+en.\+bin"{}
+\item 
+\Hypertarget{structwhisper__params_ae8ca994e7c1d5f13e542142fa654770f}\label{structwhisper__params_ae8ca994e7c1d5f13e542142fa654770f} 
+std::\+string {\bfseries model\+\_\+llama} = "{}models/\+ggml-\/llama-\/7B.\+bin"{}
+\item 
+\Hypertarget{structwhisper__params_ad15a8a3f5b44448936f79045c4d35842}\label{structwhisper__params_ad15a8a3f5b44448936f79045c4d35842} 
+std::\+string {\bfseries speak} = "{}./\+examples/\+talk-\/llama/\+speak"{}
+\item 
+\Hypertarget{structwhisper__params_a28810a3568d061025496dca9163e4cf3}\label{structwhisper__params_a28810a3568d061025496dca9163e4cf3} 
+std::\+string {\bfseries speak\+\_\+file} = "{}./\+examples/\+talk-\/llama/\+to\+\_\+speak.\+txt"{}
+\item 
+\Hypertarget{structwhisper__params_abd4c8c93b420b368ef418917f170aa4b}\label{structwhisper__params_abd4c8c93b420b368ef418917f170aa4b} 
+std::\+string {\bfseries path\+\_\+session} = "{}"{}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+addon.\+node/\+addon.\+cpp\item 
+whisper.\+cpp/\+examples/\+bench/\+bench.\+cpp\item 
+whisper.\+cpp/\+examples/\+cli/\+cli.\+cpp\item 
+whisper.\+cpp/\+examples/\+command/\+command.\+cpp\item 
+whisper.\+cpp/\+examples/\+lsp/\+lsp.\+cpp\item 
+whisper.\+cpp/\+examples/\+stream/\+stream.\+cpp\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+talk-\/llama.\+cpp\item 
+whisper.\+cpp/\+examples/\+wchess/\+wchess.\+cmd/\+wchess.\+cmd.\+cpp\end{DoxyCompactItemize}

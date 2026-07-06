@@ -1,0 +1,58 @@
+\doxysection{quantize\+\_\+state\+\_\+impl Struct Reference}
+\hypertarget{structquantize__state__impl}{}\label{structquantize__state__impl}\index{quantize\_state\_impl@{quantize\_state\_impl}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structquantize__state__impl_a5d2574690ae6e7b9f7f10aea1d9fd153}\label{structquantize__state__impl_a5d2574690ae6e7b9f7f10aea1d9fd153} 
+{\bfseries quantize\+\_\+state\+\_\+impl} (const \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \&model, const \doxymbox{\hyperlink{structllama__model__quantize__params}{llama\+\_\+model\+\_\+quantize\+\_\+params}} \texorpdfstring{$\ast$}{*}params)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structquantize__state__impl_ab330e8130597c7b5031f7b1218115f86}\label{structquantize__state__impl_ab330e8130597c7b5031f7b1218115f86} 
+const \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \& {\bfseries model}
+\item 
+\Hypertarget{structquantize__state__impl_a5ce81b136c0c6a66324576aba956759d}\label{structquantize__state__impl_a5ce81b136c0c6a66324576aba956759d} 
+const \doxymbox{\hyperlink{structllama__model__quantize__params}{llama\+\_\+model\+\_\+quantize\+\_\+params}} \texorpdfstring{$\ast$}{*} {\bfseries params}
+\item 
+\Hypertarget{structquantize__state__impl_a417a0686fdd5c2c6cf1bacc4915560bb}\label{structquantize__state__impl_a417a0686fdd5c2c6cf1bacc4915560bb} 
+int {\bfseries n\+\_\+attention\+\_\+wv} = 0
+\item 
+\Hypertarget{structquantize__state__impl_a94c6c3e4788f3ffc5d253d84067942c3}\label{structquantize__state__impl_a94c6c3e4788f3ffc5d253d84067942c3} 
+int {\bfseries n\+\_\+ffn\+\_\+down} = 0
+\item 
+\Hypertarget{structquantize__state__impl_a1410578874c0ca350dd4a1e0299e95a6}\label{structquantize__state__impl_a1410578874c0ca350dd4a1e0299e95a6} 
+int {\bfseries n\+\_\+ffn\+\_\+gate} = 0
+\item 
+\Hypertarget{structquantize__state__impl_a67112cf8b4029eb5b8c4ae59fa6d59f7}\label{structquantize__state__impl_a67112cf8b4029eb5b8c4ae59fa6d59f7} 
+int {\bfseries n\+\_\+ffn\+\_\+up} = 0
+\item 
+\Hypertarget{structquantize__state__impl_a1de186af7706e4ac411f84bce46dc68a}\label{structquantize__state__impl_a1de186af7706e4ac411f84bce46dc68a} 
+int {\bfseries i\+\_\+attention\+\_\+wv} = 0
+\item 
+\Hypertarget{structquantize__state__impl_a954bad730dcfbee0599487abd9a93dc1}\label{structquantize__state__impl_a954bad730dcfbee0599487abd9a93dc1} 
+int {\bfseries i\+\_\+ffn\+\_\+down} = 0
+\item 
+\Hypertarget{structquantize__state__impl_a46620fbda21786b986be82ce6ae68b48}\label{structquantize__state__impl_a46620fbda21786b986be82ce6ae68b48} 
+int {\bfseries i\+\_\+ffn\+\_\+gate} = 0
+\item 
+\Hypertarget{structquantize__state__impl_aec820e17205e2188409fb22e039e2c77}\label{structquantize__state__impl_aec820e17205e2188409fb22e039e2c77} 
+int {\bfseries i\+\_\+ffn\+\_\+up} = 0
+\item 
+\Hypertarget{structquantize__state__impl_a28e876d3621c95b86751a35e02ac4c25}\label{structquantize__state__impl_a28e876d3621c95b86751a35e02ac4c25} 
+int {\bfseries n\+\_\+fallback} = 0
+\item 
+\Hypertarget{structquantize__state__impl_a618f5795d060c61c3fd859ef760775e3}\label{structquantize__state__impl_a618f5795d060c61c3fd859ef760775e3} 
+bool {\bfseries has\+\_\+imatrix} = false
+\item 
+\Hypertarget{structquantize__state__impl_a94adb308cd00d304c2d1e2aa551d9515}\label{structquantize__state__impl_a94adb308cd00d304c2d1e2aa551d9515} 
+bool {\bfseries has\+\_\+tied\+\_\+embeddings} = true
+\item 
+\Hypertarget{structquantize__state__impl_ae7b5aa8f2c18bf6a7879c7b0851b4ddf}\label{structquantize__state__impl_ae7b5aa8f2c18bf6a7879c7b0851b4ddf} 
+std::\+vector$<$ std::\+pair$<$ std::\+regex, ggml\+\_\+type $>$ $>$ {\bfseries tensor\+\_\+type\+\_\+patterns}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/quant.\+cpp\end{DoxyCompactItemize}

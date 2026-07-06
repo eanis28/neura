@@ -1,0 +1,23 @@
+\doxysection{whisper.\+cpp/\+examples/\+deprecation-\/warning Directory Reference}
+\hypertarget{dir_62e66452be131db80ab89299893186f5}{}\label{dir_62e66452be131db80ab89299893186f5}\index{whisper.cpp/examples/deprecation-\/warning Directory Reference@{whisper.cpp/examples/deprecation-\/warning Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_62e66452be131db80ab89299893186f5_autotoc_md71}{}\doxysubsection{\texorpdfstring{Migration notice for binary filenames}{Migration notice for binary filenames}}\label{dir_62e66452be131db80ab89299893186f5_autotoc_md71}
+\begin{DoxyImportant}{Important}
+\+[2024 Dec 20]\+ Binaries have been renamed w/\+ a {\ttfamily whisper-\/} prefix. {\ttfamily main} is now {\ttfamily whisper-\/cli}, {\ttfamily server} is {\ttfamily whisper-\/server}, etc (\href{https://github.com/ggerganov/whisper.cpp/pull/2648}{\texttt{https:\+/\+/\+github.\+com/\+ggerganov/\+whisper.\+cpp/\+pull/\+2648}})
+\end{DoxyImportant}
+This migration was important, but it is a breaking change that may not always be immediately obvious to users.
+
+Please update all scripts and workflows to use the new binary names.
+
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Old Filename  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}New Filename  \\
+main  &whisper-\/cli  \\
+bench  &whisper-\/bench  \\
+stream  &whisper-\/stream  \\
+command  &whisper-\/command  \\
+server  &whisper-\/server  \\
+talk-\/llama  &whisper-\/talk-\/llama  \\
+\end{DoxyTable}

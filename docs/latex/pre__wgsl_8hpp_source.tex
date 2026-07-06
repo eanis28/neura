@@ -1,0 +1,784 @@
+\doxysection{pre\+\_\+wgsl.\+hpp}
+\hypertarget{pre__wgsl_8hpp_source}{}\label{pre__wgsl_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/webgpu/pre\_wgsl.hpp@{whisper.cpp/ggml/src/ggml-\/webgpu/pre\_wgsl.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ PRE\_WGSL\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ PRE\_WGSL\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cctype>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <unordered\_set>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }pre\_wgsl\ \{}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ Options}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structpre__wgsl_1_1_options}{Options}}\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_path\ =\ \textcolor{stringliteral}{"{}."{}};}
+\DoxyCodeLine{00021\ \ \ \ \ std::vector<std::string>\ macros;}
+\DoxyCodeLine{00022\ \};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ Utility:\ trim}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{static}\ std::string\ trim(\textcolor{keyword}{const}\ std::string\ \&\ s)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ a\ =\ 0;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordflow}{while}\ (a\ <\ s.size()\ \&\&\ std::isspace((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})\ s[a]))\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ a++;}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ b\ =\ s.size();}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordflow}{while}\ (b\ >\ a\ \&\&\ std::isspace((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})\ s[b\ -\/\ 1]))\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ b-\/-\/;}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordflow}{return}\ s.substr(a,\ b\ -\/\ a);}
+\DoxyCodeLine{00037\ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{static}\ std::string\ trim\_value(std::istream\ \&\ is)\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ std::string\ str;}
+\DoxyCodeLine{00041\ \ \ \ \ std::getline(is,\ str);}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordflow}{return}\ trim(str);}
+\DoxyCodeLine{00043\ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ isIdentChar(\textcolor{keywordtype}{char}\ c)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordflow}{return}\ std::isalnum(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\textcolor{keyword}{>}(c))\ ||\ c\ ==\ \textcolor{charliteral}{'\_'};}
+\DoxyCodeLine{00047\ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{static}\ std::string\ expandMacrosRecursiveInternal(\textcolor{keyword}{const}\ std::string\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::string>\ \&\ macros,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ visiting);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{static}\ std::string\ expandMacroValue(\textcolor{keyword}{const}\ std::string\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::string>\ \&\ macros,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ visiting)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{if}\ (visiting.count(name))\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Recursive\ macro:\ "{}}\ +\ name);}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ visiting.insert(name);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ macros.find(name);}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ macros.end())\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ visiting.erase(name);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ name;}
+\DoxyCodeLine{00065\ \ \ \ \ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ value\ =\ it-\/>second;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordflow}{if}\ (value.empty())\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ visiting.erase(name);}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00071\ \ \ \ \ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ std::string\ expanded\ =\ expandMacrosRecursiveInternal(value,\ macros,\ visiting);}
+\DoxyCodeLine{00074\ \ \ \ \ visiting.erase(name);}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordflow}{return}\ expanded;}
+\DoxyCodeLine{00076\ \}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{static}\ std::string\ expandMacrosRecursiveInternal(\textcolor{keyword}{const}\ std::string\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::string>\ \&\ macros,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ visiting)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ std::string\ result;}
+\DoxyCodeLine{00082\ \ \ \ \ result.reserve(line.size());}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ 0;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{while}\ (i\ <\ line.size())\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isIdentChar(line[i]))\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ start\ =\ i;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (i\ <\ line.size()\ \&\&\ isIdentChar(line[i]))\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ token\ =\ line.substr(start,\ i\ -\/\ start);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ macros.find(token);}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ macros.end())\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ expandMacroValue(token,\ macros,\ visiting);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ token;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ line[i];}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00103\ \ \ \ \ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00106\ \}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{static}\ std::string\ expandMacrosRecursive(\textcolor{keyword}{const}\ std::string\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line,}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::string>\ \&\ macros)\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ std::unordered\_set<std::string>\ visiting;}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordflow}{return}\ expandMacrosRecursiveInternal(line,\ macros,\ visiting);}
+\DoxyCodeLine{00112\ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00115\ \textcolor{comment}{//\ Tokenizer\ for\ expressions\ in\ \#if/\#elif}}
+\DoxyCodeLine{00116\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00117\ \textcolor{keyword}{class\ }ExprLexer\ \{}
+\DoxyCodeLine{00118\ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{enum}\ Kind\ \{\ END,\ IDENT,\ NUMBER,\ OP,\ LPAREN,\ RPAREN\ \};}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structpre__wgsl_1_1_expr_lexer_1_1_tok}{Tok}}\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ Kind\ \ \ \ \ \ \ \ kind;}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ std::string\ text;}
+\DoxyCodeLine{00124\ \ \ \ \ \};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{explicit}\ ExprLexer(std::string\_view\ sv)\ :\ src(sv),\ pos(0)\ \{\}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ Tok\ next()\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ skipWS();}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos\ >=\ src.size())\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ END,\ \textcolor{stringliteral}{"{}"{}}\ \};}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ c\ =\ src[pos];}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ number}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::isdigit((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})\ c))\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ start\ =\ pos;}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (pos\ <\ src.size()\ \&\&\ std::isdigit((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})\ src[pos]))\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pos++;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ NUMBER,\ std::string(src.substr(start,\ pos\ -\/\ start))\ \};}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ identifier}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::isalpha((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})\ c)\ ||\ c\ ==\ \textcolor{charliteral}{'\_'})\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ start\ =\ pos;}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (pos\ <\ src.size()\ \&\&\ (std::isalnum((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})\ src[pos])\ ||\ src[pos]\ ==\ \textcolor{charliteral}{'\_'}))\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pos++;}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ IDENT,\ std::string(src.substr(start,\ pos\ -\/\ start))\ \};}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'('})\ \{}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ pos++;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ LPAREN,\ \textcolor{stringliteral}{"{}("{}}\ \};}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{')'})\ \{}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ pos++;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ RPAREN,\ \textcolor{stringliteral}{"{})"{}}\ \};}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ multi-\/char\ operators}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ two\_ops[]\ =\ \{\ \textcolor{stringliteral}{"{}=="{}},\ \textcolor{stringliteral}{"{}!="{}},\ \textcolor{stringliteral}{"{}<="{}},\ \textcolor{stringliteral}{"{}>="{}},\ \textcolor{stringliteral}{"{}\&\&"{}},\ \textcolor{stringliteral}{"{}||"{}},\ \textcolor{stringliteral}{"{}<<"{}},\ \textcolor{stringliteral}{"{}>>"{}}\ \};}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ op\ :\ two\_ops)\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (src.substr(pos,\ 2)\ ==\ op)\ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pos\ +=\ 2;}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ OP,\ std::string(op)\ \};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ single-\/char\ operators}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::string(\textcolor{stringliteral}{"{}+-\/*/\%<>!"{}}).find(c)\ !=\ std::string::npos)\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ pos++;}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ OP,\ std::string(1,\ c)\ \};}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ unexpected}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ pos++;}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ END,\ \textcolor{stringliteral}{"{}"{}}\ \};}
+\DoxyCodeLine{00181\ \ \ \ \ \}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00184\ \ \ \ \ std::string\_view\ src;}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ pos;}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordtype}{void}\ skipWS()\ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (pos\ <\ src.size()\ \&\&\ std::isspace((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char})\ src[pos]))\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ pos++;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00191\ \ \ \ \ \}}
+\DoxyCodeLine{00192\ \};}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00195\ \textcolor{comment}{//\ Expression\ Parser\ (recursive\ descent)}}
+\DoxyCodeLine{00196\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00197\ \textcolor{keyword}{class\ }ExprParser\ \{}
+\DoxyCodeLine{00198\ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00199\ \ \ \ \ ExprParser(std::string\_view\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ expr,}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::string>\ \&\ macros,}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ visiting)\ :}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ lex(expr),}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ macros(macros),}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ visiting(visiting)\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ advance();}
+\DoxyCodeLine{00206\ \ \ \ \ \}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordtype}{int}\ parse()\ \{\ \textcolor{keywordflow}{return}\ parseLogicalOr();\ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00211\ \ \ \ \ \doxymbox{\hyperlink{classpre__wgsl_1_1_expr_lexer}{ExprLexer}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lex;}
+\DoxyCodeLine{00212\ \ \ \ \ \doxymbox{\hyperlink{structpre__wgsl_1_1_expr_lexer_1_1_tok}{ExprLexer::Tok}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tok;}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::string>\ \&\ macros;}
+\DoxyCodeLine{00214\ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ visiting;}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keywordtype}{void}\ advance()\ \{\ tok\ =\ lex.next();\ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordtype}{bool}\ acceptOp(\textcolor{keyword}{const}\ std::string\ \&\ s)\ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tok.kind\ ==\ ExprLexer::OP\ \&\&\ tok.text\ ==\ s)\ \{}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ advance();}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00224\ \ \ \ \ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordtype}{bool}\ acceptKind(ExprLexer::Kind\ k)\ \{}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tok.kind\ ==\ k)\ \{}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ advance();}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00232\ \ \ \ \ \}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keywordtype}{int}\ parseLogicalOr()\ \{}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ v\ =\ parseLogicalAnd();}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (acceptOp(\textcolor{stringliteral}{"{}||"{}}))\ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseLogicalAnd();}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ ||\ rhs);}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00241\ \ \ \ \ \}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keywordtype}{int}\ parseLogicalAnd()\ \{}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ v\ =\ parseEquality();}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (acceptOp(\textcolor{stringliteral}{"{}\&\&"{}}))\ \{}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseEquality();}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ \&\&\ rhs);}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00250\ \ \ \ \ \}}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keywordtype}{int}\ parseEquality()\ \{}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ v\ =\ parseRelational();}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}=="{}}))\ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseRelational();}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ ==\ rhs);}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}!="{}}))\ \{}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseRelational();}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ !=\ rhs);}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00266\ \ \ \ \ \}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{keywordtype}{int}\ parseRelational()\ \{}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ v\ =\ parseShift();}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}<"{}}))\ \{}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseShift();}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ <\ rhs);}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}>"{}}))\ \{}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseShift();}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ >\ rhs);}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}<="{}}))\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseShift();}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ <=\ rhs);}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}>="{}}))\ \{}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseShift();}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ >=\ rhs);}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00288\ \ \ \ \ \}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keywordtype}{int}\ parseShift()\ \{}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ v\ =\ parseAdd();}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}<<"{}}))\ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseAdd();}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ <<\ rhs);}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}>>"{}}))\ \{}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseAdd();}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ >>\ rhs);}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00304\ \ \ \ \ \}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keywordtype}{int}\ parseAdd()\ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ v\ =\ parseMult();}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}+"{}}))\ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseMult();}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ +\ rhs);}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}-\/"{}}))\ \{}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseMult();}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ -\/\ rhs);}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00320\ \ \ \ \ \}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keywordtype}{int}\ parseMult()\ \{}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ v\ =\ parseUnary();}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}*"{}}))\ \{}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseUnary();}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (v\ *\ rhs);}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}/"{}}))\ \{}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseUnary();}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (rhs\ ==\ 0\ ?\ 0\ :\ v\ /\ rhs);}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}\%"{}}))\ \{}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rhs\ =\ parseUnary();}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ \ \ \ \ \ \ =\ (rhs\ ==\ 0\ ?\ 0\ :\ v\ \%\ rhs);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00339\ \ \ \ \ \}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keywordtype}{int}\ parseUnary()\ \{}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}!"{}}))\ \{}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ !parseUnary();}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}-\/"{}}))\ \{}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/parseUnary();}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptOp(\textcolor{stringliteral}{"{}+"{}}))\ \{}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ +parseUnary();}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ parsePrimary();}
+\DoxyCodeLine{00352\ \ \ \ \ \}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{keywordtype}{int}\ parsePrimary()\ \{}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ '('\ expr\ ')'}}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptKind(ExprLexer::LPAREN))\ \{}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ v\ =\ parse();}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!acceptKind(ExprLexer::RPAREN))\ \{}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}missing\ ')'"{}});}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ number}}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tok.kind\ ==\ ExprLexer::NUMBER)\ \{}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ v\ =\ std::stoi(tok.text);}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \ \ \ \ advance();}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ defined(identifier)}}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tok.kind\ ==\ ExprLexer::IDENT\ \&\&\ tok.text\ ==\ \textcolor{stringliteral}{"{}defined"{}})\ \{}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ advance();}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptKind(ExprLexer::LPAREN))\ \{}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tok.kind\ !=\ ExprLexer::IDENT)\ \{}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}expected\ identifier\ in\ defined()"{}});}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name\ =\ tok.text;}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ advance();}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!acceptKind(ExprLexer::RPAREN))\ \{}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}missing\ )\ in\ defined()"{}});}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ macros.count(name)\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ defined\ NAME}}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tok.kind\ !=\ ExprLexer::IDENT)\ \{}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}expected\ identifier\ in\ defined\ NAME"{}});}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name\ =\ tok.text;}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ advance();}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ macros.count(name)\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ identifier\ -\/>\ treat\ as\ integer,\ if\ defined\ use\ its\ value\ else\ 0}}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tok.kind\ ==\ ExprLexer::IDENT)\ \{}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name\ =\ tok.text;}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ advance();}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ macros.find(name);}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ macros.end())\ \{}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it-\/>second.empty())\ \{}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ evalMacroExpression(name,\ it-\/>second);}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ unexpected}}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00411\ \ \ \ \ \}}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{keywordtype}{int}\ evalMacroExpression(\textcolor{keyword}{const}\ std::string\ \&\ name,\ \textcolor{keyword}{const}\ std::string\ \&\ value)\ \{}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (visiting.count(name))\ \{}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Recursive\ macro:\ "{}}\ +\ name);}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ visiting.insert(name);}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ ExprParser\ ep(value,\ macros,\ visiting);}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ v\ =\ ep.parse();}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ visiting.erase(name);}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00423\ \ \ \ \ \}}
+\DoxyCodeLine{00424\ \};}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00427\ \textcolor{comment}{//\ Preprocessor}}
+\DoxyCodeLine{00428\ \textcolor{comment}{//==============================================================}}
+\DoxyCodeLine{00429\ \textcolor{keyword}{class\ }Preprocessor\ \{}
+\DoxyCodeLine{00430\ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00431\ \ \ \ \ \textcolor{keyword}{explicit}\ Preprocessor(\doxymbox{\hyperlink{structpre__wgsl_1_1_options}{Options}}\ opts\ =\ \{\})\ :\ opts\_(std::move(opts))\ \{}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Treat\ empty\ include\ path\ as\ current\ directory}}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (opts\_.include\_path.empty())\ \{}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \ \ \ \ opts\_.include\_path\ =\ \textcolor{stringliteral}{"{}."{}};}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ parseMacroDefinitions(opts\_.macros);}
+\DoxyCodeLine{00437\ \ \ \ \ \}}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \ \ \ \ std::string\ preprocess\_file(\textcolor{keyword}{const}\ std::string\ \&\ filename,\ \textcolor{keyword}{const}\ std::vector<std::string>\ \&\ additional\_macros\ =\ \{\})\ \{}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ macros;}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \ \ \ \ \ \ \ \ \ \ \ \ \ predefined;}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_stack;}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ buildMacros(additional\_macros,\ macros,\ predefined);}
+\DoxyCodeLine{00444\ }
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ std::string\ result\ =\ processFile(filename,\ macros,\ predefined,\ include\_stack,\ DirectiveMode::All);}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00447\ \ \ \ \ \}}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ \ \ \ \ std::string\ preprocess(\textcolor{keyword}{const}\ std::string\ \&\ contents,\ \textcolor{keyword}{const}\ std::vector<std::string>\ \&\ additional\_macros\ =\ \{\})\ \{}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ macros;}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \ \ \ \ \ \ \ \ \ \ \ \ \ predefined;}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_stack;}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ buildMacros(additional\_macros,\ macros,\ predefined);}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ std::string\ result\ =\ processString(contents,\ macros,\ predefined,\ include\_stack,\ DirectiveMode::All);}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00457\ \ \ \ \ \}}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00459\ \ \ \ \ std::string\ preprocess\_includes\_file(\textcolor{keyword}{const}\ std::string\ \&\ filename)\ \{}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ macros;}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \ \ \ \ \ \ \ \ \ \ \ \ \ predefined;}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_stack;}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ std::string\ result\ =\ processFile(filename,\ macros,\ predefined,\ include\_stack,\ DirectiveMode::IncludesOnly);}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00465\ \ \ \ \ \}}
+\DoxyCodeLine{00466\ }
+\DoxyCodeLine{00467\ \ \ \ \ std::string\ preprocess\_includes(\textcolor{keyword}{const}\ std::string\ \&\ contents)\ \{}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ macros;}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \ \ \ \ \ \ \ \ \ \ \ \ \ predefined;}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_stack;}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ std::string\ result\ =\ processString(contents,\ macros,\ predefined,\ include\_stack,\ DirectiveMode::IncludesOnly);}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00473\ \ \ \ \ \}}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00476\ \ \ \ \ \doxymbox{\hyperlink{structpre__wgsl_1_1_options}{Options}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ opts\_;}
+\DoxyCodeLine{00477\ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ global\_macros;}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{keyword}{enum\ class}\ DirectiveMode\ \{\ All,\ IncludesOnly\ \};}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00481\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structpre__wgsl_1_1_preprocessor_1_1_cond}{Cond}}\ \{}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ parent\_active;}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ active;}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ taken;}
+\DoxyCodeLine{00485\ \ \ \ \ \};}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{comment}{//\ Parse\ macro\ definitions\ into\ global\_macros}}
+\DoxyCodeLine{00489\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00490\ \ \ \ \ \textcolor{keywordtype}{void}\ parseMacroDefinitions(\textcolor{keyword}{const}\ std::vector<std::string>\ \&\ macro\_defs)\ \{}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ def\ :\ macro\_defs)\ \{}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ eq\_pos\ =\ def.find(\textcolor{charliteral}{'='});}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eq\_pos\ !=\ std::string::npos)\ \{}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Format:\ NAME=VALUE}}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name\ \ \ \ =\ trim(def.substr(0,\ eq\_pos));}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ value\ \ \ =\ trim(def.substr(eq\_pos\ +\ 1));}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ global\_macros[name]\ =\ value;}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Format:\ NAME}}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name\ \ \ \ =\ trim(def);}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ global\_macros[name]\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00504\ \ \ \ \ \}}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{comment}{//\ Build\ combined\ macro\ map\ and\ predefined\ set\ for\ a\ preprocessing\ operation}}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00509\ \ \ \ \ \textcolor{keywordtype}{void}\ buildMacros(\textcolor{keyword}{const}\ std::vector<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ additional\_macros,}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ \&\ macros,}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ predefined)\ \{}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ macros\ =\ global\_macros;}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ predefined.clear();}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ [name,\ value]\ :\ global\_macros)\ \{}
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ \ \ \ \ predefined.insert(name);}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00518\ }
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ def\ :\ additional\_macros)\ \{}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ eq\_pos\ =\ def.find(\textcolor{charliteral}{'='});}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name,\ value;}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eq\_pos\ !=\ std::string::npos)\ \{}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name\ \ =\ trim(def.substr(0,\ eq\_pos));}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ trim(def.substr(eq\_pos\ +\ 1));}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name\ \ =\ trim(def);}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ to\ macros\ map\ (will\ override\ global\ if\ same\ name)}}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \ \ \ \ macros[name]\ =\ value;}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \ \ predefined.insert(name);}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00534\ \ \ \ \ \}}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00537\ \ \ \ \ \textcolor{comment}{//\ Helpers}}
+\DoxyCodeLine{00538\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00539\ \ \ \ \ std::string\ loadFile(\textcolor{keyword}{const}\ std::string\ \&\ fname)\ \{}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ std::ifstream\ f(fname);}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!f.is\_open())\ \{}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Could\ not\ open\ file:\ "{}}\ +\ fname);}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ std::stringstream\ ss;}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ ss\ <<\ f.rdbuf();}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ss.str();}
+\DoxyCodeLine{00547\ \ \ \ \ \}}
+\DoxyCodeLine{00548\ }
+\DoxyCodeLine{00549\ \ \ \ \ \textcolor{keywordtype}{bool}\ condActive(\textcolor{keyword}{const}\ std::vector<Cond>\ \&\ cond)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cond.empty())\ \{}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cond.back().active;}
+\DoxyCodeLine{00554\ \ \ \ \ \}}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00557\ \ \ \ \ \textcolor{comment}{//\ Process\ a\ file}}
+\DoxyCodeLine{00558\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00559\ \ \ \ \ std::string\ processFile(\textcolor{keyword}{const}\ std::string\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name,}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ \&\ macros,}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ predefined\_macros,}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_stack,}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DirectiveMode\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mode)\ \{}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (include\_stack.count(name))\ \{}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Recursive\ include:\ "{}}\ +\ name);}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00567\ }
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ include\_stack.insert(name);}
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ std::string\ shader\_code\ =\ loadFile(name);}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ std::string\ out\ \ \ \ \ \ \ \ \ =\ processString(shader\_code,\ macros,\ predefined\_macros,\ include\_stack,\ mode);}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ include\_stack.erase(name);}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ out;}
+\DoxyCodeLine{00573\ \ \ \ \ \}}
+\DoxyCodeLine{00574\ }
+\DoxyCodeLine{00575\ \ \ \ \ std::string\ processIncludeFile(\textcolor{keyword}{const}\ std::string\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fname,}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ \&\ macros,}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ predefined\_macros,}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_stack,}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DirectiveMode\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mode)\ \{}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ std::string\ full\_path\ =\ opts\_.include\_path\ +\ \textcolor{stringliteral}{"{}/"{}}\ +\ fname;}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ processFile(full\_path,\ macros,\ predefined\_macros,\ include\_stack,\ mode);}
+\DoxyCodeLine{00582\ \ \ \ \ \}}
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00585\ \ \ \ \ \textcolor{comment}{//\ Process\ text}}
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00587\ \ \ \ \ std::string\ processString(\textcolor{keyword}{const}\ std::string\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shader\_code,}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ \&\ macros,}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ predefined\_macros,}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_stack,}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DirectiveMode\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mode)\ \{}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ std::vector<Cond>\ \ cond;\ \ \textcolor{comment}{//\ Conditional\ stack\ for\ this\ shader}}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ std::stringstream\ \ out;}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ std::istringstream\ in(shader\_code);}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ line;}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (std::getline(in,\ line))\ \{}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ t\ =\ trim(line);}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!t.empty()\ \&\&\ t[0]\ ==\ \textcolor{charliteral}{'\#'})\ \{}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ handled\ =\ handleDirective(t,\ out,\ macros,\ predefined\_macros,\ cond,\ include\_stack,\ mode);}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mode\ ==\ DirectiveMode::IncludesOnly\ \&\&\ !handled)\ \{}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ <<\ line\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mode\ ==\ DirectiveMode::IncludesOnly)\ \{}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ <<\ line\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (condActive(cond))\ \{}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Expand\ macros\ in\ the\ line\ before\ outputting}}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ expanded\ =\ expandMacrosRecursive(line,\ macros);}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ <<\ expanded\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mode\ ==\ DirectiveMode::All\ \&\&\ !cond.empty())\ \{}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Unclosed\ \#if\ directive"{}});}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ out.str();}
+\DoxyCodeLine{00621\ \ \ \ \ \}}
+\DoxyCodeLine{00622\ }
+\DoxyCodeLine{00623\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00624\ \ \ \ \ \textcolor{comment}{//\ Directive\ handler}}
+\DoxyCodeLine{00625\ \ \ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00626\ \ \ \ \ \textcolor{keywordtype}{bool}\ handleDirective(\textcolor{keyword}{const}\ std::string\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t,}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::stringstream\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out,}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ \&\ macros,}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ predefined\_macros,}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<Cond>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cond,}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_stack,}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DirectiveMode\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mode)\ \{}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ split\ into\ tokens}}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ body\ =\ t.substr(1);}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ std::istringstream\ iss(body);}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ cmd;}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ iss\ >>\ cmd;}
+\DoxyCodeLine{00638\ }
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmd\ ==\ \textcolor{stringliteral}{"{}include"{}})\ \{}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mode\ ==\ DirectiveMode::All\ \&\&\ !condActive(cond))\ \{}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ file;}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \ \ \ \ iss\ >>\ file;}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (file.size()\ >=\ 2\ \&\&\ file.front()\ ==\ \textcolor{charliteral}{'"{}'}\ \&\&\ file.back()\ ==\ \textcolor{charliteral}{'"{}'})\ \{}
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file\ =\ file.substr(1,\ file.size()\ -\/\ 2);}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \ \ \ \ out\ <<\ processIncludeFile(file,\ macros,\ predefined\_macros,\ include\_stack,\ mode);}
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00651\ }
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mode\ ==\ DirectiveMode::IncludesOnly)\ \{}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmd\ ==\ \textcolor{stringliteral}{"{}define"{}})\ \{}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!condActive(cond))\ \{}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ iss\ >>\ name;}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Don't\ override\ predefined\ macros\ from\ options}}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (predefined\_macros.count(name))\ \{}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ value\ =\ trim\_value(iss);}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \ \ \ \ macros[name]\ \ \ \ \ \ =\ value;}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00670\ }
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmd\ ==\ \textcolor{stringliteral}{"{}undef"{}})\ \{}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!condActive(cond))\ \{}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \ \ \ \ iss\ >>\ name;}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Don't\ undef\ predefined\ macros\ from\ options}}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (predefined\_macros.count(name))\ \{}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ macros.erase(name);}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmd\ ==\ \textcolor{stringliteral}{"{}ifdef"{}})\ \{}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \ \ \ \ iss\ >>\ name;}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ p\ =\ condActive(cond);}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ v\ =\ macros.count(name);}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \ \ \ \ cond.push\_back(\{\ p,\ p\ \&\&\ v,\ p\ \&\&\ v\ \});}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00693\ }
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmd\ ==\ \textcolor{stringliteral}{"{}ifndef"{}})\ \{}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00696\ \ \ \ \ \ \ \ \ \ \ \ \ iss\ >>\ name;}
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ p\ =\ condActive(cond);}
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ v\ =\ !macros.count(name);}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \ \ \ \ cond.push\_back(\{\ p,\ p\ \&\&\ v,\ p\ \&\&\ v\ \});}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmd\ ==\ \textcolor{stringliteral}{"{}if"{}})\ \{}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ expr\ =\ trim\_value(iss);}
+\DoxyCodeLine{00705\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ p\ \ \ \ =\ condActive(cond);}
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ v\ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00707\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ visiting;}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ExprParser\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ep(expr,\ macros,\ visiting);}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ ep.parse()\ !=\ 0;}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \ \ \ \ cond.push\_back(\{\ p,\ p\ \&\&\ v,\ p\ \&\&\ v\ \});}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00715\ }
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmd\ ==\ \textcolor{stringliteral}{"{}elif"{}})\ \{}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ expr\ =\ trim\_value(iss);}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cond.empty())\ \{}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}\#elif\ without\ \#if"{}});}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00722\ }
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structpre__wgsl_1_1_preprocessor_1_1_cond}{Cond}}\ \&\ c\ =\ cond.back();}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!c.parent\_active)\ \{}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00728\ }
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c.taken)\ \{}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00733\ }
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<std::string>\ visiting;}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ ExprParser\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ep(expr,\ macros,\ visiting);}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ ep.parse()\ !=\ 0;}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \ \ c.active\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ v;}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v)\ \{}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.taken\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00743\ }
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmd\ ==\ \textcolor{stringliteral}{"{}else"{}})\ \{}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cond.empty())\ \{}
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}\#else\ without\ \#if"{}});}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structpre__wgsl_1_1_preprocessor_1_1_cond}{Cond}}\ \&\ c\ =\ cond.back();}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!c.parent\_active)\ \{}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00753\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c.taken)\ \{}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.active\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00758\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.taken\ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00762\ }
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmd\ ==\ \textcolor{stringliteral}{"{}endif"{}})\ \{}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cond.empty())\ \{}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}\#endif\ without\ \#if"{}});}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ \ \ \ \ cond.pop\_back();}
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00770\ }
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unknown\ directive}}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Unknown\ directive:\ \#"{}}\ +\ cmd);}
+\DoxyCodeLine{00773\ \ \ \ \ \}}
+\DoxyCodeLine{00774\ \};}
+\DoxyCodeLine{00775\ }
+\DoxyCodeLine{00776\ \}\ \ \textcolor{comment}{//\ namespace\ pre\_wgsl}}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ PRE\_WGSL\_HPP}}
+
+\end{DoxyCode}

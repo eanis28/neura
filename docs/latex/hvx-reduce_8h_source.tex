@@ -1,0 +1,302 @@
+\doxysection{hvx-\/reduce.h}
+\hypertarget{hvx-reduce_8h_source}{}\label{hvx-reduce_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/reduce.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/reduce.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HVX\_REDUCE\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HVX\_REDUCE\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}hex-\/utils.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}hvx-\/base.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}hvx-\/types.h"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_n\_i32(HVX\_Vector\ in,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ n)\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ total\ =\ n\ *\ 4;\ \ \textcolor{comment}{//\ total\ vec\ nbytes}}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ width\ =\ 4;\ \ \ \ \ \ \textcolor{comment}{//\ int32}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ HVX\_Vector\ sum\ =\ in,\ sum\_t;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordflow}{while}\ (width\ <\ total)\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ sum\_t\ =\ Q6\_V\_vror\_VR(sum,\ width);\ \ \ \ \ \textcolor{comment}{//\ rotate\ right}}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ sum\ \ \ =\ Q6\_Vw\_vadd\_VwVw(sum\_t,\ sum);\ \ \textcolor{comment}{//\ elementwise\ sum}}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ width\ =\ width\ <<\ 1;}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{return}\ sum;}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_i32(HVX\_Vector\ in)\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{return}\ hvx\_vec\_reduce\_sum\_n\_i32(in,\ 32);}
+\DoxyCodeLine{00028\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_n\_qf32(HVX\_Vector\ in,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ n)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ total\ =\ n\ *\ 4;\ \ \textcolor{comment}{//\ total\ vec\ nbytes}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ width\ =\ 4;\ \ \ \ \ \ \textcolor{comment}{//\ fp32\ nbytes}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ HVX\_Vector\ sum\ =\ in,\ sum\_t;}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{while}\ (width\ <\ total)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ sum\_t\ =\ Q6\_V\_vror\_VR(Q6\_Vsf\_equals\_Vqf32(sum),\ width);\ \ \textcolor{comment}{//\ rotate\ right}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ sum\ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(sum,\ sum\_t);\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ elementwise\ sum}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ width\ =\ width\ <<\ 1;}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordflow}{return}\ sum;}
+\DoxyCodeLine{00041\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_qf32(HVX\_Vector\ in)\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{return}\ hvx\_vec\_reduce\_sum\_n\_qf32(in,\ 32);}
+\DoxyCodeLine{00045\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ >\ 75}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_f32x4(\doxymbox{\hyperlink{struct_h_v_x___vector__x4}{HVX\_Vector\_x4}}\ in)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ HVX\_VectorPair\ sum\_p01\ =\ Q6\_W\_vshuff\_VVR(in.v[1],\ in.v[0],\ 4);}
+\DoxyCodeLine{00051\ \ \ \ \ HVX\_VectorPair\ sum\_p23\ =\ Q6\_W\_vshuff\_VVR(in.v[3],\ in.v[2],\ 4);}
+\DoxyCodeLine{00052\ \ \ \ \ HVX\_Vector\ \ sum\_sf01\ \ =\ Q6\_Vsf\_vadd\_VsfVsf(Q6\_V\_lo\_W(sum\_p01),\ Q6\_V\_hi\_W(sum\_p01));}
+\DoxyCodeLine{00053\ \ \ \ \ HVX\_Vector\ \ sum\_sf23\ \ =\ Q6\_Vsf\_vadd\_VsfVsf(Q6\_V\_lo\_W(sum\_p23),\ Q6\_V\_hi\_W(sum\_p23));}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ HVX\_VectorPair\ sum\_p0123\ =\ Q6\_W\_vshuff\_VVR(sum\_sf23,\ sum\_sf01,\ 8);}
+\DoxyCodeLine{00056\ \ \ \ \ HVX\_Vector\ \ sum\_sf\ \ \ \ \ \ \ =\ Q6\_Vsf\_vadd\_VsfVsf(Q6\_V\_lo\_W(sum\_p0123),\ Q6\_V\_hi\_W(sum\_p0123));}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ sum\_sf\ =\ Q6\_Vsf\_vadd\_VsfVsf(sum\_sf,\ Q6\_V\_vror\_VR(sum\_sf,\ VLEN\ /\ 2));}
+\DoxyCodeLine{00059\ \ \ \ \ sum\_sf\ =\ Q6\_Vsf\_vadd\_VsfVsf(sum\_sf,\ Q6\_V\_vror\_VR(sum\_sf,\ VLEN\ /\ 4));}
+\DoxyCodeLine{00060\ \ \ \ \ sum\_sf\ =\ Q6\_Vsf\_vadd\_VsfVsf(sum\_sf,\ Q6\_V\_vror\_VR(sum\_sf,\ VLEN\ /\ 8));}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{return}\ sum\_sf;}
+\DoxyCodeLine{00062\ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_f32x2(HVX\_Vector\ in0,\ HVX\_Vector\ in1)\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ HVX\_VectorPair\ sump\ =\ Q6\_W\_vshuff\_VVR(in1,\ in0,\ 4);}
+\DoxyCodeLine{00066\ \ \ \ \ HVX\_Vector\ \ sum\_sf\ \ =\ Q6\_Vsf\_vadd\_VsfVsf(Q6\_V\_lo\_W(sump),\ Q6\_V\_hi\_W(sump));}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ sum\_sf\ =\ Q6\_Vsf\_vadd\_VsfVsf(sum\_sf,\ Q6\_V\_vror\_VR(sum\_sf,\ VLEN\ /\ 2));}
+\DoxyCodeLine{00069\ \ \ \ \ sum\_sf\ =\ Q6\_Vsf\_vadd\_VsfVsf(sum\_sf,\ Q6\_V\_vror\_VR(sum\_sf,\ VLEN\ /\ 4));}
+\DoxyCodeLine{00070\ \ \ \ \ sum\_sf\ =\ Q6\_Vsf\_vadd\_VsfVsf(sum\_sf,\ Q6\_V\_vror\_VR(sum\_sf,\ VLEN\ /\ 8));}
+\DoxyCodeLine{00071\ \ \ \ \ sum\_sf\ =\ Q6\_Vsf\_vadd\_VsfVsf(sum\_sf,\ Q6\_V\_vror\_VR(sum\_sf,\ VLEN\ /\ 16));}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordflow}{return}\ sum\_sf;}
+\DoxyCodeLine{00073\ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_n\_f32(HVX\_Vector\ in,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ n)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ total\ =\ n\ *\ 4;\ \ \textcolor{comment}{//\ total\ vec\ nbytes}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ width\ =\ 4;\ \ \ \ \ \ \textcolor{comment}{//\ fp32\ nbytes}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ HVX\_Vector\ sum\ =\ in,\ sum\_t;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{while}\ (width\ <\ total)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ sum\_t\ =\ Q6\_V\_vror\_VR(sum,\ width);\ \ \ \ \ \ \ \textcolor{comment}{//\ rotate\ right}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ sum\ \ \ =\ Q6\_Vsf\_vadd\_VsfVsf(sum,\ sum\_t);\ \textcolor{comment}{//\ elementwise\ sum}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ width\ =\ width\ <<\ 1;}
+\DoxyCodeLine{00084\ \ \ \ \ \}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{return}\ sum;}
+\DoxyCodeLine{00086\ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_f32x4(\doxymbox{\hyperlink{struct_h_v_x___vector__x4}{HVX\_Vector\_x4}}\ in)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ HVX\_VectorPair\ sum\_p01\ \ =\ Q6\_W\_vshuff\_VVR(in.v[1],\ in.v[0],\ 4);}
+\DoxyCodeLine{00092\ \ \ \ \ HVX\_VectorPair\ sum\_p23\ \ =\ Q6\_W\_vshuff\_VVR(in.v[3],\ in.v[2],\ 4);}
+\DoxyCodeLine{00093\ \ \ \ \ HVX\_Vector\ \ \ \ \ sum\_qf01\ =\ Q6\_Vqf32\_vadd\_VsfVsf(Q6\_V\_lo\_W(sum\_p01),\ Q6\_V\_hi\_W(sum\_p01));}
+\DoxyCodeLine{00094\ \ \ \ \ HVX\_Vector\ \ \ \ \ sum\_qf23\ =\ Q6\_Vqf32\_vadd\_VsfVsf(Q6\_V\_lo\_W(sum\_p23),\ Q6\_V\_hi\_W(sum\_p23));}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ HVX\_VectorPair\ sum\_p0123\ =\ Q6\_W\_vshuff\_VVR(Q6\_Vsf\_equals\_Vqf32(sum\_qf23),\ Q6\_Vsf\_equals\_Vqf32(sum\_qf01),\ 8);}
+\DoxyCodeLine{00097\ \ \ \ \ HVX\_Vector\ \ \ \ \ sum\_qf\ \ \ \ =\ Q6\_Vqf32\_vadd\_VsfVsf(Q6\_V\_lo\_W(sum\_p0123),\ Q6\_V\_hi\_W(sum\_p0123));}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ sum\_qf\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(sum\_qf,\ Q6\_V\_vror\_VR(Q6\_Vsf\_equals\_Vqf32(sum\_qf),\ VLEN\ /\ 2));}
+\DoxyCodeLine{00100\ \ \ \ \ sum\_qf\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(sum\_qf,\ Q6\_V\_vror\_VR(Q6\_Vsf\_equals\_Vqf32(sum\_qf),\ VLEN\ /\ 4));}
+\DoxyCodeLine{00101\ \ \ \ \ sum\_qf\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(sum\_qf,\ Q6\_V\_vror\_VR(Q6\_Vsf\_equals\_Vqf32(sum\_qf),\ VLEN\ /\ 8));}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vsf\_equals\_Vqf32(sum\_qf);}
+\DoxyCodeLine{00103\ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_f32x2(HVX\_Vector\ in0,\ HVX\_Vector\ in1)\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ HVX\_VectorPair\ sump\ =\ Q6\_W\_vshuff\_VVR(in1,\ in0,\ 4);}
+\DoxyCodeLine{00107\ \ \ \ \ HVX\_Vector\ \ sum\_qf\ \ =\ Q6\_Vqf32\_vadd\_VsfVsf(Q6\_V\_lo\_W(sump),\ Q6\_V\_hi\_W(sump));}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ sum\_qf\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(sum\_qf,\ Q6\_V\_vror\_VR(Q6\_Vsf\_equals\_Vqf32(sum\_qf),\ VLEN\ /\ 2));}
+\DoxyCodeLine{00110\ \ \ \ \ sum\_qf\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(sum\_qf,\ Q6\_V\_vror\_VR(Q6\_Vsf\_equals\_Vqf32(sum\_qf),\ VLEN\ /\ 4));}
+\DoxyCodeLine{00111\ \ \ \ \ sum\_qf\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(sum\_qf,\ Q6\_V\_vror\_VR(Q6\_Vsf\_equals\_Vqf32(sum\_qf),\ VLEN\ /\ 8));}
+\DoxyCodeLine{00112\ \ \ \ \ sum\_qf\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(sum\_qf,\ Q6\_V\_vror\_VR(Q6\_Vsf\_equals\_Vqf32(sum\_qf),\ VLEN\ /\ 16));}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vsf\_equals\_Vqf32(sum\_qf);}
+\DoxyCodeLine{00114\ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_n\_f32(HVX\_Vector\ in,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ n)\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ total\ =\ n\ *\ 4;\ \ \textcolor{comment}{//\ total\ vec\ nbytes}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ width\ =\ 4;\ \ \ \ \ \ \textcolor{comment}{//\ fp32\ nbytes}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ HVX\_Vector\ sum\ =\ in,\ sum\_t;}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordflow}{while}\ (width\ <\ total)\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ sum\_t\ =\ Q6\_V\_vror\_VR(sum,\ width);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rotate\ right}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ sum\ \ \ =\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vadd\_VsfVsf(sum,\ sum\_t));\ \ \textcolor{comment}{//\ elementwise\ sum}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ width\ =\ width\ <<\ 1;}
+\DoxyCodeLine{00125\ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordflow}{return}\ sum;}
+\DoxyCodeLine{00127\ \}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_sum\_f32(HVX\_Vector\ in)\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordflow}{return}\ hvx\_vec\_reduce\_sum\_n\_f32(in,\ 32);}
+\DoxyCodeLine{00133\ \}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_max\_f16(HVX\_Vector\ in)\ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ total\ =\ 128;\ \ \textcolor{comment}{//\ total\ vec\ nbytes}}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ width\ =\ 2;\ \ \ \ \textcolor{comment}{//\ fp16\ nbytes}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ HVX\_Vector\ \_max\ =\ in,\ \_max\_t;}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordflow}{while}\ (width\ <\ total)\ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \_max\_t\ =\ Q6\_V\_vror\_VR(\_max,\ width);\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rotate\ right}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \_max\ \ \ =\ Q6\_Vhf\_vmax\_VhfVhf(\_max\_t,\ \_max);\ \ \textcolor{comment}{//\ elementwise\ max}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ width\ \ =\ width\ <<\ 1;}
+\DoxyCodeLine{00144\ \ \ \ \ \}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordflow}{return}\ \_max;}
+\DoxyCodeLine{00147\ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_max2\_f16(HVX\_Vector\ in,\ HVX\_Vector\ \_max)\ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ total\ =\ 128;\ \ \textcolor{comment}{//\ total\ vec\ nbytes}}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ width\ =\ 2;\ \ \ \ \textcolor{comment}{//\ fp32\ nbytes}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ HVX\_Vector\ \_max\_t;}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \_max\ =\ Q6\_Vhf\_vmax\_VhfVhf(in,\ \_max);}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordflow}{while}\ (width\ <\ total)\ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \_max\_t\ =\ Q6\_V\_vror\_VR(\_max,\ width);\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rotate\ right}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \_max\ \ \ =\ Q6\_Vhf\_vmax\_VhfVhf(\_max\_t,\ \_max);\ \ \textcolor{comment}{//\ elementwise\ max}}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ width\ \ =\ width\ <<\ 1;}
+\DoxyCodeLine{00160\ \ \ \ \ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordflow}{return}\ \_max;}
+\DoxyCodeLine{00163\ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_max\_f32(HVX\_Vector\ in)\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ total\ =\ 128;\ \ \textcolor{comment}{//\ total\ vec\ nbytes}}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ width\ =\ 4;\ \ \ \ \textcolor{comment}{//\ fp32\ nbytes}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ HVX\_Vector\ \_max\ =\ in,\ \_max\_t;}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordflow}{while}\ (width\ <\ total)\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \_max\_t\ =\ Q6\_V\_vror\_VR(\_max,\ width);\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rotate\ right}}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \_max\ \ \ =\ Q6\_Vsf\_vmax\_VsfVsf(\_max\_t,\ \_max);\ \ \textcolor{comment}{//\ elementwise\ max}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ width\ \ =\ width\ <<\ 1;}
+\DoxyCodeLine{00174\ \ \ \ \ \}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keywordflow}{return}\ \_max;}
+\DoxyCodeLine{00177\ \}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_reduce\_max2\_f32(HVX\_Vector\ in,\ HVX\_Vector\ \_max)\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ total\ =\ 128;\ \ \textcolor{comment}{//\ total\ vec\ nbytes}}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ width\ =\ 4;\ \ \ \ \textcolor{comment}{//\ fp32\ nbytes}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ HVX\_Vector\ \_max\_t;}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \_max\ =\ Q6\_Vsf\_vmax\_VsfVsf(in,\ \_max);}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordflow}{while}\ (width\ <\ total)\ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \_max\_t\ =\ Q6\_V\_vror\_VR(\_max,\ width);\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rotate\ right}}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \_max\ \ \ =\ Q6\_Vsf\_vmax\_VsfVsf(\_max\_t,\ \_max);\ \ \textcolor{comment}{//\ elementwise\ max}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ width\ \ =\ width\ <<\ 1;}
+\DoxyCodeLine{00190\ \ \ \ \ \}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordflow}{return}\ \_max;}
+\DoxyCodeLine{00193\ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#define\ hvx\_reduce\_loop\_body(src\_type,\ init\_vec,\ pad\_vec,\ vec\_op,\ reduce\_op,\ scalar\_reduce)\ \(\backslash\)}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ src\_type\ *\ restrict\ vsrc\ =\ (src\_type\ *)\ src;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ HVX\_Vector\ acc\ =\ init\_vec;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ elem\_size\ =\ sizeof(float);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ epv\ \ =\ 128\ /\ elem\_size;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ nvec\ =\ num\_elems\ /\ epv;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ nloe\ =\ num\_elems\ \%\ epv;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ uint32\_t\ i\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}unroll(4)"{})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (;\ i\ <\ nvec;\ i++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ acc\ =\ vec\_op(acc,\ vsrc[i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (nloe)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ const\ float\ *\ srcf\ =\ (const\ float\ *)\ src\ +\ i\ *\ epv;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ in\ =\ *(HVX\_UVector\ *)\ srcf;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ temp\ =\ Q6\_V\_valign\_VVR(in,\ pad\_vec,\ nloe\ *\ elem\_size);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ acc\ =\ vec\_op(acc,\ temp);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ HVX\_Vector\ v\ =\ reduce\_op(acc);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ return\ scalar\_reduce(v);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\ \ \ \ \}\ while(0)}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ HVX\_REDUCE\_MAX\_OP(acc,\ val)\ Q6\_Vsf\_vmax\_VsfVsf(acc,\ val)}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ HVX\_REDUCE\_SUM\_OP(acc,\ val)\ Q6\_Vqf32\_vadd\_VsfVsf(Q6\_Vsf\_equals\_Vqf32(acc),\ val)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ HVX\_SUM\_SQ\_OP(acc,\ val)\ Q6\_Vqf32\_vadd\_Vqf32Vqf32(acc,\ Q6\_Vqf32\_vmpy\_VsfVsf(val,\ val))}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ HVX\_REDUCE\_MAX\_SCALAR(v)\ hvx\_vec\_get\_f32(v)}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ HVX\_REDUCE\_SUM\_SCALAR(v)\ hvx\_vec\_get\_f32(Q6\_Vsf\_equals\_Vqf32(v))}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{comment}{//\ Max\ variants}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_reduce\_max\_f32\_a(\textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00229\ \ \ \ \ HVX\_Vector\ init\_vec\ =\ hvx\_vec\_splat\_f32(((\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ src)[0]);}
+\DoxyCodeLine{00230\ \ \ \ \ assert((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ src\ \%\ 128\ ==\ 0);}
+\DoxyCodeLine{00231\ \ \ \ \ hvx\_reduce\_loop\_body(HVX\_Vector,\ init\_vec,\ init\_vec,\ HVX\_REDUCE\_MAX\_OP,\ hvx\_vec\_reduce\_max\_f32,\ HVX\_REDUCE\_MAX\_SCALAR);}
+\DoxyCodeLine{00232\ \}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_reduce\_max\_f32\_u(\textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00235\ \ \ \ \ HVX\_Vector\ init\_vec\ =\ hvx\_vec\_splat\_f32(((\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ src)[0]);}
+\DoxyCodeLine{00236\ \ \ \ \ hvx\_reduce\_loop\_body(HVX\_UVector,\ init\_vec,\ init\_vec,\ HVX\_REDUCE\_MAX\_OP,\ hvx\_vec\_reduce\_max\_f32,\ HVX\_REDUCE\_MAX\_SCALAR);}
+\DoxyCodeLine{00237\ \}}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_reduce\_max\_f32(\textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keywordflow}{if}\ (hex\_is\_aligned((\textcolor{keywordtype}{void}\ *)\ src,\ 128))\ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hvx\_reduce\_max\_f32\_a(src,\ num\_elems);}
+\DoxyCodeLine{00242\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hvx\_reduce\_max\_f32\_u(src,\ num\_elems);}
+\DoxyCodeLine{00244\ \ \ \ \ \}}
+\DoxyCodeLine{00245\ \}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{comment}{//\ Sum\ variants}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_reduce\_sum\_f32\_a(\textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00250\ \ \ \ \ HVX\_Vector\ init\_vec\ =\ Q6\_V\_vsplat\_R(0);}
+\DoxyCodeLine{00251\ \ \ \ \ assert((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ src\ \%\ 128\ ==\ 0);}
+\DoxyCodeLine{00252\ \ \ \ \ hvx\_reduce\_loop\_body(HVX\_Vector,\ init\_vec,\ init\_vec,\ HVX\_REDUCE\_SUM\_OP,\ hvx\_vec\_reduce\_sum\_qf32,\ HVX\_REDUCE\_SUM\_SCALAR);}
+\DoxyCodeLine{00253\ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_reduce\_sum\_f32\_u(\textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00256\ \ \ \ \ HVX\_Vector\ init\_vec\ =\ Q6\_V\_vsplat\_R(0);}
+\DoxyCodeLine{00257\ \ \ \ \ hvx\_reduce\_loop\_body(HVX\_UVector,\ init\_vec,\ init\_vec,\ HVX\_REDUCE\_SUM\_OP,\ hvx\_vec\_reduce\_sum\_qf32,\ HVX\_REDUCE\_SUM\_SCALAR);}
+\DoxyCodeLine{00258\ \}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_reduce\_sum\_f32(\textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keywordflow}{if}\ (hex\_is\_aligned((\textcolor{keywordtype}{void}\ *)\ src,\ 128))\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hvx\_reduce\_sum\_f32\_a(src,\ num\_elems);}
+\DoxyCodeLine{00263\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hvx\_reduce\_sum\_f32\_u(src,\ num\_elems);}
+\DoxyCodeLine{00265\ \ \ \ \ \}}
+\DoxyCodeLine{00266\ \}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{comment}{//\ Sum\ of\ squares\ variants}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_sum\_of\_squares\_f32\_a(\textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00271\ \ \ \ \ HVX\_Vector\ init\_vec\ =\ Q6\_V\_vsplat\_R(0);}
+\DoxyCodeLine{00272\ \ \ \ \ assert((uintptr\_t)\ src\ \%\ 128\ ==\ 0);}
+\DoxyCodeLine{00273\ \ \ \ \ hvx\_reduce\_loop\_body(HVX\_Vector,\ init\_vec,\ init\_vec,\ HVX\_SUM\_SQ\_OP,\ hvx\_vec\_reduce\_sum\_qf32,\ HVX\_REDUCE\_SUM\_SCALAR);}
+\DoxyCodeLine{00274\ \}}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_sum\_of\_squares\_f32\_u(\textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ HVX\_Vector\ init\_vec\ =\ Q6\_V\_vsplat\_R(0);}
+\DoxyCodeLine{00278\ \ \ \ \ hvx\_reduce\_loop\_body(HVX\_UVector,\ init\_vec,\ init\_vec,\ HVX\_SUM\_SQ\_OP,\ hvx\_vec\_reduce\_sum\_qf32,\ HVX\_REDUCE\_SUM\_SCALAR);}
+\DoxyCodeLine{00279\ \}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_sum\_of\_squares\_f32(\textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordflow}{if}\ (hex\_is\_aligned((\textcolor{keywordtype}{void}\ *)\ src,\ 128))\ \{}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hvx\_sum\_of\_squares\_f32\_a(src,\ num\_elems);}
+\DoxyCodeLine{00284\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hvx\_sum\_of\_squares\_f32\_u(src,\ num\_elems);}
+\DoxyCodeLine{00286\ \ \ \ \ \}}
+\DoxyCodeLine{00287\ \}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#undef\ hvx\_reduce\_loop\_body}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#undef\ HVX\_REDUCE\_MAX\_OP}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#undef\ HVX\_REDUCE\_SUM\_OP}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#undef\ HVX\_REDUCE\_MAX\_SCALAR}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#undef\ HVX\_REDUCE\_SUM\_SCALAR}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#undef\ HVX\_SUM\_SQ\_OP}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HVX\_REDUCE\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

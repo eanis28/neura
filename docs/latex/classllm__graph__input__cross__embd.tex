@@ -1,0 +1,57 @@
+\doxysection{llm\+\_\+graph\+\_\+input\+\_\+cross\+\_\+embd Class Reference}
+\hypertarget{classllm__graph__input__cross__embd}{}\label{classllm__graph__input__cross__embd}\index{llm\_graph\_input\_cross\_embd@{llm\_graph\_input\_cross\_embd}}
+Inheritance diagram for llm\+\_\+graph\+\_\+input\+\_\+cross\+\_\+embd:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllm__graph__input__cross__embd}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__cross__embd_aa5c10f9e2f2cc18a76443c81c2be1a5f}\label{classllm__graph__input__cross__embd_aa5c10f9e2f2cc18a76443c81c2be1a5f} 
+{\bfseries llm\+\_\+graph\+\_\+input\+\_\+cross\+\_\+embd} (const \doxymbox{\hyperlink{structllama__cross}{llama\+\_\+cross}} \texorpdfstring{$\ast$}{*}cross)
+\item 
+void \doxymbox{\hyperlink{classllm__graph__input__cross__embd_a6024c5a2d793b6cd93a4124902cda5a9}{set\+\_\+input}} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool {\bfseries can\+\_\+reuse} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__cross__embd_ae523de38e3945273f609cc3b2e4231d1}\label{classllm__graph__input__cross__embd_ae523de38e3945273f609cc3b2e4231d1} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries cross\+\_\+embd}
+\item 
+\Hypertarget{classllm__graph__input__cross__embd_a272f6329f4fbc285396a6186e4ed1924}\label{classllm__graph__input__cross__embd_a272f6329f4fbc285396a6186e4ed1924} 
+const \doxymbox{\hyperlink{structllama__cross}{llama\+\_\+cross}} \texorpdfstring{$\ast$}{*} {\bfseries cross}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries debug} = 0
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllm__graph__input__cross__embd_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllm__graph__input__cross__embd_a6024c5a2d793b6cd93a4124902cda5a9}\index{llm\_graph\_input\_cross\_embd@{llm\_graph\_input\_cross\_embd}!set\_input@{set\_input}}
+\index{set\_input@{set\_input}!llm\_graph\_input\_cross\_embd@{llm\_graph\_input\_cross\_embd}}
+\doxysubsubsection{\texorpdfstring{set\_input()}{set\_input()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__cross__embd_a6024c5a2d793b6cd93a4124902cda5a9} 
+void llm\+\_\+graph\+\_\+input\+\_\+cross\+\_\+embd::\+set\+\_\+input (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}}]{ubatch}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+cpp\end{DoxyCompactItemize}

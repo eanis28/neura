@@ -1,0 +1,40 @@
+\doxysection{Shared\+Response Struct Reference}
+\hypertarget{struct_shared_response}{}\label{struct_shared_response}\index{SharedResponse@{SharedResponse}}
+
+
+Thread-\/safe container for passing responses between threads.  
+
+
+
+
+{\ttfamily \+\#include $<$UI.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_shared_response_a3b4e3fd89f828fd8d67f0568f5bdc9c0}\label{struct_shared_response_a3b4e3fd89f828fd8d67f0568f5bdc9c0} 
+std::\+mutex {\bfseries mtx}
+\item 
+\Hypertarget{struct_shared_response_aa650ef28820a9249bf0f6cd541d22330}\label{struct_shared_response_aa650ef28820a9249bf0f6cd541d22330} 
+std::\+string {\bfseries text}
+\item 
+\Hypertarget{struct_shared_response_a49215e049ceecea346d709fb68dbb5cd}\label{struct_shared_response_a49215e049ceecea346d709fb68dbb5cd} 
+bool {\bfseries updated} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Thread-\/safe container for passing responses between threads. 
+
+This structure is used to safely share text responses (such as voice command outputs) between worker threads (e.\+g., voice listener) and the main UI thread.
+
+It uses a mutex to ensure synchronized access and a flag to indicate when new data is available.
+
+\begin{DoxyAuthor}{Author}
+Erina 
+\end{DoxyAuthor}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_u_i_8h}{UI.\+h}}\end{DoxyCompactItemize}

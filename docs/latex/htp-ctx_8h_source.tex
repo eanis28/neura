@@ -1,0 +1,53 @@
+\doxysection{htp-\/ctx.h}
+\hypertarget{htp-ctx_8h_source}{}\label{htp-ctx_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/htp-\/ctx.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/htp-\/ctx.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HTP\_CTX\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HTP\_CTX\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}hex-\/dma.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}worker-\/pool.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <dspqueue.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stdatomic.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ HTP\_MAX\_NTHREADS\ 10}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ Main\ context\ for\ htp\ DSP\ backend}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__context}{htp\_context}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ dspqueue\_t\ \ \ \ \ \ \ \ \ \ \ \ queue;}
+\DoxyCodeLine{00017\ \ \ \ \ \doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ \ \ \ \ \ \ \ \ \ \ dma[HTP\_MAX\_NTHREADS];}
+\DoxyCodeLine{00018\ \ \ \ \ worker\_pool\_context\_t\ worker\_pool;}
+\DoxyCodeLine{00019\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_threads;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{int}\ thread\_id;}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{int}\ thread\_prio;}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ uint8\_t\ *\ vtcm\_base;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ vtcm\_size;}
+\DoxyCodeLine{00026\ \ \ \ \ uint32\_t\ \ vtcm\_rctx;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ atomic\_bool\ vtcm\_valid;}
+\DoxyCodeLine{00029\ \ \ \ \ atomic\_bool\ vtcm\_inuse;}
+\DoxyCodeLine{00030\ \ \ \ \ atomic\_bool\ vtcm\_needs\_release;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ uint32\_t\ opmask;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ Cached\ src1\ spad\ position\ from\ the\ last\ quantize\ pass.}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ When\ SKIP\_QUANTIZE\ is\ set\ the\ Q8\ activation\ data\ is\ already\ in\ VTCM}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ at\ this\ address;\ the\ matmul\ must\ read\ from\ here\ instead\ of\ recomputing}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ the\ offset\ (which\ depends\ on\ the\ current\ op's\ src0\ size).}}
+\DoxyCodeLine{00038\ \ \ \ \ uint8\_t\ *\ prev\_src1\_spad;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ HMX\ acceleration\ fields\ (v73+,\ enabled\ by\ compile-\/time\ HTP\_HAS\_HMX)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#ifdef\ HTP\_HAS\_HMX}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ hmx\_enabled;\ \ \ \ \ \ \ \textcolor{comment}{//\ Runtime\ flag:\ HMX\ initialisation\ succeeded}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ vtcm\_scratch\_size;\ \textcolor{comment}{//\ Usable\ dynamic\ scratch\ (vtcm\_size\ minus\ tail\ reservation)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HTP\_CTX\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

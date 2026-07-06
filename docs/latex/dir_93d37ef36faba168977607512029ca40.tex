@@ -1,0 +1,49 @@
+\doxysection{whisper.\+cpp/\+examples/\+bench.wasm Directory Reference}
+\hypertarget{dir_93d37ef36faba168977607512029ca40}{}\label{dir_93d37ef36faba168977607512029ca40}\index{whisper.cpp/examples/bench.wasm Directory Reference@{whisper.cpp/examples/bench.wasm Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_93d37ef36faba168977607512029ca40_autotoc_md62}{}\doxysubsection{\texorpdfstring{bench.\+wasm}{bench.\+wasm}}\label{dir_93d37ef36faba168977607512029ca40_autotoc_md62}
+Benchmark the performance of whisper.\+cpp in the browser using Web\+Assembly
+
+Link:\+ \href{https://ggml.ai/whisper.cpp/bench.wasm/}{\texttt{https:\+/\+/\+ggml.\+ai/\+whisper.\+cpp/\+bench.\+wasm/\+}}
+
+Terminal version:\+ \href{/examples/bench}{\texttt{examples/\+bench}}\hypertarget{dir_93d37ef36faba168977607512029ca40_autotoc_md63}{}\doxysubsection{\texorpdfstring{Build instructions}{Build instructions}}\label{dir_93d37ef36faba168977607512029ca40_autotoc_md63}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ build\ using\ Emscripten\ (v3.1.2)}
+\DoxyCodeLine{git\ clone\ https://github.com/ggerganov/whisper.cpp}
+\DoxyCodeLine{cd\ whisper.cpp}
+\DoxyCodeLine{mkdir\ build-\/em\ \&\&\ cd\ build-\/em}
+\DoxyCodeLine{emcmake\ cmake\ ..}
+\DoxyCodeLine{make\ -\/j}
+
+\end{DoxyCode}
+ \doxylink{requirements_The}{The} example can then be started by running a local HTTP server:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{python3\ examples/server.py}
+
+\end{DoxyCode}
+ And then opening a browser to the following URL:\+ \href{http://localhost:8000/bench.wasm}{\texttt{http:\+/\+/\+localhost:\+8000/\+bench.\+wasm}}
+
+To run the example in a different server, you need to copy the following files to the server\textquotesingle{}s HTTP path:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ copy\ the\ produced\ page\ to\ your\ HTTP\ path}
+\DoxyCodeLine{cp\ bin/bench.wasm/*\ \ \ \ \ \ \ /path/to/html/}
+\DoxyCodeLine{cp\ bin/libbench.js\ \ \ \ \ \ \ \ /path/to/html/}
+\DoxyCodeLine{cp\ bin/libbench.worker.js\ /path/to/html/}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+📝 {\bfseries{Note:\+}} By default this example is built with {\ttfamily WHISPER\+\_\+\+WASM\+\_\+\+SINGLE\+\_\+\+FILE=ON} which means that that a separate .wasm file will not be generated. Instead, the WASM module is embedded in the main JS file as a base64 encoded string. To generate a separate .wasm file, you need to disable this option by passing {\ttfamily -\/DWHISPER\+\_\+\+WASM\+\_\+\+SINGLE\+\_\+\+FILE=OFF}:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{emcmake\ cmake\ ..\ -\/DWHISPER\_WASM\_SINGLE\_FILE=OFF}
+
+\end{DoxyCode}
+ This will generate a {\ttfamily libbench.\+wasm} file in the build/\+bin directory. \end{quote}
+
+
+\begin{quote}
+📝 {\bfseries{Note:\+}} As of Emscripten 3.\+1.\+58 (April 2024), separate worker.\+js files are no longer generated and the worker is embedded in the main JS file. So the worker file will not be geneated for versions later than {\ttfamily 3.\+1.\+58}. \end{quote}

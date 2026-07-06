@@ -1,0 +1,43 @@
+\doxysection{whisper.\+cpp/\+ci Directory Reference}
+\hypertarget{dir_192775561d5c9acaa725518775b09c68}{}\label{dir_192775561d5c9acaa725518775b09c68}\index{whisper.cpp/ci Directory Reference@{whisper.cpp/ci Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_192775561d5c9acaa725518775b09c68_autotoc_md49}{}\doxysubsection{\texorpdfstring{CI}{CI}}\label{dir_192775561d5c9acaa725518775b09c68_autotoc_md49}
+In addition to \href{https://github.com/ggerganov/whisper.cpp/actions}{\texttt{Github Actions}} {\ttfamily whisper.\+cpp} uses a custom CI framework:\+
+
+\href{https://github.com/ggml-org/ci}{\texttt{https:\+/\+/\+github.\+com/\+ggml-\/org/\+ci}}
+
+It monitors the {\ttfamily master} branch for new commits and runs the \href{https://github.com/ggerganov/whisper.cpp/blob/master/ci/run.sh}{\texttt{ci/\+run.\+sh}} script on dedicated cloud instances. This allows us to execute heavier workloads compared to just using Github Actions. Also with time, the cloud instances will be scaled to cover various hardware architectures, including GPU and Apple Silicon instances.
+
+Collaborators can optionally trigger the CI run by adding the {\ttfamily ggml-\/ci} keyword to their commit message. Only the branches of this repo are monitored for this keyword.
+
+It is a good practice, before publishing changes to execute the full CI locally on your machine:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ tmp}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ CPU-\/only\ build}
+\DoxyCodeLine{bash\ ./ci/run.sh\ ./tmp/results\ ./tmp/mnt}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ with\ CUDA\ support}
+\DoxyCodeLine{GG\_BUILD\_CUDA=1\ bash\ ./ci/run.sh\ ./tmp/results\ ./tmp/mnt}
+
+\end{DoxyCode}
+\hypertarget{dir_192775561d5c9acaa725518775b09c68_autotoc_md50}{}\doxysubsection{\texorpdfstring{Environment Variables}{Environment Variables}}\label{dir_192775561d5c9acaa725518775b09c68_autotoc_md50}
+\doxylink{requirements_The}{The} CI script supports several environment variables to control the build:\+
+
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Variable  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Description  \\
+{\ttfamily GG\+\_\+\+BUILD\+\_\+\+CUDA}  &Enable NVIDIA CUDA GPU acceleration  \\
+{\ttfamily GG\+\_\+\+BUILD\+\_\+\+SYCL}  &Enable Intel SYCL acceleration  \\
+{\ttfamily GG\+\_\+\+BUILD\+\_\+\+VULKAN}  &Enable Vulkan GPU acceleration  \\
+{\ttfamily GG\+\_\+\+BUILD\+\_\+\+METAL}  &Enable Metal acceleration on Apple Silicon  \\
+{\ttfamily GG\+\_\+\+BUILD\+\_\+\+BLAS}  &Enable BLAS CPU acceleration  \\
+{\ttfamily GG\+\_\+\+BUILD\+\_\+\+OPENVINO}  &Enable Open\+VINO support  \\
+{\ttfamily GG\+\_\+\+BUILD\+\_\+\+COREML}  &Enable Core ML support for Apple Neural Engine  \\
+{\ttfamily GG\+\_\+\+BUILD\+\_\+\+LOW\+\_\+\+PERF}  &Limit tests for low-\/performance hardware  \\
+{\ttfamily GG\+\_\+\+BUILD\+\_\+\+TEST\+\_\+\+MODELS}  &Comma-\/separated list of models to test (e.\+g. "{}tiny.\+en,tiny,base,medium"{}, defaults to all models unless {\ttfamily GG\+\_\+\+BUILD\+\_\+\+LOW\+\_\+\+PERF} is set)  \\
+\end{DoxyTable}

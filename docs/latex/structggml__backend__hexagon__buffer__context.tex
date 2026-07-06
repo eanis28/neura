@@ -1,0 +1,43 @@
+\doxysection{ggml\+\_\+backend\+\_\+hexagon\+\_\+buffer\+\_\+context Struct Reference}
+\hypertarget{structggml__backend__hexagon__buffer__context}{}\label{structggml__backend__hexagon__buffer__context}\index{ggml\_backend\_hexagon\_buffer\_context@{ggml\_backend\_hexagon\_buffer\_context}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_a121f65c925536333dfd056befbbe2a5d}\label{structggml__backend__hexagon__buffer__context_a121f65c925536333dfd056befbbe2a5d} 
+bool {\bfseries mmap\+\_\+to} (\doxymbox{\hyperlink{structggml__hexagon__session}{ggml\+\_\+hexagon\+\_\+session}} \texorpdfstring{$\ast$}{*}s)
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_a275f89b5a311e2ad8f93c3f885c6d24e}\label{structggml__backend__hexagon__buffer__context_a275f89b5a311e2ad8f93c3f885c6d24e} 
+bool {\bfseries mmap} ()
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_ac2d3f5b0d517a05f182e6a565574a90e}\label{structggml__backend__hexagon__buffer__context_ac2d3f5b0d517a05f182e6a565574a90e} 
+void {\bfseries munmap} ()
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_a05883cc72d6dd43293b4376ef331d751}\label{structggml__backend__hexagon__buffer__context_a05883cc72d6dd43293b4376ef331d751} 
+{\bfseries ggml\+\_\+backend\+\_\+hexagon\+\_\+buffer\+\_\+context} (\doxymbox{\hyperlink{structggml__hexagon__session}{ggml\+\_\+hexagon\+\_\+session}} \texorpdfstring{$\ast$}{*}sess, size\+\_\+t size, bool repack)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_ae4cdb9d7842da116f78a77b19d421419}\label{structggml__backend__hexagon__buffer__context_ae4cdb9d7842da116f78a77b19d421419} 
+\doxymbox{\hyperlink{structggml__hexagon__session}{ggml\+\_\+hexagon\+\_\+session}} \texorpdfstring{$\ast$}{*} {\bfseries sess}
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_a8e11f4993959a2f90bdc74deb3716792}\label{structggml__backend__hexagon__buffer__context_a8e11f4993959a2f90bdc74deb3716792} 
+uint8\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries base}
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_ae1785219ad931341f46cd506a8f5166e}\label{structggml__backend__hexagon__buffer__context_ae1785219ad931341f46cd506a8f5166e} 
+size\+\_\+t {\bfseries size}
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_a975621a5704639c315bc5218d07d19ca}\label{structggml__backend__hexagon__buffer__context_a975621a5704639c315bc5218d07d19ca} 
+int {\bfseries fd}
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_af4ca1ac2a7284a0b2047881f4e1b9c5f}\label{structggml__backend__hexagon__buffer__context_af4ca1ac2a7284a0b2047881f4e1b9c5f} 
+bool {\bfseries mapped}
+\item 
+\Hypertarget{structggml__backend__hexagon__buffer__context_a9bcf181872a668fb239b4f4fc4e6b205}\label{structggml__backend__hexagon__buffer__context_a9bcf181872a668fb239b4f4fc4e6b205} 
+bool {\bfseries repack}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/hexagon/\+ggml-\/hexagon.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,238 @@
+\doxysection{apir\+\_\+cs\+\_\+ggml.\+h}
+\hypertarget{apir__cs__ggml_8h_source}{}\label{apir__cs__ggml_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_cs\_ggml.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_cs\_ggml.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}apir\_cs.h"{}}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}apir\_cs\_rpc.h"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ ggml\_buffer\_to\_apir\_host\_handle(ggml\_backend\_buffer\_t\ buffer);}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_ggml\_buffer\_host\_handle(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ apir\_buffer\_host\_handle\_t\ *\ handle);}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ ggml\_backend\_buffer\_t\ apir\_decode\_ggml\_buffer(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec);}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{/*\ apir\_rpc\_tensor\ */}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_rcp\_tensor(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ *\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}})\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ apir\_rpc\_tensor\_size\ =\ \textcolor{keyword}{sizeof}(*apir\_rpc\_tensor);}
+\DoxyCodeLine{00015\ \ \ \ \ apir\_encode(enc,\ apir\_rpc\_tensor\_size,\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}},\ apir\_rpc\_tensor\_size);}
+\DoxyCodeLine{00016\ \}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ *\ apir\_decode\_apir\_rpc\_tensor\_inplace(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ apir\_rpc\_tensor\_size\ =\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}});}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordflow}{return}\ (\doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ *)\ (uintptr\_t)\ apir\_decoder\_use\_inplace(dec,\ apir\_rpc\_tensor\_size);}
+\DoxyCodeLine{00022\ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ *\ apir\_decode\_apir\_rpc\_tensor\_array\_inplace(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uint32\_t\ n\_tensors)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ apir\_rpc\_tensor\_size\ =\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}})\ *\ n\_tensors;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{return}\ (\doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ *)\ (uintptr\_t)\ apir\_decoder\_use\_inplace(dec,\ apir\_rpc\_tensor\_size);}
+\DoxyCodeLine{00028\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\ ggml\_tensor\ */}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_ggml\_tensor(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ serialized\ =\ apir\_serialize\_tensor(tensor);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ apir\_encode\_rcp\_tensor(enc,\ \&serialized);}
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ apir\_decode\_ggml\_tensor(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ *\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ =\ apir\_decode\_apir\_rpc\_tensor\_inplace(dec);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}})\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00043\ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \doxymbox{\hyperlink{structggml__init__params}{ggml\_init\_params}}\ params\{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*.mem\_size\ \ \ =*/}ggml\_tensor\_overhead(),}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*.mem\_buffer\ =*/}NULL,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*.no\_alloc\ \ \ =*/}\textcolor{keyword}{true},}
+\DoxyCodeLine{00049\ \ \ \ \ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx\ =\ ggml\_init(params);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor\ =\ apir\_deserialize\_tensor(ctx,\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}});}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{return}\ tensor;}
+\DoxyCodeLine{00056\ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{/*\ ***\ ggml\_backend\_buffer\_type\_t\ ***\ */}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//\ ggml\_backend\_buffer\_type\_t\ is\ a\ POINTER\ (to\ a\ struct).}}
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Only\ the\ host\ pointer\ is\ shared\ between\ the\ host\ and\ guest.}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//\ The\ guest\ stores\ it\ in\ \`{}buft-\/>context`.}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ The\ host\ simply\ writes\ the\ pointer\ address\ in\ the\ buffer\ variable.}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_ggml\_buffer\_type(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ ggml\_backend\_buffer\_type\_t\ buft)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ apir\_buffer\_type\_host\_handle\_t\ handle\ =\ ggml\_buffer\_type\_to\_apir\_handle(buft);}
+\DoxyCodeLine{00067\ \ \ \ \ apir\_encoder\_write(enc,\ \textcolor{keyword}{sizeof}(handle),\ \&handle,\ \textcolor{keyword}{sizeof}(handle));}
+\DoxyCodeLine{00068\ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ ggml\_backend\_buffer\_type\_t\ apir\_decode\_ggml\_buffer\_type(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ apir\_buffer\_type\_host\_handle\_t\ handle;}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ apir\_decoder\_read(dec,\ \textcolor{keyword}{sizeof}(handle),\ \&handle,\ \textcolor{keyword}{sizeof}(handle));}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordflow}{return}\ (ggml\_backend\_buffer\_type\_t)\ handle;}
+\DoxyCodeLine{00076\ \}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_apir\_buffer\_type\_host\_handle(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ apir\_buffer\_type\_host\_handle\_t\ handle)\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ apir\_encoder\_write(enc,\ \textcolor{keyword}{sizeof}(handle),\ \&handle,\ \textcolor{keyword}{sizeof}(handle));}
+\DoxyCodeLine{00080\ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ apir\_buffer\_type\_host\_handle\_t\ apir\_decode\_apir\_buffer\_type\_host\_handle(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ apir\_buffer\_type\_host\_handle\_t\ handle;}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ apir\_decoder\_read(dec,\ \textcolor{keyword}{sizeof}(handle),\ \&handle,\ \textcolor{keyword}{sizeof}(handle));}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordflow}{return}\ handle;}
+\DoxyCodeLine{00088\ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{comment}{/*\ ***\ ggml\_backend\_type\_t\ ***\ */}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{comment}{//\ ggml\_backend\_buffer\_t\ is\ a\ POINTER.}}
+\DoxyCodeLine{00093\ \textcolor{comment}{//\ same\ logic\ as\ for\ ggml\_backend\_buffer\_type\_t}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_ggml\_buffer(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ ggml\_backend\_buffer\_t\ buffer)\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ apir\_buffer\_host\_handle\_t\ handle\ =\ BUFFER\_TO\_HOST\_HANDLE(buffer);}
+\DoxyCodeLine{00097\ \ \ \ \ apir\_encoder\_write(enc,\ \textcolor{keyword}{sizeof}(handle),\ \&handle,\ \textcolor{keyword}{sizeof}(handle));}
+\DoxyCodeLine{00098\ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ ggml\_backend\_buffer\_t\ apir\_decode\_ggml\_buffer(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ ggml\_backend\_buffer\_t\ buffer;}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ buffer\_ptr\_size\ =\ \textcolor{keyword}{sizeof}(buffer);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ apir\_decoder\_read(dec,\ buffer\_ptr\_size,\ \&buffer,\ buffer\_ptr\_size);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{//\ SECURITY:\ Validate\ buffer\ handle\ against\ tracked\ buffers\ to\ prevent}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ guest\ VM\ from\ providing\ arbitrary\ host\ memory\ addresses}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordflow}{if}\ (buffer)\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keyword}{extern}\ std::unordered\_set<ggml\_backend\_buffer\_t>\ backend\_buffers;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (backend\_buffers.find(buffer)\ ==\ backend\_buffers.end())\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_LOG\_WARN(\textcolor{stringliteral}{"{}ggml-\/virtgpu-\/backend:\ \%s:\ Invalid\ buffer\ handle\ from\ guest:\ \%p\(\backslash\)n"{}},\ \_\_func\_\_,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void}\ *)\ buffer);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ fatal\ flag\ to\ prevent\ further\ processing\ with\ invalid\ handle}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ apir\_decoder\_set\_fatal(dec);}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordflow}{return}\ buffer;}
+\DoxyCodeLine{00120\ \}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{comment}{/*\ enum\ ggml\_status\ */}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_ggml\_status(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ ggml\_status\ *\ status)\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ apir\_encoder\_write(enc,\ \textcolor{keyword}{sizeof}(*status),\ status,\ \textcolor{keyword}{sizeof}(*status));}
+\DoxyCodeLine{00126\ \}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_ggml\_status(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ ggml\_status\ *\ status)\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ apir\_decoder\_read(dec,\ \textcolor{keyword}{sizeof}(*status),\ status,\ \textcolor{keyword}{sizeof}(*status));}
+\DoxyCodeLine{00130\ \}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{comment}{/*\ virtgpu\_shmem\ */}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_virtgpu\_shmem\_res\_id(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ uint32\_t\ shmem\_res\_id)\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ apir\_encode\_uint32\_t(enc,\ \&shmem\_res\_id);}
+\DoxyCodeLine{00136\ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_virtgpu\_shmem\_res\_id(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uint32\_t\ *\ shmem\_res\_id)\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ apir\_decode\_uint32\_t(dec,\ shmem\_res\_id);}
+\DoxyCodeLine{00140\ \}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{comment}{/*\ ggml\_cgraph\ */}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ apir\_serialize\_ggml\_cgraph(\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ std::vector<uint8\_t>\ \&\ cgraph\_data)\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ apir\_serialize\_graph(cgraph,\ cgraph\_data);}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordflow}{return}\ cgraph\_data.size();}
+\DoxyCodeLine{00148\ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_cgraph\_data(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ std::vector<uint8\_t>\ \&\ cgraph\_data)\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ cgraph\_size\ =\ cgraph\_data.size();}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ apir\_encode(enc,\ cgraph\_size,\ cgraph\_data.data(),\ cgraph\_size);}
+\DoxyCodeLine{00154\ \}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ apir\_decode\_ggml\_cgraph(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{size\_t}\ cgraph\_size)\ \{}
+\DoxyCodeLine{00157\ \ \ \ \ GGML\_UNUSED(cgraph\_size);}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ uint32\_t\ n\_nodes;}
+\DoxyCodeLine{00160\ \ \ \ \ apir\_decode\_uint32\_t(dec,\ \&n\_nodes);}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ *\ nodes\ =\ apir\_decode\_uint64\_t\_array\_inplace(dec,\ n\_nodes);}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ uint32\_t\ n\_tensors;}
+\DoxyCodeLine{00164\ \ \ \ \ apir\_decode\_uint32\_t(dec,\ \&n\_tensors);}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ *\ tensors\ =\ apir\_decode\_apir\_rpc\_tensor\_array\_inplace(dec,\ n\_tensors);}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordflow}{return}\ apir\_deserialize\_graph(n\_nodes,\ n\_tensors,\ tensors,\ nodes);}
+\DoxyCodeLine{00168\ \}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_ggml\_buffer\_handle(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ apir\_buffer\_host\_handle\_t\ *\ handle)\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ apir\_encoder\_write(enc,\ \textcolor{keyword}{sizeof}(*handle),\ \&handle,\ \textcolor{keyword}{sizeof}(*handle));}
+\DoxyCodeLine{00172\ \}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_ggml\_tensor\_inline(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor)\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ tensor\_size\ =\ \textcolor{keyword}{sizeof}(*tensor);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordflow}{if}\ (tensor-\/>extra)\ \{}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}\%s:\ Cannot\ pass\ tensors\ with\ extra"{}},\ \_\_func\_\_);}
+\DoxyCodeLine{00179\ \ \ \ \ \}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordflow}{if}\ (tensor-\/>src[0]\ \&\&\ tensor-\/>buffer)\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ first\ =\ 1;}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (first)\ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_LOG\_WARN(\textcolor{stringliteral}{"{}\%s:\ Cannot\ pass\ tensors\ with\ src\ and\ buffer\(\backslash\)n"{}},\ \_\_func\_\_);}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ first\ =\ 0;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00187\ \ \ \ \ \}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ apir\_encoder\_write(enc,\ tensor\_size,\ tensor,\ tensor\_size);}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{comment}{//\ tensor-\/>data\ is\ a\ pointer\ inside\ the\ device\ buffer.\ No\ need\ to\ touch\ it}}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{comment}{//\ tensor-\/>buffer\ is\ a\ pointer\ to\ a\ buffer.\ Encoding\ the\ buffer\ handle\ in\ sequence.}}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{comment}{//\ (could\ also\ make\ a\ copy\ of\ the\ tensor,\ and\ update\ locally.)}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keywordflow}{if}\ (tensor-\/>buffer)\ \{}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ apir\_buffer\_host\_handle\_t\ buffer\_handle\ =\ ggml\_buffer\_to\_apir\_handle(tensor-\/>buffer);}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ apir\_encode\_ggml\_buffer\_handle(enc,\ \&buffer\_handle);}
+\DoxyCodeLine{00198\ \ \ \ \ \}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keywordflow}{if}\ (tensor-\/>view\_src)\ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ apir\_encoder\_write(enc,\ tensor\_size,\ tensor-\/>view\_src,\ tensor\_size);}
+\DoxyCodeLine{00202\ \ \ \ \ \}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ tensor-\/>src[i];\ i++)\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor\_src\ =\ tensor-\/>src[i];}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ apir\_encoder\_write(enc,\ tensor\_size,\ tensor\_src,\ tensor\_size);}
+\DoxyCodeLine{00207\ \ \ \ \ \}}
+\DoxyCodeLine{00208\ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ apir\_decode\_ggml\_tensor\_inplace(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{comment}{//\ it\ safe\ to\ remove\ the\ \`{}const`\ qualifier\ here,\ we\ *do*\ want\ to}}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{comment}{//\ modify\ the\ shared\ memory\ data\ to\ fix\ the\ \`{}src`\ pointers.}}
+\DoxyCodeLine{00213\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor\ =\ (\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *)\ (uintptr\_t)\ apir\_decoder\_use\_inplace(dec,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}));}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{comment}{//\ tensor-\/>data\ is\ a\ pointer\ inside\ the\ device\ buffer.\ No\ need\ to\ touch\ it}}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{comment}{//\ tensor-\/>buffer\ is\ a\ pointer\ to\ a\ buffer.\ Decode\ the\ buffer\ handle\ encoded\ in\ sequence.}}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keywordflow}{if}\ (tensor-\/>buffer)\ \{}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ tensor-\/>buffer\ =\ apir\_decode\_ggml\_buffer(dec);}
+\DoxyCodeLine{00219\ \ \ \ \ \}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordflow}{if}\ (tensor-\/>view\_src)\ \{}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor\_view\_src\ =\ (\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *)\ (uintptr\_t)\ apir\_decoder\_use\_inplace(dec,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}));}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ tensor-\/>view\_src\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ tensor\_view\_src;}
+\DoxyCodeLine{00224\ \ \ \ \ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ tensor-\/>src[i];\ i++)\ \{}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor\_src\ =\ (\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *)\ (uintptr\_t)\ apir\_decoder\_use\_inplace(dec,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}));}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ tensor-\/>src[i]\ =\ tensor\_src;\ \ \textcolor{comment}{//\ overwrite\ op-\/>src[i]\ pointer\ with\ the\ actual\ location\ of\ the\ src\ tensor}}
+\DoxyCodeLine{00229\ \ \ \ \ \}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keywordflow}{return}\ tensor;}
+\DoxyCodeLine{00232\ \}}
+
+\end{DoxyCode}

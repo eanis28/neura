@@ -1,0 +1,38 @@
+\doxysection{Conversation\+Entry Struct Reference}
+\hypertarget{struct_conversation_entry}{}\label{struct_conversation_entry}\index{ConversationEntry@{ConversationEntry}}
+
+
+Represents a single logged command/\+response exchange.  
+
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_conversation_entry_a1140ed58510aa05fa1f8d67830d9e443}\label{struct_conversation_entry_a1140ed58510aa05fa1f8d67830d9e443} 
+int {\bfseries id} = 0
+\begin{DoxyCompactList}\small\item\em Sequential entry ID assigned at log time. \end{DoxyCompactList}\item 
+\Hypertarget{struct_conversation_entry_a9e0873a8c3aa7dca5f42b3c86eb9cd26}\label{struct_conversation_entry_a9e0873a8c3aa7dca5f42b3c86eb9cd26} 
+std::\+string {\bfseries timestamp}
+\begin{DoxyCompactList}\small\item\em ISO 8601 UTC timestamp of the exchange (e.\+g. "{}2026-\/03-\/24\+T17:\+44:\+45"{}). \end{DoxyCompactList}\item 
+\Hypertarget{struct_conversation_entry_ad8454690ccf0b0ac2677fbebc7139553}\label{struct_conversation_entry_ad8454690ccf0b0ac2677fbebc7139553} 
+std::\+string {\bfseries command}
+\begin{DoxyCompactList}\small\item\em Raw command string issued by the user. \end{DoxyCompactList}\item 
+\Hypertarget{struct_conversation_entry_a9db4934de81f0fa851fabaf567c0ab3b}\label{struct_conversation_entry_a9db4934de81f0fa851fabaf567c0ab3b} 
+std::\+string {\bfseries response}
+\begin{DoxyCompactList}\small\item\em Reply or status message produced by the action. \end{DoxyCompactList}\item 
+\Hypertarget{struct_conversation_entry_a5292ae46ae5ac84fc78cf3f90b771026}\label{struct_conversation_entry_a5292ae46ae5ac84fc78cf3f90b771026} 
+bool {\bfseries success} = true
+\begin{DoxyCompactList}\small\item\em true if the action completed without error; false otherwise. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a single logged command/\+response exchange. 
+
+Mirrors the JSON object schema written by \doxylink{class_conversation_logger}{Conversation\+Logger}. Populated by load\+History() when reading conversation.\+json. \begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+History.\+cpp\end{DoxyCompactItemize}

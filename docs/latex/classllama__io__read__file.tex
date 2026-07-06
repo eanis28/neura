@@ -1,0 +1,77 @@
+\doxysection{llama\+\_\+io\+\_\+read\+\_\+file Class Reference}
+\hypertarget{classllama__io__read__file}{}\label{classllama__io__read__file}\index{llama\_io\_read\_file@{llama\_io\_read\_file}}
+Inheritance diagram for llama\+\_\+io\+\_\+read\+\_\+file:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllama__io__read__file}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__io__read__file_a27a37b69c71f473bc3b7b35b6228463b}\label{classllama__io__read__file_a27a37b69c71f473bc3b7b35b6228463b} 
+{\bfseries llama\+\_\+io\+\_\+read\+\_\+file} (\doxymbox{\hyperlink{structllama__file}{llama\+\_\+file}} \texorpdfstring{$\ast$}{*}f)
+\item 
+void \doxymbox{\hyperlink{classllama__io__read__file_acf1a9ce34cd31ff3e91eaa2983ab33c0}{read\+\_\+to}} (void \texorpdfstring{$\ast$}{*}dst, size\+\_\+t size) override
+\item 
+const uint8\+\_\+t \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classllama__io__read__file_ade21918c7a0ca46700c93d2edda1a686}{read}} (size\+\_\+t size) override
+\item 
+size\+\_\+t \doxymbox{\hyperlink{classllama__io__read__file_acd1c75c7b831c9af9f215b30f357398f}{n\+\_\+bytes}} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries read\+\_\+string} (std::\+string \&str)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__io__read__file_aeeb86547742c51a9723a97e6cac24dd7}\label{classllama__io__read__file_aeeb86547742c51a9723a97e6cac24dd7} 
+\doxymbox{\hyperlink{structllama__file}{llama\+\_\+file}} \texorpdfstring{$\ast$}{*} {\bfseries file}
+\item 
+\Hypertarget{classllama__io__read__file_a7379ddfe0f4181bb5aa5de0b4e26ed8b}\label{classllama__io__read__file_a7379ddfe0f4181bb5aa5de0b4e26ed8b} 
+size\+\_\+t {\bfseries size\+\_\+read} = 0
+\item 
+\Hypertarget{classllama__io__read__file_a3cb237e7043bc91a4202004c3c50a39e}\label{classllama__io__read__file_a3cb237e7043bc91a4202004c3c50a39e} 
+std::\+vector$<$ uint8\+\_\+t $>$ {\bfseries temp\+\_\+buffer}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllama__io__read__file_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllama__io__read__file_acd1c75c7b831c9af9f215b30f357398f}\index{llama\_io\_read\_file@{llama\_io\_read\_file}!n\_bytes@{n\_bytes}}
+\index{n\_bytes@{n\_bytes}!llama\_io\_read\_file@{llama\_io\_read\_file}}
+\doxysubsubsection{\texorpdfstring{n\_bytes()}{n\_bytes()}}
+{\footnotesize\ttfamily \label{classllama__io__read__file_acd1c75c7b831c9af9f215b30f357398f} 
+size\+\_\+t llama\+\_\+io\+\_\+read\+\_\+file::\+n\+\_\+bytes (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}}.
+
+\Hypertarget{classllama__io__read__file_ade21918c7a0ca46700c93d2edda1a686}\index{llama\_io\_read\_file@{llama\_io\_read\_file}!read@{read}}
+\index{read@{read}!llama\_io\_read\_file@{llama\_io\_read\_file}}
+\doxysubsubsection{\texorpdfstring{read()}{read()}}
+{\footnotesize\ttfamily \label{classllama__io__read__file_ade21918c7a0ca46700c93d2edda1a686} 
+const uint8\+\_\+t \texorpdfstring{$\ast$}{*} llama\+\_\+io\+\_\+read\+\_\+file::\+read (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}}.
+
+\Hypertarget{classllama__io__read__file_acf1a9ce34cd31ff3e91eaa2983ab33c0}\index{llama\_io\_read\_file@{llama\_io\_read\_file}!read\_to@{read\_to}}
+\index{read\_to@{read\_to}!llama\_io\_read\_file@{llama\_io\_read\_file}}
+\doxysubsubsection{\texorpdfstring{read\_to()}{read\_to()}}
+{\footnotesize\ttfamily \label{classllama__io__read__file_acf1a9ce34cd31ff3e91eaa2983ab33c0} 
+void llama\+\_\+io\+\_\+read\+\_\+file::\+read\+\_\+to (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/context.\+cpp\end{DoxyCompactItemize}

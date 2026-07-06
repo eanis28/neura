@@ -1,0 +1,31 @@
+\doxysection{ggml\+\_\+backend\+\_\+registry Struct Reference}
+\hypertarget{structggml__backend__registry}{}\label{structggml__backend__registry}\index{ggml\_backend\_registry@{ggml\_backend\_registry}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__registry_afe89d975f809e80f1bf635c57d2fb942}\label{structggml__backend__registry_afe89d975f809e80f1bf635c57d2fb942} 
+void {\bfseries register\+\_\+backend} (ggml\+\_\+backend\+\_\+reg\+\_\+t reg, dl\+\_\+handle\+\_\+ptr handle=nullptr)
+\item 
+\Hypertarget{structggml__backend__registry_a10844c6fc505144f541ecbd52dd40f1d}\label{structggml__backend__registry_a10844c6fc505144f541ecbd52dd40f1d} 
+void {\bfseries register\+\_\+device} (ggml\+\_\+backend\+\_\+dev\+\_\+t device)
+\item 
+\Hypertarget{structggml__backend__registry_ab9687c713b38d5b899c33f4ac04be93b}\label{structggml__backend__registry_ab9687c713b38d5b899c33f4ac04be93b} 
+ggml\+\_\+backend\+\_\+reg\+\_\+t {\bfseries load\+\_\+backend} (const fs::\+path \&path, bool silent)
+\item 
+\Hypertarget{structggml__backend__registry_a27912fcc81cd60977eeaa2a0b2339755}\label{structggml__backend__registry_a27912fcc81cd60977eeaa2a0b2339755} 
+void {\bfseries unload\+\_\+backend} (ggml\+\_\+backend\+\_\+reg\+\_\+t reg, bool silent)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__registry_a97c4fb95b764f44ad94b638126256ee1}\label{structggml__backend__registry_a97c4fb95b764f44ad94b638126256ee1} 
+std::\+vector$<$ \doxymbox{\hyperlink{structggml__backend__reg__entry}{ggml\+\_\+backend\+\_\+reg\+\_\+entry}} $>$ {\bfseries backends}
+\item 
+\Hypertarget{structggml__backend__registry_a218fd96603df10fcdaf6504ddd355c27}\label{structggml__backend__registry_a218fd96603df10fcdaf6504ddd355c27} 
+std::\+vector$<$ ggml\+\_\+backend\+\_\+dev\+\_\+t $>$ {\bfseries devices}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/backend-\/reg.\+cpp\end{DoxyCompactItemize}

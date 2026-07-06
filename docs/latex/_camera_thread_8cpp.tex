@@ -1,0 +1,43 @@
+\doxysection{Camera\+Thread.\+cpp File Reference}
+\hypertarget{_camera_thread_8cpp}{}\label{_camera_thread_8cpp}\index{CameraThread.cpp@{CameraThread.cpp}}
+
+
+Implementation of background camera capture thread.  
+
+
+{\ttfamily \+\#include "{}Camera\+Thread.\+h"{}}\newline
+{\ttfamily \+\#include "{}Settings.\+h"{}}\newline
+{\ttfamily \+\#include $<$chrono$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static cv::\+\+Video\+Capture \doxymbox{\hyperlink{_camera_thread_8cpp_a75adf002656e6b0c4c26c003a69b519d}{open\+Camera}} ()
+\begin{DoxyCompactList}\small\item\em Opens camera device with platform-\/specific backend. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementation of background camera capture thread. 
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{_camera_thread_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_camera_thread_8cpp_a75adf002656e6b0c4c26c003a69b519d}\index{CameraThread.cpp@{CameraThread.cpp}!openCamera@{openCamera}}
+\index{openCamera@{openCamera}!CameraThread.cpp@{CameraThread.cpp}}
+\doxysubsubsection{\texorpdfstring{openCamera()}{openCamera()}}
+{\footnotesize\ttfamily \label{_camera_thread_8cpp_a75adf002656e6b0c4c26c003a69b519d} 
+cv::\+\+Video\+Capture open\+Camera (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Opens camera device with platform-\/specific backend. 
+
+Attempts to open the camera using the index from g\+\_\+settings.\+camera\+Index. If that fails or is -\/1, falls back to probing indices 1 and 0. Uses platform-\/specific backends:\+ AVFoundation (mac\+OS), MSMF (Windows), V4\+L2 (Linux).
+
+\begin{DoxyReturn}{Returns}
+Opened Video\+Capture object, or empty capture if all attempts fail 
+\end{DoxyReturn}

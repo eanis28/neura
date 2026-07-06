@@ -1,0 +1,43 @@
+\doxysection{History.\+h File Reference}
+\hypertarget{_history_8h}{}\label{_history_8h}\index{History.h@{History.h}}
+
+
+Terminal UI page that displays the full conversation history.  
+
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{_history_8h_afe09add2795b6a8e08f54e5c03a0821b}{run\+History\+Page}} ()
+\begin{DoxyCompactList}\small\item\em Launches the interactive conversation history page. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Terminal UI page that displays the full conversation history. 
+
+Reads all entries from conversation.\+json (written by \doxylink{class_conversation_logger}{Conversation\+Logger}) and renders them as a scrollable, paginated list in the terminal. \doxylink{requirements_The}{The} user can navigate back to the main menu or close the window entirely. \begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{_history_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_history_8h_afe09add2795b6a8e08f54e5c03a0821b}\index{History.h@{History.h}!runHistoryPage@{runHistoryPage}}
+\index{runHistoryPage@{runHistoryPage}!History.h@{History.h}}
+\doxysubsubsection{\texorpdfstring{runHistoryPage()}{runHistoryPage()}}
+{\footnotesize\ttfamily \label{_history_8h_afe09add2795b6a8e08f54e5c03a0821b} 
+bool run\+History\+Page (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Launches the interactive conversation history page. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Reads from conversation.\+json and displays all logged command/\+response exchanges in reverse-\/chronological or sequential order. Blocks until the user chooses to navigate away.
+
+\begin{DoxyReturn}{Returns}
+true if the user navigated back to the main menu; false if the user closed the window or an unrecoverable read error occurred. 
+\end{DoxyReturn}

@@ -1,0 +1,77 @@
+\doxysection{llama-\/chat.h}
+\hypertarget{llama-chat_8h_source}{}\label{llama-chat_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/chat.h@{whisper.cpp/examples/talk-\/llama/llama-\/chat.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{enum}\ llm\_chat\_template\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_CHATML,}
+\DoxyCodeLine{00009\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_LLAMA\_2,}
+\DoxyCodeLine{00010\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_LLAMA\_2\_SYS,}
+\DoxyCodeLine{00011\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_LLAMA\_2\_SYS\_BOS,}
+\DoxyCodeLine{00012\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_LLAMA\_2\_SYS\_STRIP,}
+\DoxyCodeLine{00013\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_MISTRAL\_V1,}
+\DoxyCodeLine{00014\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_MISTRAL\_V3,}
+\DoxyCodeLine{00015\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_MISTRAL\_V3\_TEKKEN,}
+\DoxyCodeLine{00016\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_MISTRAL\_V7,}
+\DoxyCodeLine{00017\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_MISTRAL\_V7\_TEKKEN,}
+\DoxyCodeLine{00018\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_PHI\_3,}
+\DoxyCodeLine{00019\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_PHI\_4,}
+\DoxyCodeLine{00020\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_FALCON\_3,}
+\DoxyCodeLine{00021\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_ZEPHYR,}
+\DoxyCodeLine{00022\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_MONARCH,}
+\DoxyCodeLine{00023\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_GEMMA,}
+\DoxyCodeLine{00024\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_ORION,}
+\DoxyCodeLine{00025\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_OPENCHAT,}
+\DoxyCodeLine{00026\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_VICUNA,}
+\DoxyCodeLine{00027\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_VICUNA\_ORCA,}
+\DoxyCodeLine{00028\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_DEEPSEEK,}
+\DoxyCodeLine{00029\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_DEEPSEEK\_2,}
+\DoxyCodeLine{00030\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_DEEPSEEK\_3,}
+\DoxyCodeLine{00031\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_COMMAND\_R,}
+\DoxyCodeLine{00032\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_LLAMA\_3,}
+\DoxyCodeLine{00033\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_CHATGLM\_3,}
+\DoxyCodeLine{00034\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_CHATGLM\_4,}
+\DoxyCodeLine{00035\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_GLMEDGE,}
+\DoxyCodeLine{00036\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_MINICPM,}
+\DoxyCodeLine{00037\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_EXAONE\_3,}
+\DoxyCodeLine{00038\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_EXAONE\_4,}
+\DoxyCodeLine{00039\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_EXAONE\_MOE,}
+\DoxyCodeLine{00040\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_RWKV\_WORLD,}
+\DoxyCodeLine{00041\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_GRANITE,}
+\DoxyCodeLine{00042\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_GIGACHAT,}
+\DoxyCodeLine{00043\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_MEGREZ,}
+\DoxyCodeLine{00044\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_YANDEX,}
+\DoxyCodeLine{00045\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_BAILING,}
+\DoxyCodeLine{00046\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_BAILING\_THINK,}
+\DoxyCodeLine{00047\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_BAILING2,}
+\DoxyCodeLine{00048\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_LLAMA4,}
+\DoxyCodeLine{00049\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_SMOLVLM,}
+\DoxyCodeLine{00050\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_DOTS1,}
+\DoxyCodeLine{00051\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_HUNYUAN\_MOE,}
+\DoxyCodeLine{00052\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_OPENAI\_MOE,}
+\DoxyCodeLine{00053\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_HUNYUAN\_DENSE,}
+\DoxyCodeLine{00054\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_KIMI\_K2,}
+\DoxyCodeLine{00055\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_SEED\_OSS,}
+\DoxyCodeLine{00056\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_GROK\_2,}
+\DoxyCodeLine{00057\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_PANGU\_EMBED,}
+\DoxyCodeLine{00058\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_SOLAR\_OPEN,}
+\DoxyCodeLine{00059\ \ \ \ \ LLM\_CHAT\_TEMPLATE\_UNKNOWN,}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__chat__message}{llama\_chat\_message}};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ llm\_chat\_template\ llm\_chat\_template\_from\_str(\textcolor{keyword}{const}\ std::string\ \&\ name);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ llm\_chat\_template\ llm\_chat\_detect\_template(\textcolor{keyword}{const}\ std::string\ \&\ tmpl);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ int32\_t\ llm\_chat\_apply\_template(}
+\DoxyCodeLine{00069\ \ \ \ \ llm\_chat\_template\ tmpl,}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<const\ llama\_chat\_message\ *>\ \&\ chat,}
+\DoxyCodeLine{00071\ \ \ \ \ std::string\ \&\ dest,\ \textcolor{keywordtype}{bool}\ add\_ass);}
+
+\end{DoxyCode}

@@ -1,0 +1,28 @@
+\doxysection{ggml-\/zendnn.h}
+\hypertarget{ggml-zendnn_8h_source}{}\label{ggml-zendnn_8h_source}\index{whisper.cpp/ggml/include/ggml-\/zendnn.h@{whisper.cpp/ggml/include/ggml-\/zendnn.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00007\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ backend\ API}}
+\DoxyCodeLine{00011\ GGML\_BACKEND\_API\ ggml\_backend\_t\ ggml\_backend\_zendnn\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_is\_zendnn(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ number\ of\ threads\ used\ for\ zendnn\ operations}}
+\DoxyCodeLine{00016\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_zendnn\_set\_n\_threads(ggml\_backend\_t\ backend\_zendnn,\ \textcolor{keywordtype}{int}\ n\_threads);}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_zendnn\_reg(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00021\ \}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

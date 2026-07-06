@@ -1,0 +1,35 @@
+\doxysection{grammar-\/parser.h}
+\hypertarget{grammar-parser_8h_source}{}\label{grammar-parser_8h_source}\index{whisper.cpp/examples/grammar-\/parser.h@{whisper.cpp/examples/grammar-\/parser.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Implements\ a\ parser\ for\ an\ extended\ Backus-\/Naur\ form\ (BNF),\ producing\ the}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ binary\ context-\/free\ grammar\ format\ specified\ by\ whisper.h.\ Supports\ character}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ ranges,\ grouping,\ and\ repetition\ operators.\ As\ an\ example,\ a\ grammar\ for}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ arithmetic\ might\ look\ like:}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ root\ \ ::=\ expr}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ expr\ \ ::=\ term\ ([-\/+*/]\ term)*}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ term\ \ ::=\ num\ |\ "{}("{}\ space\ expr\ "{})"{}\ space}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ num\ \ \ ::=\ [0-\/9]+\ space}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ space\ ::=\ [\ \(\backslash\)t\(\backslash\)n]*}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}whisper.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{namespace\ }grammar\_parser\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgrammar__parser_1_1parse__state}{parse\_state}}\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ std::map<std::string,\ uint32\_t>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ symbol\_ids;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ std::vector<std::vector<whisper\_grammar\_element>>\ rules;}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ std::vector<const\ whisper\_grammar\_element\ *>\ \ \ \ \ \ c\_rules()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00025\ \ \ \ \ \};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \doxymbox{\hyperlink{structgrammar__parser_1_1parse__state}{parse\_state}}\ parse(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ src);}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ print\_grammar(FILE\ *\ file,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structgrammar__parser_1_1parse__state}{parse\_state}}\ \&\ state);}
+\DoxyCodeLine{00029\ \}}
+
+\end{DoxyCode}

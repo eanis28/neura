@@ -1,0 +1,59 @@
+\doxysection{whisper.\+cpp/\+examples/\+whisper.wasm Directory Reference}
+\hypertarget{dir_fd7a0111519fea847627886349e6d2c8}{}\label{dir_fd7a0111519fea847627886349e6d2c8}\index{whisper.cpp/examples/whisper.wasm Directory Reference@{whisper.cpp/examples/whisper.wasm Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_fd7a0111519fea847627886349e6d2c8_autotoc_md127}{}\doxysubsection{\texorpdfstring{whisper.\+wasm}{whisper.\+wasm}}\label{dir_fd7a0111519fea847627886349e6d2c8_autotoc_md127}
+Inference of \href{https://github.com/openai/whisper}{\texttt{Open\+AI\textquotesingle{}s Whisper ASR model}} inside the browser
+
+This example uses a Web\+Assembly (WASM) port of the \href{https://github.com/ggerganov/whisper.cpp}{\texttt{whisper.\+cpp}} implementation of the transformer to run the inference inside a web page. \doxylink{requirements_The}{The} audio data does not leave your computer -\/ it is processed locally on your machine. \doxylink{requirements_The}{The} performance is not great but you should be able to achieve x2 or x3 real-\/time for the {\ttfamily tiny} and {\ttfamily base} models on a modern CPU and browser (i.\+e. transcribe a 60 seconds audio in about \texorpdfstring{$\sim$}{\string~}20-\/30 seconds).
+
+This WASM port utilizes \href{https://emcc.zcopy.site/docs/porting/simd/}{\texttt{WASM SIMD 128-\/bit intrinsics}} so you have to make sure that \href{https://webassembly.org/roadmap/}{\texttt{your browser supports them}}.
+
+\doxylink{requirements_The}{The} example is capable of running all models up to size {\ttfamily small} inclusive. Beyond that, the memory requirements and performance are unsatisfactory. \doxylink{requirements_The}{The} implementation currently support only the {\ttfamily Greedy} sampling strategy. Both transcription and translation are supported.
+
+Since the model data is quite big (74MB for the {\ttfamily tiny} model) you need to manually load the model into the web-\/page.
+
+\doxylink{requirements_The}{The} example supports both loading audio from a file and recording audio from the microphone. \doxylink{requirements_The}{The} maximum length of the audio is limited to 120 seconds.\hypertarget{dir_fd7a0111519fea847627886349e6d2c8_autotoc_md128}{}\doxysubsection{\texorpdfstring{Live demo}{Live demo}}\label{dir_fd7a0111519fea847627886349e6d2c8_autotoc_md128}
+Link:\+ \href{https://ggml.ai/whisper.cpp/}{\texttt{https:\+/\+/\+ggml.\+ai/\+whisper.\+cpp/\+}}
+
+\hypertarget{dir_fd7a0111519fea847627886349e6d2c8_autotoc_md129}{}\doxysubsection{\texorpdfstring{Build instructions}{Build instructions}}\label{dir_fd7a0111519fea847627886349e6d2c8_autotoc_md129}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ (v3.1.2)}
+\DoxyCodeLine{\#\ build\ using\ Emscripten}
+\DoxyCodeLine{git\ clone\ https://github.com/ggml-\/org/whisper.cpp}
+\DoxyCodeLine{cd\ whisper.cpp}
+\DoxyCodeLine{mkdir\ build-\/em\ \&\&\ cd\ build-\/em}
+\DoxyCodeLine{emcmake\ cmake\ ..}
+\DoxyCodeLine{make\ -\/j}
+
+\end{DoxyCode}
+ \doxylink{requirements_The}{The} example can then be started by running a local HTTP server:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{python3\ examples/server.py}
+
+\end{DoxyCode}
+ And then opening a browser to the following URL:\+ \href{http://localhost:8000/whisper.wasm}{\texttt{http:\+/\+/\+localhost:\+8000/\+whisper.\+wasm}}
+
+To run the example in a different server, you need to copy the following files to the server\textquotesingle{}s HTTP path:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ copy\ the\ produced\ page\ to\ your\ HTTP\ path}
+\DoxyCodeLine{cp\ bin/whisper.wasm/*\ \ \ \ /path/to/html/}
+\DoxyCodeLine{cp\ bin/libmain.js\ \ \ \ \ \ \ \ /path/to/html/}
+\DoxyCodeLine{cp\ bin/libmain.worker.js\ /path/to/html/}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+📝 {\bfseries{Note:\+}} By default this example is built with {\ttfamily WHISPER\+\_\+\+WASM\+\_\+\+SINGLE\+\_\+\+FILE=ON} which means that that a separate .wasm file will not be generated. Instead, the WASM module is embedded in the main JS file as a base64 encoded string. To generate a separate .wasm file, you need to disable this option by passing {\ttfamily -\/DWHISPER\+\_\+\+WASM\+\_\+\+SINGLE\+\_\+\+FILE=OFF}:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{emcmake\ cmake\ ..\ -\/DWHISPER\_WASM\_SINGLE\_FILE=OFF}
+
+\end{DoxyCode}
+ This will generate a {\ttfamily libmain.\+wasm} file in the build/\+bin directory. \end{quote}
+
+
+\begin{quote}
+📝 {\bfseries{Note:\+}} As of Emscripten 3.\+1.\+58 (April 2024), separate worker.\+js files are no longer generated and the worker is embedded in the main JS file. So the worker file will not be geneated for versions later than {\ttfamily 3.\+1.\+58}. \end{quote}

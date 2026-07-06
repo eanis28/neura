@@ -1,0 +1,193 @@
+\doxysection{llama-\/vocab.h}
+\hypertarget{llama-vocab_8h_source}{}\label{llama-vocab_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/vocab.h@{whisper.cpp/examples/talk-\/llama/llama-\/vocab.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ pre-\/tokenization\ types}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{enum}\ llama\_vocab\_pre\_type\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_DEFAULT\ \ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00012\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_LLAMA3\ \ \ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00013\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_DEEPSEEK\_LLM\ \ \ \ =\ 2,}
+\DoxyCodeLine{00014\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_DEEPSEEK\_CODER\ \ =\ 3,}
+\DoxyCodeLine{00015\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_FALCON\ \ \ \ \ \ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00016\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_MPT\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 5,}
+\DoxyCodeLine{00017\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_STARCODER\ \ \ \ \ \ \ =\ 6,}
+\DoxyCodeLine{00018\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_GPT2\ \ \ \ \ \ \ \ \ \ \ \ =\ 7,}
+\DoxyCodeLine{00019\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_REFACT\ \ \ \ \ \ \ \ \ \ =\ 8,}
+\DoxyCodeLine{00020\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_COMMAND\_R\ \ \ \ \ \ \ =\ 9,}
+\DoxyCodeLine{00021\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_STABLELM2\ \ \ \ \ \ \ =\ 10,}
+\DoxyCodeLine{00022\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_QWEN2\ \ \ \ \ \ \ \ \ \ \ =\ 11,}
+\DoxyCodeLine{00023\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_OLMO\ \ \ \ \ \ \ \ \ \ \ \ =\ 12,}
+\DoxyCodeLine{00024\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_DBRX\ \ \ \ \ \ \ \ \ \ \ \ =\ 13,}
+\DoxyCodeLine{00025\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_SMAUG\ \ \ \ \ \ \ \ \ \ \ =\ 14,}
+\DoxyCodeLine{00026\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_PORO\ \ \ \ \ \ \ \ \ \ \ \ =\ 15,}
+\DoxyCodeLine{00027\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_CHATGLM3\ \ \ \ \ \ \ \ =\ 16,}
+\DoxyCodeLine{00028\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_CHATGLM4\ \ \ \ \ \ \ \ =\ 17,}
+\DoxyCodeLine{00029\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_VIKING\ \ \ \ \ \ \ \ \ \ =\ 18,}
+\DoxyCodeLine{00030\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_JAIS\ \ \ \ \ \ \ \ \ \ \ \ =\ 19,}
+\DoxyCodeLine{00031\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_TEKKEN\ \ \ \ \ \ \ \ \ \ =\ 20,}
+\DoxyCodeLine{00032\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_SMOLLM\ \ \ \ \ \ \ \ \ \ =\ 21,}
+\DoxyCodeLine{00033\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_CODESHELL\ \ \ \ \ \ \ =\ 22,}
+\DoxyCodeLine{00034\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_BLOOM\ \ \ \ \ \ \ \ \ \ \ =\ 23,}
+\DoxyCodeLine{00035\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_GPT3\_FINNISH\ \ \ \ =\ 24,}
+\DoxyCodeLine{00036\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_EXAONE\ \ \ \ \ \ \ \ \ \ =\ 25,}
+\DoxyCodeLine{00037\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_CHAMELEON\ \ \ \ \ \ \ =\ 26,}
+\DoxyCodeLine{00038\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_MINERVA\ \ \ \ \ \ \ \ \ =\ 27,}
+\DoxyCodeLine{00039\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_DEEPSEEK3\_LLM\ \ \ =\ 28,}
+\DoxyCodeLine{00040\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_GPT4O\ \ \ \ \ \ \ \ \ \ \ =\ 29,}
+\DoxyCodeLine{00041\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_SUPERBPE\ \ \ \ \ \ \ \ =\ 30,}
+\DoxyCodeLine{00042\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_TRILLION\ \ \ \ \ \ \ \ =\ 31,}
+\DoxyCodeLine{00043\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_BAILINGMOE\ \ \ \ \ \ =\ 32,}
+\DoxyCodeLine{00044\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_LLAMA4\ \ \ \ \ \ \ \ \ \ =\ 33,}
+\DoxyCodeLine{00045\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_PIXTRAL\ \ \ \ \ \ \ \ \ =\ 34,}
+\DoxyCodeLine{00046\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_SEED\_CODER\ \ \ \ \ \ =\ 35,}
+\DoxyCodeLine{00047\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_HUNYUAN\ \ \ \ \ \ \ \ \ =\ 36,}
+\DoxyCodeLine{00048\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_KIMI\_K2\ \ \ \ \ \ \ \ \ =\ 37,}
+\DoxyCodeLine{00049\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_HUNYUAN\_DENSE\ \ \ =\ 38,}
+\DoxyCodeLine{00050\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_GROK\_2\ \ \ \ \ \ \ \ \ \ =\ 39,}
+\DoxyCodeLine{00051\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_GRANITE\_DOCLING\ =\ 40,}
+\DoxyCodeLine{00052\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_MINIMAX\_M2\ \ \ \ \ \ =\ 41,}
+\DoxyCodeLine{00053\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_AFMOE\ \ \ \ \ \ \ \ \ \ \ =\ 42,}
+\DoxyCodeLine{00054\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_SOLAR\_OPEN\ \ \ \ \ \ =\ 43,}
+\DoxyCodeLine{00055\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_YOUTU\ \ \ \ \ \ \ \ \ \ \ =\ 44,}
+\DoxyCodeLine{00056\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_EXAONE\_MOE\ \ \ \ \ \ =\ 45,}
+\DoxyCodeLine{00057\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_QWEN35\ \ \ \ \ \ \ \ \ \ =\ 46,}
+\DoxyCodeLine{00058\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_TINY\_AYA\ \ \ \ \ \ \ \ =\ 47,}
+\DoxyCodeLine{00059\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_JOYAI\_LLM\ \ \ \ \ \ \ =\ 48,}
+\DoxyCodeLine{00060\ \ \ \ \ LLAMA\_VOCAB\_PRE\_TYPE\_JAIS2\ \ \ \ \ \ \ \ \ \ \ =\ 49,}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_l_l_m___k_v}{LLM\_KV}};}
+\DoxyCodeLine{00064\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__loader}{llama\_model\_loader}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{struct\ }llama\_vocab\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__vocab_1_1token__data}{token\_data}}\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ text;}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ \ \ score;}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ llama\_token\_attr\ attr;}
+\DoxyCodeLine{00071\ \ \ \ \ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ llama\_vocab();}
+\DoxyCodeLine{00074\ \ \ \ \ \string~llama\_vocab();}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{void}\ load(\doxymbox{\hyperlink{structllama__model__loader}{llama\_model\_loader}}\ \&\ ml,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_l_l_m___k_v}{LLM\_KV}}\ \&\ kv);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ std::string\ get\_tokenizer\_model()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00079\ \ \ \ \ std::string\ get\_tokenizer\_pre()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_vocab\_type\ \ \ \ \ get\_type()\ \ \ \ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_vocab\_pre\_type\ get\_pre\_type()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ uint32\_t\ n\_tokens()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00085\ \ \ \ \ uint32\_t\ n\_token\_types()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ std::string\ type\_name()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_normal\ \ \ \ \ \ (llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_unknown\ \ \ \ \ (llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_control\ \ \ \ \ (llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_byte\ \ \ \ \ \ \ \ (llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_user\_defined(llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_unused\ \ \ \ \ \ (llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_eog\ \ \ \ \ \ \ \ \ (llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ uint8\_t\ \ \ \ \ token\_to\_byte(llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00098\ \ \ \ \ llama\_token\ byte\_to\_token(uint8\_t\ ch)\ \ \ \ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ llama\_token\ text\_to\_token(\textcolor{keyword}{const}\ std::string\ \&\ text)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__vocab_1_1token__data}{token\_data}}\ \&\ get\_token\_data(llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ token\_get\_text\ (llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ \ \ token\_get\_score(llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00106\ \ \ \ \ llama\_token\_attr\ token\_get\_attr\ (llama\_token\ \textcolor{keywordtype}{id})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ llama\_token\ token\_bos()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00109\ \ \ \ \ llama\_token\ token\_eos()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00110\ \ \ \ \ llama\_token\ token\_eot()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00111\ \ \ \ \ llama\_token\ token\_eom()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00112\ \ \ \ \ llama\_token\ token\_unk()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00113\ \ \ \ \ llama\_token\ token\_sep()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00114\ \ \ \ \ llama\_token\ token\_nl\ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00115\ \ \ \ \ llama\_token\ token\_pad()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00116\ \ \ \ \ llama\_token\ token\_mask()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ llama\_token\ token\_prefix()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00119\ \ \ \ \ llama\_token\ token\_middle()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00120\ \ \ \ \ llama\_token\ token\_suffix()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ llama\_token\ token\_fim\_pre()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00123\ \ \ \ \ llama\_token\ token\_fim\_suf()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00124\ \ \ \ \ llama\_token\ token\_fim\_mid()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00125\ \ \ \ \ llama\_token\ token\_fim\_pad()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00126\ \ \ \ \ llama\_token\ token\_fim\_rep()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00127\ \ \ \ \ llama\_token\ token\_fim\_sep()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_add\_space\_prefix\ \ \ \ \ \ \ \ \ \ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_add\_bos\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_add\_eos\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_add\_sep\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_ignore\_merges\ \ \ \ \ \ \ \ \ \ \ \ \ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_clean\_spaces\ \ \ \ \ \ \ \ \ \ \ \ \ \ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_remove\_extra\_whitespaces\ \ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_escape\_whitespaces\ \ \ \ \ \ \ \ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_treat\_whitespace\_as\_suffix()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{int}\ max\_token\_len()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{int}\ find\_bpe\_rank(\textcolor{keyword}{const}\ std::string\ \&\ token\_left,\ \textcolor{keyword}{const}\ std::string\ \&\ token\_right)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00142\ \ \ \ \ std::vector<std::string>\ get\_bpe\_merges()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ std::vector<char>\ get\_precompiled\_charsmap()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ int32\_t\ tokenize(}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ text,}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ text\_len,}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ *\ tokens,}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_tokens\_max,}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ add\_special,}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ parse\_special)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ std::vector<llama\_token>\ tokenize(}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ raw\_text,}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ add\_special,}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ parse\_special\ =\ \textcolor{keyword}{false})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{//\ does\ not\ write\ null-\/terminator\ to\ buf}}
+\DoxyCodeLine{00160\ \ \ \ \ int32\_t\ token\_to\_piece(}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ \ \ token,}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ buf,}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ length,}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ lstrip,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ special)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{comment}{//\ use\ cached\ data}}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ token\_to\_piece(llama\_token\ token)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ int32\_t\ detokenize(}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ tokens,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_tokens,}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ text,}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ text\_len\_max,}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ remove\_special,}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ unparse\_special)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ std::string\ detokenize(}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<llama\_token>\ \&\ tokens,}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ special)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordtype}{void}\ print\_info()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__vocab_1_1impl}{impl}};}
+\DoxyCodeLine{00186\ \ \ \ \ std::unique\_ptr<impl>\ pimpl;}
+\DoxyCodeLine{00187\ \};}
+
+\end{DoxyCode}

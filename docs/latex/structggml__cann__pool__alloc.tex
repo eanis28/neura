@@ -1,0 +1,175 @@
+\doxysection{ggml\+\_\+cann\+\_\+pool\+\_\+alloc Struct Reference}
+\hypertarget{structggml__cann__pool__alloc}{}\label{structggml__cann__pool__alloc}\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+
+
+RAII wrapper for managing memory allocations from a CANN memory pool.  
+
+
+
+
+{\ttfamily \+\#include $<$common.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__pool__alloc_a08f974db7a807b09911c811e136d67c7}\label{structggml__cann__pool__alloc_a08f974db7a807b09911c811e136d67c7} 
+{\bfseries ggml\+\_\+cann\+\_\+pool\+\_\+alloc} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{structggml__cann__pool__alloc_a1e703f37527210c545f2e450cf5988c3}{ggml\+\_\+cann\+\_\+pool\+\_\+alloc}} (\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} \&\doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}})
+\begin{DoxyCompactList}\small\item\em Constructor that initializes the memory pool. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{structggml__cann__pool__alloc_aa748e999d674c831cdeab25251f3fd6d}{ggml\+\_\+cann\+\_\+pool\+\_\+alloc}} (\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} \&\doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}}, size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Constructor that initializes the memory pool and allocates memory. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__alloc_a76914c439dece94c5c64169a8dba5aea}\label{structggml__cann__pool__alloc_a76914c439dece94c5c64169a8dba5aea} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}ggml\+\_\+cann\+\_\+pool\+\_\+alloc} ()
+\begin{DoxyCompactList}\small\item\em Destructor that frees the allocated memory block. \end{DoxyCompactList}\item 
+void \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__cann__pool__alloc_a2abf418b665068714b7aab9b51338ec2}{alloc}} (size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Allocates memory from the pool. \end{DoxyCompactList}\item 
+void \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__cann__pool__alloc_ae365f99595ee890dcf37622a5322db95}{alloc}} (\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} \&\doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}}, size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Allocates memory from a specific memory pool. \end{DoxyCompactList}\item 
+void \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__cann__pool__alloc_ac507c90844d1ad1b92bc3a25e90cd148}{get}} ()
+\begin{DoxyCompactList}\small\item\em Gets the pointer to the allocated memory block. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__alloc_a53cdce9257909d71a45e3ee6abb25dc9}\label{structggml__cann__pool__alloc_a53cdce9257909d71a45e3ee6abb25dc9} 
+{\bfseries ggml\+\_\+cann\+\_\+pool\+\_\+alloc} (const \doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\+\_\+cann\+\_\+pool\+\_\+alloc}} \&)=delete
+\item 
+\Hypertarget{structggml__cann__pool__alloc_aa3d5fed93d5c8f1c4022b8326ccd85c5}\label{structggml__cann__pool__alloc_aa3d5fed93d5c8f1c4022b8326ccd85c5} 
+{\bfseries ggml\+\_\+cann\+\_\+pool\+\_\+alloc} (\doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\+\_\+cann\+\_\+pool\+\_\+alloc}} \&\&)=delete
+\item 
+\Hypertarget{structggml__cann__pool__alloc_a7e0900b0340639d49ae65233815a5fbd}\label{structggml__cann__pool__alloc_a7e0900b0340639d49ae65233815a5fbd} 
+\doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\+\_\+cann\+\_\+pool\+\_\+alloc}} \& {\bfseries operator=} (const \doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\+\_\+cann\+\_\+pool\+\_\+alloc}} \&)=delete
+\item 
+\Hypertarget{structggml__cann__pool__alloc_aa96b3674c74021005c0a23be9696a1f5}\label{structggml__cann__pool__alloc_aa96b3674c74021005c0a23be9696a1f5} 
+\doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\+\_\+cann\+\_\+pool\+\_\+alloc}} \& {\bfseries operator=} (\doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\+\_\+cann\+\_\+pool\+\_\+alloc}} \&\&)=delete
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}} = nullptr
+\item 
+void \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3}{ptr}} = nullptr
+\item 
+size\+\_\+t \doxymbox{\hyperlink{structggml__cann__pool__alloc_a5faf2e9be49360a10735c790b00e38b5}{actual\+\_\+size}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+RAII wrapper for managing memory allocations from a CANN memory pool. 
+
+\label{doc-constructors}
+\Hypertarget{structggml__cann__pool__alloc_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structggml__cann__pool__alloc_a1e703f37527210c545f2e450cf5988c3}\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\doxysubsubsection{\texorpdfstring{ggml\_cann\_pool\_alloc()}{ggml\_cann\_pool\_alloc()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__alloc_a1e703f37527210c545f2e450cf5988c3} 
+ggml\+\_\+cann\+\_\+pool\+\_\+alloc::\+ggml\+\_\+cann\+\_\+pool\+\_\+alloc (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} \&}]{pool}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Constructor that initializes the memory pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}} & Reference to the memory pool. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{structggml__cann__pool__alloc_aa748e999d674c831cdeab25251f3fd6d}\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\doxysubsubsection{\texorpdfstring{ggml\_cann\_pool\_alloc()}{ggml\_cann\_pool\_alloc()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__alloc_aa748e999d674c831cdeab25251f3fd6d} 
+ggml\+\_\+cann\+\_\+pool\+\_\+alloc::\+ggml\+\_\+cann\+\_\+pool\+\_\+alloc (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} \&}]{pool}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor that initializes the memory pool and allocates memory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}} & Reference to the memory pool. \\
+\hline
+{\em size} & Size of the memory block to allocate. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{structggml__cann__pool__alloc_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structggml__cann__pool__alloc_ae365f99595ee890dcf37622a5322db95}\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!alloc@{alloc}}
+\index{alloc@{alloc}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__alloc_ae365f99595ee890dcf37622a5322db95} 
+void \texorpdfstring{$\ast$}{*} ggml\+\_\+cann\+\_\+pool\+\_\+alloc::\+alloc (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} \&}]{pool}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Allocates memory from a specific memory pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}} & Reference to the memory pool. \\
+\hline
+{\em size} & Size of the memory block to allocate. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the allocated memory block. 
+\end{DoxyReturn}
+\Hypertarget{structggml__cann__pool__alloc_a2abf418b665068714b7aab9b51338ec2}\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!alloc@{alloc}}
+\index{alloc@{alloc}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__alloc_a2abf418b665068714b7aab9b51338ec2} 
+void \texorpdfstring{$\ast$}{*} ggml\+\_\+cann\+\_\+pool\+\_\+alloc::\+alloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Allocates memory from the pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & Size of the memory block to allocate. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the allocated memory block. 
+\end{DoxyReturn}
+\Hypertarget{structggml__cann__pool__alloc_ac507c90844d1ad1b92bc3a25e90cd148}\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!get@{get}}
+\index{get@{get}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__alloc_ac507c90844d1ad1b92bc3a25e90cd148} 
+void \texorpdfstring{$\ast$}{*} ggml\+\_\+cann\+\_\+pool\+\_\+alloc::\+get (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the pointer to the allocated memory block. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to the allocated memory block. 
+\end{DoxyReturn}
+
+
+\label{doc-variable-members}
+\Hypertarget{structggml__cann__pool__alloc_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structggml__cann__pool__alloc_a5faf2e9be49360a10735c790b00e38b5}\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!actual\_size@{actual\_size}}
+\index{actual\_size@{actual\_size}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\doxysubsubsection{\texorpdfstring{actual\_size}{actual\_size}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__alloc_a5faf2e9be49360a10735c790b00e38b5} 
+size\+\_\+t ggml\+\_\+cann\+\_\+pool\+\_\+alloc::\+actual\+\_\+size = 0}
+
+Actual size of the allocated memory block. \Hypertarget{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!pool@{pool}}
+\index{pool@{pool}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\doxysubsubsection{\texorpdfstring{pool}{pool}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235} 
+\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}}\texorpdfstring{$\ast$}{*} ggml\+\_\+cann\+\_\+pool\+\_\+alloc::\+pool = nullptr}
+
+Pointer to the memory pool. \Hypertarget{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3}\index{ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}!ptr@{ptr}}
+\index{ptr@{ptr}!ggml\_cann\_pool\_alloc@{ggml\_cann\_pool\_alloc}}
+\doxysubsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3} 
+void\texorpdfstring{$\ast$}{*} ggml\+\_\+cann\+\_\+pool\+\_\+alloc::\+ptr = nullptr}
+
+Pointer to the allocated memory block. 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+common.\+h\end{DoxyCompactItemize}

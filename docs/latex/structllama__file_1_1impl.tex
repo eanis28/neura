@@ -1,0 +1,64 @@
+\doxysection{llama\+\_\+file::\+impl Struct Reference}
+\hypertarget{structllama__file_1_1impl}{}\label{structllama__file_1_1impl}\index{llama\_file::impl@{llama\_file::impl}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__file_1_1impl_af929fabb6db05474f20be9130ccb153b}\label{structllama__file_1_1impl_af929fabb6db05474f20be9130ccb153b} 
+{\bfseries impl} (const char \texorpdfstring{$\ast$}{*}fname, const char \texorpdfstring{$\ast$}{*}mode, const bool use\+\_\+direct\+\_\+io=false)
+\item 
+\Hypertarget{structllama__file_1_1impl_ac6e17c7ea69c7de1a6c83beb624992d4}\label{structllama__file_1_1impl_ac6e17c7ea69c7de1a6c83beb624992d4} 
+void {\bfseries init\+\_\+fp} (const char \texorpdfstring{$\ast$}{*}mode)
+\item 
+\Hypertarget{structllama__file_1_1impl_a984ad8a8bb36bb9f10a7d2b90036cd1a}\label{structllama__file_1_1impl_a984ad8a8bb36bb9f10a7d2b90036cd1a} 
+size\+\_\+t {\bfseries tell} () const
+\item 
+\Hypertarget{structllama__file_1_1impl_ab13feed9bf609eb182f543b673ca1259}\label{structllama__file_1_1impl_ab13feed9bf609eb182f543b673ca1259} 
+void {\bfseries seek} (size\+\_\+t offset, int whence) const
+\item 
+\Hypertarget{structllama__file_1_1impl_ab8c8f2342845b60a663e8147535d45b7}\label{structllama__file_1_1impl_ab8c8f2342845b60a663e8147535d45b7} 
+void {\bfseries read\+\_\+raw\+\_\+unsafe} (void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t len)
+\item 
+\Hypertarget{structllama__file_1_1impl_a84c25dcbd83b2876318b3fe057ece240}\label{structllama__file_1_1impl_a84c25dcbd83b2876318b3fe057ece240} 
+void {\bfseries read\+\_\+aligned\+\_\+chunk} (void \texorpdfstring{$\ast$}{*}dest, size\+\_\+t size)
+\item 
+\Hypertarget{structllama__file_1_1impl_a1679a3f984035de33ec7dc03f50cdd2b}\label{structllama__file_1_1impl_a1679a3f984035de33ec7dc03f50cdd2b} 
+void {\bfseries read\+\_\+raw} (void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t len)
+\item 
+\Hypertarget{structllama__file_1_1impl_ac2f859970c4fb129d7ff5e9e8fac6f5d}\label{structllama__file_1_1impl_ac2f859970c4fb129d7ff5e9e8fac6f5d} 
+uint32\+\_\+t {\bfseries read\+\_\+u32} ()
+\item 
+\Hypertarget{structllama__file_1_1impl_aa71496c1434472b5251e5fd1f176f893}\label{structllama__file_1_1impl_aa71496c1434472b5251e5fd1f176f893} 
+void {\bfseries write\+\_\+raw} (const void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t len) const
+\item 
+\Hypertarget{structllama__file_1_1impl_a67bddc76b77a88909163c76ba0da206c}\label{structllama__file_1_1impl_a67bddc76b77a88909163c76ba0da206c} 
+void {\bfseries write\+\_\+u32} (uint32\+\_\+t val) const
+\item 
+\Hypertarget{structllama__file_1_1impl_a2618bec1fd9dd4687590c0d305bd6ed6}\label{structllama__file_1_1impl_a2618bec1fd9dd4687590c0d305bd6ed6} 
+bool {\bfseries has\+\_\+direct\+\_\+io} () const
+\item 
+\Hypertarget{structllama__file_1_1impl_a245a738c91f6f12e7b0a0eb68eb5e561}\label{structllama__file_1_1impl_a245a738c91f6f12e7b0a0eb68eb5e561} 
+size\+\_\+t {\bfseries read\+\_\+alignment} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__file_1_1impl_ac785395e10703583d107a54727ce7e99}\label{structllama__file_1_1impl_ac785395e10703583d107a54727ce7e99} 
+int {\bfseries fd} = -\/1
+\item 
+\Hypertarget{structllama__file_1_1impl_a9a6bba629117ba0cf776447c5595aaa5}\label{structllama__file_1_1impl_a9a6bba629117ba0cf776447c5595aaa5} 
+std::\+string {\bfseries fname}
+\item 
+\Hypertarget{structllama__file_1_1impl_a53b9385522f7508003a3ddd971d80cc0}\label{structllama__file_1_1impl_a53b9385522f7508003a3ddd971d80cc0} 
+size\+\_\+t {\bfseries alignment} = 1
+\item 
+\Hypertarget{structllama__file_1_1impl_ad87bf0ffede30ff2a991e62955460eba}\label{structllama__file_1_1impl_ad87bf0ffede30ff2a991e62955460eba} 
+FILE \texorpdfstring{$\ast$}{*} {\bfseries fp} \{\}
+\item 
+\Hypertarget{structllama__file_1_1impl_acf7f6b014d774dcf3ea63fb838338be4}\label{structllama__file_1_1impl_acf7f6b014d774dcf3ea63fb838338be4} 
+size\+\_\+t {\bfseries size} \{\}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/mmap.\+cpp\end{DoxyCompactItemize}

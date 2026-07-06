@@ -1,0 +1,56 @@
+\doxysection{llm\+\_\+graph\+\_\+input\+\_\+k\+\_\+shift Class Reference}
+\hypertarget{classllm__graph__input__k__shift}{}\label{classllm__graph__input__k__shift}\index{llm\_graph\_input\_k\_shift@{llm\_graph\_input\_k\_shift}}
+Inheritance diagram for llm\+\_\+graph\+\_\+input\+\_\+k\+\_\+shift:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllm__graph__input__k__shift}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__k__shift_acd05aa20fc9a6c3cbaaf9e0c9e48c0f1}\label{classllm__graph__input__k__shift_acd05aa20fc9a6c3cbaaf9e0c9e48c0f1} 
+{\bfseries llm\+\_\+graph\+\_\+input\+\_\+k\+\_\+shift} (const \doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} \texorpdfstring{$\ast$}{*}kv\+\_\+self)
+\item 
+void \doxymbox{\hyperlink{classllm__graph__input__k__shift_af33a77fc9b902cd319447439b9cca239}{set\+\_\+input}} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool {\bfseries can\+\_\+reuse} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__k__shift_a03bfeedb2cef99814442017a9d8c8306}\label{classllm__graph__input__k__shift_a03bfeedb2cef99814442017a9d8c8306} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries k\+\_\+shift}
+\item 
+\Hypertarget{classllm__graph__input__k__shift_a16349f58ae1c99f35b7760da3de4d3b2}\label{classllm__graph__input__k__shift_a16349f58ae1c99f35b7760da3de4d3b2} 
+const \doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} \texorpdfstring{$\ast$}{*} {\bfseries kv\+\_\+self}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries debug} = 0
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllm__graph__input__k__shift_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllm__graph__input__k__shift_af33a77fc9b902cd319447439b9cca239}\index{llm\_graph\_input\_k\_shift@{llm\_graph\_input\_k\_shift}!set\_input@{set\_input}}
+\index{set\_input@{set\_input}!llm\_graph\_input\_k\_shift@{llm\_graph\_input\_k\_shift}}
+\doxysubsubsection{\texorpdfstring{set\_input()}{set\_input()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__k__shift_af33a77fc9b902cd319447439b9cca239} 
+void llm\+\_\+graph\+\_\+input\+\_\+k\+\_\+shift::\+set\+\_\+input (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}}]{ubatch}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/kv-\/cache.\+cpp\end{DoxyCompactItemize}

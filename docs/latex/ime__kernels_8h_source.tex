@@ -1,0 +1,32 @@
+\doxysection{ime\+\_\+kernels.\+h}
+\hypertarget{ime__kernels_8h_source}{}\label{ime__kernels_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/spacemit/ime\_kernels.h@{whisper.cpp/ggml/src/ggml-\/cpu/spacemit/ime\_kernels.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{namespace\ }sqnbitgemm\_spacemit\_ime\ \{}
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }ime1\ \{}
+\DoxyCodeLine{00007\ \textcolor{keywordtype}{size\_t}\ gemm\_kernel\_i8i4(\textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ blk\_len,}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::byte\ *\ quant\_a\_ptr,}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::byte\ *\ quant\_b\_data,}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ \ \ \ \ quant\_b\_scale,}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::byte\ *\ quant\_b\_zp,}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ \ \ \ \ \ \ \ \ \ \ c\_ptr,}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ count\_m,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ count\_n,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ count\_k,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ block\_count\_k,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ ldc,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ \ \ \ \ bias,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ scale\_stride);}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keywordtype}{void}\ quantize\_a\_row\_i8(\textcolor{keywordtype}{size\_t}\ blk\_len,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ a\_ptr,\ \textcolor{keywordtype}{size\_t}\ count\_k,\ std::byte\ *\ quant\_a\_ptr);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{void}\ quantize\_a\_4row\_i8(\textcolor{keywordtype}{size\_t}\ blk\_len,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ a\_ptr,\ \textcolor{keywordtype}{size\_t}\ count\_k,\ std::byte\ *\ quant\_a\_ptr);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \}\ \ \textcolor{comment}{//\ namespace\ ime1}}
+\DoxyCodeLine{00026\ \}\ \ \textcolor{comment}{//\ namespace\ sqnbitgemm\_spacemit\_ime}}
+
+\end{DoxyCode}

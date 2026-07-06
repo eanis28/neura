@@ -1,0 +1,37 @@
+\doxysection{whisper-\/openvino-\/encoder.h}
+\hypertarget{whisper-openvino-encoder_8h_source}{}\label{whisper-openvino-encoder_8h_source}\index{whisper.cpp/src/openvino/whisper-\/openvino-\/encoder.h@{whisper.cpp/src/openvino/whisper-\/openvino-\/encoder.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Wrapper\ of\ the\ OpenVINO\ Whisper\ Encoder\ model}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#if\ \_\_cplusplus}}
+\DoxyCodeLine{00005\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__openvino__context}{whisper\_openvino\_context}};}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ initialize\ openvino\ encoder,\ given\ path\ to\ model\ xml,\ device\ ("{}CPU"{},\ "{}GPU"{},\ etc.),\ and}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ path\ to\ cache\_dir.\ Returns\ null\ upon\ failure.}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__openvino__context}{whisper\_openvino\_context}}\ *\ whisper\_openvino\_init(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model,}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ device,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cache\_dir);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ clean\ up\ a\ ctx\ previously\ returned\ from\ whisper\_openvino\_init()}}
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{void}\ whisper\_openvino\_free(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__openvino__context}{whisper\_openvino\_context}}\ *\ ctx);}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ Perform\ encode\ using\ OpenVINO.}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ Returns\ 1\ on\ success}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ Returns\ 0\ on\ failure}}
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{int}\ whisper\_openvino\_encode(}
+\DoxyCodeLine{00025\ \ \ \ \ \doxymbox{\hyperlink{structwhisper__openvino__context}{whisper\_openvino\_context}}*\ ctx,}
+\DoxyCodeLine{00026\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}*\ mel,}
+\DoxyCodeLine{00027\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}*\ out);}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#if\ \_\_cplusplus}}
+\DoxyCodeLine{00030\ \}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

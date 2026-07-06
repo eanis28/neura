@@ -1,0 +1,5 @@
+<map id="AudioManager::stop" name="AudioManager::stop">
+<area shape="rect" id="Node000001" title="Stops the active PortAudio stream." alt="" coords="257,5,394,31"/>
+<area shape="rect" id="Node000002" href="$class_audio_manager.html#ad94dc46723c6d7cf8c81fc3772a842aa" title="Destroys the AudioManager object." alt="" coords="5,5,209,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,18,209,21,209,16,244,18"/>
+</map>

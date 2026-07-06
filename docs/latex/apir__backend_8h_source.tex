@@ -1,0 +1,56 @@
+\doxysection{apir\+\_\+backend.\+h}
+\hypertarget{apir__backend_8h_source}{}\label{apir__backend_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_backend.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_backend.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}apir\_backend.gen.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}\ \ \textcolor{comment}{//\ for\ uintptr\_t}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <time.h>}\ \ \ \ \textcolor{comment}{//\ for\ timespec,\ clock\_gettime}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_SUCCESS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_CANNOT\_OPEN\_BACKEND\_LIBRARY\ 1}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_CANNOT\_OPEN\_GGML\_LIBRARY\ \ \ \ 2}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_MISSING\_BACKEND\_SYMBOLS\ \ \ \ \ 3}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_MISSING\_GGML\_SYMBOLS\ \ \ \ \ \ \ \ 4}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_BACKEND\_FAILED\ \ \ \ \ \ \ \ \ \ \ \ \ \ 5}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_BACKEND\_REG\_FAILED\ \ \ \ \ \ \ \ \ \ 6}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_ALREADY\_INITED\ \ \ \ \ \ \ \ \ \ \ \ \ \ 7}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_NO\_DEVICE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 8}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_BACKEND\_INIT\_FAILED\ \ \ \ \ \ \ \ \ 9}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ new\ entries\ here\ need\ to\ be\ added\ to\ the\ apir\_backend\_initialize\_error\ function\ below}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_FORWARD\_INDEX\_INVALID\ 6}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ 0\ is\ fast,\ 1\ avoids\ the\ backend\ to\ crash\ if\ an\ unsupported\ tensor\ is\ received}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_CHECK\_SUPPORTS\_OP\ 0}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ uintptr\_t\ apir\_buffer\_type\_host\_handle\_t;}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ uintptr\_t\ apir\_buffer\_host\_handle\_t;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ apir\_backend\_initialize\_error(\textcolor{keywordtype}{int}\ code)\ \{}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ APIR\_BACKEND\_INITIALIZE\_ERROR(code\_name)\ \(\backslash\)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (code\ ==\ code\_name)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ \#code\_name;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_SUCCESS);}
+\DoxyCodeLine{00037\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_CANNOT\_OPEN\_BACKEND\_LIBRARY);}
+\DoxyCodeLine{00038\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_CANNOT\_OPEN\_GGML\_LIBRARY);}
+\DoxyCodeLine{00039\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_MISSING\_BACKEND\_SYMBOLS);}
+\DoxyCodeLine{00040\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_MISSING\_GGML\_SYMBOLS);}
+\DoxyCodeLine{00041\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_BACKEND\_FAILED);}
+\DoxyCodeLine{00042\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_BACKEND\_REG\_FAILED);}
+\DoxyCodeLine{00043\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_ALREADY\_INITED);}
+\DoxyCodeLine{00044\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_NO\_DEVICE);}
+\DoxyCodeLine{00045\ \ \ \ \ APIR\_BACKEND\_INITIALIZE\_ERROR(APIR\_BACKEND\_INITIALIZE\_BACKEND\_INIT\_FAILED);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Unknown\ APIR\_BACKEND\_INITIALIZE\ error:/"{}};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#undef\ APIR\_BACKEND\_INITIALIZE\_ERROR}}
+\DoxyCodeLine{00050\ \}}
+
+\end{DoxyCode}

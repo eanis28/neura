@@ -1,0 +1,42 @@
+\doxysection{hvx-\/types.h}
+\hypertarget{hvx-types_8h_source}{}\label{hvx-types_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/types.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/types.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HVX\_TYPES\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HVX\_TYPES\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <hexagon\_types.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ SIZEOF\_FP32\ (4)}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ SIZEOF\_FP16\ (2)}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ VLEN\ \ \ \ \ \ \ \ (128)}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ VLEN\_FP32\ \ \ (VLEN\ /\ SIZEOF\_FP32)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ VLEN\_FP16\ \ \ (VLEN\ /\ SIZEOF\_FP16)}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00016\ \ \ \ \ HVX\_Vector\ v;}
+\DoxyCodeLine{00017\ \ \ \ \ uint8\_t\ \ \ \ b[VLEN];}
+\DoxyCodeLine{00018\ \ \ \ \ uint16\_t\ \ \ h[VLEN\_FP16];}
+\DoxyCodeLine{00019\ \ \ \ \ uint32\_t\ \ \ w[VLEN\_FP32];}
+\DoxyCodeLine{00020\ \ \ \ \ \_\_fp16\ \ \ \ \ fp16[VLEN\_FP16];}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ fp32[VLEN\_FP32];}
+\DoxyCodeLine{00022\ \}\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((aligned(VLEN),\ packed))\ HVX\_VectorAlias;}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00025\ \ \ \ \ HVX\_Vector\ v[2];}
+\DoxyCodeLine{00026\ \}\ \doxymbox{\hyperlink{struct_h_v_x___vector__x2}{HVX\_Vector\_x2}};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00029\ \ \ \ \ HVX\_Vector\ v[4];}
+\DoxyCodeLine{00030\ \}\ \doxymbox{\hyperlink{struct_h_v_x___vector__x4}{HVX\_Vector\_x4}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00033\ \ \ \ \ HVX\_Vector\ v[8];}
+\DoxyCodeLine{00034\ \}\ \doxymbox{\hyperlink{struct_h_v_x___vector__x8}{HVX\_Vector\_x8}};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HVX\_TYPES\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,139 @@
+\doxysection{quantize.\+hpp}
+\hypertarget{quantize_8hpp_source}{}\label{quantize_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/quantize.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/quantize.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/***************************************************************************}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \ Copyright\ (C)\ 2025\ Codeplay\ Software\ Ltd.}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Copyright\ (C)\ 2025\ Intel\ Corporation}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ \ MIT\ License}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ \ Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ \ distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ \ WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ \ See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ \ limitations\ under\ the\ License.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ \ quantize.hpp}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ \ Description:}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ \ \ \ \ Sycl\ backend\ specific\ quantization\ functions}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ **************************************************************************/}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <sycl/nd\_item.hpp>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}ggml-\/sycl/dpct/helper.hpp"{}}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ ElementsPerWI>}
+\DoxyCodeLine{00027\ \_\_dpct\_inline\_\_\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ quantize\_q8\_1\_impl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ \_\_restrict\_\_\ x,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::vec<int8\_t,\ ElementsPerWI>\ \&\ quantized\_values,\ \textcolor{keywordtype}{float}\ \&\ d,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \&\ sum,\ \textcolor{keyword}{const}\ sycl::nd\_item<1>\ \&\ it)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{auto}\ subgroup\_id\ =\ it.get\_group(0);}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{auto}\ wi\_id\ \ \ \ \ \ \ =\ it.get\_local\_id(0);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ sycl::vec<float,\ ElementsPerWI>\ wi\_f32\_vals;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{auto}\ float\_ptr\_offset\ =\ subgroup\_id\ *\ QK8\_1\ +\ ElementsPerWI\ *\ wi\_id;}
+\DoxyCodeLine{00036\ \ \ \ \ wi\_f32\_vals\ \ \ \ \ \ \ \ \ \ \ =\ *\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }sycl::vec<float,\ ElementsPerWI>\ *\textcolor{keyword}{>}(x\ +\ float\_ptr\_offset);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{float}\ amax\ =\ 0.0f;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#pragma\ unroll(ElementsPerWI)}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ ElementsPerWI;\ i++)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ sum\ +=\ wi\_f32\_vals[i];}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ amax\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ sycl::fmax(amax,\ sycl::fabs(wi\_f32\_vals[i]));}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ quantized\_values[i]\ =\ 0;}
+\DoxyCodeLine{00045\ \ \ \ \ \}}
+\DoxyCodeLine{00046\ \ \ \ \ sum\ \ =\ sycl::reduce\_over\_group(it.get\_sub\_group(),\ sum,\ sycl::plus<float>());}
+\DoxyCodeLine{00047\ \ \ \ \ amax\ =\ sycl::reduce\_over\_group(it.get\_sub\_group(),\ amax,\ sycl::maximum<float>());}
+\DoxyCodeLine{00048\ \ \ \ \ d\ \ \ \ =\ amax\ ==\ 0\ ?\ 1\ :\ amax\ /\ 127;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#pragma\ unroll(ElementsPerWI)}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ ElementsPerWI;\ i++)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ quantized\_values[i]\ =\ sycl::round(wi\_f32\_vals[i]\ /\ d);}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ d\ =\ amax\ ==\ 0\ ?\ 0\ :\ d;}
+\DoxyCodeLine{00056\ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ No\ op\ to\ control\ codepath\ in\ ggml\_sycl\_op\_mul\_mat}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ ElementsPerWI>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structno__quantize__q8__1}{no\_quantize\_q8\_1}}\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ operator()(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *,\ \textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ sycl::nd\_item<1>\ \&)\textcolor{keyword}{\ const\ }\{\}}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ ElementsPerWI>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structquantize__and__reorder__q8__1__soa}{quantize\_and\_reorder\_q8\_1\_soa}}\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ operator()(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ \_\_restrict\_\_\ x,\ \textcolor{keywordtype}{void}\ *\ reordered\_q8\_tensor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ kx,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ kx\_padded,\ \textcolor{keyword}{const}\ sycl::nd\_item<1>\ \&\ it)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ \ \ \ \ \ \ \ Quantizes\ and\ reorders\ the\ resultant\ q8\ tensor\ in\ a\ per\ row\ fashion}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ \ \ \ \ \ \ \ Each\ sub-\/group\ calculates\ one\ quant\ block.\ i.e.\ QK8\_1\ quant\ values\ and\ the\ d\ and\ sum\ values}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ subgroup\_id\ =\ it.get\_group(0);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ wi\_id\ \ \ \ \ \ \ =\ it.get\_local\_id(0);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ sycl::vec<int8\_t,\ ElementsPerWI>\ quantized\_values;}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ d\ \ \ =\ 0.0f;}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sum\ =\ 0.0f;}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ quantize\_q8\_1\_impl<ElementsPerWI>(x,\ quantized\_values,\ d,\ sum,\ it);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_blocks\_per\_row\ =\ kx\ /\ QK8\_1;}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ row\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ subgroup\_id\ /\ num\_blocks\_per\_row;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ col\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ subgroup\_id\ \%\ num\_blocks\_per\_row;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ row\_offset\ \ \ \ \ \ \ \ \ =\ row\ *\ (kx\_padded\ /\ QK8\_1)\ *\ \textcolor{keyword}{sizeof}(block\_q8\_1);}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ col\_offset\ \ \ \ \ \ \ \ \ =\ QK8\_1\ *\ col\ +\ wi\_id\ *\ ElementsPerWI;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ quant\_ptr\ =\ (int8\_t\ *)\ ((\textcolor{keywordtype}{char}\ *)\ reordered\_q8\_tensor\ +\ row\_offset\ +\ col\_offset);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{reinterpret\_cast<}sycl::vec<int8\_t,\ ElementsPerWI>\ *\textcolor{keyword}{>}(quant\_ptr)\ =\ quantized\_values;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ds\_ptr\ =\ (sycl::half2\ *)\ ((\textcolor{keywordtype}{char}\ *)\ reordered\_q8\_tensor\ +\ row\_offset\ +\ kx\ +\ col\ *\ \textcolor{keyword}{sizeof}(sycl::half2));}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (wi\_id\ ==\ 0)\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ *ds\_ptr\ =\ sycl::half2(sycl::half(d),\ sycl::half(sum));}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ ElementsPerWI>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structquantize__q8__1}{quantize\_q8\_1}}\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ operator()(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ \_\_restrict\_\_\ x,\ \textcolor{keywordtype}{void}\ *\ q8\_tensor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ kx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ kx\_padded,}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<1>\ \&\ it)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ subgroup\_id\ =\ it.get\_group(0);}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ wi\_id\ \ \ \ \ \ \ =\ it.get\_local\_id(0);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_blocks\_per\_row\ =\ kx\ /\ QK8\_1;}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ row\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ subgroup\_id\ /\ num\_blocks\_per\_row;}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ pitch\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ kx\_padded\ /\ QK8\_1;}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ sycl::vec<int8\_t,\ ElementsPerWI>\ quantized\_values;}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ d\ \ \ =\ 0.0f;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sum\ =\ 0.0f;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ quantize\_q8\_1\_impl<ElementsPerWI>(x,\ quantized\_values,\ d,\ sum,\ it);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ block\_q8\_1\ *\ quant\_ptr\ =\ (block\_q8\_1\ *)\ q8\_tensor;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ \ block\_id\ \ =\ subgroup\_id\ \%\ num\_blocks\_per\_row\ +\ row\ *\ pitch;}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ int8\_t\ *\ qs\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \&(quant\_ptr[block\_id].qs[wi\_id\ *\ ElementsPerWI]);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{reinterpret\_cast<}sycl::vec<int8\_t,\ ElementsPerWI>\ *\textcolor{keyword}{>}(qs)\ =\ quantized\_values;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (wi\_id\ ==\ 0)\ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ quant\_ptr[block\_id].ds\ =\ sycl::half2(sycl::half(d),\ sycl::half(sum));}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}>\ \textcolor{keyword}{typename}\ quantize\_f>}
+\DoxyCodeLine{00121\ \textcolor{keywordtype}{void}\ quantize\_row\_q8\_1\_sycl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keywordtype}{void}\ *\ vy,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ kx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ky,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ kx\_padded,}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpct::queue\_ptr\ stream)\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{static\_assert}(QK8\_1\ \%\ WARP\_SIZE\ ==\ 0);}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{auto}\ local\_range\ \ \ \ \ \ =\ std::size\_t(WARP\_SIZE);}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{auto}\ num\_quant\_blocks\ =\ ky\ *\ (kx\ /\ QK8\_1);}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{auto}\ global\_range\ \ \ \ \ =\ num\_quant\_blocks\ *\ local\_range;}
+\DoxyCodeLine{00127\ \ \ \ \ dpct::has\_capability\_or\_fail(stream-\/>get\_device(),\ \{\ sycl::aspect::fp16\ \});}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ stream-\/>parallel\_for(sycl::nd\_range<1>(\{\ global\_range\ \},\ \{\ local\_range\ \}),}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [=](sycl::nd\_item<1>\ it)\ [[sycl::reqd\_sub\_group\_size(WARP\_SIZE)]]\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ quantize\_f<QK8\_1\ /\ WARP\_SIZE>()(x,\ vy,\ kx,\ kx\_padded,\ it);}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00133\ \}}
+
+\end{DoxyCode}

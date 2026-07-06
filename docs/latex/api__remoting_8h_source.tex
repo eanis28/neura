@@ -1,0 +1,101 @@
+\doxysection{api\+\_\+remoting.\+h}
+\hypertarget{api__remoting_8h_source}{}\label{api__remoting_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/api\_remoting.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/api\_remoting.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{/*\ the\ rest\ of\ this\ file\ must\ match\ virglrenderer/src/apir-\/protocol.h\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ APIR\_PROTOCOL\_MAJOR\ 0}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ APIR\_PROTOCOL\_MINOR\ 1}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ APIR\_HANDSHAKE\_MAGIC\ 0xab1e}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{enum}\ ApirCommandType\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ APIR\_COMMAND\_TYPE\_HANDSHAKE\ \ \ =\ 0,}
+\DoxyCodeLine{00016\ \ \ \ \ APIR\_COMMAND\_TYPE\_LOADLIBRARY\ =\ 1,}
+\DoxyCodeLine{00017\ \ \ \ \ APIR\_COMMAND\_TYPE\_FORWARD\ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ APIR\_COMMAND\_TYPE\_LENGTH\ =\ 3,}
+\DoxyCodeLine{00020\ \};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{typedef}\ uint64\_t\ ApirCommandFlags;}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{enum}\ ApirLoadLibraryReturnCode\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ APIR\_LOAD\_LIBRARY\_SUCCESS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ these\ error\ codes\ are\ returned\ by\ the\ Virglrenderer\ APIR\ component}}
+\DoxyCodeLine{00027\ \ \ \ \ APIR\_LOAD\_LIBRARY\_HYPERCALL\_INITIALIZATION\_ERROR\ =\ 1,}
+\DoxyCodeLine{00028\ \ \ \ \ APIR\_LOAD\_LIBRARY\_ALREADY\_LOADED\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00029\ \ \ \ \ APIR\_LOAD\_LIBRARY\_ENV\_VAR\_MISSING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 3,}
+\DoxyCodeLine{00030\ \ \ \ \ APIR\_LOAD\_LIBRARY\_CANNOT\_OPEN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00031\ \ \ \ \ APIR\_LOAD\_LIBRARY\_SYMBOL\_MISSING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 5,}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{//\ any\ value\ greater\ than\ this\ is\ an\ APIR\ *backend\ library*\ initialization\ return\ code}}
+\DoxyCodeLine{00033\ \ \ \ \ APIR\_LOAD\_LIBRARY\_INIT\_BASE\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 6,}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{enum}\ ApirForwardReturnCode\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ APIR\_FORWARD\_SUCCESS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ these\ error\ codes\ are\ returned\ by\ the\ Virglrenderer\ APIR\ component}}
+\DoxyCodeLine{00039\ \ \ \ \ APIR\_FORWARD\_NO\_DISPATCH\_FCT\ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00040\ \ \ \ \ APIR\_FORWARD\_TIMEOUT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00041\ \ \ \ \ APIR\_FORWARD\_FAILED\_TO\_SYNC\_STREAMS\ =\ 3,}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ any\ value\ greater\ than\ this\ index\ an\ APIR\ *backend\ library*\ forward\ return\ code}}
+\DoxyCodeLine{00043\ \ \ \ \ APIR\_FORWARD\_BASE\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00044\ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((unused))\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ apir\_command\_name(ApirCommandType\ type)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{switch}\ (type)\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_HANDSHAKE:}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}HandShake"{}};}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_LOADLIBRARY:}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}LoadLibrary"{}};}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_FORWARD:}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Forward"{}};}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unknown"{}};}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((unused))\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ apir\_load\_library\_error(ApirLoadLibraryReturnCode\ code)\ \{}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ APIR\_LOAD\_LIBRARY\_ERROR(code\_name)\ \(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (code\ ==\ code\_name)\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ \#code\_name;\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ APIR\_LOAD\_LIBRARY\_ERROR(APIR\_LOAD\_LIBRARY\_SUCCESS);}
+\DoxyCodeLine{00067\ \ \ \ \ APIR\_LOAD\_LIBRARY\_ERROR(APIR\_LOAD\_LIBRARY\_HYPERCALL\_INITIALIZATION\_ERROR);}
+\DoxyCodeLine{00068\ \ \ \ \ APIR\_LOAD\_LIBRARY\_ERROR(APIR\_LOAD\_LIBRARY\_ALREADY\_LOADED);}
+\DoxyCodeLine{00069\ \ \ \ \ APIR\_LOAD\_LIBRARY\_ERROR(APIR\_LOAD\_LIBRARY\_ENV\_VAR\_MISSING);}
+\DoxyCodeLine{00070\ \ \ \ \ APIR\_LOAD\_LIBRARY\_ERROR(APIR\_LOAD\_LIBRARY\_CANNOT\_OPEN);}
+\DoxyCodeLine{00071\ \ \ \ \ APIR\_LOAD\_LIBRARY\_ERROR(APIR\_LOAD\_LIBRARY\_SYMBOL\_MISSING);}
+\DoxyCodeLine{00072\ \ \ \ \ APIR\_LOAD\_LIBRARY\_ERROR(APIR\_LOAD\_LIBRARY\_INIT\_BASE\_INDEX);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Unknown\ APIR\_COMMAND\_TYPE\_LoadLibrary\ error"{}};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#undef\ APIR\_LOAD\_LIBRARY\_ERROR}}
+\DoxyCodeLine{00077\ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((unused))\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ apir\_forward\_error(ApirForwardReturnCode\ code)\ \{}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ APIR\_FORWARD\_ERROR(code\_name)\ \(\backslash\)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (code\ ==\ code\_name)\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ \#code\_name;\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ APIR\_FORWARD\_ERROR(APIR\_FORWARD\_SUCCESS);}
+\DoxyCodeLine{00087\ \ \ \ \ APIR\_FORWARD\_ERROR(APIR\_FORWARD\_NO\_DISPATCH\_FCT);}
+\DoxyCodeLine{00088\ \ \ \ \ APIR\_FORWARD\_ERROR(APIR\_FORWARD\_TIMEOUT);}
+\DoxyCodeLine{00089\ \ \ \ \ APIR\_FORWARD\_ERROR(APIR\_FORWARD\_FAILED\_TO\_SYNC\_STREAMS);}
+\DoxyCodeLine{00090\ \ \ \ \ APIR\_FORWARD\_ERROR(APIR\_FORWARD\_BASE\_INDEX);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Unknown\ APIR\_COMMAND\_TYPE\_FORWARD\ error"{}};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#undef\ APIR\_FORWARD\_ERROR}}
+\DoxyCodeLine{00095\ \}}
+
+\end{DoxyCode}

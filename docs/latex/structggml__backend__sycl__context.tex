@@ -1,0 +1,65 @@
+\doxysection{ggml\+\_\+backend\+\_\+sycl\+\_\+context Struct Reference}
+\hypertarget{structggml__backend__sycl__context}{}\label{structggml__backend__sycl__context}\index{ggml\_backend\_sycl\_context@{ggml\_backend\_sycl\_context}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__sycl__context_a0093b7b03aa31ff236504725456291d0}\label{structggml__backend__sycl__context_a0093b7b03aa31ff236504725456291d0} 
+{\bfseries ggml\+\_\+backend\+\_\+sycl\+\_\+context} (int device)
+\item 
+\Hypertarget{structggml__backend__sycl__context_ac02d059f7e2ce422794ec648b089bd09}\label{structggml__backend__sycl__context_ac02d059f7e2ce422794ec648b089bd09} 
+queue\+\_\+ptr {\bfseries stream} (int device, int stream)
+\item 
+\Hypertarget{structggml__backend__sycl__context_a7ebdca7cb222db6670668722484a45ee}\label{structggml__backend__sycl__context_a7ebdca7cb222db6670668722484a45ee} 
+queue\+\_\+ptr {\bfseries stream} ()
+\item 
+\Hypertarget{structggml__backend__sycl__context_acff35a61616296bbb59e678b8de129ac}\label{structggml__backend__sycl__context_acff35a61616296bbb59e678b8de129ac} 
+\doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}} \& {\bfseries pool} (int device)
+\item 
+\Hypertarget{structggml__backend__sycl__context_a1915333d51335c38a35fd847fcdf1a33}\label{structggml__backend__sycl__context_a1915333d51335c38a35fd847fcdf1a33} 
+\doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}} \& {\bfseries pool} ()
+\item 
+\Hypertarget{structggml__backend__sycl__context_a4be031c07e66a953f5fc3274ff958a1f}\label{structggml__backend__sycl__context_a4be031c07e66a953f5fc3274ff958a1f} 
+\doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}} \& {\bfseries host\+\_\+pool} (int device)
+\item 
+\Hypertarget{structggml__backend__sycl__context_a6343b03842d59049fe63cc6d72f19608}\label{structggml__backend__sycl__context_a6343b03842d59049fe63cc6d72f19608} 
+\doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}} \& {\bfseries host\+\_\+pool} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__sycl__context_ab9d47dbfc182e71ad4ff5e6e11cd8ce5}\label{structggml__backend__sycl__context_ab9d47dbfc182e71ad4ff5e6e11cd8ce5} 
+static std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}} $>$ {\bfseries new\+\_\+pool\+\_\+for\+\_\+device} (queue\+\_\+ptr qptr, int device)
+\item 
+\Hypertarget{structggml__backend__sycl__context_a384db3ef061a2ed252203cc3cfb883bb}\label{structggml__backend__sycl__context_a384db3ef061a2ed252203cc3cfb883bb} 
+static std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}} $>$ {\bfseries new\+\_\+pool\+\_\+for\+\_\+host} (queue\+\_\+ptr qptr, int device)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__sycl__context_aacbe225f1d9a5878e68286c9c98c065f}\label{structggml__backend__sycl__context_aacbe225f1d9a5878e68286c9c98c065f} 
+int {\bfseries device}
+\item 
+\Hypertarget{structggml__backend__sycl__context_acf51482a64ddd1bb7f930109d5bdea71}\label{structggml__backend__sycl__context_acf51482a64ddd1bb7f930109d5bdea71} 
+std::\+string {\bfseries name}
+\item 
+\Hypertarget{structggml__backend__sycl__context_a14f9654ad2430b1f60b11d3badaf9a1b}\label{structggml__backend__sycl__context_a14f9654ad2430b1f60b11d3badaf9a1b} 
+\doxymbox{\hyperlink{structoptimize__feature}{optimize\+\_\+feature}} {\bfseries opt\+\_\+feature}
+\item 
+\Hypertarget{structggml__backend__sycl__context_ac53957116b98899a0fd43daba393bd83}\label{structggml__backend__sycl__context_ac53957116b98899a0fd43daba393bd83} 
+queue\+\_\+ptr {\bfseries qptrs} \+[GGML\+\_\+\+SYCL\+\_\+\+MAX\+\_\+\+DEVICES]\+\+[GGML\+\_\+\+SYCL\+\_\+\+MAX\+\_\+\+STREAMS]\+ = \{ \{ nullptr \} \}
+\item 
+\Hypertarget{structggml__backend__sycl__context_a9ce1422c92ddc36e815f15425514b140}\label{structggml__backend__sycl__context_a9ce1422c92ddc36e815f15425514b140} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}} $>$ {\bfseries pools} \+[GGML\+\_\+\+SYCL\+\_\+\+MAX\+\_\+\+DEVICES]\+
+\item 
+\Hypertarget{structggml__backend__sycl__context_a3d2456dcc198f65219b62605ac3b0ef1}\label{structggml__backend__sycl__context_a3d2456dcc198f65219b62605ac3b0ef1} 
+std::\+unordered\+\_\+map$<$ sycl::\+queue \texorpdfstring{$\ast$}{*}, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structggml__sycl__pool__alloc}{ggml\+\_\+sycl\+\_\+pool\+\_\+alloc}}$<$ uint8\+\_\+t $>$ $>$ $>$ {\bfseries scratchpad\+\_\+map}
+\item 
+\Hypertarget{structggml__backend__sycl__context_a4b56a4a314295e068a5792df4c9aef01}\label{structggml__backend__sycl__context_a4b56a4a314295e068a5792df4c9aef01} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}} $>$ {\bfseries host\+\_\+pools} \+[GGML\+\_\+\+SYCL\+\_\+\+MAX\+\_\+\+DEVICES]\+
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+common.\+hpp\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+ggml-\/sycl.\+cpp\end{DoxyCompactItemize}

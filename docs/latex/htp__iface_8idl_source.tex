@@ -1,0 +1,22 @@
+\doxysection{htp\+\_\+iface.\+idl}
+\hypertarget{htp__iface_8idl_source}{}\label{htp__iface_8idl_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/htp\_iface.idl@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/htp\_iface.idl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ FastRPC\ IDL\ interface\ for\ GGML\ HTP}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ HTP\_IDL}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ HTP\_IDL}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}AEEStdDef.idl"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}remote.idl"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{interface\ }\doxymbox{\hyperlink{interfacehtp__iface}{htp\_iface}}\ :\ remote\_handle64\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ AEEResult\ start(in\ uint32\ sess\_id,\ in\ uint64\ dsp\_queue\_id,\ in\ uint32\ n\_hvx,\ in\ uint32\ use\_hmx);}
+\DoxyCodeLine{00011\ \ \ \ \ AEEResult\ stop();}
+\DoxyCodeLine{00012\ \ \ \ \ AEEResult\ enable\_etm();}
+\DoxyCodeLine{00013\ \ \ \ \ AEEResult\ disable\_etm();}
+\DoxyCodeLine{00014\ \};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HTP\_IDL\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

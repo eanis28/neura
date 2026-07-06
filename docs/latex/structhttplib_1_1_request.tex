@@ -1,0 +1,140 @@
+\doxysection{httplib::\+Request Struct Reference}
+\hypertarget{structhttplib_1_1_request}{}\label{structhttplib_1_1_request}\index{httplib::Request@{httplib::Request}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structhttplib_1_1_request_a15426727f1b20cfc4e021e97012ed541}\label{structhttplib_1_1_request_a15426727f1b20cfc4e021e97012ed541} 
+bool {\bfseries has\+\_\+header} (const std::\+string \&key) const
+\item 
+\Hypertarget{structhttplib_1_1_request_a6f28a37c9f5a5ee287dec21f49386353}\label{structhttplib_1_1_request_a6f28a37c9f5a5ee287dec21f49386353} 
+std::\+string {\bfseries get\+\_\+header\+\_\+value} (const std::\+string \&key, const char \texorpdfstring{$\ast$}{*}def="{}"{}, size\+\_\+t id=0) const
+\item 
+\Hypertarget{structhttplib_1_1_request_a4e6034f5ddd1c619dfdc7972747d5855}\label{structhttplib_1_1_request_a4e6034f5ddd1c619dfdc7972747d5855} 
+uint64\+\_\+t {\bfseries get\+\_\+header\+\_\+value\+\_\+u64} (const std::\+string \&key, uint64\+\_\+t def=0, size\+\_\+t id=0) const
+\item 
+\Hypertarget{structhttplib_1_1_request_ae16288e2907707d539d115c785119be5}\label{structhttplib_1_1_request_ae16288e2907707d539d115c785119be5} 
+size\+\_\+t {\bfseries get\+\_\+header\+\_\+value\+\_\+count} (const std::\+string \&key) const
+\item 
+\Hypertarget{structhttplib_1_1_request_af75d1bafb42f0a7f8a9f977b60324843}\label{structhttplib_1_1_request_af75d1bafb42f0a7f8a9f977b60324843} 
+void {\bfseries set\+\_\+header} (const std::\+string \&key, const std::\+string \&val)
+\item 
+\Hypertarget{structhttplib_1_1_request_a0844503ea91ecd8075c3c510d52c4216}\label{structhttplib_1_1_request_a0844503ea91ecd8075c3c510d52c4216} 
+bool {\bfseries has\+\_\+param} (const std::\+string \&key) const
+\item 
+\Hypertarget{structhttplib_1_1_request_a9386e500de33e4e5af99724a4828e714}\label{structhttplib_1_1_request_a9386e500de33e4e5af99724a4828e714} 
+std::\+string {\bfseries get\+\_\+param\+\_\+value} (const std::\+string \&key, size\+\_\+t id=0) const
+\item 
+\Hypertarget{structhttplib_1_1_request_a17dc86435cb0f85dc766097a7bc93b7d}\label{structhttplib_1_1_request_a17dc86435cb0f85dc766097a7bc93b7d} 
+size\+\_\+t {\bfseries get\+\_\+param\+\_\+value\+\_\+count} (const std::\+string \&key) const
+\item 
+\Hypertarget{structhttplib_1_1_request_a9be91099296a3c65ae972cc2bfaf578a}\label{structhttplib_1_1_request_a9be91099296a3c65ae972cc2bfaf578a} 
+bool {\bfseries is\+\_\+multipart\+\_\+form\+\_\+data} () const
+\item 
+\Hypertarget{structhttplib_1_1_request_a6c77d22a057f4da22c25aa785b46080a}\label{structhttplib_1_1_request_a6c77d22a057f4da22c25aa785b46080a} 
+bool {\bfseries has\+\_\+file} (const std::\+string \&key) const
+\item 
+\Hypertarget{structhttplib_1_1_request_aa6aab6cb73afc579bf719f6269d04f17}\label{structhttplib_1_1_request_aa6aab6cb73afc579bf719f6269d04f17} 
+\doxymbox{\hyperlink{structhttplib_1_1_multipart_form_data}{Multipart\+Form\+Data}} {\bfseries get\+\_\+file\+\_\+value} (const std::\+string \&key) const
+\item 
+\Hypertarget{structhttplib_1_1_request_a616fada50105b8274f09d3a1e08121bf}\label{structhttplib_1_1_request_a616fada50105b8274f09d3a1e08121bf} 
+std::\+vector$<$ \doxymbox{\hyperlink{structhttplib_1_1_multipart_form_data}{Multipart\+Form\+Data}} $>$ {\bfseries get\+\_\+file\+\_\+values} (const std::\+string \&key) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structhttplib_1_1_request_af69b50892d54b1a66c9b47e53226badc}\label{structhttplib_1_1_request_af69b50892d54b1a66c9b47e53226badc} 
+std::\+string {\bfseries method}
+\item 
+\Hypertarget{structhttplib_1_1_request_ac26dc36ecdf16660d152385d39c7be9a}\label{structhttplib_1_1_request_ac26dc36ecdf16660d152385d39c7be9a} 
+std::\+string {\bfseries path}
+\item 
+\Hypertarget{structhttplib_1_1_request_a757f45c8985e2d1d879ee7bdf54d8626}\label{structhttplib_1_1_request_a757f45c8985e2d1d879ee7bdf54d8626} 
+Params {\bfseries params}
+\item 
+\Hypertarget{structhttplib_1_1_request_aff4a258b9b297834c0ad45afd40a75b4}\label{structhttplib_1_1_request_aff4a258b9b297834c0ad45afd40a75b4} 
+Headers {\bfseries headers}
+\item 
+\Hypertarget{structhttplib_1_1_request_ad4502def5e057794ad17f014cf671656}\label{structhttplib_1_1_request_ad4502def5e057794ad17f014cf671656} 
+std::\+string {\bfseries body}
+\item 
+\Hypertarget{structhttplib_1_1_request_a5d14feb3676c9f75f826d5685f041cd5}\label{structhttplib_1_1_request_a5d14feb3676c9f75f826d5685f041cd5} 
+std::\+string {\bfseries remote\+\_\+addr}
+\item 
+\Hypertarget{structhttplib_1_1_request_a70245e5d672feb090b844e96744fd6e7}\label{structhttplib_1_1_request_a70245e5d672feb090b844e96744fd6e7} 
+int {\bfseries remote\+\_\+port} = -\/1
+\item 
+\Hypertarget{structhttplib_1_1_request_a337b498e36840b7ab7285b3dd8e2fa48}\label{structhttplib_1_1_request_a337b498e36840b7ab7285b3dd8e2fa48} 
+std::\+string {\bfseries local\+\_\+addr}
+\item 
+\Hypertarget{structhttplib_1_1_request_af34f7c735d208e9366bd0bf6c0ea3332}\label{structhttplib_1_1_request_af34f7c735d208e9366bd0bf6c0ea3332} 
+int {\bfseries local\+\_\+port} = -\/1
+\item 
+\Hypertarget{structhttplib_1_1_request_aa3edfd554b749bf2cb03a57a12c24602}\label{structhttplib_1_1_request_aa3edfd554b749bf2cb03a57a12c24602} 
+std::\+string {\bfseries version}
+\item 
+\Hypertarget{structhttplib_1_1_request_a81749298e170ed7559a9dee927ec078f}\label{structhttplib_1_1_request_a81749298e170ed7559a9dee927ec078f} 
+std::\+string {\bfseries target}
+\item 
+\Hypertarget{structhttplib_1_1_request_ab5a7da2bbbddeda10dba907a93201def}\label{structhttplib_1_1_request_ab5a7da2bbbddeda10dba907a93201def} 
+Multipart\+Form\+Data\+Map {\bfseries files}
+\item 
+\Hypertarget{structhttplib_1_1_request_abe8594e9fe1652a3b3846823c9fc065c}\label{structhttplib_1_1_request_abe8594e9fe1652a3b3846823c9fc065c} 
+Ranges {\bfseries ranges}
+\item 
+\Hypertarget{structhttplib_1_1_request_a9c55b6ab1bcd7c25a40a9c23ee2af1db}\label{structhttplib_1_1_request_a9c55b6ab1bcd7c25a40a9c23ee2af1db} 
+Match {\bfseries matches}
+\item 
+\Hypertarget{structhttplib_1_1_request_a3d2f38f9019bcf700e2abba02d8b4157}\label{structhttplib_1_1_request_a3d2f38f9019bcf700e2abba02d8b4157} 
+std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ {\bfseries path\+\_\+params}
+\item 
+\Hypertarget{structhttplib_1_1_request_acb1c088454bc7dc2256badfa90937092}\label{structhttplib_1_1_request_acb1c088454bc7dc2256badfa90937092} 
+std::\+function$<$ bool()$>$ {\bfseries is\+\_\+connection\+\_\+closed} = \+[$\,$]\+() \{ return true; \}
+\item 
+\Hypertarget{structhttplib_1_1_request_ae8ffd012988e754aaef33a1766a59824}\label{structhttplib_1_1_request_ae8ffd012988e754aaef33a1766a59824} 
+Response\+Handler {\bfseries response\+\_\+handler}
+\item 
+\Hypertarget{structhttplib_1_1_request_a2aaa1d1733b3854a59aaaabf6bd4cde9}\label{structhttplib_1_1_request_a2aaa1d1733b3854a59aaaabf6bd4cde9} 
+Content\+Receiver\+With\+Progress {\bfseries content\+\_\+receiver}
+\item 
+\Hypertarget{structhttplib_1_1_request_a68b563d55a73c85ae4624b43f840ea0e}\label{structhttplib_1_1_request_a68b563d55a73c85ae4624b43f840ea0e} 
+Progress {\bfseries progress}
+\item 
+\Hypertarget{structhttplib_1_1_request_ad52fe030efab9b240ef3d8caeb2c6f7d}\label{structhttplib_1_1_request_ad52fe030efab9b240ef3d8caeb2c6f7d} 
+size\+\_\+t {\bfseries redirect\+\_\+count\+\_\+} = CPPHTTPLIB\+\_\+\+REDIRECT\+\_\+\+MAX\+\_\+\+COUNT
+\item 
+\Hypertarget{structhttplib_1_1_request_ab6b2118c4c790236cbb009ddb977f544}\label{structhttplib_1_1_request_ab6b2118c4c790236cbb009ddb977f544} 
+size\+\_\+t {\bfseries content\+\_\+length\+\_\+} = 0
+\item 
+\Hypertarget{structhttplib_1_1_request_ab4345b7b56d1efd0ef8e6ec8f047c607}\label{structhttplib_1_1_request_ab4345b7b56d1efd0ef8e6ec8f047c607} 
+Content\+Provider {\bfseries content\+\_\+provider\+\_\+}
+\item 
+\Hypertarget{structhttplib_1_1_request_ac8229da221a0786bdb6c1ad10d126e84}\label{structhttplib_1_1_request_ac8229da221a0786bdb6c1ad10d126e84} 
+bool {\bfseries is\+\_\+chunked\+\_\+content\+\_\+provider\+\_\+} = false
+\item 
+\Hypertarget{structhttplib_1_1_request_a95cf89390e33a408559331ff6aad2a53}\label{structhttplib_1_1_request_a95cf89390e33a408559331ff6aad2a53} 
+size\+\_\+t {\bfseries authorization\+\_\+count\+\_\+} = 0
+\item 
+std::\+chrono::\+time\+\_\+point$<$ std::\+chrono::\+steady\+\_\+clock $>$ \doxymbox{\hyperlink{structhttplib_1_1_request_ab3de0c920108ed3d3002e58137634854}{start\+\_\+time\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-variable-members}
+\Hypertarget{structhttplib_1_1_request_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structhttplib_1_1_request_ab3de0c920108ed3d3002e58137634854}\index{httplib::Request@{httplib::Request}!start\_time\_@{start\_time\_}}
+\index{start\_time\_@{start\_time\_}!httplib::Request@{httplib::Request}}
+\doxysubsubsection{\texorpdfstring{start\_time\_}{start\_time\_}}
+{\footnotesize\ttfamily \label{structhttplib_1_1_request_ab3de0c920108ed3d3002e58137634854} 
+std::\+chrono::\+time\+\_\+point$<$std::\+chrono::\+steady\+\_\+clock$>$ httplib::\+\+Request::\+start\+\_\+time\+\_\+}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =}
+\DoxyCodeLine{(std::chrono::steady\_clock::time\_point::min)()}
+
+\end{DoxyCode}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+server/\+httplib.\+h\end{DoxyCompactItemize}

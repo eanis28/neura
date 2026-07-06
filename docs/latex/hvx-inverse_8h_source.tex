@@ -1,0 +1,216 @@
+\doxysection{hvx-\/inverse.h}
+\hypertarget{hvx-inverse_8h_source}{}\label{hvx-inverse_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/inverse.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/inverse.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HVX\_INVERSE\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HVX\_INVERSE\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <HAP\_farf.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}hvx-\/base.h"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ ====================================================}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ FUNCTION:\ 1/(x+1)\ \ \ \ \ y(0)\ =\ 1,\ \ y(0.5)\ =\ 0.6667,\ y(1)\ =\ 0.5}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Order:3;\ continuity:\ True;\ Ends\ forced:\ True}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ Mode:\ unsigned;\ \ \ Result\ fractional\ bits:\ 14}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ Peak\ Error:\ 1.1295e-\/04\ \ Rms\ Error:\ 2.8410e-\/05\ \ \ Mean\ Error:\ 1.1370e-\/05}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ \ \ \ \ \ 32769\ \ -\/32706\ \ \ 31252\ \ -\/10589}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ \ \ \ \ \ 32590\ \ -\/30635\ \ \ 22793\ \ \ -\/4493}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ \ \ \ \ \ 32066\ \ -\/27505\ \ \ 16481\ \ \ -\/2348}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ \ \ \ \ \ 31205\ \ -\/24054\ \ \ 11849\ \ \ -\/1306}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_recip\_xp1\_O3\_unsigned(HVX\_Vector\ vx)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ input\ is\ 0..0xffff\ representing\ 0.0\ \ ..\ 1.0}}
+\DoxyCodeLine{00026\ \ \ \ \ HVX\_Vector\ p;}
+\DoxyCodeLine{00027\ \ \ \ \ p\ =\ Q6\_Vh\_vlut4\_VuhPh(vx,\ 0xFAE6F6D4EE73D6A3ull);}
+\DoxyCodeLine{00028\ \ \ \ \ p\ =\ Q6\_Vh\_vmpa\_VhVhVuhPuh\_sat(p,\ vx,\ 0x2E49406159097A14ull);}
+\DoxyCodeLine{00029\ \ \ \ \ p\ =\ Q6\_Vh\_vmps\_VhVhVuhPuh\_sat(p,\ vx,\ 0x5DF66B7177AB7FC2ull);}
+\DoxyCodeLine{00030\ \ \ \ \ p\ =\ Q6\_Vh\_vmpa\_VhVhVuhPuh\_sat(p,\ vx,\ 0x79E57D427F4E8001ull);}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{return}\ p;\ \ \textcolor{comment}{//\ signed\ result,\ 14\ fractional\ bits}}
+\DoxyCodeLine{00032\ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ Find\ reciprocal\ of\ fp16.}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ (1)\ first,\ convert\ to\ fp32,\ multiplying\ by\ 1.0;\ this\ is\ done\ to}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ \ \ \ handle\ denormals.\ Ignoring\ sign\ and\ zero,\ result\ should\ be\ at}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ \ \ \ least\ 5.9604645e-\/08\ (32-\/bit\ code\ 0x33800000)\ and\ at\ most\ 131008\ (0x47ffe000)}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ \ \ \ (exponent\ in\ range\ [103,143])}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ (2)\ extract\ the\ mantissa\ into\ 16-\/bit\ unsigned;\ find\ reciprocal\ using\ a\ fitted\ poly}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ (3)\ put\ this,\ along\ with\ '253-\/exp'\ (exp\ from\ (1))\ together\ to\ make\ an\ qf32}}
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ (4)\ convert\ that\ to\ fp16}}
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ (5)\ put\ sign\ back\ in.\ Also,\ if\ the\ original\ value\ (w/o\ sign)\ was\ <0x81,\ replace}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ \ \ \ \ the\ result\ with\ the\ max\ value.}}
+\DoxyCodeLine{00044\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_inverse\_f16(HVX\_Vector\ vals)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ HVX\_Vector\ \ \ \ \ em\_mask\ \ =\ Q6\_Vh\_vsplat\_R(0x7FFF);}
+\DoxyCodeLine{00046\ \ \ \ \ HVX\_Vector\ \ \ \ \ avals\ \ \ \ =\ Q6\_V\_vand\_VV(vals,\ em\_mask);}
+\DoxyCodeLine{00047\ \ \ \ \ HVX\_VectorPred\ is\_neg\ \ \ =\ Q6\_Q\_vcmp\_gt\_VhVh(avals,\ vals);}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ is\ too\ small\ to\ 1/x\ ?\ for\ 'standard'\ fp16,\ this\ would\ be\ 0x101}}
+\DoxyCodeLine{00049\ \ \ \ \ HVX\_VectorPred\ is\_small\ =\ Q6\_Q\_vcmp\_gt\_VhVh(Q6\_Vh\_vsplat\_R(0x101),\ avals);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ HVX\_VectorPair\ to\_qf32\ \ =\ Q6\_Wqf32\_vmpy\_VhfVhf(avals,\ Q6\_Vh\_vsplat\_R(0x3C00));\ \ \textcolor{comment}{//\ *1.0}}
+\DoxyCodeLine{00052\ \ \ \ \ HVX\_Vector\ \ \ \ \ to\_f32\_0\ =\ Q6\_Vsf\_equals\_Vqf32(Q6\_V\_lo\_W(to\_qf32));}
+\DoxyCodeLine{00053\ \ \ \ \ HVX\_Vector\ \ \ \ \ to\_f32\_1\ =\ Q6\_Vsf\_equals\_Vqf32(Q6\_V\_hi\_W(to\_qf32));}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ bits\ 22..13\ contain\ the\ mantissa\ now\ (w/o\ hidden\ bit);\ move\ to\ bit\ 14..5\ of\ a\ 16-\/bit\ vector}}
+\DoxyCodeLine{00056\ \ \ \ \ HVX\_Vector\ mant\_u16\ =\ Q6\_Vh\_vshuffo\_VhVh(Q6\_Vw\_vasl\_VwR(to\_f32\_1,\ 9),\ Q6\_Vw\_vasl\_VwR(to\_f32\_0,\ 9));}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ likewise\ extract\ the\ upper\ 16\ from\ each,\ containing\ the\ exponents\ in\ range\ 103..142}}
+\DoxyCodeLine{00058\ \ \ \ \ HVX\_Vector\ exp\_u16\ \ =\ Q6\_Vh\_vshuffo\_VhVh(to\_f32\_1,\ to\_f32\_0);}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{//Get\ exponent\ in\ IEEE\ 32-\/bit\ representation}}
+\DoxyCodeLine{00060\ \ \ \ \ exp\_u16\ \ \ \ \ \ \ \ \ \ \ \ \ =\ Q6\_Vuh\_vlsr\_VuhR(exp\_u16,\ 7);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ so,\ mant\_u16\ contains\ an\ unbiased\ mantissa\ in\ upper\ 10\ bits\ of\ each\ u16\ lane}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ We\ can\ consider\ it\ to\ be\ x-\/1.0,\ with\ 16\ fractional\ bits,\ where\ 'x'\ is\ in\ range\ [1.0,2.0)}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ Use\ poly\ to\ transform\ to\ 1/x,\ with\ 14\ fractional\ bits}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00066\ \ \ \ \ HVX\_Vector\ rm\ =\ hvx\_vec\_recip\_xp1\_O3\_unsigned(mant\_u16);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ HVX\_Vector\ vcl0\ =\ Q6\_Vuh\_vcl0\_Vuh(rm);\ \ \textcolor{comment}{//count\ leading\ zeros}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ Get\ mantissa\ for\ 16-\/bit\ representation}}
+\DoxyCodeLine{00071\ \ \ \ \ HVX\_Vector\ mant\_recip\ =\ Q6\_V\_vand\_VV(Q6\_Vh\_vasr\_VhR(Q6\_Vh\_vasl\_VhVh(rm,\ vcl0),\ 5),\ Q6\_Vh\_vsplat\_R(0x03FF));}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//Compute\ Reciprocal\ Exponent}}
+\DoxyCodeLine{00074\ \ \ \ \ HVX\_Vector\ exp\_recip\ =}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ Q6\_Vh\_vsub\_VhVh(Q6\_Vh\_vsub\_VhVh(Q6\_Vh\_vsplat\_R(254),\ exp\_u16),\ Q6\_Vh\_vsub\_VhVh(vcl0,\ Q6\_Vh\_vsplat\_R(1)));}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//Convert\ it\ for\ 16-\/bit\ representation}}
+\DoxyCodeLine{00077\ \ \ \ \ exp\_recip\ =\ Q6\_Vh\_vadd\_VhVh\_sat(Q6\_Vh\_vsub\_VhVh(exp\_recip,\ Q6\_Vh\_vsplat\_R(127)),\ Q6\_Vh\_vsplat\_R(15));}
+\DoxyCodeLine{00078\ \ \ \ \ exp\_recip\ =\ Q6\_Vh\_vasl\_VhR(exp\_recip,\ 10);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//Merge\ exponent\ and\ mantissa\ for\ reciprocal}}
+\DoxyCodeLine{00081\ \ \ \ \ HVX\_Vector\ recip\ =\ Q6\_V\_vor\_VV(exp\_recip,\ mant\_recip);}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ map\ 'small'\ inputs\ to\ standard\ largest\ value\ 0x7bff}}
+\DoxyCodeLine{00083\ \ \ \ \ recip\ \ \ \ \ \ \ \ \ \ \ \ =\ Q6\_V\_vmux\_QVV(is\_small,\ Q6\_Vh\_vsplat\_R(0x7bff),\ recip);}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ add\ sign\ back}}
+\DoxyCodeLine{00085\ \ \ \ \ recip\ \ \ \ \ \ \ \ \ \ \ \ =\ Q6\_V\_vandor\_VQR(recip,\ is\_neg,\ 0x80008000);}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{return}\ recip;}
+\DoxyCodeLine{00087\ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_inverse\_f32(HVX\_Vector\ v\_sf)\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ HVX\_Vector\ inv\_aprox\_sf\ =\ Q6\_V\_vsplat\_R(0x7EEEEBB3);}
+\DoxyCodeLine{00091\ \ \ \ \ HVX\_Vector\ two\_sf\ \ \ \ \ \ \ =\ hvx\_vec\_splat\_f32(2.0);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ First\ approximation}}
+\DoxyCodeLine{00094\ \ \ \ \ HVX\_Vector\ i\_sf\ =\ Q6\_Vw\_vsub\_VwVw(inv\_aprox\_sf,\ v\_sf);}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ HVX\_Vector\ r\_qf;}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{comment}{//\ Refine}}
+\DoxyCodeLine{00099\ \ \ \ \ r\_qf\ =\ Q6\_Vqf32\_vmpy\_VsfVsf(}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ i\_sf,\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vsub\_VsfVsf(two\_sf,\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vmpy\_VsfVsf(i\_sf,\ v\_sf)))));}
+\DoxyCodeLine{00101\ \ \ \ \ r\_qf\ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ r\_qf,\ Q6\_Vqf32\_vsub\_VsfVsf(two\_sf,\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vmpy\_VsfVsf(Q6\_Vsf\_equals\_Vqf32(r\_qf),\ v\_sf))));}
+\DoxyCodeLine{00103\ \ \ \ \ r\_qf\ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ r\_qf,\ Q6\_Vqf32\_vsub\_VsfVsf(two\_sf,\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vmpy\_VsfVsf(Q6\_Vsf\_equals\_Vqf32(r\_qf),\ v\_sf))));}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vsf\_equals\_Vqf32(r\_qf);}
+\DoxyCodeLine{00107\ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_inverse\_f32\_guard(HVX\_Vector\ v\_sf,\ HVX\_Vector\ nan\_inf\_mask)\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ HVX\_Vector\ out\ =\ hvx\_vec\_inverse\_f32(v\_sf);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ HVX\_Vector\ \ \ \ \ masked\_out\ =\ Q6\_V\_vand\_VV(out,\ nan\_inf\_mask);}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_VectorPred\ pred\ =\ Q6\_Q\_vcmp\_eq\_VwVw(nan\_inf\_mask,\ masked\_out);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_V\_vmux\_QVV(pred,\ Q6\_V\_vzero(),\ out);}
+\DoxyCodeLine{00116\ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ hvx\_inverse\_f32\_loop\_body(dst\_type,\ src\_type,\ vec\_store)\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ dst\_type\ *\ restrict\ vdst\ =\ (dst\_type\ *)\ dst;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ src\_type\ *\ restrict\ vsrc\ =\ (src\_type\ *)\ src;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ HVX\_Vector\ nan\_inf\_mask\ =\ Q6\_V\_vsplat\_R(0x7f800000);\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ nvec\ =\ n\ /\ VLEN\_FP32;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ nloe\ =\ n\ \%\ VLEN\_FP32;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ uint32\_t\ i\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}unroll(4)"{})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (;\ i\ <\ nvec;\ i++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ vdst[i]\ =\ hvx\_vec\_inverse\_f32\_guard(vsrc[i],\ nan\_inf\_mask);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (nloe)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ v\ =\ hvx\_vec\_inverse\_f32\_guard(vsrc[i],\ nan\_inf\_mask);\ \(\backslash\)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ vec\_store((void\ *)\ \&vdst[i],\ nloe\ *\ SIZEOF\_FP32,\ v);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\ \ \ \ \}\ while(0)}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_inverse\_f16\_guard(HVX\_Vector\ v\_sf,\ HVX\_Vector\ nan\_inf\_mask)\ \{}
+\DoxyCodeLine{00141\ \ \ \ \ HVX\_Vector\ out\ =\ hvx\_vec\_inverse\_f16(v\_sf);}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ HVX\_Vector\ \ \ \ \ masked\_out\ =\ Q6\_V\_vand\_VV(out,\ nan\_inf\_mask);}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_VectorPred\ pred\ =\ Q6\_Q\_vcmp\_eq\_VhVh(nan\_inf\_mask,\ masked\_out);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_V\_vmux\_QVV(pred,\ Q6\_V\_vzero(),\ out);}
+\DoxyCodeLine{00147\ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ hvx\_inverse\_f16\_loop\_body(dst\_type,\ src\_type,\ vec\_store)\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ dst\_type\ *\ restrict\ vdst\ =\ (dst\_type\ *)\ dst;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ src\_type\ *\ restrict\ vsrc\ =\ (src\_type\ *)\ src;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ HVX\_Vector\ nan\_inf\_mask\ =\ Q6\_Vh\_vsplat\_R(0x7c00);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ nvec\ =\ n\ /\ VLEN\_FP16;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ nloe\ =\ n\ \%\ VLEN\_FP16;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ uint32\_t\ i\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}unroll(4)"{})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (;\ i\ <\ nvec;\ i++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ vdst[i]\ =\ hvx\_vec\_inverse\_f16\_guard(vsrc[i],\ nan\_inf\_mask);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (nloe)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ v\ =\ hvx\_vec\_inverse\_f16\_guard(vsrc[i],\ nan\_inf\_mask);\ \(\backslash\)}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ vec\_store((void\ *)\ \&vdst[i],\ nloe\ *\ SIZEOF\_FP16,\ v);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\ \ \ \ \}\ while(0)}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{comment}{//\ Generic\ macro\ to\ define\ alignment\ permutations\ for\ an\ op}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ DEFINE\_HVX\_INV\_OP\_VARIANTS(OP\_NAME,\ OP\_LOOP\_BODY)\ \(\backslash\)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{static\ inline\ void\ OP\_NAME\#\#\_aa(uint8\_t\ *\ restrict\ dst,\ const\ uint8\_t\ *\ restrict\ src,\ uint32\_t\ n)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\ \ \ \ assert((uintptr\_t)\ dst\ \%\ 128\ ==\ 0);\ \(\backslash\)}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\ \ \ \ assert((uintptr\_t)\ src\ \%\ 128\ ==\ 0);\ \(\backslash\)}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\ \ \ \ OP\_LOOP\_BODY(HVX\_Vector,\ HVX\_Vector,\ hvx\_vec\_store\_a);\ \(\backslash\)}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\}\ \(\backslash\)}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{static\ inline\ void\ OP\_NAME\#\#\_au(uint8\_t\ *\ restrict\ dst,\ const\ uint8\_t\ *\ restrict\ src,\ uint32\_t\ n)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\ \ \ \ assert((uintptr\_t)\ dst\ \%\ 128\ ==\ 0);\ \(\backslash\)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\ \ \ \ OP\_LOOP\_BODY(HVX\_Vector,\ HVX\_UVector,\ hvx\_vec\_store\_a);\ \(\backslash\)}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\}\ \(\backslash\)}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{static\ inline\ void\ OP\_NAME\#\#\_ua(uint8\_t\ *\ restrict\ dst,\ const\ uint8\_t\ *\ restrict\ src,\ uint32\_t\ n)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\ \ \ \ assert((uintptr\_t)\ src\ \%\ 128\ ==\ 0);\ \(\backslash\)}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\ \ \ \ OP\_LOOP\_BODY(HVX\_UVector,\ HVX\_Vector,\ hvx\_vec\_store\_u);\ \(\backslash\)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\}\ \(\backslash\)}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{static\ inline\ void\ OP\_NAME\#\#\_uu(uint8\_t\ *\ restrict\ dst,\ const\ uint8\_t\ *\ restrict\ src,\ uint32\_t\ n)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\ \ \ \ OP\_LOOP\_BODY(HVX\_UVector,\ HVX\_UVector,\ hvx\_vec\_store\_u);\ \(\backslash\)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\}\ \(\backslash\)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00190\ \textcolor{comment}{//\ Dispatcher\ logic}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#define\ HVX\_INV\_DISPATCHER(OP\_NAME)\ \(\backslash\)}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{static\ inline\ void\ OP\_NAME(uint8\_t\ *\ restrict\ dst,\ const\ uint8\_t\ *\ restrict\ src,\ const\ uint32\_t\ num\_elems)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\ \ \ \ if\ (hex\_is\_aligned((void\ *)\ dst,\ 128)\ \&\&\ hex\_is\_aligned((void\ *)\ src,\ 128))\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ OP\_NAME\#\#\_aa(dst,\ src,\ num\_elems);\ \(\backslash\)}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\ \ \ \ \}\ else\ if\ (hex\_is\_aligned((void\ *)\ dst,\ 128))\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ OP\_NAME\#\#\_au(dst,\ src,\ num\_elems);\ \(\backslash\)}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\ \ \ \ \}\ else\ if\ (hex\_is\_aligned((void\ *)\ src,\ 128))\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ OP\_NAME\#\#\_ua(dst,\ src,\ num\_elems);\ \(\backslash\)}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\ \ \ \ \}\ else\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ OP\_NAME\#\#\_uu(dst,\ src,\ num\_elems);\ \(\backslash\)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\ \ \ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ DEFINE\_HVX\_INV\_OP\_VARIANTS(hvx\_inverse\_f32,\ hvx\_inverse\_f32\_loop\_body)}
+\DoxyCodeLine{00205\ DEFINE\_HVX\_INV\_OP\_VARIANTS(hvx\_inverse\_f16,\ hvx\_inverse\_f16\_loop\_body)}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ HVX\_INV\_DISPATCHER(hvx\_inverse\_f32)}
+\DoxyCodeLine{00208\ HVX\_INV\_DISPATCHER(hvx\_inverse\_f16)}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HVX\_INVERSE\_H}}
+
+\end{DoxyCode}

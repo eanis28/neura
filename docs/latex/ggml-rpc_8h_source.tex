@@ -1,0 +1,41 @@
+\doxysection{ggml-\/rpc.h}
+\hypertarget{ggml-rpc_8h_source}{}\label{ggml-rpc_8h_source}\index{whisper.cpp/ggml/include/ggml-\/rpc.h@{whisper.cpp/ggml/include/ggml-\/rpc.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00006\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ RPC\_PROTO\_MAJOR\_VERSION\ \ \ \ 3}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ RPC\_PROTO\_MINOR\_VERSION\ \ \ \ 6}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ RPC\_PROTO\_PATCH\_VERSION\ \ \ \ 1}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00014\ \textcolor{keyword}{static\_assert}(GGML\_OP\_COUNT\ ==\ 96,\ \textcolor{stringliteral}{"{}GGML\_OP\_COUNT\ has\ changed\ -\/\ update\ RPC\_PROTO\_PATCH\_VERSION"{}});}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ GGML\_RPC\_MAX\_SERVERS\ \ \ \ \ \ \ 16}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ backend\ API}}
+\DoxyCodeLine{00020\ GGML\_BACKEND\_API\ ggml\_backend\_t\ ggml\_backend\_rpc\_init(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ endpoint,\ uint32\_t\ device);}
+\DoxyCodeLine{00021\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_is\_rpc(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_rpc\_buffer\_type(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ endpoint,\ uint32\_t\ device);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_rpc\_get\_device\_memory(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ endpoint,\ uint32\_t\ device,\ \textcolor{keywordtype}{size\_t}\ *\ free,\ \textcolor{keywordtype}{size\_t}\ *\ total);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_rpc\_start\_server(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ endpoint,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cache\_dir,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ n\_threads,\ \textcolor{keywordtype}{size\_t}\ n\_devices,\ ggml\_backend\_dev\_t\ *\ devices);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_rpc\_reg(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00031\ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_rpc\_add\_server(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ endpoint);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00034\ \}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

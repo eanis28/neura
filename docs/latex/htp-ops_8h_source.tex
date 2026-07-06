@@ -1,0 +1,70 @@
+\doxysection{htp-\/ops.h}
+\hypertarget{htp-ops_8h_source}{}\label{htp-ops_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/htp-\/ops.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/htp-\/ops.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HTP\_OPS\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HTP\_OPS\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}htp-\/ctx.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}htp-\/msg.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}worker-\/pool.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <hex-\/fastdiv.h>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ ggml-\/common.h\ must\ be\ included\ prior\ to\ this\ header}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__spad}{htp\_spad}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ uint8\_t\ *\ data;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ stride;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ size;}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ size\_per\_thread;}
+\DoxyCodeLine{00020\ \};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__context}{htp\_context}}\ *\ ctx;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{enum}\ htp\_op\ op;}
+\DoxyCodeLine{00026\ \ \ \ \ int32\_t\ \ \ \ \ op\_params[HTP\_MAX\_OP\_PARAMS\ /\ \textcolor{keyword}{sizeof}(int32\_t)];}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src0;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src1;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src2;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src3;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ src4;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__tensor}{htp\_tensor}}\ dst;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__spad}{htp\_spad}}\ src0\_spad;}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__spad}{htp\_spad}}\ src1\_spad;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__spad}{htp\_spad}}\ src2\_spad;}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__spad}{htp\_spad}}\ src3\_spad;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__spad}{htp\_spad}}\ dst\_spad;}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ worker\_pool\_context\_t\ *\ wpool;\ \ \ \ \ \ \textcolor{comment}{//\ worker\ pool}}
+\DoxyCodeLine{00042\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_threads;\ \ \textcolor{comment}{//\ num\ threads}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ uint32\_t\ flags;}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{int}\ op\_matmul(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{int}\ op\_matmul\_id(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{int}\ op\_binary(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{int}\ op\_unary(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{int}\ op\_sum\_rows(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{int}\ op\_activations(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{int}\ op\_softmax(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{int}\ op\_add\_id(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00055\ \textcolor{keywordtype}{int}\ op\_rope(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00056\ \textcolor{keywordtype}{int}\ op\_flash\_attn\_ext(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00057\ \textcolor{keywordtype}{int}\ op\_set\_rows(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{int}\ op\_get\_rows(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{int}\ op\_cpy(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{int}\ op\_repeat(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00061\ \textcolor{keywordtype}{int}\ op\_argsort(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{int}\ op\_ssm\_conv(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__ops__context}{htp\_ops\_context}}\ *\ octx);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HTP\_OPS\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

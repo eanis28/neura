@@ -1,0 +1,27 @@
+\doxysection{dpct::\+MMAType\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Struct Template Reference}
+\hypertarget{structdpct_1_1_m_m_a_type}{}\label{structdpct_1_1_m_m_a_type}\index{dpct::MMAType$<$ T $>$@{dpct::MMAType$<$ T $>$}}
+
+
+{\ttfamily \+\#include $<$helper.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structdpct_1_1_m_m_a_type_acbf8d1ec29cc2f7727f55ac20a3fdde7}\label{structdpct_1_1_m_m_a_type_acbf8d1ec29cc2f7727f55ac20a3fdde7} 
+using {\bfseries Pack\+Type} = uint32\+\_\+t
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+struct dpct::\+\+MMAType$<$ T $>$}
+A helper struct that defines the pack type for the input matrix fragments of mma() function based on the type of input matrix fragments. \doxylink{requirements_The}{The} \doxylink{structdpct_1_1_m_m_a_type}{MMAType} struct is specialized for different types of input matrices. Currently, the specialization for f16, bf16 and s8 types is defined below. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em \+[in]\+} & T \doxylink{requirements_The}{The} type of the input matrix fragments \\
+\hline
+\end{DoxyTemplParams}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+dpct/\+helper.\+hpp\end{DoxyCompactItemize}

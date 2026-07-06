@@ -1,0 +1,59 @@
+\doxysection{convert-\/whisper-\/to-\/coreml.Residual\+Attention\+Block\+ANE Class Reference}
+\hypertarget{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e}{}\label{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e}\index{convert-\/whisper-\/to-\/coreml.ResidualAttentionBlockANE@{convert-\/whisper-\/to-\/coreml.ResidualAttentionBlockANE}}
+Inheritance diagram for convert-\/whisper-\/to-\/coreml.Residual\+Attention\+Block\+ANE:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_acfc21b62d7c8aa69111b4e74097c7017}\label{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_acfc21b62d7c8aa69111b4e74097c7017} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, int n\+\_\+state, int n\+\_\+head, bool cross\+\_\+attention=False)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_ad382541c2f26fc03607ef203f01facc9}\label{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_ad382541c2f26fc03607ef203f01facc9} 
+{\bfseries attn} = \doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e}{Multi\+Head\+Attention\+ANE}}(n\+\_\+state, n\+\_\+head)
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_a306b9c08d5c66907869e897f5f13c8b2}\label{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_a306b9c08d5c66907869e897f5f13c8b2} 
+{\bfseries attn\+\_\+ln} = \doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_layer_norm_a_n_e}{Layer\+Norm\+ANE}}(n\+\_\+state)
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_ab798fbb0c7d3f1bbe7c5c70050ab669b}\label{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_ab798fbb0c7d3f1bbe7c5c70050ab669b} 
+{\bfseries cross\+\_\+attn} = \doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e}{Multi\+Head\+Attention\+ANE}}(n\+\_\+state, n\+\_\+head) if cross\+\_\+attention else None
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_ad187f26d428d96c4fa0be4b244e59917}\label{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_ad187f26d428d96c4fa0be4b244e59917} 
+{\bfseries cross\+\_\+attn\+\_\+ln} = \doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_layer_norm_a_n_e}{Layer\+Norm\+ANE}}(n\+\_\+state) if cross\+\_\+attention else None
+\item 
+\doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_ac2bd25d84edf55ffe3c9ba38d4c3cb31}{mlp}}
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_a54968503e03293b342c398da61e37afe}\label{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_a54968503e03293b342c398da61e37afe} 
+{\bfseries mlp\+\_\+ln} = \doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_layer_norm_a_n_e}{Layer\+Norm\+ANE}}(n\+\_\+state)
+\end{DoxyCompactItemize}
+
+
+\label{doc-variable-members}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_ac2bd25d84edf55ffe3c9ba38d4c3cb31}\index{convert-\/whisper-\/to-\/coreml.ResidualAttentionBlockANE@{convert-\/whisper-\/to-\/coreml.ResidualAttentionBlockANE}!mlp@{mlp}}
+\index{mlp@{mlp}!convert-\/whisper-\/to-\/coreml.ResidualAttentionBlockANE@{convert-\/whisper-\/to-\/coreml.ResidualAttentionBlockANE}}
+\doxysubsubsection{\texorpdfstring{mlp}{mlp}}
+{\footnotesize\ttfamily \label{classconvert-whisper-to-coreml_1_1_residual_attention_block_a_n_e_ac2bd25d84edf55ffe3c9ba38d4c3cb31} 
+convert-\/whisper-\/to-\/coreml.\+Residual\+Attention\+Block\+ANE.\+mlp}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \ \ nn.Sequential(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ nn.Conv2d(n\_state,\ n\_mlp,\ kernel\_size=1),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ nn.GELU(),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ nn.Conv2d(n\_mlp,\ n\_state,\ kernel\_size=1)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ )}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+models/\+convert-\/whisper-\/to-\/coreml.\+py\end{DoxyCompactItemize}

@@ -1,0 +1,85 @@
+\doxysection{libdl.\+h}
+\hypertarget{libdl_8h_source}{}\label{libdl_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/libdl.h@{whisper.cpp/ggml/src/ggml-\/hexagon/libdl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#\ \ \ define\ WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#\ \ \ ifndef\ NOMINMAX}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ NOMINMAX}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#\ \ \ include\ <windows.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#\ \ \ include\ <winevt.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ \ \ include\ <dlfcn.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ \ \ include\ <unistd.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }fs\ =\ std::filesystem;}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{using\ }dl\_handle\ =\ std::remove\_pointer\_t<HMODULE>;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdl__handle__deleter}{dl\_handle\_deleter}}\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ operator()(HMODULE\ handle)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ FreeLibrary(handle);}
+\DoxyCodeLine{00025\ \ \ \ \ \}}
+\DoxyCodeLine{00026\ \};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ dl\_handle\ *\ dl\_load\_library(\textcolor{keyword}{const}\ fs::path\ \&\ path)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ suppress\ error\ dialogs\ for\ missing\ DLLs}}
+\DoxyCodeLine{00030\ \ \ \ \ DWORD\ old\_mode\ =\ SetErrorMode(SEM\_FAILCRITICALERRORS);}
+\DoxyCodeLine{00031\ \ \ \ \ SetErrorMode(old\_mode\ |\ SEM\_FAILCRITICALERRORS);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ HMODULE\ handle\ =\ LoadLibraryW(path.wstring().c\_str());}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ SetErrorMode(old\_mode);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{return}\ handle;}
+\DoxyCodeLine{00038\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ *\ dl\_get\_sym(dl\_handle\ *\ handle,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ DWORD\ old\_mode\ =\ SetErrorMode(SEM\_FAILCRITICALERRORS);}
+\DoxyCodeLine{00042\ \ \ \ \ SetErrorMode(old\_mode\ |\ SEM\_FAILCRITICALERRORS);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ p\ =\ (\textcolor{keywordtype}{void}\ *)\ GetProcAddress(handle,\ name);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ SetErrorMode(old\_mode);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{return}\ p;}
+\DoxyCodeLine{00049\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ dl\_error()\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00053\ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{using\ }dl\_handle\ =\ void;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdl__handle__deleter}{dl\_handle\_deleter}}\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ operator()(\textcolor{keywordtype}{void}\ *\ handle)\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ dlclose(handle);}
+\DoxyCodeLine{00062\ \ \ \ \ \}}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ dl\_handle\ *\ dl\_load\_library(\textcolor{keyword}{const}\ fs::path\ \&\ path)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ dl\_handle\ *\ handle\ =\ dlopen(path.string().c\_str(),\ RTLD\_NOW\ |\ RTLD\_LOCAL);}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{return}\ handle;}
+\DoxyCodeLine{00068\ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ *\ dl\_get\_sym(dl\_handle\ *\ handle,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{return}\ dlsym(handle,\ name);}
+\DoxyCodeLine{00072\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ dl\_error()\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *rslt\ =\ dlerror();}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{return}\ rslt\ !=\ \textcolor{keyword}{nullptr}\ ?\ rslt\ :\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00077\ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

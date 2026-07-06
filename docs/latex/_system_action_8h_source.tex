@@ -1,0 +1,40 @@
+\doxysection{System\+Action.\+h}
+\hypertarget{_system_action_8h_source}{}\label{_system_action_8h_source}\doxymbox{\hyperlink{_system_action_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{action_8h}{action.h}}"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{MediaCommand}}\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662a6a216efc529825c60a4a4c0bc99ad77f}{PLAY}},}
+\DoxyCodeLine{00031\ \ \ \ \ \doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662a291554596c183e837f0a6bec3767c891}{PAUSE}},}
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662a1252c45651289c0b553a30d27bb5ae9b}{TOGGLE}}}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_system_action_a60846f8630dbc52c84e96fab59841604}{SystemAction}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_action_adf6d17666645657d71bee9f12386db6b}{Action}}\ \{}
+\DoxyCodeLine{00046\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_system_action_a60846f8630dbc52c84e96fab59841604}{SystemAction}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_configuration}{Configuration}}\&\ cfg,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{MediaCommand}}\ cmd\ =\ \doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662a1252c45651289c0b553a30d27bb5ae9b}{MediaCommand::TOGGLE}});}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_system_action_af99d42d8f8416f5f454a7594c875944c}{execute}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00078\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_system_action_ad2f7ac9470ceb9cfae3d9451f4a8e1a8}{describe}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_system_action_ac99b06fac5cee3b73332c4d60f12f697}{setCommand}}(\doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{MediaCommand}}\ cmd)\ \{\ \doxymbox{\hyperlink{class_system_action_a674f113e10cd7ec8caacb9c4c056680f}{command}}\ =\ cmd;\ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00089\ \ \ \ \ \doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{MediaCommand}}\ \doxymbox{\hyperlink{class_system_action_a674f113e10cd7ec8caacb9c4c056680f}{command}};\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_system_action_a543a25731e5b2a4595c9ddc73d92c615}{sendMediaKey}}(\textcolor{keyword}{const}\ std::string\&\ linuxCmd,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ macCmd,}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ winCmd)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_system_action_a3075a13ef1971969efb38bf187f97e43}{sendMediaKeyPlay}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_system_action_a21ffe7cc708a92c633abbcde5763edc6}{sendMediaKeyPause}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00142\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_system_action_ac21dafd160063cbafe9da06ce23fd925}{detectActivePlayer}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00143\ \};}
+
+\end{DoxyCode}

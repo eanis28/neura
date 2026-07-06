@@ -1,0 +1,43 @@
+\doxysection{ggml-\/openvino.h}
+\hypertarget{ggml-openvino_8h_source}{}\label{ggml-openvino_8h_source}\index{whisper.cpp/ggml/include/ggml-\/openvino.h@{whisper.cpp/ggml/include/ggml-\/openvino.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ GGML\_OPENVINO\_NAME\ "{}OPENVINO"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ backend\ API}}
+\DoxyCodeLine{00014\ GGML\_BACKEND\_API\ ggml\_backend\_t\ ggml\_backend\_openvino\_init(\textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_is\_openvino(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_buffer\_is\_openvino(ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_buft\_is\_openvino(ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_buft\_is\_openvino\_host(ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{size\_t}\ ggml\_backend\_openvino\_buffer\_get\_ctx\_id(ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ device\ buffer}}
+\DoxyCodeLine{00027\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_openvino\_buffer\_type(\textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_openvino\_host\_buffer\_type(\textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_backend\_openvino\_get\_device\_count(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_openvino\_reg(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

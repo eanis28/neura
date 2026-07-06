@@ -1,0 +1,81 @@
+\doxysection{WChess Class Reference}
+\hypertarget{class_w_chess}{}\label{class_w_chess}\index{WChess@{WChess}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_w_chess_1_1callbacks}{callbacks}}
+\item 
+struct \doxymbox{\hyperlink{struct_w_chess_1_1settings}{settings}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_w_chess_a8fa828cd416991ee1bafa261183a067d}\label{class_w_chess_a8fa828cd416991ee1bafa261183a067d} 
+using {\bfseries Check\+Running\+Cb} = bool (\texorpdfstring{$\ast$}{*})()
+\item 
+\Hypertarget{class_w_chess_a89070ee742e396980ffec53f3a70ec73}\label{class_w_chess_a89070ee742e396980ffec53f3a70ec73} 
+using {\bfseries Get\+Audio\+Cb} = bool (\texorpdfstring{$\ast$}{*})(std::\+vector$<$float$>$ \&)
+\item 
+\Hypertarget{class_w_chess_a0fcd80d81abf80b39b1f16749162395d}\label{class_w_chess_a0fcd80d81abf80b39b1f16749162395d} 
+using {\bfseries Set\+Moves\+Cb} = void (\texorpdfstring{$\ast$}{*})(const std::\+string \&, float)
+\item 
+\Hypertarget{class_w_chess_a35217278a5f913c941faafd8e1ec0397}\label{class_w_chess_a35217278a5f913c941faafd8e1ec0397} 
+using {\bfseries Set\+Grammar\+Cb} = void (\texorpdfstring{$\ast$}{*})(const std::\+string \&)
+\item 
+\Hypertarget{class_w_chess_a50ce0faac6a5317424bf9d97749966fd}\label{class_w_chess_a50ce0faac6a5317424bf9d97749966fd} 
+using {\bfseries Clear\+Audio\+Cb} = void (\texorpdfstring{$\ast$}{*})()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_w_chess_a2230dc09e7925eef0b47f38cd7c128fd}\label{class_w_chess_a2230dc09e7925eef0b47f38cd7c128fd} 
+{\bfseries WChess} (\doxymbox{\hyperlink{structwhisper__context}{whisper\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, const \doxymbox{\hyperlink{structwhisper__full__params}{whisper\+\_\+full\+\_\+params}} \&wparams, \doxymbox{\hyperlink{struct_w_chess_1_1callbacks}{callbacks}} cb, \doxymbox{\hyperlink{struct_w_chess_1_1settings}{settings}} s)
+\item 
+\Hypertarget{class_w_chess_a67b45d3849fd4393bc0d165e1ab95aa9}\label{class_w_chess_a67b45d3849fd4393bc0d165e1ab95aa9} 
+void {\bfseries run} ()
+\item 
+\Hypertarget{class_w_chess_add47b1ea3d8710a53befbbec30e0ee8a}\label{class_w_chess_add47b1ea3d8710a53befbbec30e0ee8a} 
+std::\+string {\bfseries stringify\+\_\+board} () const
+\item 
+\Hypertarget{class_w_chess_a83dc5293618eaf89c331b14c7d495711}\label{class_w_chess_a83dc5293618eaf89c331b14c7d495711} 
+std::\+string {\bfseries get\+\_\+grammar} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_w_chess_a92ca9eac71300f261c5288f6bbaa96bd}\label{class_w_chess_a92ca9eac71300f261c5288f6bbaa96bd} 
+bool {\bfseries get\+\_\+audio} (std::\+vector$<$ float $>$ \&pcmf32) const
+\item 
+\Hypertarget{class_w_chess_a21756f8ebb9c8578700c71dafc7eeb2d}\label{class_w_chess_a21756f8ebb9c8578700c71dafc7eeb2d} 
+void {\bfseries set\+\_\+move} (const std::\+string \&moves, float prob) const
+\item 
+\Hypertarget{class_w_chess_a2a6794a312fa09da77307277bceefc4b}\label{class_w_chess_a2a6794a312fa09da77307277bceefc4b} 
+void {\bfseries set\+\_\+grammar} (const std::\+string \&grammar) const
+\item 
+\Hypertarget{class_w_chess_aa9a13ca90e9b8a872b5e5e462c4f32e6}\label{class_w_chess_aa9a13ca90e9b8a872b5e5e462c4f32e6} 
+std::\+string {\bfseries transcribe} (const std::\+vector$<$ float $>$ \&pcmf32, float \&logprob\+\_\+min, float \&logprob\+\_\+sum, int \&n\+\_\+tokens, int64\+\_\+t \&t\+\_\+ms)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_w_chess_a3c83c57dfc309ca444eedb2afd19bb91}\label{class_w_chess_a3c83c57dfc309ca444eedb2afd19bb91} 
+\doxymbox{\hyperlink{structwhisper__context}{whisper\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries m\+\_\+ctx}
+\item 
+\Hypertarget{class_w_chess_a2e0ab3e940c3545c16078f4609168a43}\label{class_w_chess_a2e0ab3e940c3545c16078f4609168a43} 
+\doxymbox{\hyperlink{structwhisper__full__params}{whisper\+\_\+full\+\_\+params}} {\bfseries m\+\_\+wparams}
+\item 
+\Hypertarget{class_w_chess_adb7c614f4b3dac11f8614910df7b34e2}\label{class_w_chess_adb7c614f4b3dac11f8614910df7b34e2} 
+const \doxymbox{\hyperlink{struct_w_chess_1_1callbacks}{callbacks}} {\bfseries m\+\_\+cb}
+\item 
+\Hypertarget{class_w_chess_a0bee73a53cb0ef5f7cefccf62d054533}\label{class_w_chess_a0bee73a53cb0ef5f7cefccf62d054533} 
+const \doxymbox{\hyperlink{struct_w_chess_1_1settings}{settings}} {\bfseries m\+\_\+settings}
+\item 
+\Hypertarget{class_w_chess_a836707548639b595000fc65d172c9034}\label{class_w_chess_a836707548639b595000fc65d172c9034} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_chessboard}{Chessboard}} $>$ {\bfseries m\+\_\+board}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+wchess/\+libwchess/\+WChess.\+h\item 
+whisper.\+cpp/\+examples/\+wchess/\+libwchess/\+WChess.\+cpp\end{DoxyCompactItemize}

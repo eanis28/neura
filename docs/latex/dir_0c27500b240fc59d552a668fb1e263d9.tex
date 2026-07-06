@@ -1,0 +1,105 @@
+\doxysection{whisper.\+cpp/\+tests/\+earnings21 Directory Reference}
+\hypertarget{dir_0c27500b240fc59d552a668fb1e263d9}{}\label{dir_0c27500b240fc59d552a668fb1e263d9}\index{whisper.cpp/tests/earnings21 Directory Reference@{whisper.cpp/tests/earnings21 Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \doxymbox{\hyperlink{dir_d7f02dafcd6e8459d260dd74af167b0b}{normalizers}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md192}{}\doxysubsection{\texorpdfstring{whisper.\+cpp/\+tests/\+earnings21}{whisper.\+cpp/\+tests/\+earnings21}}\label{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md192}
+\href{https://arxiv.org/abs/2104.11348}{\texttt{Earnings-\/21}} is a real-\/world benchmark dataset that contains 39-\/hours of long-\/form English speech, sourced from public earning calls.
+
+This directory contains a set of scripts to evaluate the performance of whisper.\+cpp on Earnings-\/21 corpus.\hypertarget{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md193}{}\doxysubsection{\texorpdfstring{Quick Start}{Quick Start}}\label{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md193}
+
+\begin{DoxyEnumerate}
+\item (Pre-\/requirement) Compile {\ttfamily whisper-\/cli} and prepare the Whisper model in {\ttfamily ggml} format.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ \#\ Execute\ the\ commands\ below\ in\ the\ project\ root\ dir.}
+\DoxyCodeLine{\$\ cmake\ -\/B\ build}
+\DoxyCodeLine{\$\ cmake\ -\/-\/build\ build\ -\/-\/config\ Release}
+\DoxyCodeLine{\$\ ./models/download-\/ggml-\/model.sh\ tiny}
+
+\end{DoxyCode}
+
+
+Consult \doxylink{dir_772ead685b9d496e78573f3740fb4e67}{whisper.cpp/\+\+README.md} for more details.
+\item Download the audio files.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ make\ get-\/audio}
+
+\end{DoxyCode}
+
+\item Set up the environment to compute WER score.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pip\ install\ -\/r\ requirements.txt}
+
+\end{DoxyCode}
+
+
+For example, if you use {\ttfamily virtualenv}, you can set up it as follows:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ python3\ -\/m\ venv\ venv}
+\DoxyCodeLine{\$\ .\ venv/bin/activate}
+\DoxyCodeLine{\$\ pip\ install\ -\/r\ requirements.txt}
+
+\end{DoxyCode}
+
+\item Run the benchmark test.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ make}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}\hypertarget{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md194}{}\doxysubsection{\texorpdfstring{How-\/to guides}{How-\/to guides}}\label{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md194}
+\hypertarget{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md195}{}\doxysubsubsection{\texorpdfstring{How to change the inference parameters}{How to change the inference parameters}}\label{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md195}
+Create {\ttfamily eval.\+conf} and override variables.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{WHISPER\_MODEL\ =\ large-\/v3-\/turbo}
+\DoxyCodeLine{WHISPER\_FLAGS\ =\ -\/-\/no-\/prints\ -\/-\/threads\ 8\ -\/-\/language\ en\ -\/-\/output-\/txt}
+
+\end{DoxyCode}
+
+
+Check out {\ttfamily eval.\+mk} for more details.\hypertarget{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md196}{}\doxysubsubsection{\texorpdfstring{How to perform the benchmark test on a 10-\/hour subset}{How to perform the benchmark test on a 10-\/hour subset}}\label{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md196}
+Earnings-\/21 provides a small but representative subset (approximately 10-\/hour audio data) to evaluate ASR systems quickly.
+
+To switch to the subset, create {\ttfamily eval.\+conf} and add the following line:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{EARNINGS21\_EVAL10\ =\ yes}
+
+\end{DoxyCode}
+\hypertarget{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md197}{}\doxysubsubsection{\texorpdfstring{How to run the benchmark test using VAD}{How to run the benchmark test using VAD}}\label{dir_0c27500b240fc59d552a668fb1e263d9_autotoc_md197}
+First, you need to download a VAD model:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ \#\ Execute\ the\ commands\ below\ in\ the\ project\ root\ dir.}
+\DoxyCodeLine{\$\ ./models/download-\/vad-\/model.sh\ silero-\/v6.2.0}
+
+\end{DoxyCode}
+
+
+Create {\ttfamily eval.\+conf} with the following content:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{WHISPER\_FLAGS\ =\ -\/-\/no-\/prints\ -\/-\/language\ en\ -\/-\/output-\/txt\ -\/-\/vad\ -\/-\/vad-\/model\ ../../models/ggml-\/silero-\/v6.2.0.bin}
+
+\end{DoxyCode}
+ 

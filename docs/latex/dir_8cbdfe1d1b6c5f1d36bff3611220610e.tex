@@ -1,0 +1,72 @@
+\doxysection{whisper.\+cpp/\+examples/\+cli Directory Reference}
+\hypertarget{dir_8cbdfe1d1b6c5f1d36bff3611220610e}{}\label{dir_8cbdfe1d1b6c5f1d36bff3611220610e}\index{whisper.cpp/examples/cli Directory Reference@{whisper.cpp/examples/cli Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_8cbdfe1d1b6c5f1d36bff3611220610e_autotoc_md65}{}\doxysubsection{\texorpdfstring{whisper.\+cpp/\+examples/\+cli}{whisper.\+cpp/\+examples/\+cli}}\label{dir_8cbdfe1d1b6c5f1d36bff3611220610e_autotoc_md65}
+This is the main example demonstrating most of the functionality of the Whisper model. It can be used as a reference for using the {\ttfamily whisper.\+cpp} library in other projects.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/bin/whisper-\/cli\ -\/h}
+\DoxyCodeLine{}
+\DoxyCodeLine{usage:\ ./build/bin/whisper-\/cli\ [options]\ file0\ file1\ ...}
+\DoxyCodeLine{supported\ audio\ formats:\ flac,\ mp3,\ ogg,\ wav}
+\DoxyCodeLine{}
+\DoxyCodeLine{options:}
+\DoxyCodeLine{\ \ -\/h,\ \ \ \ \ \ \ \ -\/-\/help\ \ \ \ \ \ \ \ \ \ \ \ \ \ [default]\ show\ this\ help\ message\ and\ exit}
+\DoxyCodeLine{\ \ -\/t\ N,\ \ \ \ \ \ -\/-\/threads\ N\ \ \ \ \ \ \ \ \ [4\ \ \ \ \ \ ]\ number\ of\ threads\ to\ use\ during\ computation}
+\DoxyCodeLine{\ \ -\/p\ N,\ \ \ \ \ \ -\/-\/processors\ N\ \ \ \ \ \ [1\ \ \ \ \ \ ]\ number\ of\ processors\ to\ use\ during\ computation}
+\DoxyCodeLine{\ \ -\/ot\ N,\ \ \ \ \ -\/-\/offset-\/t\ N\ \ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ time\ offset\ in\ milliseconds}
+\DoxyCodeLine{\ \ -\/on\ N,\ \ \ \ \ -\/-\/offset-\/n\ N\ \ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ segment\ index\ offset}
+\DoxyCodeLine{\ \ -\/d\ \ N,\ \ \ \ \ -\/-\/duration\ N\ \ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ duration\ of\ audio\ to\ process\ in\ milliseconds}
+\DoxyCodeLine{\ \ -\/mc\ N,\ \ \ \ \ -\/-\/max-\/context\ N\ \ \ \ \ [-\/1\ \ \ \ \ ]\ maximum\ number\ of\ text\ context\ tokens\ to\ store}
+\DoxyCodeLine{\ \ -\/ml\ N,\ \ \ \ \ -\/-\/max-\/len\ N\ \ \ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ maximum\ segment\ length\ in\ characters}
+\DoxyCodeLine{\ \ -\/sow,\ \ \ \ \ \ -\/-\/split-\/on-\/word\ \ \ \ \ [false\ \ ]\ split\ on\ word\ rather\ than\ on\ token}
+\DoxyCodeLine{\ \ -\/bo\ N,\ \ \ \ \ -\/-\/best-\/of\ N\ \ \ \ \ \ \ \ \ [5\ \ \ \ \ \ ]\ number\ of\ best\ candidates\ to\ keep}
+\DoxyCodeLine{\ \ -\/bs\ N,\ \ \ \ \ -\/-\/beam-\/size\ N\ \ \ \ \ \ \ [5\ \ \ \ \ \ ]\ beam\ size\ for\ beam\ search}
+\DoxyCodeLine{\ \ -\/ac\ N,\ \ \ \ \ -\/-\/audio-\/ctx\ N\ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ audio\ context\ size\ (0\ -\/\ all)}
+\DoxyCodeLine{\ \ -\/wt\ N,\ \ \ \ \ -\/-\/word-\/thold\ N\ \ \ \ \ \ [0.01\ \ \ ]\ word\ timestamp\ probability\ threshold}
+\DoxyCodeLine{\ \ -\/et\ N,\ \ \ \ \ -\/-\/entropy-\/thold\ N\ \ \ [2.40\ \ \ ]\ entropy\ threshold\ for\ decoder\ fail}
+\DoxyCodeLine{\ \ -\/lpt\ N,\ \ \ \ -\/-\/logprob-\/thold\ N\ \ \ [-\/1.00\ \ ]\ log\ probability\ threshold\ for\ decoder\ fail}
+\DoxyCodeLine{\ \ -\/nth\ N,\ \ \ \ -\/-\/no-\/speech-\/thold\ N\ [0.60\ \ \ ]\ no\ speech\ threshold}
+\DoxyCodeLine{\ \ -\/tp,\ \ \ \ \ \ \ -\/-\/temperature\ N\ \ \ \ \ [0.00\ \ \ ]\ The\ sampling\ temperature,\ between\ 0\ and\ 1}
+\DoxyCodeLine{\ \ -\/tpi,\ \ \ \ \ \ -\/-\/temperature-\/inc\ N\ [0.20\ \ \ ]\ The\ increment\ of\ temperature,\ between\ 0\ and\ 1}
+\DoxyCodeLine{\ \ -\/debug,\ \ \ \ -\/-\/debug-\/mode\ \ \ \ \ \ \ \ [false\ \ ]\ enable\ debug\ mode\ (eg.\ dump\ log\_mel)}
+\DoxyCodeLine{\ \ -\/tr,\ \ \ \ \ \ \ -\/-\/translate\ \ \ \ \ \ \ \ \ [false\ \ ]\ translate\ from\ source\ language\ to\ english}
+\DoxyCodeLine{\ \ -\/di,\ \ \ \ \ \ \ -\/-\/diarize\ \ \ \ \ \ \ \ \ \ \ [false\ \ ]\ stereo\ audio\ diarization}
+\DoxyCodeLine{\ \ -\/tdrz,\ \ \ \ \ -\/-\/tinydiarize\ \ \ \ \ \ \ [false\ \ ]\ enable\ tinydiarize\ (requires\ a\ tdrz\ model)}
+\DoxyCodeLine{\ \ -\/nf,\ \ \ \ \ \ \ -\/-\/no-\/fallback\ \ \ \ \ \ \ [false\ \ ]\ do\ not\ use\ temperature\ fallback\ while\ decoding}
+\DoxyCodeLine{\ \ -\/otxt,\ \ \ \ \ -\/-\/output-\/txt\ \ \ \ \ \ \ \ [false\ \ ]\ output\ result\ in\ a\ text\ file}
+\DoxyCodeLine{\ \ -\/ovtt,\ \ \ \ \ -\/-\/output-\/vtt\ \ \ \ \ \ \ \ [false\ \ ]\ output\ result\ in\ a\ vtt\ file}
+\DoxyCodeLine{\ \ -\/osrt,\ \ \ \ \ -\/-\/output-\/srt\ \ \ \ \ \ \ \ [false\ \ ]\ output\ result\ in\ a\ srt\ file}
+\DoxyCodeLine{\ \ -\/olrc,\ \ \ \ \ -\/-\/output-\/lrc\ \ \ \ \ \ \ \ [false\ \ ]\ output\ result\ in\ a\ lrc\ file}
+\DoxyCodeLine{\ \ -\/owts,\ \ \ \ \ -\/-\/output-\/words\ \ \ \ \ \ [false\ \ ]\ output\ script\ for\ generating\ karaoke\ video}
+\DoxyCodeLine{\ \ -\/fp,\ \ \ \ \ \ \ -\/-\/font-\/path\ \ \ \ \ \ \ \ \ [/System/Library/Fonts/Supplemental/Courier\ New\ Bold.ttf]\ path\ to\ a\ monospace\ font\ for\ karaoke\ video}
+\DoxyCodeLine{\ \ -\/ocsv,\ \ \ \ \ -\/-\/output-\/csv\ \ \ \ \ \ \ \ [false\ \ ]\ output\ result\ in\ a\ CSV\ file}
+\DoxyCodeLine{\ \ -\/oj,\ \ \ \ \ \ \ -\/-\/output-\/json\ \ \ \ \ \ \ [false\ \ ]\ output\ result\ in\ a\ JSON\ file}
+\DoxyCodeLine{\ \ -\/ojf,\ \ \ \ \ \ -\/-\/output-\/json-\/full\ \ [false\ \ ]\ include\ more\ information\ in\ the\ JSON\ file}
+\DoxyCodeLine{\ \ -\/of\ FNAME,\ -\/-\/output-\/file\ FNAME\ [\ \ \ \ \ \ \ ]\ output\ file\ path\ (without\ file\ extension)}
+\DoxyCodeLine{\ \ -\/np,\ \ \ \ \ \ \ -\/-\/no-\/prints\ \ \ \ \ \ \ \ \ [false\ \ ]\ do\ not\ print\ anything\ other\ than\ the\ results}
+\DoxyCodeLine{\ \ -\/ps,\ \ \ \ \ \ \ -\/-\/print-\/special\ \ \ \ \ [false\ \ ]\ print\ special\ tokens}
+\DoxyCodeLine{\ \ -\/pc,\ \ \ \ \ \ \ -\/-\/print-\/colors\ \ \ \ \ \ [false\ \ ]\ print\ colors}
+\DoxyCodeLine{\ \ -\/pp,\ \ \ \ \ \ \ -\/-\/print-\/progress\ \ \ \ [false\ \ ]\ print\ progress}
+\DoxyCodeLine{\ \ -\/nt,\ \ \ \ \ \ \ -\/-\/no-\/timestamps\ \ \ \ \ [false\ \ ]\ do\ not\ print\ timestamps}
+\DoxyCodeLine{\ \ -\/l\ LANG,\ \ \ -\/-\/language\ LANG\ \ \ \ \ [en\ \ \ \ \ ]\ spoken\ language\ ('auto'\ for\ auto-\/detect)}
+\DoxyCodeLine{\ \ -\/dl,\ \ \ \ \ \ \ -\/-\/detect-\/language\ \ \ [false\ \ ]\ exit\ after\ automatically\ detecting\ language}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ -\/-\/prompt\ PROMPT\ \ \ \ \ [\ \ \ \ \ \ \ ]\ initial\ prompt\ (max\ n\_text\_ctx/2\ tokens)}
+\DoxyCodeLine{\ \ -\/m\ FNAME,\ \ -\/-\/model\ FNAME\ \ \ \ \ \ \ [models/ggml-\/base.en.bin]\ model\ path}
+\DoxyCodeLine{\ \ -\/f\ FNAME,\ \ -\/-\/file\ FNAME\ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ input\ audio\ file\ path}
+\DoxyCodeLine{\ \ -\/oved\ D,\ \ \ -\/-\/ov-\/e-\/device\ DNAME\ [CPU\ \ \ \ ]\ the\ OpenVINO\ device\ used\ for\ encode\ inference}
+\DoxyCodeLine{\ \ -\/dtw\ MODEL\ -\/-\/dtw\ MODEL\ \ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ compute\ token-\/level\ timestamps}
+\DoxyCodeLine{\ \ -\/ls,\ \ \ \ \ \ \ -\/-\/log-\/score\ \ \ \ \ \ \ \ \ [false\ \ ]\ log\ best\ decoder\ scores\ of\ tokens}
+\DoxyCodeLine{\ \ -\/ng,\ \ \ \ \ \ \ -\/-\/no-\/gpu\ \ \ \ \ \ \ \ \ \ \ \ [false\ \ ]\ disable\ GPU}
+\DoxyCodeLine{\ \ -\/fa,\ \ \ \ \ \ \ -\/-\/flash-\/attn\ \ \ \ \ \ \ \ [false\ \ ]\ flash\ attention}
+\DoxyCodeLine{\ \ -\/sns,\ \ \ \ \ \ -\/-\/suppress-\/nst\ \ \ \ \ \ [false\ \ ]\ suppress\ non-\/speech\ tokens}
+\DoxyCodeLine{\ \ -\/-\/suppress-\/regex\ REGEX\ \ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ regular\ expression\ matching\ tokens\ to\ suppress}
+\DoxyCodeLine{\ \ -\/-\/grammar\ GRAMMAR\ \ \ \ \ \ \ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ GBNF\ grammar\ to\ guide\ decoding}
+\DoxyCodeLine{\ \ -\/-\/grammar-\/rule\ RULE\ \ \ \ \ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ top-\/level\ GBNF\ grammar\ rule\ name}
+\DoxyCodeLine{\ \ -\/-\/grammar-\/penalty\ N\ \ \ \ \ \ \ \ \ \ \ \ [100.0\ \ ]\ scales\ down\ logits\ of\ nongrammar\ tokens}
+
+\end{DoxyCode}
+ 

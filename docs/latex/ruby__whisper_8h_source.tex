@@ -1,0 +1,114 @@
+\doxysection{ruby\+\_\+whisper.\+h}
+\hypertarget{ruby__whisper_8h_source}{}\label{ruby__whisper_8h_source}\index{whisper.cpp/bindings/ruby/ext/ruby\_whisper.h@{whisper.cpp/bindings/ruby/ext/ruby\_whisper.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ RUBY\_WHISPER\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ RUBY\_WHISPER\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <ruby.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <ruby/util.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <ruby/memory\_view.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}whisper.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00010\ \ \ VALUE\ *context;}
+\DoxyCodeLine{00011\ \ \ VALUE\ user\_data;}
+\DoxyCodeLine{00012\ \ \ VALUE\ callback;}
+\DoxyCodeLine{00013\ \ \ VALUE\ callbacks;}
+\DoxyCodeLine{00014\ \}\ \doxymbox{\hyperlink{structruby__whisper__callback__container}{ruby\_whisper\_callback\_container}};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00017\ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *context;}
+\DoxyCodeLine{00018\ \}\ \doxymbox{\hyperlink{structruby__whisper}{ruby\_whisper}};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structruby__whisper__context__params}{ruby\_whisper\_context\_params}}\ \{}
+\DoxyCodeLine{00021\ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ params;}
+\DoxyCodeLine{00022\ \}\ \doxymbox{\hyperlink{structruby__whisper__context__params}{ruby\_whisper\_context\_params}};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00025\ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ params;}
+\DoxyCodeLine{00026\ \ \ \textcolor{keywordtype}{bool}\ diarize;}
+\DoxyCodeLine{00027\ \ \ \doxymbox{\hyperlink{structruby__whisper__callback__container}{ruby\_whisper\_callback\_container}}\ *new\_segment\_callback\_container;}
+\DoxyCodeLine{00028\ \ \ \doxymbox{\hyperlink{structruby__whisper__callback__container}{ruby\_whisper\_callback\_container}}\ *progress\_callback\_container;}
+\DoxyCodeLine{00029\ \ \ \doxymbox{\hyperlink{structruby__whisper__callback__container}{ruby\_whisper\_callback\_container}}\ *encoder\_begin\_callback\_container;}
+\DoxyCodeLine{00030\ \ \ \doxymbox{\hyperlink{structruby__whisper__callback__container}{ruby\_whisper\_callback\_container}}\ *abort\_callback\_container;}
+\DoxyCodeLine{00031\ \ \ VALUE\ vad\_params;}
+\DoxyCodeLine{00032\ \}\ \doxymbox{\hyperlink{structruby__whisper__params}{ruby\_whisper\_params}};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00035\ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__params}{whisper\_vad\_params}}\ params;}
+\DoxyCodeLine{00036\ \}\ \doxymbox{\hyperlink{structruby__whisper__vad__params}{ruby\_whisper\_vad\_params}};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00039\ \ \ VALUE\ context;}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{int}\ index;}
+\DoxyCodeLine{00041\ \}\ \doxymbox{\hyperlink{structruby__whisper__segment}{ruby\_whisper\_segment}};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00044\ \ \ \doxymbox{\hyperlink{structwhisper__token__data}{whisper\_token\_data}}\ *token\_data;}
+\DoxyCodeLine{00045\ \ \ VALUE\ text;}
+\DoxyCodeLine{00046\ \}\ \doxymbox{\hyperlink{structruby__whisper__token}{ruby\_whisper\_token}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00049\ \ \ VALUE\ context;}
+\DoxyCodeLine{00050\ \}\ \doxymbox{\hyperlink{structruby__whisper__model}{ruby\_whisper\_model}};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00053\ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__segments}{whisper\_vad\_segments}}\ *segments;}
+\DoxyCodeLine{00054\ \}\ \doxymbox{\hyperlink{structruby__whisper__vad__segments}{ruby\_whisper\_vad\_segments}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00057\ \ \ VALUE\ segments;}
+\DoxyCodeLine{00058\ \ \ \textcolor{keywordtype}{int}\ index;}
+\DoxyCodeLine{00059\ \}\ \doxymbox{\hyperlink{structruby__whisper__vad__segment}{ruby\_whisper\_vad\_segment}};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00062\ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}}\ *context;}
+\DoxyCodeLine{00063\ \}\ \doxymbox{\hyperlink{structruby__whisper__vad__context}{ruby\_whisper\_vad\_context}};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structparsed__samples__t}{parsed\_samples\_t}}\ \{}
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{float}\ *samples;}
+\DoxyCodeLine{00067\ \ \ \textcolor{keywordtype}{int}\ n\_samples;}
+\DoxyCodeLine{00068\ \ \ rb\_memory\_view\_t\ memview;}
+\DoxyCodeLine{00069\ \ \ \textcolor{keywordtype}{bool}\ memview\_exported;}
+\DoxyCodeLine{00070\ \}\ \doxymbox{\hyperlink{structparsed__samples__t}{parsed\_samples\_t}};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ GetContext(obj,\ rw)\ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\ \ TypedData\_Get\_Struct((obj),\ ruby\_whisper,\ \&ruby\_whisper\_type,\ (rw));\ \(\backslash\)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ if\ ((rw)-\/>context\ ==\ NULL)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\ \ \ \ rb\_raise(rb\_eRuntimeError,\ "{}Not\ initialized"{});\ \(\backslash\)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ GetContextParams(obj,\ rwcp)\ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\ \ TypedData\_Get\_Struct((obj),\ ruby\_whisper\_context\_params,\ \&ruby\_whisper\_context\_params\_type,\ (rwcp));\ \(\backslash\)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ GetToken(obj,\ rwt)\ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\ \ TypedData\_Get\_Struct((obj),\ ruby\_whisper\_token,\ \&ruby\_whisper\_token\_type,\ (rwt));\ \(\backslash\)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\ \ if\ ((rwt)-\/>token\_data\ ==\ NULL)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\ \ \ \ rb\_raise(rb\_eRuntimeError,\ "{}Not\ initialized"{});\ \(\backslash\)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ GetVADContext(obj,\ rwvc)\ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\ \ \ \ TypedData\_Get\_Struct((obj),\ ruby\_whisper\_vad\_context,\ \&ruby\_whisper\_vad\_context\_type,\ (rwvc));\ \(\backslash\)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\ \ \ \ if\ ((rwvc)-\/>context\ ==\ NULL)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\ \ \ \ \ \ rb\_raise(rb\_eRuntimeError,\ "{}Not\ initialized"{});\ \(\backslash\)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\ \ \ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ GetVADParams(obj,\ rwvp)\ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\ \ TypedData\_Get\_Struct((obj),\ ruby\_whisper\_vad\_params,\ \&ruby\_whisper\_vad\_params\_type,\ (rwvp));\ \(\backslash\)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ GetVADSegments(obj,\ rwvss)\ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\ \ TypedData\_Get\_Struct((obj),\ ruby\_whisper\_vad\_segments,\ \&ruby\_whisper\_vad\_segments\_type,\ (rwvss));\ \(\backslash\)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\ \ if\ ((rwvss)-\/>segments\ ==\ NULL)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\ \ \ \ rb\_raise(rb\_eRuntimeError,\ "{}Not\ initialized"{});\ \(\backslash\)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

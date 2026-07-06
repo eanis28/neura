@@ -1,0 +1,5 @@
+<map id="wordToNumber" name="wordToNumber">
+<area shape="rect" id="Node000001" title="Converts a small number word into its integer value." alt="" coords="156,5,265,31"/>
+<area shape="rect" id="Node000002" href="$_voice_command_listener_8cpp.html#a610310e616f693e77df2a3aded1fa45f" title="Parses a timer duration from spoken text." alt="" coords="5,5,108,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,18,108,21,108,16,143,18"/>
+</map>

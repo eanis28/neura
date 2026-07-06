@@ -1,0 +1,45 @@
+\doxysection{op\+\_\+table.\+h}
+\hypertarget{op__table_8h_source}{}\label{op__table_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/openvino/op\_table.h@{whisper.cpp/ggml/src/ggml-\/openvino/openvino/op\_table.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}node\_context.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{namespace\ }ov\ \{}
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }frontend\ \{}
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }ggml\ \{}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }op\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ GGML\_OP\_CONVERTER(op)\ OutputVector\ op(const\ NodeContext\&\ context)}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ GGML\_OP\_CONVERTER(translate\_add);}
+\DoxyCodeLine{00014\ GGML\_OP\_CONVERTER(translate\_cont);}
+\DoxyCodeLine{00015\ GGML\_OP\_CONVERTER(translate\_get\_rows);}
+\DoxyCodeLine{00016\ GGML\_OP\_CONVERTER(translate\_mul);}
+\DoxyCodeLine{00017\ GGML\_OP\_CONVERTER(translate\_mulmat);}
+\DoxyCodeLine{00018\ GGML\_OP\_CONVERTER(translate\_permute);}
+\DoxyCodeLine{00019\ GGML\_OP\_CONVERTER(translate\_reshape);}
+\DoxyCodeLine{00020\ GGML\_OP\_CONVERTER(translate\_rms\_norm);}
+\DoxyCodeLine{00021\ GGML\_OP\_CONVERTER(translate\_rope);}
+\DoxyCodeLine{00022\ GGML\_OP\_CONVERTER(translate\_scale);}
+\DoxyCodeLine{00023\ GGML\_OP\_CONVERTER(translate\_unary\_silu);}
+\DoxyCodeLine{00024\ GGML\_OP\_CONVERTER(translate\_soft\_max);}
+\DoxyCodeLine{00025\ GGML\_OP\_CONVERTER(translate\_transpose);}
+\DoxyCodeLine{00026\ GGML\_OP\_CONVERTER(translate\_view);}
+\DoxyCodeLine{00027\ GGML\_OP\_CONVERTER(translate\_glu\_swiglu);}
+\DoxyCodeLine{00028\ GGML\_OP\_CONVERTER(translate\_glu\_geglu);}
+\DoxyCodeLine{00029\ GGML\_OP\_CONVERTER(translate\_set\_rows);}
+\DoxyCodeLine{00030\ GGML\_OP\_CONVERTER(translate\_cpy);}
+\DoxyCodeLine{00031\ GGML\_OP\_CONVERTER(translate\_flash\_attn\_ext);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \}\ \textcolor{comment}{//\ namespace\ op}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ std::unordered\_map<std::string,\ CreatorFunction>\ get\_supported\_ops();}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \}\ \ \textcolor{comment}{//\ namespace\ ggml}}
+\DoxyCodeLine{00038\ \}\ \ \textcolor{comment}{//\ namespace\ frontend}}
+\DoxyCodeLine{00039\ \}\ \ \textcolor{comment}{//\ namespace\ ov}}
+
+\end{DoxyCode}

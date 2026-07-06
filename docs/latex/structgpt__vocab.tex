@@ -1,0 +1,35 @@
+\doxysection{gpt\+\_\+vocab Struct Reference}
+\hypertarget{structgpt__vocab}{}\label{structgpt__vocab}\index{gpt\_vocab@{gpt\_vocab}}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgpt__vocab_a560c39a4f1743574eb47d2e124c86d69}\label{structgpt__vocab_a560c39a4f1743574eb47d2e124c86d69} 
+using {\bfseries id} = int32\+\_\+t
+\item 
+\Hypertarget{structgpt__vocab_afd0724130bd83e05096ab71aa4774d72}\label{structgpt__vocab_afd0724130bd83e05096ab71aa4774d72} 
+using {\bfseries token} = std::\+string
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgpt__vocab_adf2d4a34c29d95801c79dc6b6e07458e}\label{structgpt__vocab_adf2d4a34c29d95801c79dc6b6e07458e} 
+void {\bfseries add\+\_\+special\+\_\+token} (const std::\+string \&token)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgpt__vocab_ac961e11c3a2d914b0b4e4dd40f595643}\label{structgpt__vocab_ac961e11c3a2d914b0b4e4dd40f595643} 
+std::\+map$<$ token, id $>$ {\bfseries token\+\_\+to\+\_\+id}
+\item 
+\Hypertarget{structgpt__vocab_a35212d5e9a91e89a5bcbb2848413664f}\label{structgpt__vocab_a35212d5e9a91e89a5bcbb2848413664f} 
+std::\+map$<$ id, token $>$ {\bfseries id\+\_\+to\+\_\+token}
+\item 
+\Hypertarget{structgpt__vocab_a6640b1f6ea1be21220e5a7a24b8ccc18}\label{structgpt__vocab_a6640b1f6ea1be21220e5a7a24b8ccc18} 
+std::\+vector$<$ std::\+string $>$ {\bfseries special\+\_\+tokens}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+common.\+h\item 
+whisper.\+cpp/\+examples/\+common.\+cpp\end{DoxyCompactItemize}

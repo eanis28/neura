@@ -1,0 +1,79 @@
+\doxysection{ggml\+\_\+hexagon\+\_\+session Struct Reference}
+\hypertarget{structggml__hexagon__session}{}\label{structggml__hexagon__session}\index{ggml\_hexagon\_session@{ggml\_hexagon\_session}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__hexagon__session_a31ec9e756f58a0c14d56cf902dc7df5e}\label{structggml__hexagon__session_a31ec9e756f58a0c14d56cf902dc7df5e} 
+{\bfseries ggml\+\_\+hexagon\+\_\+session} (int dev\+\_\+id, ggml\+\_\+backend\+\_\+dev\+\_\+t dev) noexcept(false)
+\item 
+\Hypertarget{structggml__hexagon__session_a2c73b1163f912c2dc6b0c4fc4b406ba1}\label{structggml__hexagon__session_a2c73b1163f912c2dc6b0c4fc4b406ba1} 
+void {\bfseries allocate} (int dev\+\_\+id) noexcept(false)
+\item 
+\Hypertarget{structggml__hexagon__session_ab902e6a0f678fd75694ed9bd0f9f0a15}\label{structggml__hexagon__session_ab902e6a0f678fd75694ed9bd0f9f0a15} 
+void {\bfseries release} () noexcept(true)
+\item 
+\Hypertarget{structggml__hexagon__session_af48e6547149302c53b3013ad2af33868}\label{structggml__hexagon__session_af48e6547149302c53b3013ad2af33868} 
+void {\bfseries enqueue} (struct \doxymbox{\hyperlink{structhtp__general__req}{htp\+\_\+general\+\_\+req}} \&req, struct dspqueue\+\_\+buffer \texorpdfstring{$\ast$}{*}bufs, uint32\+\_\+t n\+\_\+bufs, bool sync=false)
+\item 
+\Hypertarget{structggml__hexagon__session_ab4d8ecd3b48fe3bf5136b4995c2de38e}\label{structggml__hexagon__session_ab4d8ecd3b48fe3bf5136b4995c2de38e} 
+void {\bfseries flush} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__hexagon__session_a98a2b8d2ca462480760e8da3a293b135}\label{structggml__hexagon__session_a98a2b8d2ca462480760e8da3a293b135} 
+\doxymbox{\hyperlink{structggml__backend__buffer__type}{ggml\+\_\+backend\+\_\+buffer\+\_\+type}} {\bfseries buffer\+\_\+type} = \{\}
+\item 
+\Hypertarget{structggml__hexagon__session_af017b041f9ef6f9d3eeeb250bd7eb3af}\label{structggml__hexagon__session_af017b041f9ef6f9d3eeeb250bd7eb3af} 
+\doxymbox{\hyperlink{structggml__backend__buffer__type}{ggml\+\_\+backend\+\_\+buffer\+\_\+type}} {\bfseries repack\+\_\+buffer\+\_\+type} = \{\}
+\item 
+\Hypertarget{structggml__hexagon__session_aa2f15f460b0fbe231855c9c88daa3c50}\label{structggml__hexagon__session_aa2f15f460b0fbe231855c9c88daa3c50} 
+std::\+string {\bfseries name}
+\item 
+\Hypertarget{structggml__hexagon__session_ac70391550510b46feb6f64415e7fc034}\label{structggml__hexagon__session_ac70391550510b46feb6f64415e7fc034} 
+remote\+\_\+handle64 {\bfseries handle}
+\item 
+\Hypertarget{structggml__hexagon__session_a8bcbcf5c94e2c9fb6f1f9e44bb341be4}\label{structggml__hexagon__session_a8bcbcf5c94e2c9fb6f1f9e44bb341be4} 
+dspqueue\+\_\+t {\bfseries queue}
+\item 
+\Hypertarget{structggml__hexagon__session_a850532ca986c65450b7f862472c34595}\label{structggml__hexagon__session_a850532ca986c65450b7f862472c34595} 
+uint32\+\_\+t {\bfseries session\+\_\+id}
+\item 
+\Hypertarget{structggml__hexagon__session_a7fa7f65d4b744d3309dbd6196243d6b5}\label{structggml__hexagon__session_a7fa7f65d4b744d3309dbd6196243d6b5} 
+uint32\+\_\+t {\bfseries domain\+\_\+id}
+\item 
+\Hypertarget{structggml__hexagon__session_aef704502366cba9109c946c83dbcb733}\label{structggml__hexagon__session_aef704502366cba9109c946c83dbcb733} 
+uint64\+\_\+t {\bfseries queue\+\_\+id}
+\item 
+\Hypertarget{structggml__hexagon__session_a32073b87f808d10f423957ad5c53bdfe}\label{structggml__hexagon__session_a32073b87f808d10f423957ad5c53bdfe} 
+int {\bfseries dev\+\_\+id}
+\item 
+\Hypertarget{structggml__hexagon__session_a5bbbb490d060b5f3a84d704d5f6ed1c2}\label{structggml__hexagon__session_a5bbbb490d060b5f3a84d704d5f6ed1c2} 
+bool {\bfseries valid\+\_\+session}
+\item 
+\Hypertarget{structggml__hexagon__session_a96065d050101249992de4a689a273e9a}\label{structggml__hexagon__session_a96065d050101249992de4a689a273e9a} 
+bool {\bfseries valid\+\_\+handle}
+\item 
+\Hypertarget{structggml__hexagon__session_a3ffd5bbeeae9e1be0de2b02930af78b4}\label{structggml__hexagon__session_a3ffd5bbeeae9e1be0de2b02930af78b4} 
+bool {\bfseries valid\+\_\+queue}
+\item 
+\Hypertarget{structggml__hexagon__session_a6be00fd242a548bbe917ca82934dc793}\label{structggml__hexagon__session_a6be00fd242a548bbe917ca82934dc793} 
+bool {\bfseries valid\+\_\+iface}
+\item 
+\Hypertarget{structggml__hexagon__session_a90e377ebd24dbe9c919304656e29409d}\label{structggml__hexagon__session_a90e377ebd24dbe9c919304656e29409d} 
+std::\+atomic$<$ int $>$ {\bfseries op\+\_\+pending}
+\item 
+\Hypertarget{structggml__hexagon__session_ac8b1a07a28f2ff6f4d74988343320c81}\label{structggml__hexagon__session_ac8b1a07a28f2ff6f4d74988343320c81} 
+uint32\+\_\+t {\bfseries prof\+\_\+usecs}
+\item 
+\Hypertarget{structggml__hexagon__session_afd21ebd52d25f585bbbf07acef73b475}\label{structggml__hexagon__session_afd21ebd52d25f585bbbf07acef73b475} 
+uint32\+\_\+t {\bfseries prof\+\_\+cycles}
+\item 
+\Hypertarget{structggml__hexagon__session_a8186f936ef0245b4ccc64896607a2b53}\label{structggml__hexagon__session_a8186f936ef0245b4ccc64896607a2b53} 
+uint32\+\_\+t {\bfseries prof\+\_\+pkts}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/hexagon/\+ggml-\/hexagon.\+cpp\end{DoxyCompactItemize}

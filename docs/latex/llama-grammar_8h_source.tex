@@ -1,0 +1,200 @@
+\doxysection{llama-\/grammar.h}
+\hypertarget{llama-grammar_8h_source}{}\label{llama-grammar_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/grammar.h@{whisper.cpp/examples/talk-\/llama/llama-\/grammar.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <regex>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ grammar\ element\ type}}
+\DoxyCodeLine{00013\ \textcolor{keyword}{enum}\ llama\_gretype\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{comment}{//\ end\ of\ rule\ definition}}
+\DoxyCodeLine{00015\ \ \ \ \ LLAMA\_GRETYPE\_END\ \ \ \ \ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{//\ start\ of\ alternate\ definition\ for\ rule}}
+\DoxyCodeLine{00018\ \ \ \ \ LLAMA\_GRETYPE\_ALT\ \ \ \ \ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{comment}{//\ non-\/terminal\ element:\ reference\ to\ rule}}
+\DoxyCodeLine{00021\ \ \ \ \ LLAMA\_GRETYPE\_RULE\_REF\ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ terminal\ element:\ character\ (code\ point)}}
+\DoxyCodeLine{00024\ \ \ \ \ LLAMA\_GRETYPE\_CHAR\ \ \ \ \ \ \ \ \ \ \ =\ 3,}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ inverse\ char(s)\ ([\string^a],\ [\string^a-\/b]\ [\string^abc])}}
+\DoxyCodeLine{00027\ \ \ \ \ LLAMA\_GRETYPE\_CHAR\_NOT\ \ \ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ modifies\ a\ preceding\ LLAMA\_GRETYPE\_CHAR\ or\ LLAMA\_GRETYPE\_CHAR\_ALT\ to}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{//\ be\ an\ inclusive\ range\ ([a-\/z])}}
+\DoxyCodeLine{00031\ \ \ \ \ LLAMA\_GRETYPE\_CHAR\_RNG\_UPPER\ =\ 5,}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ modifies\ a\ preceding\ LLAMA\_GRETYPE\_CHAR\ or}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ LLAMA\_GRETYPE\_CHAR\_RNG\_UPPER\ to\ add\ an\ alternate\ char\ to\ match\ ([ab],\ [a-\/zA])}}
+\DoxyCodeLine{00035\ \ \ \ \ LLAMA\_GRETYPE\_CHAR\_ALT\ \ \ \ \ \ \ =\ 6,}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ any\ character\ (.)}}
+\DoxyCodeLine{00038\ \ \ \ \ LLAMA\_GRETYPE\_CHAR\_ANY\ \ \ \ \ \ \ =\ 7,}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ terminal\ element:\ token\ (<[token-\/id]>)}}
+\DoxyCodeLine{00041\ \ \ \ \ LLAMA\_GRETYPE\_TOKEN\ \ \ \ \ \ \ \ \ \ =\ 8,}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ inverse\ token\ (!<[token-\/id]>)}}
+\DoxyCodeLine{00044\ \ \ \ \ LLAMA\_GRETYPE\_TOKEN\_NOT\ \ \ \ \ \ =\ 9,}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__grammar__element}{llama\_grammar\_element}}\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_gretype\ type;}
+\DoxyCodeLine{00049\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ value;\ \textcolor{comment}{//\ Unicode\ code\ point,\ rule\ ID,\ or\ token\ ID}}
+\DoxyCodeLine{00050\ \}\ \doxymbox{\hyperlink{structllama__grammar__element}{llama\_grammar\_element}};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__partial__utf8}{llama\_partial\_utf8}}\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ uint32\_t\ value;\ \ \ \ \textcolor{comment}{//\ bit\ value\ so\ far\ (unshifted)}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ n\_remain;\ \textcolor{comment}{//\ num\ bytes\ remaining;\ -\/1\ indicates\ invalid\ sequence}}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__grammar__candidate}{llama\_grammar\_candidate}}\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ \ \ \ \ *\ code\_points;}
+\DoxyCodeLine{00060\ \ \ \ \ \doxymbox{\hyperlink{structllama__partial__utf8}{llama\_partial\_utf8}}\ \ \ partial\_utf8;}
+\DoxyCodeLine{00061\ \ \ \ \ llama\_token\ \ \ \ \ \ \ \ \ \ id;}
+\DoxyCodeLine{00062\ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{using\ }llama\_grammar\_rule\ \ =\ std::vector<\ \ \ \ \ \ llama\_grammar\_element>;}
+\DoxyCodeLine{00065\ \textcolor{keyword}{using\ }llama\_grammar\_stack\ =\ std::vector<const\ llama\_grammar\_element\ *>;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{keyword}{using\ }llama\_grammar\_rules\ \ \ \ \ \ =\ std::vector<llama\_grammar\_rule>;}
+\DoxyCodeLine{00068\ \textcolor{keyword}{using\ }llama\_grammar\_stacks\ \ \ \ \ =\ std::vector<llama\_grammar\_stack>;}
+\DoxyCodeLine{00069\ \textcolor{keyword}{using\ }llama\_grammar\_candidates\ =\ std::vector<llama\_grammar\_candidate>;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{//\ TODO:\ remove,\ needed\ for\ tests\ atm}}
+\DoxyCodeLine{00072\ \textcolor{keyword}{const}\ llama\_grammar\_rules\ \ \&\ llama\_grammar\_get\_rules\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ *\ grammar);}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ llama\_grammar\_stacks\ \&\ llama\_grammar\_get\_stacks(\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ *\ grammar);}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//\ takes\ a\ set\ of\ possible\ pushdown\ stacks\ on\ a\ grammar,\ which\ are\ required\ to}}
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ be\ positioned\ at\ a\ character\ range\ (see\ \`{}llama\_grammar\_advance\_stack`),\ and}}
+\DoxyCodeLine{00077\ \textcolor{comment}{//\ produces\ the\ N\ possible\ stacks\ if\ the\ given\ char\ is\ accepted\ at\ those}}
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ positions}}
+\DoxyCodeLine{00079\ \textcolor{keywordtype}{void}\ llama\_grammar\_accept(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ *\ grammar,\ uint32\_t\ chr);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ std::vector<llama\_grammar\_candidate>\ llama\_grammar\_reject\_candidates\_for\_stack(}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_grammar\_rules\ \ \ \ \ \ \&\ rules,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_grammar\_stack\ \ \ \ \ \ \&\ stack,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_grammar\_candidates\ \&\ candidates);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{struct\ }llama\_grammar\_parser\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab;}
+\DoxyCodeLine{00088\ \ \ \ \ std::map<std::string,\ uint32\_t>\ symbol\_ids;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ llama\_grammar\_rules\ rules;}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ llama\_grammar\_parser(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab\ =\ \textcolor{keyword}{nullptr})\ :\ vocab(vocab)\ \{\}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ llama\_grammar\_stack\ c\_rules()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ uint32\_t\ get\_symbol\_id(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ src,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{00097\ \ \ \ \ uint32\_t\ generate\_symbol\_id(\textcolor{keyword}{const}\ std::string\ \&\ base\_name);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{void}\ add\_rule(uint32\_t\ rule\_id,\ \textcolor{keyword}{const}\ llama\_grammar\_rule\ \&\ rule);}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ parse\_alternates(}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ *\ src,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ rule\_name,}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ rule\_id,}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_nested);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ parse\_sequence(}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ \ *\ src,}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \ \&\ rule\_name,}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_grammar\_rule\ \&\ rule,}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_nested);}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ parse\_rule(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ src);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{bool}\ parse(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ src);}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{void}\ print(FILE\ *\ file);}
+\DoxyCodeLine{00117\ \};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__grammar__trigger__pattern}{llama\_grammar\_trigger\_pattern}}\ \{}
+\DoxyCodeLine{00120\ \ \ \ \ std::string\ pattern;}
+\DoxyCodeLine{00121\ \ \ \ \ std::regex\ \ regex;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ find(\textcolor{keyword}{const}\ std::string\ \&\ input)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00124\ \};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{comment}{//\ maintain\ a\ list\ of\ llama\_tokens\ and\ their\ positions\ in\ the\ trigger\_buffer}}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{using\ }token\_pos\ =\ std::pair<llama\_token,\ std::pair<size\_t,\ size\_t>>;}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{comment}{//\ note:\ allow\ null\ vocab\ for\ testing\ (not\ great)}}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab;}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{const}\ llama\_grammar\_rules\ \ rules;\ \ \textcolor{comment}{//\ TODO:\ shared\ ptr}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ llama\_grammar\_stacks\ stacks;}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{//\ buffer\ for\ partially\ generated\ UTF-\/8\ sequence\ from\ accepted\ tokens}}
+\DoxyCodeLine{00137\ \ \ \ \ \doxymbox{\hyperlink{structllama__partial__utf8}{llama\_partial\_utf8}}\ partial\_utf8;}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{comment}{//\ lazy\ grammars\ wait\ for\ trigger\ words\ or\ tokens\ before\ constraining\ the\ sampling.}}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//\ we\ still\ have\ trigger\_tokens\ for\ non-\/lazy\ grammars\ to\ force\ printing\ of\ special\ trigger\ tokens.}}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{//\ (useful\ e.g.\ for\ tool\_choice=required)}}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lazy\ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ awaiting\_trigger\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Initialized\ to\ true\ for\ lazy\ grammars\ only}}
+\DoxyCodeLine{00144\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ trigger\_buffer;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ buffered\ by\ lazy\ grammar.\ Will\ be\ cleared\ once\ trigger\ is\ found.}}
+\DoxyCodeLine{00145\ \ \ \ \ std::vector<token\_pos>\ \ \ trigger\_buffer\_positions;\ \textcolor{comment}{//\ Tokens\ buffered\ by\ lazy\ grammar.\ Used\ to\ replay\ when\ a\ trigger\ is\ found.}}
+\DoxyCodeLine{00146\ \ \ \ \ std::vector<llama\_token>\ trigger\_tokens;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Tokens\ that\ trigger\ a\ lazy\ grammar,\ or\ tokens\ to\ force\ printing\ of\ (even\ if\ special).}}
+\DoxyCodeLine{00147\ \ \ \ \ std::vector<llama\_grammar\_trigger\_pattern>}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trigger\_patterns;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Regular\ expressions\ that\ trigger\ a\ lazy\ grammar.\ Must\ be\ a\ full\ match\ of\ the\ entire\ generated}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ string,\ and\ the\ grammar\ will\ be\ given\ the\ string\ from\ the\ first\ match\ group\ onwards.}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{comment}{//}}
+\DoxyCodeLine{00154\ \textcolor{comment}{//\ internal\ API}}
+\DoxyCodeLine{00155\ \textcolor{comment}{//}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{comment}{//\ note:\ needed\ for\ tests\ (not\ great)}}
+\DoxyCodeLine{00158\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ *\ llama\_grammar\_init\_impl(}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__grammar__element}{llama\_grammar\_element}}\ **\ rules,}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ n\_rules,}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ start\_rule\_index);}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ *\ llama\_grammar\_init\_impl(}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ grammar\_str,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ grammar\_root,}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ lazy,}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **\ trigger\_patterns,}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ num\_trigger\_patterns,}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ trigger\_tokens,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ num\_trigger\_tokens);}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{keywordtype}{void}\ llama\_grammar\_free\_impl(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ *\ grammar);}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ *\ llama\_grammar\_clone\_impl(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ \&\ grammar);}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \textcolor{comment}{//\ TODO:\ move\ the\ API\ below\ as\ member\ functions\ of\ llama\_grammar}}
+\DoxyCodeLine{00179\ \textcolor{keywordtype}{void}\ llama\_grammar\_apply\_impl(}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ \&\ grammar,}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structllama__token__data__array}{llama\_token\_data\_array}}\ *\ cur\_p);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{keywordtype}{void}\ llama\_grammar\_accept\_impl(}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ \&\ grammar,}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ \ \ token);}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{keywordtype}{void}\ llama\_grammar\_accept\_str(}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ \&\ grammar,}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ piece);}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \textcolor{keywordtype}{void}\ llama\_grammar\_accept\_token(}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}}\ \&\ grammar,}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ \ \ token,}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ piece);}
+
+\end{DoxyCode}

@@ -1,0 +1,79 @@
+\doxysection{llama-\/mmap.h}
+\hypertarget{llama-mmap_8h_source}{}\label{llama-mmap_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/mmap.h@{whisper.cpp/examples/talk-\/llama/llama-\/mmap.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cstdio>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__file}{llama\_file}};}
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__mmap}{llama\_mmap}};}
+\DoxyCodeLine{00010\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__mlock}{llama\_mlock}};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{using\ }llama\_files\ \ =\ std::vector<std::unique\_ptr<llama\_file>>;}
+\DoxyCodeLine{00013\ \textcolor{keyword}{using\ }llama\_mmaps\ \ =\ std::vector<std::unique\_ptr<llama\_mmap>>;}
+\DoxyCodeLine{00014\ \textcolor{keyword}{using\ }llama\_mlocks\ =\ std::vector<std::unique\_ptr<llama\_mlock>>;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{struct\ }llama\_file\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ llama\_file(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ fname,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ mode,\ \textcolor{keywordtype}{bool}\ use\_direct\_io\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00018\ \ \ \ \ \string~llama\_file();}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ tell()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ file\_id()\ \textcolor{keyword}{const};\ \textcolor{comment}{//\ fileno\ overload}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ seek(\textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{int}\ whence)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ read\_raw(\textcolor{keywordtype}{void}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ read\_raw\_unsafe(\textcolor{keywordtype}{void}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ read\_aligned\_chunk(\textcolor{keywordtype}{void}\ *\ dest,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00030\ \ \ \ \ uint32\_t\ read\_u32();}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ write\_raw(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ len)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ write\_u32(uint32\_t\ val)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ read\_alignment()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_direct\_io()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00037\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__file_1_1impl}{impl}};}
+\DoxyCodeLine{00039\ \ \ \ \ std::unique\_ptr<impl>\ pimpl;}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{struct\ }llama\_mmap\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ llama\_mmap(\textcolor{keyword}{const}\ llama\_mmap\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00044\ \ \ \ \ llama\_mmap(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__file}{llama\_file}}\ *\ file,\ \textcolor{keywordtype}{size\_t}\ prefetch\ =\ (\textcolor{keywordtype}{size\_t})\ -\/1,\ \textcolor{keywordtype}{bool}\ numa\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00045\ \ \ \ \ \string~llama\_mmap();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ addr()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ unmap\_fragment(\textcolor{keywordtype}{size\_t}\ first,\ \textcolor{keywordtype}{size\_t}\ last);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ SUPPORTED;}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__mmap_1_1impl}{impl}};}
+\DoxyCodeLine{00056\ \ \ \ \ std::unique\_ptr<impl>\ pimpl;}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{struct\ }llama\_mlock\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ llama\_mlock();}
+\DoxyCodeLine{00061\ \ \ \ \ \string~llama\_mlock();}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ init(\textcolor{keywordtype}{void}\ *\ ptr);}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ grow\_to(\textcolor{keywordtype}{size\_t}\ target\_size);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ SUPPORTED;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__mlock_1_1impl}{impl}};}
+\DoxyCodeLine{00070\ \ \ \ \ std::unique\_ptr<impl>\ pimpl;}
+\DoxyCodeLine{00071\ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keywordtype}{size\_t}\ llama\_path\_max();}
+
+\end{DoxyCode}

@@ -1,0 +1,89 @@
+\doxysection{virtgpu-\/utils.h}
+\hypertarget{virtgpu-utils_8h_source}{}\label{virtgpu-utils_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu-\/utils.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu-\/utils.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cerrno>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cstdarg>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cstdio>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <ctime>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ unlikely(x)\ \_\_builtin\_expect(!!(x),\ 0)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ likely(x)\ \ \ \_\_builtin\_expect(!!(x),\ 1)}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifndef\ UNUSED}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ \ \ \ define\ UNUSED(x)\ (void)\ (x)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ IS\_POT(v)\ (((v)\ \&\ ((v)\ -\/\ 1))\ ==\ 0)}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ IS\_POT\_NONZERO(v)\ ((v)\ !=\ 0\ \&\&\ IS\_POT(v))}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ ALIGN\_POT(x,\ pot\_align)\ (((x)\ +\ (pot\_align)\ -\/\ 1)\ \&\ \string~((pot\_align)\ -\/\ 1))}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ p\_atomic\_read(\_v)\ \_\_atomic\_load\_n((\_v),\ \_\_ATOMIC\_ACQUIRE)}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ util\_is\_power\_of\_two\_nonzero64(uint64\_t\ v)\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordflow}{return}\ IS\_POT\_NONZERO(v);}
+\DoxyCodeLine{00033\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint64\_t\ align64(uint64\_t\ value,\ uint64\_t\ alignment)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ assert(util\_is\_power\_of\_two\_nonzero64(alignment));}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{return}\ ALIGN\_POT(value,\ alignment);}
+\DoxyCodeLine{00038\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structlist__head}{list\_head}}\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \doxymbox{\hyperlink{structlist__head}{list\_head}}\ *\ prev;}
+\DoxyCodeLine{00042\ \ \ \ \ \doxymbox{\hyperlink{structlist__head}{list\_head}}\ *\ next;}
+\DoxyCodeLine{00043\ \};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structutil__sparse__array}{util\_sparse\_array}}\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ elem\_size;}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ node\_size\_log2;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ uintptr\_t\ root;}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{void}\ *\ util\_sparse\_array\_get(\doxymbox{\hyperlink{structutil__sparse__array}{util\_sparse\_array}}\ *\ arr,\ uint64\_t\ idx);}
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{void}\ \ \ util\_sparse\_array\_init(\doxymbox{\hyperlink{structutil__sparse__array}{util\_sparse\_array}}\ *\ arr,\ \textcolor{keywordtype}{size\_t}\ elem\_size,\ \textcolor{keywordtype}{size\_t}\ node\_size);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ os\_time\_sleep(int64\_t\ usecs)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ timespec\ time;}
+\DoxyCodeLine{00057\ \ \ \ \ time.tv\_sec\ \ =\ usecs\ /\ 1000000;}
+\DoxyCodeLine{00058\ \ \ \ \ time.tv\_nsec\ =\ (usecs\ \%\ 1000000)\ *\ 1000;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordflow}{while}\ (clock\_nanosleep(CLOCK\_MONOTONIC,\ 0,\ \&time,\ \&time)\ ==\ EINTR)}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ ;}
+\DoxyCodeLine{00061\ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtimer__data}{timer\_data}}\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ start;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ total;}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ count;}
+\DoxyCodeLine{00067\ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ start\_timer(\doxymbox{\hyperlink{structtimer__data}{timer\_data}}\ *\ timer)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ timespec\ ts;}
+\DoxyCodeLine{00071\ \ \ \ \ clock\_gettime(CLOCK\_MONOTONIC,\ \&ts);}
+\DoxyCodeLine{00072\ \ \ \ \ timer-\/>start\ =\ (\textcolor{keywordtype}{long}\ long)\ ts.tv\_sec\ *\ 1000000000LL\ +\ ts.tv\_nsec;}
+\DoxyCodeLine{00073\ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//\ returns\ the\ duration\ in\ ns}}
+\DoxyCodeLine{00076\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ stop\_timer(\doxymbox{\hyperlink{structtimer__data}{timer\_data}}\ *\ timer)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ timespec\ ts;}
+\DoxyCodeLine{00078\ \ \ \ \ clock\_gettime(CLOCK\_MONOTONIC,\ \&ts);}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ timer\_end\ =\ (\textcolor{keywordtype}{long}\ long)\ ts.tv\_sec\ *\ 1000000000LL\ +\ ts.tv\_nsec;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ duration\ =\ (timer\_end\ -\/\ timer-\/>start);}
+\DoxyCodeLine{00082\ \ \ \ \ timer-\/>total\ +=\ duration;}
+\DoxyCodeLine{00083\ \ \ \ \ timer-\/>count\ +=\ 1;}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{return}\ duration;}
+\DoxyCodeLine{00086\ \}}
+
+\end{DoxyCode}

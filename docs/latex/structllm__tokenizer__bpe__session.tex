@@ -1,0 +1,55 @@
+\doxysection{llm\+\_\+tokenizer\+\_\+bpe\+\_\+session Struct Reference}
+\hypertarget{structllm__tokenizer__bpe__session}{}\label{structllm__tokenizer__bpe__session}\index{llm\_tokenizer\_bpe\_session@{llm\_tokenizer\_bpe\_session}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_ad664c4e6b2b61dde648b99e397511210}\label{structllm__tokenizer__bpe__session_ad664c4e6b2b61dde648b99e397511210} 
+{\bfseries llm\+\_\+tokenizer\+\_\+bpe\+\_\+session} (const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \&vocab, const \doxymbox{\hyperlink{structllm__tokenizer__bpe}{llm\+\_\+tokenizer\+\_\+bpe}} \&tokenizer)
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_af55d529343a112a29a1dee62d1ec6b1c}\label{structllm__tokenizer__bpe__session_af55d529343a112a29a1dee62d1ec6b1c} 
+bool {\bfseries append\+\_\+bos} (std::\+vector$<$ llama\+\_\+token $>$ \&output) const
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_a87ce0a158c845ba0acbc39d22f848c0e}\label{structllm__tokenizer__bpe__session_a87ce0a158c845ba0acbc39d22f848c0e} 
+bool {\bfseries append\+\_\+eos} (std::\+vector$<$ llama\+\_\+token $>$ \&output) const
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_adf627d4b7b99b42df1fa08ce7fe6c2f0}\label{structllm__tokenizer__bpe__session_adf627d4b7b99b42df1fa08ce7fe6c2f0} 
+void {\bfseries check\+\_\+double\+\_\+bos\+\_\+eos} (const std::\+vector$<$ llama\+\_\+token $>$ \&output) const
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_a5040352b0fc3d25b2d30907f0bc55372}\label{structllm__tokenizer__bpe__session_a5040352b0fc3d25b2d30907f0bc55372} 
+void {\bfseries tokenize} (const std::\+string \&text, std::\+vector$<$ llama\+\_\+token $>$ \&output)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_a3f3dd5b157c61de7acd7c1f6e7605cd2}\label{structllm__tokenizer__bpe__session_a3f3dd5b157c61de7acd7c1f6e7605cd2} 
+static void {\bfseries append} (const llama\+\_\+token token\+\_\+id, std::\+vector$<$ llama\+\_\+token $>$ \&output)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_a4942e3baac7f562a239c87615dea07c4}\label{structllm__tokenizer__bpe__session_a4942e3baac7f562a239c87615dea07c4} 
+void {\bfseries add\+\_\+new\+\_\+bigram} (int left, int right)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_a4bccf325424c2ba2f6e8331df1f455d1}\label{structllm__tokenizer__bpe__session_a4bccf325424c2ba2f6e8331df1f455d1} 
+const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \& {\bfseries vocab}
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_a2d1b314e02834851594ed5aa451402e3}\label{structllm__tokenizer__bpe__session_a2d1b314e02834851594ed5aa451402e3} 
+const \doxymbox{\hyperlink{structllm__tokenizer__bpe}{llm\+\_\+tokenizer\+\_\+bpe}} \& {\bfseries tokenizer}
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_a42ea2a8d91e2fc8d80ead1f4e8f32104}\label{structllm__tokenizer__bpe__session_a42ea2a8d91e2fc8d80ead1f4e8f32104} 
+std::\+vector$<$ \doxymbox{\hyperlink{structllm__symbol}{llm\+\_\+symbol}} $>$ {\bfseries symbols}
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_a8df6e868c37113a0c3859f09ccef14f4}\label{structllm__tokenizer__bpe__session_a8df6e868c37113a0c3859f09ccef14f4} 
+std::\+vector$<$ \doxymbox{\hyperlink{structllm__symbol}{llm\+\_\+symbol}} $>$ {\bfseries symbols\+\_\+final}
+\item 
+\Hypertarget{structllm__tokenizer__bpe__session_a0b1625304bbd73c273b93520bca899b4}\label{structllm__tokenizer__bpe__session_a0b1625304bbd73c273b93520bca899b4} 
+llm\+\_\+bigram\+\_\+bpe::\+queue {\bfseries work\+\_\+queue}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/vocab.\+cpp\end{DoxyCompactItemize}

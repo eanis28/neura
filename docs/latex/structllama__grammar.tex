@@ -1,0 +1,46 @@
+\doxysection{llama\+\_\+grammar Struct Reference}
+\hypertarget{structllama__grammar}{}\label{structllama__grammar}\index{llama\_grammar@{llama\_grammar}}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__grammar_a4bee4e9fa2530022caa8df10d4fd65b4}\label{structllama__grammar_a4bee4e9fa2530022caa8df10d4fd65b4} 
+using {\bfseries token\+\_\+pos} = std::\+pair$<$llama\+\_\+token, std::\+pair$<$size\+\_\+t, size\+\_\+t$>$$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__grammar_aa517ccbe81fdbe85230664b05c790564}\label{structllama__grammar_aa517ccbe81fdbe85230664b05c790564} 
+const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \texorpdfstring{$\ast$}{*} {\bfseries vocab}
+\item 
+\Hypertarget{structllama__grammar_aeaf43da2c8d0190322a6cf22ac9fa437}\label{structllama__grammar_aeaf43da2c8d0190322a6cf22ac9fa437} 
+const llama\+\_\+grammar\+\_\+rules {\bfseries rules}
+\item 
+\Hypertarget{structllama__grammar_a6be588ca0cc788cd9ddd3c5af3753ca4}\label{structllama__grammar_a6be588ca0cc788cd9ddd3c5af3753ca4} 
+llama\+\_\+grammar\+\_\+stacks {\bfseries stacks}
+\item 
+\Hypertarget{structllama__grammar_a18f50e68739c990bad6a7267fed44028}\label{structllama__grammar_a18f50e68739c990bad6a7267fed44028} 
+\doxymbox{\hyperlink{structllama__partial__utf8}{llama\+\_\+partial\+\_\+utf8}} {\bfseries partial\+\_\+utf8}
+\item 
+\Hypertarget{structllama__grammar_af2f05ad42c855907f81b1c84793995ad}\label{structllama__grammar_af2f05ad42c855907f81b1c84793995ad} 
+bool {\bfseries lazy} = false
+\item 
+\Hypertarget{structllama__grammar_a75bbbed79e024beaf48d35f39dd4c997}\label{structllama__grammar_a75bbbed79e024beaf48d35f39dd4c997} 
+bool {\bfseries awaiting\+\_\+trigger} = false
+\item 
+\Hypertarget{structllama__grammar_ae1879d12600c851e2f2ff309c4291fa4}\label{structllama__grammar_ae1879d12600c851e2f2ff309c4291fa4} 
+std::\+string {\bfseries trigger\+\_\+buffer}
+\item 
+\Hypertarget{structllama__grammar_ad7343913497dda5753dc33a6c733be09}\label{structllama__grammar_ad7343913497dda5753dc33a6c733be09} 
+std::\+vector$<$ token\+\_\+pos $>$ {\bfseries trigger\+\_\+buffer\+\_\+positions}
+\item 
+\Hypertarget{structllama__grammar_a93255a43fd8da014143fc8a1c61d60d3}\label{structllama__grammar_a93255a43fd8da014143fc8a1c61d60d3} 
+std::\+vector$<$ llama\+\_\+token $>$ {\bfseries trigger\+\_\+tokens}
+\item 
+\Hypertarget{structllama__grammar_ad0fca9ff27cd733534b30a49b0f3d871}\label{structllama__grammar_ad0fca9ff27cd733534b30a49b0f3d871} 
+std::\+vector$<$ \doxymbox{\hyperlink{structllama__grammar__trigger__pattern}{llama\+\_\+grammar\+\_\+trigger\+\_\+pattern}} $>$ {\bfseries trigger\+\_\+patterns}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/grammar.\+h\end{DoxyCompactItemize}

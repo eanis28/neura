@@ -1,0 +1,115 @@
+\doxysection{ggml-\/quants.h}
+\hypertarget{ggml-quants_8h_source}{}\label{ggml-quants_8h_source}\index{whisper.cpp/ggml/src/ggml-\/quants.h@{whisper.cpp/ggml/src/ggml-\/quants.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#define\ GGML\_COMMON\_DECL\_C}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml-\/common.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ GGML\ internal\ header}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ NOTE:\ these\ functions\ are\ defined\ as\ GGML\_API\ because\ they\ used\ by\ the\ CPU\ backend}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Quantization}}
+\DoxyCodeLine{00017\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q4\_0\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q4\_0\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00018\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q4\_1\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q4\_1\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00019\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q5\_0\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q5\_0\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00020\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q5\_1\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q5\_1\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00021\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q8\_0\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q8\_0\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00022\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q8\_1\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q8\_1\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_mxfp4\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_mxfp4\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00025\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_nvfp4\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_nvfp4\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q2\_K\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q2\_K\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00028\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q3\_K\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q3\_K\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00029\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q4\_K\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q4\_K\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00030\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q5\_K\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q5\_K\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00031\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q6\_K\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q6\_K\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00032\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_q8\_K\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_q8\_K\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_tq1\_0\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_tq1\_0\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00035\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_tq2\_0\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_tq2\_0\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_iq3\_xxs\_ref(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_iq3\_xxs\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00038\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_iq4\_nl\_ref\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_iq4\_nl\ \ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00039\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_iq4\_xs\_ref\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_iq4\_xs\ \ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00040\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_iq3\_s\_ref\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_iq3\_s\ \ \ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00041\ GGML\_API\ \textcolor{keywordtype}{void}\ quantize\_row\_iq2\_s\_ref\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ block\_iq2\_s\ \ \ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ Dequantization}}
+\DoxyCodeLine{00044\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q4\_0(\textcolor{keyword}{const}\ block\_q4\_0\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00045\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q4\_1(\textcolor{keyword}{const}\ block\_q4\_1\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00046\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q5\_0(\textcolor{keyword}{const}\ block\_q5\_0\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00047\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q5\_1(\textcolor{keyword}{const}\ block\_q5\_1\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00048\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q8\_0(\textcolor{keyword}{const}\ block\_q8\_0\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00049\ \textcolor{comment}{//GGML\_API\ void\ dequantize\_row\_q8\_1(const\ block\_q8\_1\ *\ GGML\_RESTRICT\ x,\ float\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_mxfp4(\textcolor{keyword}{const}\ block\_mxfp4\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00052\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_nvfp4(\textcolor{keyword}{const}\ block\_nvfp4\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q2\_K(\textcolor{keyword}{const}\ block\_q2\_K\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00055\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q3\_K(\textcolor{keyword}{const}\ block\_q3\_K\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00056\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q4\_K(\textcolor{keyword}{const}\ block\_q4\_K\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00057\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q5\_K(\textcolor{keyword}{const}\ block\_q5\_K\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00058\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q6\_K(\textcolor{keyword}{const}\ block\_q6\_K\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00059\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_q8\_K(\textcolor{keyword}{const}\ block\_q8\_K\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_tq1\_0(\textcolor{keyword}{const}\ block\_tq1\_0\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00062\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_tq2\_0(\textcolor{keyword}{const}\ block\_tq2\_0\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_iq2\_xxs(\textcolor{keyword}{const}\ block\_iq2\_xxs\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00065\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_iq2\_xs\ (\textcolor{keyword}{const}\ block\_iq2\_xs\ \ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00066\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_iq2\_s\ \ (\textcolor{keyword}{const}\ block\_iq2\_s\ \ \ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00067\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_iq3\_xxs(\textcolor{keyword}{const}\ block\_iq3\_xxs\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00068\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_iq1\_s\ \ (\textcolor{keyword}{const}\ block\_iq1\_s\ \ \ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00069\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_iq1\_m\ \ (\textcolor{keyword}{const}\ block\_iq1\_m\ \ \ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00070\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_iq4\_nl\ (\textcolor{keyword}{const}\ block\_iq4\_nl\ \ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00071\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_iq4\_xs\ (\textcolor{keyword}{const}\ block\_iq4\_xs\ \ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00072\ GGML\_API\ \textcolor{keywordtype}{void}\ dequantize\_row\_iq3\_s\ \ (\textcolor{keyword}{const}\ block\_iq3\_s\ \ \ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ int64\_t\ k);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{comment}{//\ Quantization\ utilizing\ an\ importance\ matrix\ (a.k.a.\ "{}Activation\ aWare\ Quantization"{})}}
+\DoxyCodeLine{00075\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_iq2\_xxs(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00076\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_iq2\_xs\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00077\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_iq2\_s\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00078\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_iq3\_xxs(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00079\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_iq1\_s\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00080\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_iq1\_m\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00081\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_iq4\_nl\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00082\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_iq4\_xs\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00083\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_iq3\_s\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_tq1\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00086\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_tq2\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q2\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00089\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q3\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00090\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q4\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00091\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q5\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00092\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q6\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00093\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q4\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00094\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q4\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00095\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q5\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00096\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q5\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00097\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_q8\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_mxfp4(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00100\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ quantize\_nvfp4(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ src,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ dst,\ int64\_t\ nrows,\ int64\_t\ n\_per\_row,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ imatrix);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ GGML\_API\ \textcolor{keywordtype}{void}\ iq2xs\_init\_impl(\textcolor{keyword}{enum}\ ggml\_type\ type);}
+\DoxyCodeLine{00103\ GGML\_API\ \textcolor{keywordtype}{void}\ iq2xs\_free\_impl(\textcolor{keyword}{enum}\ ggml\_type\ type);}
+\DoxyCodeLine{00104\ GGML\_API\ \textcolor{keywordtype}{void}\ iq3xs\_init\_impl(\textcolor{keywordtype}{int}\ grid\_size);}
+\DoxyCodeLine{00105\ GGML\_API\ \textcolor{keywordtype}{void}\ iq3xs\_free\_impl(\textcolor{keywordtype}{int}\ grid\_size);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00108\ \}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

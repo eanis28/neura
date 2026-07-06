@@ -1,0 +1,145 @@
+\doxysection{ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio Struct Reference}
+\hypertarget{structggml__cann__pool__buf__prio}{}\label{structggml__cann__pool__buf__prio}\index{ggml\_cann\_pool\_buf\_prio@{ggml\_cann\_pool\_buf\_prio}}
+
+
+A pool of CANN buffers(priority segment buffer).  
+
+
+Inheritance diagram for ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{structggml__cann__pool__buf__prio}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structggml__cann__pool__buf__prio_1_1ggml__cann__buffer}{ggml\+\_\+cann\+\_\+buffer}}
+\begin{DoxyCompactList}\small\item\em Structure representing a CANN buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{structggml__cann__pool__buf__prio_a66673e3686826a10ea7878707475c10b}{ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio}} (int \doxymbox{\hyperlink{structggml__cann__pool__buf__prio_a3312abed3675c9a3ed5305f474b4937e}{device}})
+\begin{DoxyCompactList}\small\item\em Constructor to initialize the buffer pool for a specific device. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__buf__prio_a36bde760d67a43ac08e0bce295cebcee}\label{structggml__cann__pool__buf__prio_a36bde760d67a43ac08e0bce295cebcee} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio} ()
+\begin{DoxyCompactList}\small\item\em Destructor to free all buffers in the pool. \end{DoxyCompactList}\item 
+void \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__cann__pool__buf__prio_a173e40417eb9602fda30dd4b11412875}{alloc}} (size\+\_\+t size, size\+\_\+t \texorpdfstring{$\ast$}{*}actual\+\_\+size) override
+\begin{DoxyCompactList}\small\item\em Allocate a buffer of the given size. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{structggml__cann__pool__buf__prio_afd45e635d0e26db1213836321fe91e82}{free}} (void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t size) override
+\begin{DoxyCompactList}\small\item\em Free a buffer and return it to the pool. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}ggml\+\_\+cann\+\_\+pool} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the memory pool. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__pool__buf__prio_a3312abed3675c9a3ed5305f474b4937e}\label{structggml__cann__pool__buf__prio_a3312abed3675c9a3ed5305f474b4937e} 
+int {\bfseries device}
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} device ID associated with this buffer pool. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__buf__prio_afef637c2725725a6de2918c180bab58f}\label{structggml__cann__pool__buf__prio_afef637c2725725a6de2918c180bab58f} 
+bool {\bfseries disable\+\_\+clean} = false
+\begin{DoxyCompactList}\small\item\em Whether to disable clean during buffer allocation. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__buf__prio_a908ca59694c0054379397d5196866592}\label{structggml__cann__pool__buf__prio_a908ca59694c0054379397d5196866592} 
+std::\+unordered\+\_\+map$<$ void \texorpdfstring{$\ast$}{*}, size\+\_\+t $>$ {\bfseries buffer\+\_\+pool}
+\begin{DoxyCompactList}\small\item\em Array of CANN buffers in the pool. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__buf__prio_ada0dc893ae6a66f553896327e6ce118e}\label{structggml__cann__pool__buf__prio_ada0dc893ae6a66f553896327e6ce118e} 
+std::\+priority\+\_\+queue$<$ \doxymbox{\hyperlink{structggml__cann__pool__buf__prio_1_1ggml__cann__buffer}{ggml\+\_\+cann\+\_\+buffer}}, std::\+vector$<$ \doxymbox{\hyperlink{structggml__cann__pool__buf__prio_1_1ggml__cann__buffer}{ggml\+\_\+cann\+\_\+buffer}} $>$, std::\+greater$<$$>$ $>$ {\bfseries free\+\_\+buffers}
+\item 
+\Hypertarget{structggml__cann__pool__buf__prio_af12ff11a51f9209e06908f3d1298ec42}\label{structggml__cann__pool__buf__prio_af12ff11a51f9209e06908f3d1298ec42} 
+size\+\_\+t {\bfseries pool\+\_\+size} = 0
+\begin{DoxyCompactList}\small\item\em Total size of all buffers in the pool. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__pool__buf__prio_a0adaa35dcb72b6670fd6514d51953593}\label{structggml__cann__pool__buf__prio_a0adaa35dcb72b6670fd6514d51953593} 
+static const size\+\_\+t {\bfseries max\+\_\+reuse\+\_\+margin} = 1ull $<$$<$ 22
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} maximum reuse margin for a buffer. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__buf__prio_a77b493e294419878962df85839326f32}\label{structggml__cann__pool__buf__prio_a77b493e294419878962df85839326f32} 
+static const size\+\_\+t {\bfseries min\+\_\+free\+\_\+margin} = 1ull $<$$<$ 20
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} minimum free margin for a buffer. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__buf__prio_af33aa8554e35706d33e72215af1b013c}\label{structggml__cann__pool__buf__prio_af33aa8554e35706d33e72215af1b013c} 
+static const size\+\_\+t {\bfseries alignment} = 128
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} alignment for buffer allocation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A pool of CANN buffers(priority segment buffer). 
+
+This class manages a pool of CANN buffers for a specific device. 
+
+\label{doc-constructors}
+\Hypertarget{structggml__cann__pool__buf__prio_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structggml__cann__pool__buf__prio_a66673e3686826a10ea7878707475c10b}\index{ggml\_cann\_pool\_buf\_prio@{ggml\_cann\_pool\_buf\_prio}!ggml\_cann\_pool\_buf\_prio@{ggml\_cann\_pool\_buf\_prio}}
+\index{ggml\_cann\_pool\_buf\_prio@{ggml\_cann\_pool\_buf\_prio}!ggml\_cann\_pool\_buf\_prio@{ggml\_cann\_pool\_buf\_prio}}
+\doxysubsubsection{\texorpdfstring{ggml\_cann\_pool\_buf\_prio()}{ggml\_cann\_pool\_buf\_prio()}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__buf__prio_a66673e3686826a10ea7878707475c10b} 
+ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio::\+ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio (\begin{DoxyParamCaption}\item[{int}]{device}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Constructor to initialize the buffer pool for a specific device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__cann__pool__buf__prio_a3312abed3675c9a3ed5305f474b4937e}{device}} & \doxylink{requirements_The}{The} device ID to associate with this buffer pool. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{structggml__cann__pool__buf__prio_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structggml__cann__pool__buf__prio_a173e40417eb9602fda30dd4b11412875}\index{ggml\_cann\_pool\_buf\_prio@{ggml\_cann\_pool\_buf\_prio}!alloc@{alloc}}
+\index{alloc@{alloc}!ggml\_cann\_pool\_buf\_prio@{ggml\_cann\_pool\_buf\_prio}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__buf__prio_a173e40417eb9602fda30dd4b11412875} 
+void \texorpdfstring{$\ast$}{*} ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio::\+alloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{, }\item[{size\+\_\+t \texorpdfstring{$\ast$}{*}}]{actual\+\_\+size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Allocate a buffer of the given size. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & \doxylink{requirements_The}{The} size of the buffer to allocate. \\
+\hline
+{\em actual\+\_\+size} & A pointer to a variable to receive the actual size of the allocated buffer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the allocated buffer. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{structggml__cann__pool_a1db69310420e48bc125a435b031bdc4d}{ggml\+\_\+cann\+\_\+pool}}.
+
+\Hypertarget{structggml__cann__pool__buf__prio_afd45e635d0e26db1213836321fe91e82}\index{ggml\_cann\_pool\_buf\_prio@{ggml\_cann\_pool\_buf\_prio}!free@{free}}
+\index{free@{free}!ggml\_cann\_pool\_buf\_prio@{ggml\_cann\_pool\_buf\_prio}}
+\doxysubsubsection{\texorpdfstring{free()}{free()}}
+{\footnotesize\ttfamily \label{structggml__cann__pool__buf__prio_afd45e635d0e26db1213836321fe91e82} 
+void ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio::\+free (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{ptr}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Free a buffer and return it to the pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & Pointer to the buffer to free. \\
+\hline
+{\em size} & Size of the buffer to free. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \doxymbox{\hyperlink{structggml__cann__pool_a8119eb4c8490390a7ebabbb94b40d1ee}{ggml\+\_\+cann\+\_\+pool}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+ggml-\/cann.\+cpp\end{DoxyCompactItemize}

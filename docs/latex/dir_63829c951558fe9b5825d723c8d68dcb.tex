@@ -1,0 +1,107 @@
+\doxysection{whisper.\+cpp/\+examples/\+whisper.nvim Directory Reference}
+\hypertarget{dir_63829c951558fe9b5825d723c8d68dcb}{}\label{dir_63829c951558fe9b5825d723c8d68dcb}\index{whisper.cpp/examples/whisper.nvim Directory Reference@{whisper.cpp/examples/whisper.nvim Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md115}{}\doxysubsection{\texorpdfstring{whisper.\+nvim}{whisper.\+nvim}}\label{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md115}
+Speech-\/to-\/text in Neovim
+
+\doxylink{requirements_The}{The} transcription is performed on the CPU and no data leaves your computer. Works best on Apple Silicon devices.
+
+\href{https://user-images.githubusercontent.com/1991296/198382564-784e9663-2037-4d04-99b8-f39136929b7e.mp4}{\texttt{https:\+/\+/\+user-\/images.\+githubusercontent.\+com/\+1991296/\+198382564-\/784e9663-\/2037-\/4d04-\/99b8-\/f39136929b7e.\+mp4}}\hypertarget{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md116}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md116}
+
+\begin{DoxyItemize}
+\item Simply press {\ttfamily Ctrl-\/G} in {\ttfamily INSERT}, {\ttfamily VISUAL} or {\ttfamily NORMAL} mode and say something
+\item When you are done -\/ press {\ttfamily Ctrl-\/C} to end the transcription and insert the transcribed text under the cursor
+\end{DoxyItemize}\hypertarget{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md117}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md117}
+{\itshape Note:\+ this is a bit tedious and hacky atm, but I hope it will be improved with time}
+
+
+\begin{DoxyItemize}
+\item Clone this repo and build the {\ttfamily stream} tool:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/ggerganov/whisper.cpp}
+\DoxyCodeLine{cd\ whisper.cpp}
+\DoxyCodeLine{make\ stream}
+
+\end{DoxyCode}
+
+\item Download the {\ttfamily base.\+en} Whisper model (140 MB):\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./models/download-\/ggml-\/model.sh\ base.en}
+
+\end{DoxyCode}
+
+\item Place the \href{whisper.nvim}{\texttt{whisper.\+nvim}} script somewhere in your PATH and give it execute permissions:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cp\ examples/whisper.nvim/whisper.nvim\ \string~/bin/}
+\DoxyCodeLine{chmod\ u+x\ \string~/bin/whisper.nvim}
+
+\end{DoxyCode}
+
+\item Fine-\/tune the script to your preference and machine parameters:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./stream\ -\/t\ 8\ -\/m\ models/ggml-\/base.en.bin\ -\/-\/step\ 350\ -\/-\/length\ 10000\ -\/f\ /tmp/whisper.nvim\ 2>\ /dev/null}
+
+\end{DoxyCode}
+
+
+On slower machines, try to increase the {\ttfamily step} parameter.
+\item \doxylink{struct_add}{Add} the following shortcuts to your {\ttfamily \texorpdfstring{$\sim$}{\string~}/\+.config/\+nvim/\+init.\+vim}:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{inoremap\ <C-\/G>\ \ <C-\/O>:!whisper.nvim<CR><C-\/O>:let\ @a\ =\ system("{}cat\ /tmp/whisper.nvim\ \(\backslash\)|\ tail\ -\/n\ 1\ \(\backslash\)|\ xargs\ -\/0\ \(\backslash\)|\ tr\ -\/d\ '\(\backslash\)\(\backslash\)n'\ \(\backslash\)|\ sed\ -\/e\ 's/\string^[[:space:]]*//'"{})<CR><C-\/R>a}
+\DoxyCodeLine{nnoremap\ <C-\/G>\ \ \ \ \ \ \ :!whisper.nvim<CR>:let\ @a\ =\ system("{}cat\ /tmp/whisper.nvim\ \(\backslash\)|\ tail\ -\/n\ 1\ \(\backslash\)|\ xargs\ -\/0\ \(\backslash\)|\ tr\ -\/d\ '\(\backslash\)\(\backslash\)n'\ \(\backslash\)|\ sed\ -\/e\ 's/\string^[[:space:]]*//'"{})<CR>"{}ap}
+\DoxyCodeLine{vnoremap\ <C-\/G>\ c<C-\/O>:!whisper.nvim<CR><C-\/O>:let\ @a\ =\ system("{}cat\ /tmp/whisper.nvim\ \(\backslash\)|\ tail\ -\/n\ 1\ \(\backslash\)|\ xargs\ -\/0\ \(\backslash\)|\ tr\ -\/d\ '\(\backslash\)\(\backslash\)n'\ \(\backslash\)|\ sed\ -\/e\ 's/\string^[[:space:]]*//'"{})<CR><C-\/R>a}
+
+\end{DoxyCode}
+
+
+Explanation:\+ pressing {\ttfamily Ctrl-\/G} runs the \href{whisper.nvim}{\texttt{whisper.\+nvim}} script which in turn calls the {\ttfamily stream} binary to transcribe your speech through the microphone. \doxylink{requirements_The}{The} results from the transcription are continuously dumped into {\ttfamily /\+tmp/\+whisper.nvim}. After you kill the program with {\ttfamily Ctrl-\/C}, the vim command grabs the last line from the {\ttfamily /\+tmp/\+whisper.nvim} file and puts it under the cursor.
+
+Probably there is a much more intelligent way to achieve all this, but this is what I could hack in an hour. Any suggestions how to improve this are welcome.
+\end{DoxyItemize}
+
+You are now ready to use speech-\/to-\/text in Neovim!\hypertarget{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md118}{}\doxysubsection{\texorpdfstring{TODO}{TODO}}\label{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md118}
+There are a lot of ways to improve this idea and I don\textquotesingle{}t have much experience with Vim plugin programming, so contributions are welcome!
+
+
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] {\bfseries{Wrap this into a plugin}}
+
+It would be great to make a standalone plugin out of this that can be installed with {\ttfamily vim-\/plug} or similar
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] {\bfseries{Simplify the {\ttfamily init.\+vim} mappings (maybe factor out the common call into a separate function)}}
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item[\DoxyUnchecked] {\bfseries{\doxylink{struct_add}{Add} Copilot/\+\+GPT-\/3 integration}}
+
+This is probably a very long shot, but I think it will be very cool to have the functionality to select some code and then hit Ctrl-\/G and say something like:\+
+
+{\itshape "{}refactor this using stl containers"{}}
+
+or
+
+{\itshape "{}optimize by sorting the data first"{}}
+
+\doxylink{requirements_The}{The} plugin would then make an appropriate query using the selected text and code context to Copilot or GPT-\/3 and return the result.
+
+Here is a proof-\/of-\/concept:\+
+
+\href{https://user-images.githubusercontent.com/1991296/199078847-0278fcde-5667-4748-ba0d-7d55381d6047.mp4}{\texttt{https:\+/\+/\+user-\/images.\+githubusercontent.\+com/\+1991296/\+199078847-\/0278fcde-\/5667-\/4748-\/ba0d-\/7d55381d6047.\+mp4}}
+
+\href{https://user-images.githubusercontent.com/1991296/200067939-f98d2ac2-7519-438a-85f9-79db0841ba4f.mp4}{\texttt{https:\+/\+/\+user-\/images.\+githubusercontent.\+com/\+1991296/\+200067939-\/f98d2ac2-\/7519-\/438a-\/85f9-\/79db0841ba4f.\+mp4}}
+
+For explanation how this works see:\+ \href{https://twitter.com/ggerganov/status/1587168771789258756}{\texttt{https:\+/\+/\+twitter.\+com/\+ggerganov/\+status/\+1587168771789258756}}
+\end{DoxyItemize}\hypertarget{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md119}{}\doxysubsection{\texorpdfstring{Discussion}{Discussion}}\label{dir_63829c951558fe9b5825d723c8d68dcb_autotoc_md119}
+If you find this idea interesting, you can join the discussion here:\+ \href{https://github.com/ggerganov/whisper.cpp/discussions/108}{\texttt{https:\+/\+/\+github.\+com/\+ggerganov/\+whisper.\+cpp/\+discussions/\+108}} 

@@ -1,0 +1,94 @@
+\doxysection{hmx-\/utils.h}
+\hypertarget{hmx-utils_8h_source}{}\label{hmx-utils_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hmx-\/utils.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hmx-\/utils.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ HMX\ tile-\/level\ inline\ helpers\ (FP16\ 32x32\ tile\ operations).}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Ported\ from\ htp-\/ops-\/lib/include/dsp/hmx\_utils.h.\ (https://github.com/haozixu/htp-\/ops-\/lib)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ HMX\_UTILS\_H}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ HMX\_UTILS\_H}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <hexagon\_types.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ HMX\_FP16\_TILE\_N\_ROWS\ 32}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ HMX\_FP16\_TILE\_N\_COLS\ 32}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ HMX\_FP16\_TILE\_N\_ELMS\ 1024}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ HMX\_FP16\_TILE\_SIZE\ \ \ 2048}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ HMX\_INLINE\_ALWAYS\ inline\ \_\_attribute\_\_((unused,\ always\_inline))}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{static}\ HMX\_INLINE\_ALWAYS\ \textcolor{keywordtype}{void}\ hmx\_set\_output\_scales(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *scales)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}bias\ =\ mxmem2(\%0)"{}}\ ::\ \textcolor{stringliteral}{"{}r"{}}(scales));}
+\DoxyCodeLine{00019\ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ Initialise\ aligned\ 256-\/byte\ area\ with\ scale\ vector\ +\ zero\ padding.}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{static}\ HMX\_INLINE\_ALWAYS\ \textcolor{keywordtype}{void}\ hmx\_init\_column\_scales(\textcolor{keywordtype}{void}\ *out\_scales,\ HVX\_Vector\ v\_scale)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ HVX\_Vector\ *pv\ =\ (HVX\_Vector\ *)out\_scales;}
+\DoxyCodeLine{00024\ \ \ \ \ *pv++\ =\ v\_scale;}
+\DoxyCodeLine{00025\ \ \ \ \ *pv\ \ \ =\ Q6\_V\_vzero();}
+\DoxyCodeLine{00026\ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ Load\ multiple\ contiguous\ tiles\ with\ :deep\ streaming.}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ Rt\ =\ total\ region\ size\ -\/\ 1;\ the\ hardware\ streams\ through\ [Rs,\ Rs\ +\ Rt].}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ IMPORTANT:\ the\ tile\ region\ [Rs,\ Rs\ +\ Rt]\ must\ NOT\ cross\ a\ VTCM\ 4\ MB\ bank}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ boundary,\ otherwise\ the\ mxmem\ instruction\ will\ raise\ a\ precise\ bus\ error.}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ Callers\ must\ ensure\ their\ VTCM\ layout\ satisfies\ this\ constraint.}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{static}\ HMX\_INLINE\_ALWAYS\ \textcolor{keywordtype}{void}\ hmx\_load\_tiles\_fp16(\textcolor{keyword}{const}\ \_\_fp16\ *row\_tiles,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \_\_fp16\ *col\_tiles,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ n\_tiles)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ limit\ =\ n\_tiles\ *\ HMX\_FP16\_TILE\_SIZE\ -\/\ 1;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\ activation.hf\ =\ mxmem(\%0,\ \%1):deep\(\backslash\)n"{}}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}weight.hf\ =\ mxmem(\%2,\ \%3)\ \}\(\backslash\)n"{}}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ ::\ \textcolor{stringliteral}{"{}r"{}}(row\_tiles),\ \textcolor{stringliteral}{"{}r"{}}(limit),\ \textcolor{stringliteral}{"{}r"{}}(col\_tiles),\ \textcolor{stringliteral}{"{}r"{}}(limit)}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ :\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00042\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ Load\ a\ single\ activation+weight\ tile\ pair\ (no\ :deep\ streaming).}}
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ Rt\ defines\ the\ accessible\ region\ [Rs,\ Rs+Rt].\ \ Following\ the\ reference\ formula}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ (limit\ =\ n\_tiles\ *\ HMX\_FP16\_TILE\_SIZE\ -\/\ 1),\ for\ a\ single\ tile\ Rt\ =\ 2047.}}
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ The\ original\ code\ used\ Rt=0x7FFF\ (32\ KB\ region);\ when\ dynamic\ VTCM\ allocation}}
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ places\ a\ tile\ near\ a\ 4\ MB\ bank\ boundary,\ the\ oversized\ region\ crosses\ it\ and}}
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ triggers\ a\ precise\ bus\ error\ (0x2601).\ \ Rt=2047\ confines\ accesses\ to\ exactly}}
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ one\ 2048-\/byte\ tile\ while\ covering\ all\ 16\ HVX\ vectors\ (offsets\ 0..2047).}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{static}\ HMX\_INLINE\_ALWAYS\ \textcolor{keywordtype}{void}\ hmx\_load\_tile\_pair\_fp16(\textcolor{keyword}{const}\ \_\_fp16\ *act\_tile,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \_\_fp16\ *wt\_tile)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\ activation.hf\ =\ mxmem(\%0,\ \%1)\(\backslash\)n"{}}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}weight.hf\ =\ mxmem(\%2,\ \%3)\ \}\(\backslash\)n"{}}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ ::\ \textcolor{stringliteral}{"{}r"{}}(act\_tile),\ \textcolor{stringliteral}{"{}r"{}}(2047),}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}r"{}}(wt\_tile),\ \ \textcolor{stringliteral}{"{}r"{}}(2047)}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ :\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{static}\ HMX\_INLINE\_ALWAYS\ \textcolor{keywordtype}{void}\ hmx\_consume\_accumulator\_fp16(\_\_fp16\ *out)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ Use\ the\ combined\ convert-\/and-\/store\ instruction\ (matches\ the\ reference}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ Q6\_mxmem\_AR\_after\_hf\ intrinsic).\ \ The\ previous\ two-\/instruction\ sequence}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ "{}cvt.hf\ =\ acc(2);\ mxmem\ =\ cvt"{}\ used\ an\ undocumented\ Rs=2\ parameter.}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}mxmem(\%0,\ \%1):after.hf\ =\ acc\(\backslash\)n"{}}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ ::\ \textcolor{stringliteral}{"{}r"{}}(out),\ \textcolor{stringliteral}{"{}r"{}}(0)}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ :\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00069\ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{//\ Compute\ inner\ product\ of\ two\ vectors\ of\ tiles\ and\ store\ result.}}
+\DoxyCodeLine{00072\ \textcolor{keyword}{static}\ HMX\_INLINE\_ALWAYS\ \textcolor{keywordtype}{void}\ hmx\_dot\_fp16(\_\_fp16\ *out,}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \_\_fp16\ *row\_tiles,}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \_\_fp16\ *col\_tiles,}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ n\_tiles)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ hmx\_load\_tiles\_fp16(row\_tiles,\ col\_tiles,\ n\_tiles);}
+\DoxyCodeLine{00077\ \ \ \ \ hmx\_consume\_accumulator\_fp16(out);}
+\DoxyCodeLine{00078\ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{comment}{//\ -\/-\/-\/\ VTCM\ sequential\ allocator\ (from\ htp-\/ops-\/lib/include/dsp/vtcm\_mgr.h)\ -\/-\/-\/}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint8\_t\ *vtcm\_seq\_alloc(uint8\_t\ **vtcm\_ptr,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ uint8\_t\ *p\ =\ *vtcm\_ptr;}
+\DoxyCodeLine{00084\ \ \ \ \ *vtcm\_ptr\ +=\ size;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{return}\ p;}
+\DoxyCodeLine{00086\ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HMX\_UTILS\_H}}
+
+\end{DoxyCode}

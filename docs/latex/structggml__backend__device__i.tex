@@ -1,0 +1,55 @@
+\doxysection{ggml\+\_\+backend\+\_\+device\+\_\+i Struct Reference}
+\hypertarget{structggml__backend__device__i}{}\label{structggml__backend__device__i}\index{ggml\_backend\_device\_i@{ggml\_backend\_device\_i}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__device__i_ae12e831f6574cd6fd7d16aa769929127}\label{structggml__backend__device__i_ae12e831f6574cd6fd7d16aa769929127} 
+const char \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+name} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev)
+\item 
+\Hypertarget{structggml__backend__device__i_a4afaa6d33a39a55a21772af62bfd20ec}\label{structggml__backend__device__i_a4afaa6d33a39a55a21772af62bfd20ec} 
+const char \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+description} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev)
+\item 
+\Hypertarget{structggml__backend__device__i_aa1bf59cd0c8085d7013375883cee69c5}\label{structggml__backend__device__i_aa1bf59cd0c8085d7013375883cee69c5} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+memory} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev, size\+\_\+t \texorpdfstring{$\ast$}{*}free, size\+\_\+t \texorpdfstring{$\ast$}{*}total)
+\item 
+\Hypertarget{structggml__backend__device__i_a4e2abe86330411d4dabdcbeab12fba44}\label{structggml__backend__device__i_a4e2abe86330411d4dabdcbeab12fba44} 
+enum ggml\+\_\+backend\+\_\+dev\+\_\+type(\texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+type} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev)
+\item 
+\Hypertarget{structggml__backend__device__i_a51fb561a82454e1795184fc965fa7324}\label{structggml__backend__device__i_a51fb561a82454e1795184fc965fa7324} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+props} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev, struct \doxymbox{\hyperlink{structggml__backend__dev__props}{ggml\+\_\+backend\+\_\+dev\+\_\+props}} \texorpdfstring{$\ast$}{*}props)
+\item 
+\Hypertarget{structggml__backend__device__i_ac06e1315a87c710348a452c03b05c2ee}\label{structggml__backend__device__i_ac06e1315a87c710348a452c03b05c2ee} 
+ggml\+\_\+backend\+\_\+t(\texorpdfstring{$\ast$}{*} {\bfseries init\+\_\+backend} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev, const char \texorpdfstring{$\ast$}{*}params)
+\item 
+\Hypertarget{structggml__backend__device__i_aa8e7e9ab2fd5d61d64ab57397cda3359}\label{structggml__backend__device__i_aa8e7e9ab2fd5d61d64ab57397cda3359} 
+ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t(\texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+buffer\+\_\+type} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev)
+\item 
+\Hypertarget{structggml__backend__device__i_ab50c9537cc79c3f01a6c1a87def6822e}\label{structggml__backend__device__i_ab50c9537cc79c3f01a6c1a87def6822e} 
+ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t(\texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+host\+\_\+buffer\+\_\+type} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev)
+\item 
+\Hypertarget{structggml__backend__device__i_a83733459990e8e5622153d18adf5c6c7}\label{structggml__backend__device__i_a83733459990e8e5622153d18adf5c6c7} 
+ggml\+\_\+backend\+\_\+buffer\+\_\+t(\texorpdfstring{$\ast$}{*} {\bfseries buffer\+\_\+from\+\_\+host\+\_\+ptr} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev, void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t size, size\+\_\+t max\+\_\+tensor\+\_\+size)
+\item 
+\Hypertarget{structggml__backend__device__i_a7dafda7fae7819001a0858ee4fd1cc1c}\label{structggml__backend__device__i_a7dafda7fae7819001a0858ee4fd1cc1c} 
+bool(\texorpdfstring{$\ast$}{*} {\bfseries supports\+\_\+op} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{structggml__backend__device__i_ab24018c8e0e2977fa518de12590f9731}\label{structggml__backend__device__i_ab24018c8e0e2977fa518de12590f9731} 
+bool(\texorpdfstring{$\ast$}{*} {\bfseries supports\+\_\+buft} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev, ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t buft)
+\item 
+\Hypertarget{structggml__backend__device__i_a1893fa109ae85525e455b3c1327d1c0c}\label{structggml__backend__device__i_a1893fa109ae85525e455b3c1327d1c0c} 
+bool(\texorpdfstring{$\ast$}{*} {\bfseries offload\+\_\+op} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+\Hypertarget{structggml__backend__device__i_a249adbcc4d4b8c205e6e6031a97f4c95}\label{structggml__backend__device__i_a249adbcc4d4b8c205e6e6031a97f4c95} 
+ggml\+\_\+backend\+\_\+event\+\_\+t(\texorpdfstring{$\ast$}{*} {\bfseries event\+\_\+new} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev)
+\item 
+\Hypertarget{structggml__backend__device__i_a5e9f46ad9265b940ea6ae06121e13063}\label{structggml__backend__device__i_a5e9f46ad9265b940ea6ae06121e13063} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries event\+\_\+free} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev, ggml\+\_\+backend\+\_\+event\+\_\+t event)
+\item 
+\Hypertarget{structggml__backend__device__i_adf452bc5a6a1f3a562e78e9c529f26eb}\label{structggml__backend__device__i_adf452bc5a6a1f3a562e78e9c529f26eb} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries event\+\_\+synchronize} )(ggml\+\_\+backend\+\_\+dev\+\_\+t dev, ggml\+\_\+backend\+\_\+event\+\_\+t event)
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/backend-\/impl.\+h\end{DoxyCompactItemize}

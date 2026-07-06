@@ -1,0 +1,62 @@
+\doxysection{virtgpu Struct Reference}
+\hypertarget{structvirtgpu}{}\label{structvirtgpu}\index{virtgpu@{virtgpu}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structvirtgpu_a902e324fc5f385c67a62f0b647cff5c4}\label{structvirtgpu_a902e324fc5f385c67a62f0b647cff5c4} 
+bool {\bfseries use\+\_\+apir\+\_\+capset}
+\item 
+\Hypertarget{structvirtgpu_a8c2e04d8f2656b1bac7b19fdd21ac879}\label{structvirtgpu_a8c2e04d8f2656b1bac7b19fdd21ac879} 
+int {\bfseries fd}
+\item 
+\Hypertarget{structvirtgpu_a52e6d68e3d7577affe1e84c312284f63}\label{structvirtgpu_a52e6d68e3d7577affe1e84c312284f63} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+struct \{\\
+\>virgl\_renderer\_capset {\bfseries id}\\
+\>uint32\_t {\bfseries version}\\
+\>\doxymbox{\hyperlink{structvirgl__renderer__capset__apir}{virgl\_renderer\_capset\_apir}} {\bfseries data}\\
+\} {\bfseries capset}\\
+
+\end{tabbing}\item 
+\Hypertarget{structvirtgpu_a2c9afcf9a7f76c82f3c32e84745b7873}\label{structvirtgpu_a2c9afcf9a7f76c82f3c32e84745b7873} 
+\doxymbox{\hyperlink{structutil__sparse__array}{util\+\_\+sparse\+\_\+array}} {\bfseries shmem\+\_\+array}
+\item 
+\Hypertarget{structvirtgpu_af7d08f9a717071163cda37da013fc2b8}\label{structvirtgpu_af7d08f9a717071163cda37da013fc2b8} 
+\doxymbox{\hyperlink{structvirtgpu__shmem}{virtgpu\+\_\+shmem}} {\bfseries reply\+\_\+shmem}
+\item 
+\Hypertarget{structvirtgpu_a02a4c9d8d3f119a8028a6f50effe3808}\label{structvirtgpu_a02a4c9d8d3f119a8028a6f50effe3808} 
+\doxymbox{\hyperlink{structvirtgpu__shmem}{virtgpu\+\_\+shmem}} {\bfseries data\+\_\+shmem}
+\item 
+\Hypertarget{structvirtgpu_af95bfdb1756129771c8bfabad804a4ed}\label{structvirtgpu_af95bfdb1756129771c8bfabad804a4ed} 
+mtx\+\_\+t {\bfseries data\+\_\+shmem\+\_\+mutex}
+\item 
+\Hypertarget{structvirtgpu_a929d277e446c4808954dc00f89783c80}\label{structvirtgpu_a929d277e446c4808954dc00f89783c80} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+struct \{\\
+\>char \texorpdfstring{$\ast$}{*} {\bfseries description}\\
+\>char \texorpdfstring{$\ast$}{*} {\bfseries name}\\
+\>int32\_t {\bfseries device\_count}\\
+\>uint32\_t {\bfseries type}\\
+\>size\_t {\bfseries memory\_free}\\
+\>size\_t {\bfseries memory\_total}\\
+\} {\bfseries cached\_device\_info}\\
+
+\end{tabbing}\item 
+\Hypertarget{structvirtgpu_a79f9512a544cda9e9c4fb3d046a97690}\label{structvirtgpu_a79f9512a544cda9e9c4fb3d046a97690} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+struct \{\\
+\>apir\_buffer\_type\_host\_handle\_t {\bfseries host\_handle}\\
+\>char \texorpdfstring{$\ast$}{*} {\bfseries name}\\
+\>size\_t {\bfseries alignment}\\
+\>size\_t {\bfseries max\_size}\\
+\} {\bfseries cached\_buffer\_type}\\
+
+\end{tabbing}\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/virtgpu/\+virtgpu.\+h\end{DoxyCompactItemize}

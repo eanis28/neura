@@ -1,0 +1,56 @@
+\doxysection{ggml\+\_\+backend\+\_\+cann\+\_\+buffer\+\_\+context Struct Reference}
+\hypertarget{structggml__backend__cann__buffer__context}{}\label{structggml__backend__cann__buffer__context}\index{ggml\_backend\_cann\_buffer\_context@{ggml\_backend\_cann\_buffer\_context}}
+
+
+Context for managing a CANN buffer associated with a specific device.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{structggml__backend__cann__buffer__context_af1d3dfbcdb710e01903f209f00ce0d1f}{ggml\+\_\+backend\+\_\+cann\+\_\+buffer\+\_\+context}} (int32\+\_\+t \doxymbox{\hyperlink{structggml__backend__cann__buffer__context_a1935997335acf042e05a960e9c3044b6}{device}}, void \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{structggml__backend__cann__buffer__context_a70312b5956dbae0bf674b7a68cc7683a}{dev\+\_\+ptr}})
+\begin{DoxyCompactList}\small\item\em Constructor to initialize the CANN buffer context. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__backend__cann__buffer__context_ab9461bbf2303e7b25f2e121fcc483614}\label{structggml__backend__cann__buffer__context_ab9461bbf2303e7b25f2e121fcc483614} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}ggml\+\_\+backend\+\_\+cann\+\_\+buffer\+\_\+context} ()
+\begin{DoxyCompactList}\small\item\em Destructor to free the device memory allocated for the buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__cann__buffer__context_a1935997335acf042e05a960e9c3044b6}\label{structggml__backend__cann__buffer__context_a1935997335acf042e05a960e9c3044b6} 
+int32\+\_\+t {\bfseries device}
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} device ID associated with this buffer context. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__backend__cann__buffer__context_a70312b5956dbae0bf674b7a68cc7683a}\label{structggml__backend__cann__buffer__context_a70312b5956dbae0bf674b7a68cc7683a} 
+void \texorpdfstring{$\ast$}{*} {\bfseries dev\+\_\+ptr} = nullptr
+\begin{DoxyCompactList}\small\item\em Pointer to the device memory allocated for the buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Context for managing a CANN buffer associated with a specific device. 
+
+This structure holds information about a CANN buffer, including the device ID, device pointer, and a name derived from GGML\+\_\+\+CANN\+\_\+\+NAME and the device ID. 
+
+\label{doc-constructors}
+\Hypertarget{structggml__backend__cann__buffer__context_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structggml__backend__cann__buffer__context_af1d3dfbcdb710e01903f209f00ce0d1f}\index{ggml\_backend\_cann\_buffer\_context@{ggml\_backend\_cann\_buffer\_context}!ggml\_backend\_cann\_buffer\_context@{ggml\_backend\_cann\_buffer\_context}}
+\index{ggml\_backend\_cann\_buffer\_context@{ggml\_backend\_cann\_buffer\_context}!ggml\_backend\_cann\_buffer\_context@{ggml\_backend\_cann\_buffer\_context}}
+\doxysubsubsection{\texorpdfstring{ggml\_backend\_cann\_buffer\_context()}{ggml\_backend\_cann\_buffer\_context()}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__buffer__context_af1d3dfbcdb710e01903f209f00ce0d1f} 
+ggml\+\_\+backend\+\_\+cann\+\_\+buffer\+\_\+context::\+ggml\+\_\+backend\+\_\+cann\+\_\+buffer\+\_\+context (\begin{DoxyParamCaption}\item[{int32\+\_\+t}]{device}{, }\item[{void \texorpdfstring{$\ast$}{*}}]{dev\+\_\+ptr}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor to initialize the CANN buffer context. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__backend__cann__buffer__context_a1935997335acf042e05a960e9c3044b6}{device}} & \doxylink{requirements_The}{The} device ID associated with this buffer context. \\
+\hline
+{\em \doxylink{structggml__backend__cann__buffer__context_a70312b5956dbae0bf674b7a68cc7683a}{dev\+\_\+ptr}} & Pointer to the device memory allocated for the buffer. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+ggml-\/cann.\+cpp\end{DoxyCompactItemize}

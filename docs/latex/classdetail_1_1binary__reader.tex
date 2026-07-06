@@ -1,0 +1,790 @@
+\doxysection{detail::\+binary\+\_\+reader\texorpdfstring{$<$}{<} Basic\+Json\+Type, Input\+Adapter\+Type, SAX \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classdetail_1_1binary__reader}{}\label{classdetail_1_1binary__reader}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+
+
+deserialization of CBOR, Message\+Pack, and UBJSON values  
+
+
+
+
+{\ttfamily \+\#include $<$json.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classdetail_1_1binary__reader_a5dc3e9216177efe30686876d3faccf52}{binary\+\_\+reader}} (Input\+Adapter\+Type \&\&adapter, const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}} format=input\+\_\+format\+\_\+t::\+json) noexcept
+\begin{DoxyCompactList}\small\item\em create a binary reader \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1binary__reader_a03d3ad5fd319550b8ca4e54ddcf46ba0}\label{classdetail_1_1binary__reader_a03d3ad5fd319550b8ca4e54ddcf46ba0} 
+{\bfseries binary\+\_\+reader} (const binary\+\_\+reader \&)=delete
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a4197fcaec6f876fd9019c0f6a48c7f0d}\label{classdetail_1_1binary__reader_a4197fcaec6f876fd9019c0f6a48c7f0d} 
+{\bfseries binary\+\_\+reader} (binary\+\_\+reader \&\&)=default
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a66cae2a279b02a0f575866d7c26445bc}\label{classdetail_1_1binary__reader_a66cae2a279b02a0f575866d7c26445bc} 
+\doxymbox{\hyperlink{classdetail_1_1binary__reader_a5dc3e9216177efe30686876d3faccf52}{binary\+\_\+reader}} \& {\bfseries operator=} (const \doxymbox{\hyperlink{classdetail_1_1binary__reader_a5dc3e9216177efe30686876d3faccf52}{binary\+\_\+reader}} \&)=delete
+\item 
+\Hypertarget{classdetail_1_1binary__reader_afe5457eb25503d02f42d4e558dbbf554}\label{classdetail_1_1binary__reader_afe5457eb25503d02f42d4e558dbbf554} 
+\doxymbox{\hyperlink{classdetail_1_1binary__reader_a5dc3e9216177efe30686876d3faccf52}{binary\+\_\+reader}} \& {\bfseries operator=} (\doxymbox{\hyperlink{classdetail_1_1binary__reader_a5dc3e9216177efe30686876d3faccf52}{binary\+\_\+reader}} \&\&)=default
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a8e1b5452ae426e1d7b48761859e7f52d}{sax\+\_\+parse}} (const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}} format, json\+\_\+sax\+\_\+t \texorpdfstring{$\ast$}{*}sax\+\_\+, const bool strict=true, const \doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592}{cbor\+\_\+tag\+\_\+handler\+\_\+t}} tag\+\_\+handler=\doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592acb5e100e5a9a3e7f6d1fd97512215282}{cbor\+\_\+tag\+\_\+handler\+\_\+t::\+error}})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a81a846e1a1a3205d2b79f279acb72997}\label{classdetail_1_1binary__reader_a81a846e1a1a3205d2b79f279acb72997} 
+using {\bfseries number\+\_\+integer\+\_\+t} = typename Basic\+Json\+Type::\+number\+\_\+integer\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a387c1c1b48f4bfbfd91745c320916cb2}\label{classdetail_1_1binary__reader_a387c1c1b48f4bfbfd91745c320916cb2} 
+using {\bfseries number\+\_\+unsigned\+\_\+t} = typename Basic\+Json\+Type::\+number\+\_\+unsigned\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a9f35dbfbad495dbf13d89d749589d452}\label{classdetail_1_1binary__reader_a9f35dbfbad495dbf13d89d749589d452} 
+using {\bfseries number\+\_\+float\+\_\+t} = typename Basic\+Json\+Type::\+number\+\_\+float\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a0ee67ae79f387747a4a7c7fd9bfbc001}\label{classdetail_1_1binary__reader_a0ee67ae79f387747a4a7c7fd9bfbc001} 
+using {\bfseries string\+\_\+t} = typename Basic\+Json\+Type::\+string\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a64e41342c6f297ad51df1af200c7cea8}\label{classdetail_1_1binary__reader_a64e41342c6f297ad51df1af200c7cea8} 
+using {\bfseries binary\+\_\+t} = typename Basic\+Json\+Type::\+binary\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1binary__reader_abc518b68559199b111514a68f2be2d66}\label{classdetail_1_1binary__reader_abc518b68559199b111514a68f2be2d66} 
+using {\bfseries json\+\_\+sax\+\_\+t} = SAX
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a2d386b0e8277c44c879a75db5ec7d6ab}\label{classdetail_1_1binary__reader_a2d386b0e8277c44c879a75db5ec7d6ab} 
+using {\bfseries char\+\_\+type} = typename Input\+Adapter\+Type::\+char\+\_\+type
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a2728c21d388d4d8ee420f4d0885d4136}\label{classdetail_1_1binary__reader_a2728c21d388d4d8ee420f4d0885d4136} 
+using {\bfseries char\+\_\+int\+\_\+type} = typename std::\+char\+\_\+traits$<$char\+\_\+type$>$::\+int\+\_\+type
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a66514e22cb51ce5030b77376c1f701ec}{parse\+\_\+bson\+\_\+internal}} ()
+\begin{DoxyCompactList}\small\item\em Reads in a BSON-\/object and passes it to the SAX-\/parser. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Number\+Type$>$ }\\bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_ad8eda2acffbc76cb622e6f52a13bebea}{get\+\_\+bson\+\_\+string}} (const Number\+Type len, string\+\_\+t \&result)
+\begin{DoxyCompactList}\small\item\em Parses a C-\/style string from the BSON input. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Number\+Type$>$ }\\bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_afd4a59072e687d5d07f53d7320a4ac4d}{get\+\_\+bson\+\_\+binary}} (const Number\+Type len, binary\+\_\+t \&result)
+\begin{DoxyCompactList}\small\item\em Parses a byte array input of length {\itshape len} from the BSON input. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a510e89bbd4e8940bc726f5840c318221}{parse\+\_\+bson\+\_\+element\+\_\+internal}} (const char\+\_\+int\+\_\+type element\+\_\+type, const std::\+size\+\_\+t element\+\_\+type\+\_\+parse\+\_\+position)
+\begin{DoxyCompactList}\small\item\em Read a BSON document element of the given {\itshape element\+\_\+type}. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a29ecec318fab8ccfa64b0e75536a40e4}{parse\+\_\+bson\+\_\+element\+\_\+list}} (const bool is\+\_\+array)
+\begin{DoxyCompactList}\small\item\em Read a BSON element list (as specified in the BSON-\/spec). \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a0c82ebf5d8e4007304e5d4a2158d47c8}{parse\+\_\+bson\+\_\+array}} ()
+\begin{DoxyCompactList}\small\item\em Reads an array from the BSON input and passes it to the SAX-\/parser. \end{DoxyCompactList}\item 
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a81cc2175e02ba439e22112b3b2651ed4}{parse\+\_\+cbor\+\_\+internal}} (const bool get\+\_\+char, const \doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592}{cbor\+\_\+tag\+\_\+handler\+\_\+t}} tag\+\_\+handler)
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_af739624b7c49bb1a0bc70ac6f5066a24}{get\+\_\+cbor\+\_\+string}} (string\+\_\+t \&result)
+\begin{DoxyCompactList}\small\item\em reads a CBOR string \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a6fcde744e6311dc0646735123ee83831}{get\+\_\+cbor\+\_\+binary}} (binary\+\_\+t \&result)
+\begin{DoxyCompactList}\small\item\em reads a CBOR byte array \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a90979b91cafd841cbb2014632274a96a}{get\+\_\+cbor\+\_\+array}} (const std::\+size\+\_\+t len, const \doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592}{cbor\+\_\+tag\+\_\+handler\+\_\+t}} tag\+\_\+handler)
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a6a8ec4dc630e18ebacca8fb90f2b9b37}{get\+\_\+cbor\+\_\+object}} (const std::\+size\+\_\+t len, const \doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592}{cbor\+\_\+tag\+\_\+handler\+\_\+t}} tag\+\_\+handler)
+\item 
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a7f39303c88f4c4c210653ecf69b011d8}{parse\+\_\+msgpack\+\_\+internal}} ()
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a39289c89b50b1d53cd6e066f50ad2f01}{get\+\_\+msgpack\+\_\+string}} (string\+\_\+t \&result)
+\begin{DoxyCompactList}\small\item\em reads a Message\+Pack string \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_aa2ebaeb5c91cb3065ffd8ad29c1e50e9}{get\+\_\+msgpack\+\_\+binary}} (binary\+\_\+t \&result)
+\begin{DoxyCompactList}\small\item\em reads a Message\+Pack byte array \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a975b19d6df6ec36e98a893bde5c48a08}{get\+\_\+msgpack\+\_\+array}} (const std::\+size\+\_\+t len)
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a56e6f4b666a07df7687d43fc470a781d}{get\+\_\+msgpack\+\_\+object}} (const std::\+size\+\_\+t len)
+\item 
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a34939b49c32be48c7385c11f77cd17fc}{parse\+\_\+ubjson\+\_\+internal}} (const bool get\+\_\+char=true)
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_ade7bfc83c8db15b0b4e60dd89c4fbac6}{get\+\_\+ubjson\+\_\+string}} (string\+\_\+t \&result, const bool get\+\_\+char=true)
+\begin{DoxyCompactList}\small\item\em reads a UBJSON string \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a468f6555260ea65d96b91dfd6547f2d6}{get\+\_\+ubjson\+\_\+ndarray\+\_\+size}} (std::\+vector$<$ size\+\_\+t $>$ \&dim)
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_abcd1952c7d1c9f4b5f93da9f62e23320}{get\+\_\+ubjson\+\_\+size\+\_\+value}} (std::\+size\+\_\+t \&result, bool \&is\+\_\+ndarray, char\+\_\+int\+\_\+type prefix=0)
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a0380c1d2d3332eddf36105009ff8f9fb}{get\+\_\+ubjson\+\_\+size\+\_\+type}} (std::\+pair$<$ std::\+size\+\_\+t, char\+\_\+int\+\_\+type $>$ \&result, bool inside\+\_\+ndarray=false)
+\begin{DoxyCompactList}\small\item\em determine the type and size for a container \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a45cdf02020f3bc5c27fada582f37516c}{get\+\_\+ubjson\+\_\+value}} (const char\+\_\+int\+\_\+type prefix)
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a87e4355139f3a972aa456a3ed465606e}{get\+\_\+ubjson\+\_\+array}} ()
+\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_ad579eccbac92a913ebe15a4341c4daad}{get\+\_\+ubjson\+\_\+object}} ()
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a3e86be40b4ec5679c13147056fb089c8}\label{classdetail_1_1binary__reader_a3e86be40b4ec5679c13147056fb089c8} 
+bool {\bfseries get\+\_\+ubjson\+\_\+high\+\_\+precision\+\_\+number} ()
+\item 
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}char\+\_\+int\+\_\+type \doxymbox{\hyperlink{classdetail_1_1binary__reader_a57e8e049292254920f6a643b300d9ae7}{get}} ()
+\begin{DoxyCompactList}\small\item\em get next character from the input \end{DoxyCompactList}\item 
+char\+\_\+int\+\_\+type \doxymbox{\hyperlink{classdetail_1_1binary__reader_a451f9cb2d990780be3b6ffea6223134b}{get\+\_\+ignore\+\_\+noop}} ()
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a809c1fd4598b7d4cecaf93aaf1547205}\label{classdetail_1_1binary__reader_a809c1fd4598b7d4cecaf93aaf1547205} 
+{\footnotesize template$<$typename Number\+Type, bool Input\+Is\+Little\+Endian = false$>$ }\\bool {\bfseries get\+\_\+number} (const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}} format, Number\+Type \&result)
+\item 
+{\footnotesize template$<$typename Number\+Type$>$ }\\bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a0378b0788080dd6ba0eaaaa7aab855bf}{get\+\_\+string}} (const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}} format, const Number\+Type len, string\+\_\+t \&result)
+\begin{DoxyCompactList}\small\item\em create a string by reading characters from the input \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Number\+Type$>$ }\\bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a3ec63657f0ece66358be99ee7ec46c1f}{get\+\_\+binary}} (const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}} format, const Number\+Type len, binary\+\_\+t \&result)
+\begin{DoxyCompactList}\small\item\em create a byte array by reading bytes from the input \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader_a86d19cc231aae395395030fd8ae19fd5}{unexpect\+\_\+eof}} (const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}} format, const char \texorpdfstring{$\ast$}{*}context) const
+\item 
+std::\+string \doxymbox{\hyperlink{classdetail_1_1binary__reader_a2ef89c65a295e23efa6d7363fafc84cc}{get\+\_\+token\+\_\+string}} () const
+\item 
+std::\+string \doxymbox{\hyperlink{classdetail_1_1binary__reader_a39c740811882a0023f6386858a5d5270}{exception\+\_\+message}} (const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}} format, const std::\+string \&\doxymbox{\hyperlink{namespacedetail}{detail}}, const std::\+string \&context) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a8dd61a5501d4505c1ca23a5b6b99306a}\label{classdetail_1_1binary__reader_a8dd61a5501d4505c1ca23a5b6b99306a} 
+\texorpdfstring{$\ast$}{*}input adapter Input\+Adapter\+Type {\bfseries ia}
+\item 
+\Hypertarget{classdetail_1_1binary__reader_ab69762a9129c44e043df8cf78bba0e14}\label{classdetail_1_1binary__reader_ab69762a9129c44e043df8cf78bba0e14} 
+\texorpdfstring{$\ast$}{*}the current character char\+\_\+int\+\_\+type {\bfseries current} = std::\+char\+\_\+traits$<$char\+\_\+type$>$::\+eof()
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a11a36d903606a3c05a60b0b14d10d4d5}\label{classdetail_1_1binary__reader_a11a36d903606a3c05a60b0b14d10d4d5} 
+\texorpdfstring{$\ast$}{*}the number of characters read std::\+size\+\_\+t {\bfseries chars\+\_\+read} = 0
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a778a09f2b7d4d5fa38babea76e3f8299}\label{classdetail_1_1binary__reader_a778a09f2b7d4d5fa38babea76e3f8299} 
+\texorpdfstring{$\ast$}{*}whether we can assume little endianness const bool {\bfseries is\+\_\+little\+\_\+endian} = \doxymbox{\hyperlink{namespacedetail_a9a6920228c2b39db99481d6952ca1add}{little\+\_\+endianness}}()
+\item 
+\Hypertarget{classdetail_1_1binary__reader_aed6fbb3e7a1ff49a7b0bfd9974ab92c7}\label{classdetail_1_1binary__reader_aed6fbb3e7a1ff49a7b0bfd9974ab92c7} 
+\texorpdfstring{$\ast$}{*}input format const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}} {\bfseries input\+\_\+format} = input\+\_\+format\+\_\+t::\+json
+\item 
+\Hypertarget{classdetail_1_1binary__reader_a882e29414bb1851887fd6b92768ae3a7}\label{classdetail_1_1binary__reader_a882e29414bb1851887fd6b92768ae3a7} 
+\texorpdfstring{$\ast$}{*}the SAX \doxymbox{\hyperlink{classdetail_1_1parser}{parser}} json\+\_\+sax\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries sax} = nullptr
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$\newline
+class detail::\+binary\+\_\+reader$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$}
+deserialization of CBOR, Message\+Pack, and UBJSON values 
+
+\label{doc-constructors}
+\Hypertarget{classdetail_1_1binary__reader_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classdetail_1_1binary__reader_a5dc3e9216177efe30686876d3faccf52}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!binary\_reader@{binary\_reader}}
+\index{binary\_reader@{binary\_reader}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{binary\_reader()}{binary\_reader()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a5dc3e9216177efe30686876d3faccf52} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+\doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+binary\+\_\+reader (\begin{DoxyParamCaption}\item[{Input\+Adapter\+Type \&\&}]{adapter}{, }\item[{const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}}}]{format}{ = {\ttfamily input\+\_\+format\+\_\+t:\+:\+json}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}, {\ttfamily [noexcept]}}
+
+
+
+create a binary reader 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em adapter} & input adapter to read from \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{classdetail_1_1binary__reader_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classdetail_1_1binary__reader_a39c740811882a0023f6386858a5d5270}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!exception\_message@{exception\_message}}
+\index{exception\_message@{exception\_message}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{exception\_message()}{exception\_message()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a39c740811882a0023f6386858a5d5270} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+std::\+string \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+exception\+\_\+message (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}}}]{format}{, }\item[{const std::\+string \&}]{detail}{, }\item[{const std::\+string \&}]{context}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em format} & the current format \\
+\hline
+\doxymbox{\texttt{in}}  & {\em \doxylink{namespacedetail}{detail}} & a detailed error message \\
+\hline
+\doxymbox{\texttt{in}}  & {\em context} & further context information \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a message string to use in the \doxylink{classdetail_1_1parse__error}{parse\+\_\+error} exceptions 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a57e8e049292254920f6a643b300d9ae7}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get@{get}}
+\index{get@{get}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a57e8e049292254920f6a643b300d9ae7} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}char\+\_\+int\+\_\+type \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+get next character from the input 
+
+This function provides the interface to the used input adapter. It does not throw in case the input reached EOF, but returns a -\/\textquotesingle{}ve valued {\ttfamily std::\+char\+\_\+traits\texorpdfstring{$<$}{<}char\+\_\+type\texorpdfstring{$>$}{>}::eof()} in that case.
+
+\begin{DoxyReturn}{Returns}
+character read from the input 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a3ec63657f0ece66358be99ee7ec46c1f}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_binary@{get\_binary}}
+\index{get\_binary@{get\_binary}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_binary()}{get\_binary()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a3ec63657f0ece66358be99ee7ec46c1f} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+template$<$typename Number\+Type$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+binary (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}}}]{format}{, }\item[{const Number\+Type}]{len}{, }\item[{binary\+\_\+t \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+create a byte array by reading bytes from the input 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Number\+Type} & the type of the number \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em format} & the current format (for diagnostics) \\
+\hline
+\doxymbox{\texttt{in}}  & {\em len} & number of bytes to read \\
+\hline
+\doxymbox{\texttt{out}}  & {\em result} & byte array created by reading {\itshape len} bytes\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether byte array creation completed
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+We can not reserve {\itshape len} bytes for the result, because {\itshape len} may be too large. Usually, \doxylink{classdetail_1_1binary__reader_a86d19cc231aae395395030fd8ae19fd5}{unexpect\+\_\+eof()} detects the end of the input before we run out of memory. 
+\end{DoxyNote}
+\Hypertarget{classdetail_1_1binary__reader_afd4a59072e687d5d07f53d7320a4ac4d}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_bson\_binary@{get\_bson\_binary}}
+\index{get\_bson\_binary@{get\_bson\_binary}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_bson\_binary()}{get\_bson\_binary()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_afd4a59072e687d5d07f53d7320a4ac4d} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+template$<$typename Number\+Type$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+bson\+\_\+binary (\begin{DoxyParamCaption}\item[{const Number\+Type}]{len}{, }\item[{binary\+\_\+t \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Parses a byte array input of length {\itshape len} from the BSON input. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em len} & \doxylink{requirements_The}{The} length of the byte array to be read. \\
+\hline
+\doxymbox{\texttt{in,out}}  & {\em result} & A reference to the binary variable where the read array is to be stored. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Number\+Type} & \doxylink{requirements_The}{The} type of the length {\itshape len} \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyPrecond}{Precondition}
+len \texorpdfstring{$>$}{>}= 0 
+\end{DoxyPrecond}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the byte array was successfully parsed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_ad8eda2acffbc76cb622e6f52a13bebea}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_bson\_string@{get\_bson\_string}}
+\index{get\_bson\_string@{get\_bson\_string}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_bson\_string()}{get\_bson\_string()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_ad8eda2acffbc76cb622e6f52a13bebea} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+template$<$typename Number\+Type$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+bson\+\_\+string (\begin{DoxyParamCaption}\item[{const Number\+Type}]{len}{, }\item[{string\+\_\+t \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Parses a C-\/style string from the BSON input. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in,out}}  & {\em result} & A reference to the string variable where the read string is to be stored. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the \textbackslash{}x00-\/byte indicating the end of the string was encountered before the EOF; false\`{} indicates an unexpected EOF. \texorpdfstring{$\ast$}{*}/\+ bool get\+\_\+bson\+\_\+cstr(string\+\_\+t\& result) \{ auto out = std::\+back\+\_\+inserter(result); while (true) \{ \doxylink{classdetail_1_1binary__reader_a57e8e049292254920f6a643b300d9ae7}{get()}; if (JSON\+\_\+\+HEDLEY\+\_\+\+UNLIKELY(!unexpect\+\_\+eof(input\+\_\+format\+\_\+t::\+bson, "{}cstring"{}))) \{ return false; \} if (current == 0x00) \{ return true; \} out++ = static\+\_\+cast$<$typename string\+\_\+t::\+value\+\_\+type$>$(current); \} \}
+\end{DoxyReturn}
+/\+\texorpdfstring{$\ast$}{*}!
+
+Parses a zero-\/terminated string of length {\itshape len} from the BSON input. 
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em len} & \doxylink{requirements_The}{The} length (including the zero-\/byte at the end) of the string to be read. \\
+\hline
+\doxymbox{\texttt{in,out}}  & {\em result} & A reference to the string variable where the read string is to be stored. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Number\+Type} & \doxylink{requirements_The}{The} type of the length {\itshape len} \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyPrecond}{Precondition}
+len \texorpdfstring{$>$}{>}= 1 
+\end{DoxyPrecond}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the string was successfully parsed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a90979b91cafd841cbb2014632274a96a}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_cbor\_array@{get\_cbor\_array}}
+\index{get\_cbor\_array@{get\_cbor\_array}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_cbor\_array()}{get\_cbor\_array()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a90979b91cafd841cbb2014632274a96a} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+cbor\+\_\+array (\begin{DoxyParamCaption}\item[{const std::\+size\+\_\+t}]{len}{, }\item[{const \doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592}{cbor\+\_\+tag\+\_\+handler\+\_\+t}}}]{tag\+\_\+handler}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em len} & the length of the array or static\+\_\+cast$<$std::\+size\+\_\+t$>$(-\/1) for an array of indefinite size \\
+\hline
+\doxymbox{\texttt{in}}  & {\em tag\+\_\+handler} & how CBOR tags should be treated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether array creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a6fcde744e6311dc0646735123ee83831}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_cbor\_binary@{get\_cbor\_binary}}
+\index{get\_cbor\_binary@{get\_cbor\_binary}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_cbor\_binary()}{get\_cbor\_binary()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a6fcde744e6311dc0646735123ee83831} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+cbor\+\_\+binary (\begin{DoxyParamCaption}\item[{binary\+\_\+t \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+reads a CBOR byte array 
+
+This function first reads starting bytes to determine the expected byte array length and then copies this number of bytes into the byte array. Additionally, CBOR\textquotesingle{}s byte arrays with indefinite lengths are supported.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em result} & created byte array\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether byte array creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a6a8ec4dc630e18ebacca8fb90f2b9b37}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_cbor\_object@{get\_cbor\_object}}
+\index{get\_cbor\_object@{get\_cbor\_object}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_cbor\_object()}{get\_cbor\_object()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a6a8ec4dc630e18ebacca8fb90f2b9b37} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+cbor\+\_\+object (\begin{DoxyParamCaption}\item[{const std::\+size\+\_\+t}]{len}{, }\item[{const \doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592}{cbor\+\_\+tag\+\_\+handler\+\_\+t}}}]{tag\+\_\+handler}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em len} & the length of the object or static\+\_\+cast$<$std::\+size\+\_\+t$>$(-\/1) for an object of indefinite size \\
+\hline
+\doxymbox{\texttt{in}}  & {\em tag\+\_\+handler} & how CBOR tags should be treated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether object creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_af739624b7c49bb1a0bc70ac6f5066a24}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_cbor\_string@{get\_cbor\_string}}
+\index{get\_cbor\_string@{get\_cbor\_string}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_cbor\_string()}{get\_cbor\_string()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_af739624b7c49bb1a0bc70ac6f5066a24} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+cbor\+\_\+string (\begin{DoxyParamCaption}\item[{string\+\_\+t \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+reads a CBOR string 
+
+This function first reads starting bytes to determine the expected string length and then copies this number of bytes into a string. Additionally, CBOR\textquotesingle{}s strings with indefinite lengths are supported.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em result} & created string\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether string creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a451f9cb2d990780be3b6ffea6223134b}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_ignore\_noop@{get\_ignore\_noop}}
+\index{get\_ignore\_noop@{get\_ignore\_noop}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ignore\_noop()}{get\_ignore\_noop()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a451f9cb2d990780be3b6ffea6223134b} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+char\+\_\+int\+\_\+type \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+ignore\+\_\+noop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\begin{DoxyReturn}{Returns}
+character read from the input after ignoring all \textquotesingle{}N\textquotesingle{} entries 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a975b19d6df6ec36e98a893bde5c48a08}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_msgpack\_array@{get\_msgpack\_array}}
+\index{get\_msgpack\_array@{get\_msgpack\_array}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_msgpack\_array()}{get\_msgpack\_array()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a975b19d6df6ec36e98a893bde5c48a08} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+msgpack\+\_\+array (\begin{DoxyParamCaption}\item[{const std::\+size\+\_\+t}]{len}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em len} & the length of the array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether array creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_aa2ebaeb5c91cb3065ffd8ad29c1e50e9}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_msgpack\_binary@{get\_msgpack\_binary}}
+\index{get\_msgpack\_binary@{get\_msgpack\_binary}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_msgpack\_binary()}{get\_msgpack\_binary()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_aa2ebaeb5c91cb3065ffd8ad29c1e50e9} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+msgpack\+\_\+binary (\begin{DoxyParamCaption}\item[{binary\+\_\+t \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+reads a Message\+Pack byte array 
+
+This function first reads starting bytes to determine the expected byte array length and then copies this number of bytes into a byte array.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em result} & created byte array\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether byte array creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a56e6f4b666a07df7687d43fc470a781d}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_msgpack\_object@{get\_msgpack\_object}}
+\index{get\_msgpack\_object@{get\_msgpack\_object}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_msgpack\_object()}{get\_msgpack\_object()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a56e6f4b666a07df7687d43fc470a781d} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+msgpack\+\_\+object (\begin{DoxyParamCaption}\item[{const std::\+size\+\_\+t}]{len}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em len} & the length of the object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether object creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a39289c89b50b1d53cd6e066f50ad2f01}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_msgpack\_string@{get\_msgpack\_string}}
+\index{get\_msgpack\_string@{get\_msgpack\_string}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_msgpack\_string()}{get\_msgpack\_string()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a39289c89b50b1d53cd6e066f50ad2f01} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+msgpack\+\_\+string (\begin{DoxyParamCaption}\item[{string\+\_\+t \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+reads a Message\+Pack string 
+
+This function first reads starting bytes to determine the expected string length and then copies this number of bytes into a string.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em result} & created string\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether string creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a0378b0788080dd6ba0eaaaa7aab855bf}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_string@{get\_string}}
+\index{get\_string@{get\_string}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_string()}{get\_string()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a0378b0788080dd6ba0eaaaa7aab855bf} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+template$<$typename Number\+Type$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+string (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}}}]{format}{, }\item[{const Number\+Type}]{len}{, }\item[{string\+\_\+t \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+create a string by reading characters from the input 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Number\+Type} & the type of the number \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em format} & the current format (for diagnostics) \\
+\hline
+\doxymbox{\texttt{in}}  & {\em len} & number of characters to read \\
+\hline
+\doxymbox{\texttt{out}}  & {\em result} & string created by reading {\itshape len} bytes\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether string creation completed
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+We can not reserve {\itshape len} bytes for the result, because {\itshape len} may be too large. Usually, \doxylink{classdetail_1_1binary__reader_a86d19cc231aae395395030fd8ae19fd5}{unexpect\+\_\+eof()} detects the end of the input before we run out of string memory. 
+\end{DoxyNote}
+\Hypertarget{classdetail_1_1binary__reader_a2ef89c65a295e23efa6d7363fafc84cc}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_token\_string@{get\_token\_string}}
+\index{get\_token\_string@{get\_token\_string}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_token\_string()}{get\_token\_string()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a2ef89c65a295e23efa6d7363fafc84cc} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+std::\+string \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+token\+\_\+string (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\begin{DoxyReturn}{Returns}
+a string representation of the last read byte 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a87e4355139f3a972aa456a3ed465606e}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_ubjson\_array@{get\_ubjson\_array}}
+\index{get\_ubjson\_array@{get\_ubjson\_array}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ubjson\_array()}{get\_ubjson\_array()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a87e4355139f3a972aa456a3ed465606e} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+ubjson\+\_\+array (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\begin{DoxyReturn}{Returns}
+whether array creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a468f6555260ea65d96b91dfd6547f2d6}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_ubjson\_ndarray\_size@{get\_ubjson\_ndarray\_size}}
+\index{get\_ubjson\_ndarray\_size@{get\_ubjson\_ndarray\_size}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ubjson\_ndarray\_size()}{get\_ubjson\_ndarray\_size()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a468f6555260ea65d96b91dfd6547f2d6} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+ubjson\+\_\+ndarray\+\_\+size (\begin{DoxyParamCaption}\item[{std::\+vector$<$ size\+\_\+t $>$ \&}]{dim}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em dim} & an integer vector storing the ND array dimensions \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether reading ND array size vector is successful 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_ad579eccbac92a913ebe15a4341c4daad}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_ubjson\_object@{get\_ubjson\_object}}
+\index{get\_ubjson\_object@{get\_ubjson\_object}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ubjson\_object()}{get\_ubjson\_object()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_ad579eccbac92a913ebe15a4341c4daad} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+ubjson\+\_\+object (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\begin{DoxyReturn}{Returns}
+whether object creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a0380c1d2d3332eddf36105009ff8f9fb}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_ubjson\_size\_type@{get\_ubjson\_size\_type}}
+\index{get\_ubjson\_size\_type@{get\_ubjson\_size\_type}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ubjson\_size\_type()}{get\_ubjson\_size\_type()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a0380c1d2d3332eddf36105009ff8f9fb} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+ubjson\+\_\+size\+\_\+type (\begin{DoxyParamCaption}\item[{std::\+pair$<$ std::\+size\+\_\+t, char\+\_\+int\+\_\+type $>$ \&}]{result}{, }\item[{bool}]{inside\+\_\+ndarray}{ = {\ttfamily false}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+determine the type and size for a container 
+
+In the optimized UBJSON format, a type and a size can be provided to allow for a more compact representation.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em result} & pair of the size and the type \\
+\hline
+\doxymbox{\texttt{in}}  & {\em inside\+\_\+ndarray} & whether the parser is parsing an ND array dimensional vector\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether pair creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_abcd1952c7d1c9f4b5f93da9f62e23320}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_ubjson\_size\_value@{get\_ubjson\_size\_value}}
+\index{get\_ubjson\_size\_value@{get\_ubjson\_size\_value}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ubjson\_size\_value()}{get\_ubjson\_size\_value()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_abcd1952c7d1c9f4b5f93da9f62e23320} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+ubjson\+\_\+size\+\_\+value (\begin{DoxyParamCaption}\item[{std::\+size\+\_\+t \&}]{result}{, }\item[{bool \&}]{is\+\_\+ndarray}{, }\item[{char\+\_\+int\+\_\+type}]{prefix}{ = {\ttfamily 0}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em result} & determined size \\
+\hline
+\doxymbox{\texttt{in,out}}  & {\em is\+\_\+ndarray} & for input, {\ttfamily true} means already inside an ndarray vector or ndarray dimension is not allowed; {\ttfamily false} means ndarray is allowed; for output, {\ttfamily true} means an ndarray is found; is\+\_\+ndarray can only return {\ttfamily true} when its initial value is {\ttfamily false} \\
+\hline
+\doxymbox{\texttt{in}}  & {\em prefix} & type marker if already read, otherwise set to 0\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether size determination completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_ade7bfc83c8db15b0b4e60dd89c4fbac6}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_ubjson\_string@{get\_ubjson\_string}}
+\index{get\_ubjson\_string@{get\_ubjson\_string}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ubjson\_string()}{get\_ubjson\_string()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_ade7bfc83c8db15b0b4e60dd89c4fbac6} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+ubjson\+\_\+string (\begin{DoxyParamCaption}\item[{string\+\_\+t \&}]{result}{, }\item[{const bool}]{get\+\_\+char}{ = {\ttfamily true}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+reads a UBJSON string 
+
+This function is either called after reading the \textquotesingle{}S\textquotesingle{} byte explicitly indicating a string, or in case of an object key where the \textquotesingle{}S\textquotesingle{} byte can be left out.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em result} & created string \\
+\hline
+\doxymbox{\texttt{in}}  & {\em get\+\_\+char} & whether a new character should be retrieved from the input (true, default) or whether the last read character should be considered instead\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether string creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a45cdf02020f3bc5c27fada582f37516c}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!get\_ubjson\_value@{get\_ubjson\_value}}
+\index{get\_ubjson\_value@{get\_ubjson\_value}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ubjson\_value()}{get\_ubjson\_value()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a45cdf02020f3bc5c27fada582f37516c} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+get\+\_\+ubjson\+\_\+value (\begin{DoxyParamCaption}\item[{const char\+\_\+int\+\_\+type}]{prefix}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em prefix} & the previously read or set type prefix \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether value creation completed 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a0c82ebf5d8e4007304e5d4a2158d47c8}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!parse\_bson\_array@{parse\_bson\_array}}
+\index{parse\_bson\_array@{parse\_bson\_array}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{parse\_bson\_array()}{parse\_bson\_array()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a0c82ebf5d8e4007304e5d4a2158d47c8} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+parse\+\_\+bson\+\_\+array (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Reads an array from the BSON input and passes it to the SAX-\/parser. 
+
+\begin{DoxyReturn}{Returns}
+whether a valid BSON-\/array was passed to the SAX parser 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a510e89bbd4e8940bc726f5840c318221}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!parse\_bson\_element\_internal@{parse\_bson\_element\_internal}}
+\index{parse\_bson\_element\_internal@{parse\_bson\_element\_internal}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{parse\_bson\_element\_internal()}{parse\_bson\_element\_internal()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a510e89bbd4e8940bc726f5840c318221} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+parse\+\_\+bson\+\_\+element\+\_\+internal (\begin{DoxyParamCaption}\item[{const char\+\_\+int\+\_\+type}]{element\+\_\+type}{, }\item[{const std::\+size\+\_\+t}]{element\+\_\+type\+\_\+parse\+\_\+position}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Read a BSON document element of the given {\itshape element\+\_\+type}. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em element\+\_\+type} & \doxylink{requirements_The}{The} BSON element type, c.\+f. \href{http://bsonspec.org/spec.html}{\texttt{http:\+/\+/\+bsonspec.\+org/\+spec.\+html}} \\
+\hline
+\doxymbox{\texttt{in}}  & {\em element\+\_\+type\+\_\+parse\+\_\+position} & \doxylink{requirements_The}{The} position in the input stream, where the {\ttfamily element\+\_\+type} was read. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+Not all BSON element types are supported yet. An unsupported {\itshape element\+\_\+type} will give rise to a parse\+\_\+error.\+114:\+ Unsupported BSON record type 0x... 
+\end{DoxyWarning}
+\begin{DoxyReturn}{Returns}
+whether a valid BSON-\/object/\+array was passed to the SAX parser 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a29ecec318fab8ccfa64b0e75536a40e4}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!parse\_bson\_element\_list@{parse\_bson\_element\_list}}
+\index{parse\_bson\_element\_list@{parse\_bson\_element\_list}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{parse\_bson\_element\_list()}{parse\_bson\_element\_list()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a29ecec318fab8ccfa64b0e75536a40e4} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+parse\+\_\+bson\+\_\+element\+\_\+list (\begin{DoxyParamCaption}\item[{const bool}]{is\+\_\+array}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Read a BSON element list (as specified in the BSON-\/spec). 
+
+\doxylink{requirements_The}{The} same binary layout is used for objects and arrays, hence it must be indicated with the argument {\itshape is\+\_\+array} which one is expected (true -\/-\/\texorpdfstring{$>$}{>} array, false -\/-\/\texorpdfstring{$>$}{>} object).
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em is\+\_\+array} & Determines if the element list being read is to be treated as an object ({\itshape is\+\_\+array} == false), or as an array ({\itshape is\+\_\+array} == true). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether a valid BSON-\/object/\+array was passed to the SAX parser 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a66514e22cb51ce5030b77376c1f701ec}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!parse\_bson\_internal@{parse\_bson\_internal}}
+\index{parse\_bson\_internal@{parse\_bson\_internal}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{parse\_bson\_internal()}{parse\_bson\_internal()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a66514e22cb51ce5030b77376c1f701ec} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+parse\+\_\+bson\+\_\+internal (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Reads in a BSON-\/object and passes it to the SAX-\/parser. 
+
+\begin{DoxyReturn}{Returns}
+whether a valid BSON-\/value was passed to the SAX parser 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a81cc2175e02ba439e22112b3b2651ed4}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!parse\_cbor\_internal@{parse\_cbor\_internal}}
+\index{parse\_cbor\_internal@{parse\_cbor\_internal}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{parse\_cbor\_internal()}{parse\_cbor\_internal()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a81cc2175e02ba439e22112b3b2651ed4} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+parse\+\_\+cbor\+\_\+internal (\begin{DoxyParamCaption}\item[{const bool}]{get\+\_\+char}{, }\item[{const \doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592}{cbor\+\_\+tag\+\_\+handler\+\_\+t}}}]{tag\+\_\+handler}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em get\+\_\+char} & whether a new character should be retrieved from the input (true) or whether the last read character should be considered instead (false) \\
+\hline
+\doxymbox{\texttt{in}}  & {\em tag\+\_\+handler} & how CBOR tags should be treated\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether a valid CBOR value was passed to the SAX parser 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a7f39303c88f4c4c210653ecf69b011d8}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!parse\_msgpack\_internal@{parse\_msgpack\_internal}}
+\index{parse\_msgpack\_internal@{parse\_msgpack\_internal}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{parse\_msgpack\_internal()}{parse\_msgpack\_internal()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a7f39303c88f4c4c210653ecf69b011d8} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+parse\+\_\+msgpack\+\_\+internal (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\begin{DoxyReturn}{Returns}
+whether a valid Message\+Pack value was passed to the SAX parser 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a34939b49c32be48c7385c11f77cd17fc}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!parse\_ubjson\_internal@{parse\_ubjson\_internal}}
+\index{parse\_ubjson\_internal@{parse\_ubjson\_internal}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{parse\_ubjson\_internal()}{parse\_ubjson\_internal()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a34939b49c32be48c7385c11f77cd17fc} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+parse\+\_\+ubjson\+\_\+internal (\begin{DoxyParamCaption}\item[{const bool}]{get\+\_\+char}{ = {\ttfamily true}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em get\+\_\+char} & whether a new character should be retrieved from the input (true, default) or whether the last read character should be considered instead\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether a valid UBJSON value was passed to the SAX parser 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a8e1b5452ae426e1d7b48761859e7f52d}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!sax\_parse@{sax\_parse}}
+\index{sax\_parse@{sax\_parse}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{sax\_parse()}{sax\_parse()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a8e1b5452ae426e1d7b48761859e7f52d} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+sax\+\_\+parse (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}}}]{format}{, }\item[{json\+\_\+sax\+\_\+t \texorpdfstring{$\ast$}{*}}]{sax\+\_\+}{, }\item[{const bool}]{strict}{ = {\ttfamily true}, }\item[{const \doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592}{cbor\+\_\+tag\+\_\+handler\+\_\+t}}}]{tag\+\_\+handler}{ = {\ttfamily \doxymbox{\hyperlink{namespacedetail_a7c070b2bf3d61e3d8b8013f6fb18d592acb5e100e5a9a3e7f6d1fd97512215282}{cbor\+\_\+tag\+\_\+handler\+\_\+t::\+error}}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em format} & the binary format to parse \\
+\hline
+\doxymbox{\texttt{in}}  & {\em sax\+\_\+} & a SAX event processor \\
+\hline
+\doxymbox{\texttt{in}}  & {\em strict} & whether to expect the input to be consumed completed \\
+\hline
+\doxymbox{\texttt{in}}  & {\em tag\+\_\+handler} & how to treat CBOR tags\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether parsing was successful 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1binary__reader_a86d19cc231aae395395030fd8ae19fd5}\index{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}!unexpect\_eof@{unexpect\_eof}}
+\index{unexpect\_eof@{unexpect\_eof}!detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$@{detail::binary\_reader$<$ BasicJsonType, InputAdapterType, SAX $>$}}
+\doxysubsubsection{\texorpdfstring{unexpect\_eof()}{unexpect\_eof()}}
+{\footnotesize\ttfamily \label{classdetail_1_1binary__reader_a86d19cc231aae395395030fd8ae19fd5} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type, typename SAX = json\+\_\+sax\+\_\+dom\+\_\+parser$<$\+Basic\+Json\+Type$>$$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1binary__reader}{detail::\+binary\+\_\+reader}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type, SAX $>$::\+unexpect\+\_\+eof (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{namespacedetail_a0ab3b338d0eadc6890b72cccef0ea04f}{input\+\_\+format\+\_\+t}}}]{format}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{context}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em format} & the current format (for diagnostics) \\
+\hline
+\doxymbox{\texttt{in}}  & {\em context} & further context information (for diagnostics) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+whether the last read character is not EOF 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+json.\+hpp\end{DoxyCompactItemize}

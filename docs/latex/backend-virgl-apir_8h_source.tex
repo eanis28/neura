@@ -1,0 +1,38 @@
+\doxysection{backend-\/virgl-\/apir.h}
+\hypertarget{backend-virgl-apir_8h_source}{}\label{backend-virgl-apir_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/backend-\/virgl-\/apir.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/backend-\/virgl-\/apir.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend-\/impl.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}shared/api\_remoting.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cstdarg>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cstdio>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{extern}\ ggml\_backend\_reg\_t\ reg;}
+\DoxyCodeLine{00013\ \textcolor{keyword}{extern}\ ggml\_backend\_dev\_t\ dev;}
+\DoxyCodeLine{00014\ \textcolor{keyword}{extern}\ ggml\_backend\_t\ \ \ \ \ bck;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structvirgl__apir__callbacks}{virgl\_apir\_callbacks}}\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ (*get\_config)(uint32\_t\ virgl\_ctx\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key);}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ (*get\_shmem\_ptr)(uint32\_t\ virgl\_ctx\_id,\ uint32\_t\ res\_id);}
+\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00022\ ApirLoadLibraryReturnCode\ apir\_backend\_initialize(uint32\_t\ virgl\_ctx\_id,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirgl__apir__callbacks}{virgl\_apir\_callbacks}}\ *\ virgl\_cbs);}
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_backend\_deinit(uint32\_t\ virgl\_ctx\_id);}
+\DoxyCodeLine{00024\ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_backend\_dispatcher(uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ virgl\_ctx\_id,}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structvirgl__apir__callbacks}{virgl\_apir\_callbacks}}\ *\ virgl\_cbs,}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cmd\_type,}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dec\_cur,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ dec\_end,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enc\_cur,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ enc\_end,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ **\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enc\_cur\_after);}
+\DoxyCodeLine{00032\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,143 @@
+\doxysection{llama-\/kv-\/cache-\/iswa.h}
+\hypertarget{llama-kv-cache-iswa_8h_source}{}\label{llama-kv-cache-iswa_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/kv-\/cache-\/iswa.h@{whisper.cpp/examples/talk-\/llama/llama-\/kv-\/cache-\/iswa.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama-\/kv-\/cache.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ llama\_kv\_cache\_iswa}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ utilizes\ two\ instances\ of\ llama\_kv\_cache}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \ \ the\ first\ instance\ is\ for\ the\ non-\/SWA\ layers\ of\ the\ model\ and\ the\ second\ instance\ is\ for\ the\ SWA\ layers}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }llama\_kv\_cache\_iswa\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structllama__memory__i}{llama\_memory\_i}}\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00016\ \ \ \ \ llama\_kv\_cache\_iswa(}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ \&\ model,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_type\ \ \ type\_k,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_type\ \ \ type\_v,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ v\_trans,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ offload,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ swa\_full,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ unified,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ kv\_size,}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ n\_seq\_max,}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ n\_ubatch,}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ n\_pad,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ layer\_filter\_cb\ \&\ filter,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \ layer\_reuse\_cb\ \&\ reuse);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \string~llama\_kv\_cache\_iswa()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ llama\_memory\_i}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ llama\_memory\_context\_ptr\ init\_batch(}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllama__batch__allocr}{llama\_batch\_allocr}}\ \&\ balloc,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ n\_ubatch,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ embd\_all)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ llama\_memory\_context\_ptr\ init\_full()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ llama\_memory\_context\_ptr\ init\_update(\doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ lctx,\ \textcolor{keywordtype}{bool}\ optimize)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_can\_shift()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ clear(\textcolor{keywordtype}{bool}\ data)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ seq\_rm\ \ (llama\_seq\_id\ seq\_id,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p0,\ llama\_pos\ p1)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ seq\_cp\ \ (llama\_seq\_id\ seq\_id\_src,\ llama\_seq\_id\ seq\_id\_dst,\ llama\_pos\ p0,\ llama\_pos\ p1)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ seq\_keep(llama\_seq\_id\ seq\_id)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{override};}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ seq\_add\ (llama\_seq\_id\ seq\_id,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p0,\ llama\_pos\ p1,\ llama\_pos\ shift)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ seq\_div\ (llama\_seq\_id\ seq\_id,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p0,\ llama\_pos\ p1,\ \textcolor{keywordtype}{int}\ d)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ llama\_pos\ seq\_pos\_min(llama\_seq\_id\ seq\_id)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00057\ \ \ \ \ llama\_pos\ seq\_pos\_max(llama\_seq\_id\ seq\_id)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ std::map<ggml\_backend\_buffer\_type\_t,\ size\_t>\ memory\_breakdown()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ state\ write/load}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ state\_write(\doxymbox{\hyperlink{classllama__io__write__i}{llama\_io\_write\_i}}\ \&\ io,\ llama\_seq\_id\ seq\_id\ =\ -\/1,\ llama\_state\_seq\_flags\ flags\ =\ 0)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ state\_read\ (\doxymbox{\hyperlink{classllama__io__read__i}{llama\_io\_read\_i}}\ \ \&\ io,\ llama\_seq\_id\ seq\_id\ =\ -\/1,\ llama\_state\_seq\_flags\ flags\ =\ 0)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ llama\_kv\_cache\_iswa\ specific\ API}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \doxymbox{\hyperlink{classllama__kv__cache}{llama\_kv\_cache}}\ *\ get\_base()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00071\ \ \ \ \ \doxymbox{\hyperlink{classllama__kv__cache}{llama\_kv\_cache}}\ *\ get\_swa\ ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \&\ hparams;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ unified;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ std::unique\_ptr<llama\_kv\_cache>\ kv\_base;}
+\DoxyCodeLine{00079\ \ \ \ \ std::unique\_ptr<llama\_kv\_cache>\ kv\_swa;}
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{class\ }llama\_kv\_cache\_iswa\_context\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structllama__memory__context__i}{llama\_memory\_context\_i}}\ \{}
+\DoxyCodeLine{00083\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{using\ }slot\_info\_vec\_t\ =\ llama\_kv\_cache::slot\_info\_vec\_t;}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//\ used\ for\ errors}}
+\DoxyCodeLine{00087\ \ \ \ \ llama\_kv\_cache\_iswa\_context(llama\_memory\_status\ status);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ used\ to\ create\ a\ full-\/cache\ context}}
+\DoxyCodeLine{00090\ \ \ \ \ llama\_kv\_cache\_iswa\_context(}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllama__kv__cache__iswa}{llama\_kv\_cache\_iswa}}\ *\ kv);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ used\ to\ create\ an\ update\ context}}
+\DoxyCodeLine{00094\ \ \ \ \ llama\_kv\_cache\_iswa\_context(}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllama__kv__cache__iswa}{llama\_kv\_cache\_iswa}}\ *\ kv,}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ lctx,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ optimize);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{comment}{//\ used\ to\ create\ a\ batch\ processing\ context\ from\ a\ batch}}
+\DoxyCodeLine{00100\ \ \ \ \ llama\_kv\_cache\_iswa\_context(}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllama__kv__cache__iswa}{llama\_kv\_cache\_iswa}}\ *\ kv,}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ slot\_info\_vec\_t\ sinfos\_base,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ slot\_info\_vec\_t\ sinfos\_swa,}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<llama\_ubatch>\ ubatches);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llama\_kv\_cache\_iswa\_context();}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//\ llama\_memory\_context\_i}}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{bool}\ next()\ \ \textcolor{keyword}{override};}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{bool}\ apply()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ llama\_memory\_status\ \ get\_status()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ \&\ get\_ubatch()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ llama\_kv\_cache\_iswa\_context\ specific\ API}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__context}{llama\_kv\_cache\_context}}\ *\ get\_base()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__context}{llama\_kv\_cache\_context}}\ *\ get\_swa()\ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{comment}{//llama\_kv\_cache\_iswa\ *\ kv;}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ the\ index\ of\ the\ next\ ubatch\ to\ process}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\_next\ =\ 0;}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ std::vector<llama\_ubatch>\ ubatches;}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{const}\ llama\_memory\_context\_ptr\ ctx\_base;}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{const}\ llama\_memory\_context\_ptr\ ctx\_swa;}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{const}\ llama\_memory\_status\ status;}
+\DoxyCodeLine{00137\ \};}
+
+\end{DoxyCode}

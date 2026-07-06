@@ -1,0 +1,61 @@
+\doxysection{llama\+\_\+file Struct Reference}
+\hypertarget{structllama__file}{}\label{structllama__file}\index{llama\_file@{llama\_file}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structllama__file_1_1impl}{impl}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__file_afe4073710183ae7d4ef66cf5bf9f9406}\label{structllama__file_afe4073710183ae7d4ef66cf5bf9f9406} 
+{\bfseries llama\+\_\+file} (const char \texorpdfstring{$\ast$}{*}fname, const char \texorpdfstring{$\ast$}{*}mode, bool use\+\_\+direct\+\_\+io=false)
+\item 
+\Hypertarget{structllama__file_ac26ba7cbc640da8329ca7acc81c813ec}\label{structllama__file_ac26ba7cbc640da8329ca7acc81c813ec} 
+size\+\_\+t {\bfseries tell} () const
+\item 
+\Hypertarget{structllama__file_af9b30e3ea8bdfde38cf1bcac7e933223}\label{structllama__file_af9b30e3ea8bdfde38cf1bcac7e933223} 
+size\+\_\+t {\bfseries size} () const
+\item 
+\Hypertarget{structllama__file_aa3d79937f5efe9162ddec0bbb0dd040f}\label{structllama__file_aa3d79937f5efe9162ddec0bbb0dd040f} 
+int {\bfseries file\+\_\+id} () const
+\item 
+\Hypertarget{structllama__file_a6c10ef948dd9ef3e1917ee950e8934c0}\label{structllama__file_a6c10ef948dd9ef3e1917ee950e8934c0} 
+void {\bfseries seek} (size\+\_\+t offset, int whence) const
+\item 
+\Hypertarget{structllama__file_a2e9047b6a31a6202b6044b4fd8f9b91c}\label{structllama__file_a2e9047b6a31a6202b6044b4fd8f9b91c} 
+void {\bfseries read\+\_\+raw} (void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t len)
+\item 
+\Hypertarget{structllama__file_af7dd714105d398b1257a78f8a616685a}\label{structllama__file_af7dd714105d398b1257a78f8a616685a} 
+void {\bfseries read\+\_\+raw\+\_\+unsafe} (void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t len)
+\item 
+\Hypertarget{structllama__file_a5e62fe6281691a2e2c88a7a0f5098ba8}\label{structllama__file_a5e62fe6281691a2e2c88a7a0f5098ba8} 
+void {\bfseries read\+\_\+aligned\+\_\+chunk} (void \texorpdfstring{$\ast$}{*}dest, size\+\_\+t size)
+\item 
+\Hypertarget{structllama__file_a0012222c7344de91b682e8b3ab51f7b6}\label{structllama__file_a0012222c7344de91b682e8b3ab51f7b6} 
+uint32\+\_\+t {\bfseries read\+\_\+u32} ()
+\item 
+\Hypertarget{structllama__file_ac521d2046dce9673692861056c889a0a}\label{structllama__file_ac521d2046dce9673692861056c889a0a} 
+void {\bfseries write\+\_\+raw} (const void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t len) const
+\item 
+\Hypertarget{structllama__file_a72f247297f4fbef64da26b151b8a735f}\label{structllama__file_a72f247297f4fbef64da26b151b8a735f} 
+void {\bfseries write\+\_\+u32} (uint32\+\_\+t val) const
+\item 
+\Hypertarget{structllama__file_a0a4d88bcc175f1ba114c5f23f3005e1f}\label{structllama__file_a0a4d88bcc175f1ba114c5f23f3005e1f} 
+size\+\_\+t {\bfseries read\+\_\+alignment} () const
+\item 
+\Hypertarget{structllama__file_a757ee06f8ece5dd4e016cf1d451f238d}\label{structllama__file_a757ee06f8ece5dd4e016cf1d451f238d} 
+bool {\bfseries has\+\_\+direct\+\_\+io} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__file_af46012ac7039f298de39e610d67bf2fe}\label{structllama__file_af46012ac7039f298de39e610d67bf2fe} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structllama__file_1_1impl}{impl}} $>$ {\bfseries pimpl}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/mmap.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/mmap.\+cpp\end{DoxyCompactItemize}

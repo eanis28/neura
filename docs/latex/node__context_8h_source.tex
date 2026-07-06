@@ -1,0 +1,118 @@
+\doxysection{node\+\_\+context.\+h}
+\hypertarget{node__context_8h_source}{}\label{node__context_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/openvino/node\_context.h@{whisper.cpp/ggml/src/ggml-\/openvino/openvino/node\_context.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <openvino/frontend/node\_context.hpp>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}decoder.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }ov\ \{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }frontend\ \{}
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }ggml\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_translate_session}{TranslateSession}};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{typedef}\ std::map<std::string,\ Output<Node>>\ TensorMap;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{class\ }NodeContext\ :\ \textcolor{keyword}{public}\ frontend::NodeContext\ \{}
+\DoxyCodeLine{00018\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00019\ \ \ \ \ NodeContext(\textcolor{keyword}{const}\ std::shared\_ptr<GgmlDecoder>\&\ decoder,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<TensorMap>\&\ tensor\_map,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ node\_idx,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_translate_session}{TranslateSession}}*\ translate\_session\ =\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ :\ ov::frontend::NodeContext(decoder-\/>get\_op\_type(node\_idx)),}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ m\_decoder(decoder),}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ m\_tensor\_map(tensor\_map),}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ m\_node\_idx(node\_idx),}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ m\_translate\_session(translate\_session)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ m\_input\_names\ =\ decoder-\/>get\_input\_names(m\_node\_idx);}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ m\_output\_names\ =\ decoder-\/>get\_output\_names(m\_node\_idx);}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_translate_session}{TranslateSession}}*\ get\_translate\_session()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_translate\_session;}
+\DoxyCodeLine{00034\ \ \ \ \ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ get\_input\_names()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_input\_names;\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ get\_input\_size()\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_input\_size(m\_node\_idx);}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ ov::element::Type\ get\_input\_type(\textcolor{keywordtype}{size\_t}\ index)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_input\_type(m\_node\_idx,\ m\_input\_names[index]);}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ PartialShape\ get\_input\_shape(\textcolor{keywordtype}{size\_t}\ input\_index)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_input\_shape(m\_node\_idx,\ m\_input\_names[input\_index]);}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ std::vector<size\_t>\ get\_input\_stride(\textcolor{keywordtype}{size\_t}\ index)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_input\_stride(m\_node\_idx,\ m\_input\_names[index]);}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ std::string\ get\_output\_name()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_output\_names[0];\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ PartialShape\ get\_output\_shape()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_output\_shape(m\_node\_idx);\ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ int32\_t*\ get\_input\_op\_params(\textcolor{keywordtype}{size\_t}\ index)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_input\_op\_params(m\_node\_idx,\ m\_input\_names[index]);}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ int32\_t\ *\ get\_output\_op\_params()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_output\_op\_params(m\_node\_idx);\ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ ov::element::Type\ get\_output\_type()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_output\_type(m\_node\_idx);}
+\DoxyCodeLine{00066\ \ \ \ \ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ Output<Node>\ get\_input(\textcolor{keywordtype}{int}\ idx)\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_tensor\_map-\/>at(m\_input\_names[idx]);}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ Output<Node>\ get\_input(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tensor\_map-\/>find(name)\ ==\ m\_tensor\_map-\/>end())\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}'"{}}\ +\ name\ +\ \textcolor{stringliteral}{"{}'\ not\ found\ in\ tensor\ map."{}});}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_tensor\_map-\/>at(name);}
+\DoxyCodeLine{00077\ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_input(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_tensor\_map-\/>find(name)\ !=\ m\_tensor\_map-\/>end();}
+\DoxyCodeLine{00081\ \ \ \ \ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ get\_name()\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_op\_name(m\_node\_idx);}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ ov::Any\ get\_attribute\_as\_any(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_attribute(name);}
+\DoxyCodeLine{00089\ \ \ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{int}\ get\_op\_case()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_decoder-\/>get\_op\_case(m\_node\_idx);}
+\DoxyCodeLine{00093\ \ \ \ \ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_static()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_decoder-\/>is\_static();\ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_stateful()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_decoder-\/>is\_stateful();\ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00100\ \ \ \ \ std::shared\_ptr<GgmlDecoder>\ m\_decoder;}
+\DoxyCodeLine{00101\ \ \ \ \ std::shared\_ptr<TensorMap>\&\ m\_tensor\_map;}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_node\_idx;}
+\DoxyCodeLine{00103\ \ \ \ \ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_translate_session}{TranslateSession}}*\ m\_translate\_session;}
+\DoxyCodeLine{00104\ \ \ \ \ std::vector<std::string>\ m\_input\_names;}
+\DoxyCodeLine{00105\ \ \ \ \ std::vector<std::string>\ m\_output\_names;}
+\DoxyCodeLine{00106\ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{using\ }CreatorFunction\ =\ std::function<ov::OutputVector(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_node_context}{ov::frontend::ggml::NodeContext}}\&)>;}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \}\ \ \textcolor{comment}{//\ namespace\ ggml}}
+\DoxyCodeLine{00111\ \}\ \ \textcolor{comment}{//\ namespace\ frontend}}
+\DoxyCodeLine{00112\ \}\ \ \textcolor{comment}{//\ namespace\ ov}}
+
+\end{DoxyCode}

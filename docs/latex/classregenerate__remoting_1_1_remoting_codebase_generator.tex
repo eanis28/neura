@@ -1,0 +1,143 @@
+\doxysection{regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator Class Reference}
+\hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator}{}\label{classregenerate__remoting_1_1_remoting_codebase_generator}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_a584219ef9b82994dcde0c5df7e478044}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, str yaml\+\_\+path="{}ggmlremoting\+\_\+functions.\+yaml"{})
+\item 
+str \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_a56188bea8e24f4e6940604a6627358d3}{generate\+\_\+enum\+\_\+name}} (self, str group\+\_\+name, str function\+\_\+name)
+\item 
+str \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_adc3a6e6cd2785df33cde8b8124a0a9ef}{generate\+\_\+backend\+\_\+function\+\_\+name}} (self, str group\+\_\+name, str function\+\_\+name)
+\item 
+str \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_a084be81069605011fcb3402fe1f3a31c}{generate\+\_\+frontend\+\_\+function\+\_\+name}} (self, str group\+\_\+name, str function\+\_\+name)
+\item 
+List\+[Dict\+[str, Any]\+]\+ \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_a6d88323d7c61c6bb77f26038e997e1d2}{get\+\_\+enabled\+\_\+functions}} (self)
+\item 
+str \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_aae81b9e4ac8df618b11d89d6b56cc12c}{generate\+\_\+apir\+\_\+backend\+\_\+header}} (self)
+\item 
+str \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_aba265f153c2982c42f865d4642032bf1}{generate\+\_\+backend\+\_\+dispatched\+\_\+header}} (self)
+\item 
+str \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_a28efd0c9fe26568e22e8ac2336fdc276}{generate\+\_\+virtgpu\+\_\+forward\+\_\+header}} (self)
+\item 
+None \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_a70035c4324a08c8db50863222bfa31ff}{regenerate\+\_\+codebase}} (self)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_aa74c20bc3834260184cfacb8b41a2951}\label{classregenerate__remoting_1_1_remoting_codebase_generator_aa74c20bc3834260184cfacb8b41a2951} 
+{\bfseries yaml\+\_\+path} = yaml\+\_\+path
+\item 
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a0cad9f363608a99c0876dc9fb076fe09}\label{classregenerate__remoting_1_1_remoting_codebase_generator_a0cad9f363608a99c0876dc9fb076fe09} 
+{\bfseries config} = yaml.\+safe\+\_\+load(f)
+\item 
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_af5d236b2b52cbaf064fe661677bcc7c7}\label{classregenerate__remoting_1_1_remoting_codebase_generator_af5d236b2b52cbaf064fe661677bcc7c7} 
+{\bfseries functions} = self.\+config\+[\textquotesingle{}functions\textquotesingle{}]\+
+\item 
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a5c5df779064b9169c8b00a90cae49b14}\label{classregenerate__remoting_1_1_remoting_codebase_generator_a5c5df779064b9169c8b00a90cae49b14} 
+{\bfseries naming\+\_\+patterns} = self.\+config\+[\textquotesingle{}naming\+\_\+patterns\textquotesingle{}]\+
+\item 
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_ad07d0c7affe74fa5ecaa9dc4279fced2}\label{classregenerate__remoting_1_1_remoting_codebase_generator_ad07d0c7affe74fa5ecaa9dc4279fced2} 
+{\bfseries config\+\_\+data} = self.\+config\+[\textquotesingle{}config\textquotesingle{}]\+
+\item 
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a5b0ea3a3dd1f7f50442f920412aab441}\label{classregenerate__remoting_1_1_remoting_codebase_generator_a5b0ea3a3dd1f7f50442f920412aab441} 
+bool {\bfseries clang\+\_\+format\+\_\+available} = self.\+\_\+check\+\_\+clang\+\_\+format\+\_\+available()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_a4e814f1e02a6014db6806f1c6c170fda}{\+\_\+check\+\_\+clang\+\_\+format\+\_\+available}} (self)
+\item 
+bool \doxymbox{\hyperlink{classregenerate__remoting_1_1_remoting_codebase_generator_a09d2b3c979cee0dec72fd06ba4f22ede}{\+\_\+format\+\_\+file\+\_\+with\+\_\+clang\+\_\+format}} (self, Path file\+\_\+path)
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a584219ef9b82994dcde0c5df7e478044}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_a584219ef9b82994dcde0c5df7e478044} 
+regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str }]{yaml\+\_\+path}{ = {\ttfamily "{}ggmlremoting\+\_\+functions.yaml"{}}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Initialize the generator with the YAML configuration.\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a4e814f1e02a6014db6806f1c6c170fda}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!\_check\_clang\_format\_available@{\_check\_clang\_format\_available}}
+\index{\_check\_clang\_format\_available@{\_check\_clang\_format\_available}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{\_check\_clang\_format\_available()}{\_check\_clang\_format\_available()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_a4e814f1e02a6014db6806f1c6c170fda} 
+ bool regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+\_\+check\+\_\+clang\+\_\+format\+\_\+available (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\begin{DoxyVerb}Check if clang-format is available in the system PATH.\end{DoxyVerb}
+ \Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a09d2b3c979cee0dec72fd06ba4f22ede}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!\_format\_file\_with\_clang\_format@{\_format\_file\_with\_clang\_format}}
+\index{\_format\_file\_with\_clang\_format@{\_format\_file\_with\_clang\_format}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{\_format\_file\_with\_clang\_format()}{\_format\_file\_with\_clang\_format()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_a09d2b3c979cee0dec72fd06ba4f22ede} 
+ bool regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+\_\+format\+\_\+file\+\_\+with\+\_\+clang\+\_\+format (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{Path}]{file\+\_\+path}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\begin{DoxyVerb}Format a file with clang-format -i. Returns True if successful, False otherwise.\end{DoxyVerb}
+ \Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_aae81b9e4ac8df618b11d89d6b56cc12c}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!generate\_apir\_backend\_header@{generate\_apir\_backend\_header}}
+\index{generate\_apir\_backend\_header@{generate\_apir\_backend\_header}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{generate\_apir\_backend\_header()}{generate\_apir\_backend\_header()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_aae81b9e4ac8df618b11d89d6b56cc12c} 
+ str regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+generate\+\_\+apir\+\_\+backend\+\_\+header (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Generate the complete apir_backend.h file.\end{DoxyVerb}
+ \Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_aba265f153c2982c42f865d4642032bf1}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!generate\_backend\_dispatched\_header@{generate\_backend\_dispatched\_header}}
+\index{generate\_backend\_dispatched\_header@{generate\_backend\_dispatched\_header}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{generate\_backend\_dispatched\_header()}{generate\_backend\_dispatched\_header()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_aba265f153c2982c42f865d4642032bf1} 
+ str regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+generate\+\_\+backend\+\_\+dispatched\+\_\+header (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Generate the complete backend-dispatched.h file.\end{DoxyVerb}
+ \Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_adc3a6e6cd2785df33cde8b8124a0a9ef}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!generate\_backend\_function\_name@{generate\_backend\_function\_name}}
+\index{generate\_backend\_function\_name@{generate\_backend\_function\_name}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{generate\_backend\_function\_name()}{generate\_backend\_function\_name()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_adc3a6e6cd2785df33cde8b8124a0a9ef} 
+ str regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+generate\+\_\+backend\+\_\+function\+\_\+name (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{group\+\_\+name}{, }\item[{str}]{function\+\_\+name}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Generate the backend function name.\end{DoxyVerb}
+ \Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a56188bea8e24f4e6940604a6627358d3}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!generate\_enum\_name@{generate\_enum\_name}}
+\index{generate\_enum\_name@{generate\_enum\_name}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{generate\_enum\_name()}{generate\_enum\_name()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_a56188bea8e24f4e6940604a6627358d3} 
+ str regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+generate\+\_\+enum\+\_\+name (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{group\+\_\+name}{, }\item[{str}]{function\+\_\+name}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Generate the APIR_COMMAND_TYPE enum name for a function.\end{DoxyVerb}
+ \Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a084be81069605011fcb3402fe1f3a31c}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!generate\_frontend\_function\_name@{generate\_frontend\_function\_name}}
+\index{generate\_frontend\_function\_name@{generate\_frontend\_function\_name}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{generate\_frontend\_function\_name()}{generate\_frontend\_function\_name()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_a084be81069605011fcb3402fe1f3a31c} 
+ str regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+generate\+\_\+frontend\+\_\+function\+\_\+name (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{group\+\_\+name}{, }\item[{str}]{function\+\_\+name}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Generate the frontend function name.\end{DoxyVerb}
+ \Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a28efd0c9fe26568e22e8ac2336fdc276}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!generate\_virtgpu\_forward\_header@{generate\_virtgpu\_forward\_header}}
+\index{generate\_virtgpu\_forward\_header@{generate\_virtgpu\_forward\_header}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{generate\_virtgpu\_forward\_header()}{generate\_virtgpu\_forward\_header()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_a28efd0c9fe26568e22e8ac2336fdc276} 
+ str regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+generate\+\_\+virtgpu\+\_\+forward\+\_\+header (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Generate the complete virtgpu-forward.gen.h file.\end{DoxyVerb}
+ \Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a6d88323d7c61c6bb77f26038e997e1d2}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!get\_enabled\_functions@{get\_enabled\_functions}}
+\index{get\_enabled\_functions@{get\_enabled\_functions}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{get\_enabled\_functions()}{get\_enabled\_functions()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_a6d88323d7c61c6bb77f26038e997e1d2} 
+ List\+[Dict\+[str, Any]\+]\+ regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+get\+\_\+enabled\+\_\+functions (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get all enabled functions with their metadata.\end{DoxyVerb}
+ \Hypertarget{classregenerate__remoting_1_1_remoting_codebase_generator_a70035c4324a08c8db50863222bfa31ff}\index{regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}!regenerate\_codebase@{regenerate\_codebase}}
+\index{regenerate\_codebase@{regenerate\_codebase}!regenerate\_remoting.RemotingCodebaseGenerator@{regenerate\_remoting.RemotingCodebaseGenerator}}
+\doxysubsubsection{\texorpdfstring{regenerate\_codebase()}{regenerate\_codebase()}}
+{\footnotesize\ttfamily \label{classregenerate__remoting_1_1_remoting_codebase_generator_a70035c4324a08c8db50863222bfa31ff} 
+ None regenerate\+\_\+remoting.\+Remoting\+Codebase\+Generator.\+regenerate\+\_\+codebase (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Regenerate the entire remoting codebase.\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/virtgpu/\+regenerate\+\_\+remoting.\+py\end{DoxyCompactItemize}

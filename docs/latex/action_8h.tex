@@ -1,0 +1,22 @@
+\doxysection{action.\+h File Reference}
+\hypertarget{action_8h}{}\label{action_8h}\index{action.h@{action.h}}
+
+
+Base {\ttfamily \doxylink{class_action}{Action}} class and shared HTTP/\+utility helpers.  
+
+
+{\ttfamily \+\#include "{}config.\+h"{}}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_action}{Action}}
+\begin{DoxyCompactList}\small\item\em Abstract base class for all executable actions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Base {\ttfamily \doxylink{class_action}{Action}} class and shared HTTP/\+utility helpers. 
+
+All action subclasses inherit from action and receive http\+Get(), http\+Post(), url\+Encode(), and log() at no extra cost. Concrete subclasses only need to implement execute() and describe(). \begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}

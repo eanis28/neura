@@ -1,0 +1,139 @@
+\doxysection{whisper.\+cpp/\+examples/\+server Directory Reference}
+\hypertarget{dir_046fe0003e6c5f1c9fcf9a1d86f285cc}{}\label{dir_046fe0003e6c5f1c9fcf9a1d86f285cc}\index{whisper.cpp/examples/server Directory Reference@{whisper.cpp/examples/server Directory Reference}}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file {\bfseries httplib.\+h}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_046fe0003e6c5f1c9fcf9a1d86f285cc_autotoc_md78}{}\doxysubsection{\texorpdfstring{whisper.\+cpp/\+examples/\+server}{whisper.\+cpp/\+examples/\+server}}\label{dir_046fe0003e6c5f1c9fcf9a1d86f285cc_autotoc_md78}
+Simple http server. WAV Files are passed to the inference model via http requests.
+
+\href{https://github.com/ggerganov/whisper.cpp/assets/1991296/e983ee53-8741-4eb5-9048-afe5e4594b8f}{\texttt{https:\+/\+/\+github.\+com/\+ggerganov/\+whisper.\+cpp/\+assets/\+1991296/\+e983ee53-\/8741-\/4eb5-\/9048-\/afe5e4594b8f}}\hypertarget{dir_046fe0003e6c5f1c9fcf9a1d86f285cc_autotoc_md79}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{dir_046fe0003e6c5f1c9fcf9a1d86f285cc_autotoc_md79}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/bin/whisper-\/server\ -\/h}
+\DoxyCodeLine{}
+\DoxyCodeLine{usage:\ ./build/bin/whisper-\/server\ [options]}
+\DoxyCodeLine{}
+\DoxyCodeLine{options:}
+\DoxyCodeLine{\ \ -\/h,\ \ \ \ \ \ \ \ -\/-\/help\ \ \ \ \ \ \ \ \ \ \ \ \ \ [default]\ show\ this\ help\ message\ and\ exit}
+\DoxyCodeLine{\ \ -\/t\ N,\ \ \ \ \ \ -\/-\/threads\ N\ \ \ \ \ \ \ \ \ [4\ \ \ \ \ \ ]\ number\ of\ threads\ to\ use\ during\ computation}
+\DoxyCodeLine{\ \ -\/p\ N,\ \ \ \ \ \ -\/-\/processors\ N\ \ \ \ \ \ [1\ \ \ \ \ \ ]\ number\ of\ processors\ to\ use\ during\ computation}
+\DoxyCodeLine{\ \ -\/ot\ N,\ \ \ \ \ -\/-\/offset-\/t\ N\ \ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ time\ offset\ in\ milliseconds}
+\DoxyCodeLine{\ \ -\/on\ N,\ \ \ \ \ -\/-\/offset-\/n\ N\ \ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ segment\ index\ offset}
+\DoxyCodeLine{\ \ -\/d\ \ N,\ \ \ \ \ -\/-\/duration\ N\ \ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ duration\ of\ audio\ to\ process\ in\ milliseconds}
+\DoxyCodeLine{\ \ -\/mc\ N,\ \ \ \ \ -\/-\/max-\/context\ N\ \ \ \ \ [-\/1\ \ \ \ \ ]\ maximum\ number\ of\ text\ context\ tokens\ to\ store}
+\DoxyCodeLine{\ \ -\/ml\ N,\ \ \ \ \ -\/-\/max-\/len\ N\ \ \ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ maximum\ segment\ length\ in\ characters}
+\DoxyCodeLine{\ \ -\/sow,\ \ \ \ \ \ -\/-\/split-\/on-\/word\ \ \ \ \ [false\ \ ]\ split\ on\ word\ rather\ than\ on\ token}
+\DoxyCodeLine{\ \ -\/bo\ N,\ \ \ \ \ -\/-\/best-\/of\ N\ \ \ \ \ \ \ \ \ [2\ \ \ \ \ \ ]\ number\ of\ best\ candidates\ to\ keep}
+\DoxyCodeLine{\ \ -\/bs\ N,\ \ \ \ \ -\/-\/beam-\/size\ N\ \ \ \ \ \ \ [-\/1\ \ \ \ \ ]\ beam\ size\ for\ beam\ search}
+\DoxyCodeLine{\ \ -\/ac\ N,\ \ \ \ \ -\/-\/audio-\/ctx\ N\ \ \ \ \ \ \ [0\ \ \ \ \ \ ]\ audio\ context\ size\ (0\ -\/\ all)}
+\DoxyCodeLine{\ \ -\/wt\ N,\ \ \ \ \ -\/-\/word-\/thold\ N\ \ \ \ \ \ [0.01\ \ \ ]\ word\ timestamp\ probability\ threshold}
+\DoxyCodeLine{\ \ -\/et\ N,\ \ \ \ \ -\/-\/entropy-\/thold\ N\ \ \ [2.40\ \ \ ]\ entropy\ threshold\ for\ decoder\ fail}
+\DoxyCodeLine{\ \ -\/lpt\ N,\ \ \ \ -\/-\/logprob-\/thold\ N\ \ \ [-\/1.00\ \ ]\ log\ probability\ threshold\ for\ decoder\ fail}
+\DoxyCodeLine{\ \ -\/debug,\ \ \ \ -\/-\/debug-\/mode\ \ \ \ \ \ \ \ [false\ \ ]\ enable\ debug\ mode\ (eg.\ dump\ log\_mel)}
+\DoxyCodeLine{\ \ -\/tr,\ \ \ \ \ \ \ -\/-\/translate\ \ \ \ \ \ \ \ \ [false\ \ ]\ translate\ from\ source\ language\ to\ english}
+\DoxyCodeLine{\ \ -\/di,\ \ \ \ \ \ \ -\/-\/diarize\ \ \ \ \ \ \ \ \ \ \ [false\ \ ]\ stereo\ audio\ diarization}
+\DoxyCodeLine{\ \ -\/tdrz,\ \ \ \ \ -\/-\/tinydiarize\ \ \ \ \ \ \ [false\ \ ]\ enable\ tinydiarize\ (requires\ a\ tdrz\ model)}
+\DoxyCodeLine{\ \ -\/nf,\ \ \ \ \ \ \ -\/-\/no-\/fallback\ \ \ \ \ \ \ [false\ \ ]\ do\ not\ use\ temperature\ fallback\ while\ decoding}
+\DoxyCodeLine{\ \ -\/ps,\ \ \ \ \ \ \ -\/-\/print-\/special\ \ \ \ \ [false\ \ ]\ print\ special\ tokens}
+\DoxyCodeLine{\ \ -\/pc,\ \ \ \ \ \ \ -\/-\/print-\/colors\ \ \ \ \ \ [false\ \ ]\ print\ colors}
+\DoxyCodeLine{\ \ -\/pr,\ \ \ \ \ \ \ -\/-\/print-\/realtime\ \ \ \ [false\ \ ]\ print\ output\ in\ realtime}
+\DoxyCodeLine{\ \ -\/pp,\ \ \ \ \ \ \ -\/-\/print-\/progress\ \ \ \ [false\ \ ]\ print\ progress}
+\DoxyCodeLine{\ \ -\/nt,\ \ \ \ \ \ \ -\/-\/no-\/timestamps\ \ \ \ \ [false\ \ ]\ do\ not\ print\ timestamps}
+\DoxyCodeLine{\ \ -\/l\ LANG,\ \ \ -\/-\/language\ LANG\ \ \ \ \ [en\ \ \ \ \ ]\ spoken\ language\ ('auto'\ for\ auto-\/detect)}
+\DoxyCodeLine{\ \ -\/dl,\ \ \ \ \ \ \ -\/-\/detect-\/language\ \ \ [false\ \ ]\ exit\ after\ automatically\ detecting\ language}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ -\/-\/prompt\ PROMPT\ \ \ \ \ [\ \ \ \ \ \ \ ]\ initial\ prompt}
+\DoxyCodeLine{\ \ -\/m\ FNAME,\ \ -\/-\/model\ FNAME\ \ \ \ \ \ \ [models/ggml-\/base.en.bin]\ model\ path}
+\DoxyCodeLine{\ \ -\/oved\ D,\ \ \ -\/-\/ov-\/e-\/device\ DNAME\ [CPU\ \ \ \ ]\ the\ OpenVINO\ device\ used\ for\ encode\ inference}
+\DoxyCodeLine{\ \ -\/dtw\ MODEL\ -\/-\/dtw\ MODEL\ \ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ compute\ token-\/level\ timestamps}
+\DoxyCodeLine{\ \ -\/-\/host\ HOST,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [127.0.0.1]\ Hostname/ip-\/adress\ for\ the\ server}
+\DoxyCodeLine{\ \ -\/-\/port\ PORT,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [8080\ \ \ ]\ Port\ number\ for\ the\ server}
+\DoxyCodeLine{\ \ -\/-\/public\ PATH,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [examples/server/public]\ Path\ to\ the\ public\ folder}
+\DoxyCodeLine{\ \ -\/-\/request-\/path\ PATH,\ \ \ \ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ Request\ path\ for\ all\ requests}
+\DoxyCodeLine{\ \ -\/-\/inference-\/path\ PATH,\ \ \ \ \ \ \ \ \ [/inference]\ Inference\ path\ for\ all\ requests}
+\DoxyCodeLine{\ \ -\/-\/convert,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [false\ \ ]\ Convert\ audio\ to\ WAV,\ requires\ ffmpeg\ on\ the\ server}
+\DoxyCodeLine{\ \ -\/sns,\ \ \ \ \ \ -\/-\/suppress-\/nst\ \ \ \ \ \ [false\ \ ]\ suppress\ non-\/speech\ tokens}
+\DoxyCodeLine{\ \ -\/nth\ N,\ \ \ \ -\/-\/no-\/speech-\/thold\ N\ [0.60\ \ \ ]\ no\ speech\ threshold}
+\DoxyCodeLine{\ \ -\/nc,\ \ \ \ \ \ \ -\/-\/no-\/context\ \ \ \ \ \ \ \ [false\ \ ]\ do\ not\ use\ previous\ audio\ context}
+\DoxyCodeLine{\ \ -\/ng,\ \ \ \ \ \ \ -\/-\/no-\/gpu\ \ \ \ \ \ \ \ \ \ \ \ [false\ \ ]\ do\ not\ use\ gpu}
+\DoxyCodeLine{\ \ -\/fa,\ \ \ \ \ \ \ -\/-\/flash-\/attn\ \ \ \ \ \ \ \ [false\ \ ]\ flash\ attention}
+\DoxyCodeLine{}
+\DoxyCodeLine{Voice\ Activity\ Detection\ (VAD)\ options:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ -\/-\/vad\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [false\ \ ]\ enable\ Voice\ Activity\ Detection\ (VAD)}
+\DoxyCodeLine{\ \ -\/vm\ FNAME,\ -\/-\/vad-\/model\ FNAME\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ VAD\ model\ path}
+\DoxyCodeLine{\ \ -\/vt\ N,\ \ \ \ \ -\/-\/vad-\/threshold\ N\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [0.50\ \ \ ]\ VAD\ threshold\ for\ speech\ recognition}
+\DoxyCodeLine{\ \ -\/vspd\ N,\ \ \ -\/-\/vad-\/min-\/speech-\/duration-\/ms\ \ N\ [250\ \ \ \ ]\ VAD\ min\ speech\ duration\ (0.0-\/1.0)}
+\DoxyCodeLine{\ \ -\/vsd\ N,\ \ \ \ -\/-\/vad-\/min-\/silence-\/duration-\/ms\ N\ [100\ \ \ \ ]\ VAD\ min\ silence\ duration\ (to\ split\ segments)}
+\DoxyCodeLine{\ \ -\/vmsd\ N,\ \ \ -\/-\/vad-\/max-\/speech-\/duration-\/s\ \ \ N\ [FLT\_MAX]\ VAD\ max\ speech\ duration\ (auto-\/split\ longer)}
+\DoxyCodeLine{\ \ -\/vp\ N,\ \ \ \ \ -\/-\/vad-\/speech-\/pad-\/ms\ \ \ \ \ \ \ \ \ \ \ N\ [30\ \ \ \ \ ]\ VAD\ speech\ padding\ (extend\ segments)}
+\DoxyCodeLine{\ \ -\/vo\ N,\ \ \ \ \ -\/-\/vad-\/samples-\/overlap\ \ \ \ \ \ \ \ \ N\ [0.10\ \ \ ]\ VAD\ samples\ overlap\ (seconds\ between\ segments)}
+
+\end{DoxyCode}
+
+
+\begin{DoxyWarning}{Warning}
+{\bfseries{Do not run the server example with administrative privileges and ensure it\textquotesingle{}s operated in a sandbox environment, especially since it involves risky operations like accepting user file uploads and using ffmpeg for format conversions. Always validate and sanitize inputs to guard against potential security threats.}}
+\end{DoxyWarning}
+\hypertarget{dir_046fe0003e6c5f1c9fcf9a1d86f285cc_autotoc_md80}{}\doxysubsection{\texorpdfstring{request examples}{request examples}}\label{dir_046fe0003e6c5f1c9fcf9a1d86f285cc_autotoc_md80}
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}/\+inference\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{curl\ 127.0.0.1:8080/inference\ \(\backslash\)}
+\DoxyCodeLine{-\/H\ "{}Content-\/Type:\ multipart/form-\/data"{}\ \(\backslash\)}
+\DoxyCodeLine{-\/F\ file="{}@<file-\/path>"{}\ \(\backslash\)}
+\DoxyCodeLine{-\/F\ temperature="{}0.0"{}\ \(\backslash\)}
+\DoxyCodeLine{-\/F\ temperature\_inc="{}0.2"{}\ \(\backslash\)}
+\DoxyCodeLine{-\/F\ response\_format="{}json"{}}
+
+\end{DoxyCode}
+
+
+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}/\+load\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{curl\ 127.0.0.1:8080/load\ \(\backslash\)}
+\DoxyCodeLine{-\/H\ "{}Content-\/Type:\ multipart/form-\/data"{}\ \(\backslash\)}
+\DoxyCodeLine{-\/F\ model="{}<path-\/to-\/model-\/file>"{}}
+
+\end{DoxyCode}
+\hypertarget{dir_046fe0003e6c5f1c9fcf9a1d86f285cc_autotoc_md81}{}\doxysubsection{\texorpdfstring{Load testing with k6}{Load testing with k6}}\label{dir_046fe0003e6c5f1c9fcf9a1d86f285cc_autotoc_md81}
+\begin{quote}
+{\bfseries{Note:\+}} Install \href{https://k6.io/docs/get-started/installation/}{\texttt{k6}} before running the benchmark script. \end{quote}
+
+
+You can benchmark the Whisper server using the provided bench.\+js script with \href{https://k6.io/}{\texttt{k6}}. This script sends concurrent multipart requests to the /\+inference endpoint and is fully configurable via environment variables.
+
+{\bfseries{Example usage:\+}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{k6\ run\ bench.js\ \(\backslash\)}
+\DoxyCodeLine{\ \ -\/-\/env\ FILE\_PATH=/absolute/path/to/samples/jfk.wav\ \(\backslash\)}
+\DoxyCodeLine{\ \ -\/-\/env\ BASE\_URL=http://127.0.0.1:8080\ \(\backslash\)}
+\DoxyCodeLine{\ \ -\/-\/env\ ENDPOINT=/inference\ \(\backslash\)}
+\DoxyCodeLine{\ \ -\/-\/env\ CONCURRENCY=4\ \(\backslash\)}
+\DoxyCodeLine{\ \ -\/-\/env\ TEMPERATURE=0.0\ \(\backslash\)}
+\DoxyCodeLine{\ \ -\/-\/env\ TEMPERATURE\_INC=0.2\ \(\backslash\)}
+\DoxyCodeLine{\ \ -\/-\/env\ RESPONSE\_FORMAT=json}
+
+\end{DoxyCode}
+
+
+{\bfseries{Environment variables:\+}}
+\begin{DoxyItemize}
+\item {\ttfamily FILE\+\_\+\+PATH}:\+ Path to the audio file to send (must be absolute or relative to the k6 working directory)
+\item {\ttfamily BASE\+\_\+\+URL}:\+ Server base URL (default:\+ {\ttfamily \href{http://127.0.0.1:8080}{\texttt{http:\+/\+/\+127.\+0.\+0.\+1:\+8080}}})
+\item {\ttfamily ENDPOINT}:\+ API endpoint (default:\+ {\ttfamily /\+inference})
+\item {\ttfamily CONCURRENCY}:\+ Number of concurrent requests (default:\+ 4)
+\item {\ttfamily TEMPERATURE}:\+ Decoding temperature (default:\+ 0.\+0)
+\item {\ttfamily TEMPERATURE\+\_\+\+INC}:\+ Temperature increment (default:\+ 0.\+2)
+\item {\ttfamily RESPONSE\+\_\+\+FORMAT}:\+ Response format (default:\+ {\ttfamily json})
+\end{DoxyItemize}
+
+{\bfseries{Note:\+}}
+\begin{DoxyItemize}
+\item \doxylink{requirements_The}{The} server must be running and accessible at the specified {\ttfamily BASE\+\_\+\+URL} and {\ttfamily ENDPOINT}.
+\item \doxylink{requirements_The}{The} script is located in the same directory as this README:\+ {\ttfamily bench.\+js}. 
+\end{DoxyItemize}

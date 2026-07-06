@@ -1,0 +1,47 @@
+\doxysection{Shared\+Audio\+Buffer Struct Reference}
+\hypertarget{struct_shared_audio_buffer}{}\label{struct_shared_audio_buffer}\index{SharedAudioBuffer@{SharedAudioBuffer}}
+
+
+Shared buffer for microphone audio samples.  
+
+
+
+
+{\ttfamily \+\#include $<$Audio\+Manager.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+vector$<$ float $>$ \doxymbox{\hyperlink{struct_shared_audio_buffer_a9d6672af258a9f27bb25876f49ce6708}{samples}}
+\item 
+std::\+mutex \doxymbox{\hyperlink{struct_shared_audio_buffer_a8fb1f41558b8f145e9782bda13a3e291}{mtx}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Shared buffer for microphone audio samples. 
+
+This structure stores audio samples captured from Port\+Audio and provides a mutex to protect access when the buffer is shared between threads.
+
+\doxylink{requirements_The}{The} audio input thread writes samples into this buffer, while the speech recognition component reads from it. 
+
+\label{doc-variable-members}
+\Hypertarget{struct_shared_audio_buffer_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_shared_audio_buffer_a8fb1f41558b8f145e9782bda13a3e291}\index{SharedAudioBuffer@{SharedAudioBuffer}!mtx@{mtx}}
+\index{mtx@{mtx}!SharedAudioBuffer@{SharedAudioBuffer}}
+\doxysubsubsection{\texorpdfstring{mtx}{mtx}}
+{\footnotesize\ttfamily \label{struct_shared_audio_buffer_a8fb1f41558b8f145e9782bda13a3e291} 
+std::\+mutex Shared\+Audio\+Buffer::\+mtx}
+
+Mutex protecting access to the sample buffer. \Hypertarget{struct_shared_audio_buffer_a9d6672af258a9f27bb25876f49ce6708}\index{SharedAudioBuffer@{SharedAudioBuffer}!samples@{samples}}
+\index{samples@{samples}!SharedAudioBuffer@{SharedAudioBuffer}}
+\doxysubsubsection{\texorpdfstring{samples}{samples}}
+{\footnotesize\ttfamily \label{struct_shared_audio_buffer_a9d6672af258a9f27bb25876f49ce6708} 
+std::\+vector$<$float$>$ Shared\+Audio\+Buffer::\+samples}
+
+Captured audio samples. 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_audio_manager_8h}{Audio\+Manager.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['vad_0',['VAD',['../dir_0c27500b240fc59d552a668fb1e263d9.html#autotoc_md197',1,'How to run the benchmark test using VAD'],['../dir_772ead685b9d496e78573f3740fb4e67.html#autotoc_md175',1,'Silero-VAD'],['../dir_63ce1c9e53f3f204ebd97830a8594ec5.html#autotoc_md85',1,'Sliding window mode with VAD'],['../dir_33655e172bdb7a6d115d28001dc44f9c.html#autotoc_md34',1,'Voice Activity Detection (VAD)'],['../dir_772ead685b9d496e78573f3740fb4e67.html#autotoc_md174',1,'Voice Activity Detection (VAD)']]],
+  ['vad_20model_20setup_1',['VAD Model Setup',['../dir_15a9c0c5b3cedb04fa94f55689506615.html#autotoc_md58',1,'']]],
+  ['vad_20options_2',['VAD Options',['../dir_772ead685b9d496e78573f3740fb4e67.html#autotoc_md176',1,'']]],
+  ['vad_20parameters_3',['VAD Parameters',['../dir_15a9c0c5b3cedb04fa94f55689506615.html#autotoc_md59',1,'']]],
+  ['vad_20separately_20from_20asr_4',['Using VAD separately from ASR',['../dir_33655e172bdb7a6d115d28001dc44f9c.html#autotoc_md45',1,'']]],
+  ['vad_20speech_20segments_5',['whisper.cpp/examples/vad-speech-segments',['../dir_a3260f99555f7c3f9f173b7d7e55af7a.html#autotoc_md96',1,'']]],
+  ['vad_20support_6',['Voice Activity Detection (VAD) Support',['../dir_15a9c0c5b3cedb04fa94f55689506615.html#autotoc_md57',1,'']]],
+  ['vad_20voice_20activity_20detection_20usage_7',['VAD (Voice Activity Detection) Usage',['../dir_15a9c0c5b3cedb04fa94f55689506615.html#autotoc_md56',1,'']]],
+  ['variable_8',['Environment Variable',['../md_whisper_8cpp_2_r_e_a_d_m_e__sycl.html#autotoc_md186',1,'']]],
+  ['variables_9',['Environment Variables',['../dir_192775561d5c9acaa725518775b09c68.html#autotoc_md50',1,'']]],
+  ['version_10',['Web version',['../dir_63ce1c9e53f3f204ebd97830a8594ec5.html#autotoc_md87',1,'']]],
+  ['via_20openblas_11',['BLAS CPU support via OpenBLAS',['../dir_772ead685b9d496e78573f3740fb4e67.html#autotoc_md149',1,'']]],
+  ['via_20tinydiarize_20experimental_12',['Speaker segmentation via tinydiarize (experimental)',['../dir_772ead685b9d496e78573f3740fb4e67.html#autotoc_md163',1,'']]],
+  ['video_20comparison_20of_20different_20models_13',['Video comparison of different models',['../dir_772ead685b9d496e78573f3740fb4e67.html#autotoc_md168',1,'']]],
+  ['vim_20plugin_20configuration_14',['Vim plugin configuration',['../dir_0701ad5d3ebfb3375b9ad2ef0e84b996.html#autotoc_md75',1,'']]],
+  ['vim_20plugin_20quick_20start_15',['Vim plugin quick start',['../dir_0701ad5d3ebfb3375b9ad2ef0e84b996.html#autotoc_md73',1,'']]],
+  ['vim_20plugin_20usage_16',['Vim plugin usage',['../dir_0701ad5d3ebfb3375b9ad2ef0e84b996.html#autotoc_md74',1,'']]],
+  ['voice_20actions_17',['Voice Actions',['../md__r_e_a_d_m_e.html#autotoc_md18',1,'']]],
+  ['voice_20activity_20detection_20usage_18',['VAD (Voice Activity Detection) Usage',['../dir_15a9c0c5b3cedb04fa94f55689506615.html#autotoc_md56',1,'']]],
+  ['voice_20activity_20detection_20vad_19',['Voice Activity Detection VAD',['../dir_33655e172bdb7a6d115d28001dc44f9c.html#autotoc_md34',1,'Voice Activity Detection (VAD)'],['../dir_772ead685b9d496e78573f3740fb4e67.html#autotoc_md174',1,'Voice Activity Detection (VAD)']]],
+  ['voice_20activity_20detection_20vad_20support_20',['Voice Activity Detection (VAD) Support',['../dir_15a9c0c5b3cedb04fa94f55689506615.html#autotoc_md57',1,'']]],
+  ['vsx_20intrinsics_21',['POWER VSX Intrinsics',['../dir_772ead685b9d496e78573f3740fb4e67.html#autotoc_md143',1,'']]],
+  ['vulkan_20gpu_20support_22',['Vulkan GPU support',['../dir_772ead685b9d496e78573f3740fb4e67.html#autotoc_md148',1,'']]]
+];

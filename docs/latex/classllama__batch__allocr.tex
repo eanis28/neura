@@ -1,0 +1,149 @@
+\doxysection{llama\+\_\+batch\+\_\+allocr Class Reference}
+\hypertarget{classllama__batch__allocr}{}\label{classllama__batch__allocr}\index{llama\_batch\_allocr@{llama\_batch\_allocr}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__batch__allocr_a85de1bc6e6933878f15fa9e7a4d739c3}\label{classllama__batch__allocr_a85de1bc6e6933878f15fa9e7a4d739c3} 
+{\bfseries llama\+\_\+batch\+\_\+allocr} (uint32\+\_\+t n\+\_\+pos\+\_\+per\+\_\+embd)
+\item 
+\Hypertarget{classllama__batch__allocr_aaaec9afbf3fb23b815ea29b1c24ccbeb}\label{classllama__batch__allocr_aaaec9afbf3fb23b815ea29b1c24ccbeb} 
+bool {\bfseries init} (const \doxymbox{\hyperlink{structllama__batch}{llama\+\_\+batch}} \&batch\+\_\+inp, const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \&vocab, const \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}} \texorpdfstring{$\ast$}{*}memory, uint32\+\_\+t n\+\_\+embd, uint32\+\_\+t n\+\_\+seq\+\_\+max, bool output\+\_\+all)
+\item 
+\Hypertarget{classllama__batch__allocr_a16c90f419f9d0ce2bcf9116970e2fad5}\label{classllama__batch__allocr_a16c90f419f9d0ce2bcf9116970e2fad5} 
+const \doxymbox{\hyperlink{structllama__batch}{llama\+\_\+batch}} \& {\bfseries get\+\_\+batch} () const
+\item 
+\Hypertarget{classllama__batch__allocr_a020462e2e0aadf5b33011f44acb15b8a}\label{classllama__batch__allocr_a020462e2e0aadf5b33011f44acb15b8a} 
+uint32\+\_\+t {\bfseries get\+\_\+n\+\_\+tokens} () const
+\item 
+\Hypertarget{classllama__batch__allocr_a2bab9a7868dd9a21b97e35c5cc725cf3}\label{classllama__batch__allocr_a2bab9a7868dd9a21b97e35c5cc725cf3} 
+uint32\+\_\+t {\bfseries get\+\_\+n\+\_\+outputs} () const
+\item 
+\Hypertarget{classllama__batch__allocr_a0ea900f72aebc420ae9bf9d18df06113}\label{classllama__batch__allocr_a0ea900f72aebc420ae9bf9d18df06113} 
+uint32\+\_\+t {\bfseries get\+\_\+n\+\_\+used} () const
+\item 
+\Hypertarget{classllama__batch__allocr_a68f577879e01a3092b3fe25687966f7e}\label{classllama__batch__allocr_a68f577879e01a3092b3fe25687966f7e} 
+std::\+vector$<$ int32\+\_\+t $>$ \& {\bfseries get\+\_\+out\+\_\+ids} ()
+\item 
+\Hypertarget{classllama__batch__allocr_a192bd028ba945d2005d43a1dd15d19ca}\label{classllama__batch__allocr_a192bd028ba945d2005d43a1dd15d19ca} 
+llama\+\_\+pos {\bfseries seq\+\_\+pos\+\_\+min} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const
+\item 
+\Hypertarget{classllama__batch__allocr_acc8382b69f255ac4ca8ada2dc27ecec0}\label{classllama__batch__allocr_acc8382b69f255ac4ca8ada2dc27ecec0} 
+llama\+\_\+pos {\bfseries seq\+\_\+pos\+\_\+max} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const
+\item 
+\Hypertarget{classllama__batch__allocr_a4857453e60cbe99ed8923013527d4e0e}\label{classllama__batch__allocr_a4857453e60cbe99ed8923013527d4e0e} 
+void {\bfseries split\+\_\+reset} ()
+\item 
+\Hypertarget{classllama__batch__allocr_ae3fc65634e0f3f8158745bf8cf7f9690}\label{classllama__batch__allocr_ae3fc65634e0f3f8158745bf8cf7f9690} 
+\doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} {\bfseries split\+\_\+simple} (uint32\+\_\+t n\+\_\+ubatch)
+\item 
+\Hypertarget{classllama__batch__allocr_a7d0db287401b1f81582a8efdde929827}\label{classllama__batch__allocr_a7d0db287401b1f81582a8efdde929827} 
+\doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} {\bfseries split\+\_\+equal} (uint32\+\_\+t n\+\_\+ubatch, bool sequential)
+\item 
+\Hypertarget{classllama__batch__allocr_a24ca33a0d7d2f565fc04229bc6f33bc8}\label{classllama__batch__allocr_a24ca33a0d7d2f565fc04229bc6f33bc8} 
+\doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} {\bfseries split\+\_\+seq} (uint32\+\_\+t n\+\_\+ubatch)
+\item 
+\Hypertarget{classllama__batch__allocr_a8f89be310d33722dff51c2a62578cc66}\label{classllama__batch__allocr_a8f89be310d33722dff51c2a62578cc66} 
+\doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} {\bfseries ubatch\+\_\+reserve} (uint32\+\_\+t n\+\_\+seq\+\_\+tokens, uint32\+\_\+t n\+\_\+seqs)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__batch__allocr_a86f01c7006ff51368fda6ea234dfae67}\label{classllama__batch__allocr_a86f01c7006ff51368fda6ea234dfae67} 
+using {\bfseries pos\+\_\+set\+\_\+t} = std::\+set$<$llama\+\_\+pos$>$
+\item 
+\Hypertarget{classllama__batch__allocr_a94c8fd0ba03d421e64cfff74e4003cf3}\label{classllama__batch__allocr_a94c8fd0ba03d421e64cfff74e4003cf3} 
+using {\bfseries seq\+\_\+cpl\+\_\+t} = std::\+vector$<$bool$>$
+\item 
+\Hypertarget{classllama__batch__allocr_ad3369651dc9542384d7c4bd60f8c9bcb}\label{classllama__batch__allocr_ad3369651dc9542384d7c4bd60f8c9bcb} 
+using {\bfseries idx\+\_\+vec\+\_\+t} = std::\+vector$<$int32\+\_\+t$>$
+\item 
+\Hypertarget{classllama__batch__allocr_adfd0d87183bbb157d27e318601fbccd1}\label{classllama__batch__allocr_adfd0d87183bbb157d27e318601fbccd1} 
+using {\bfseries seq\+\_\+set\+\_\+t} = std::\+bitset$<$LLAMA\+\_\+\+MAX\+\_\+\+SEQ$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__batch__allocr_a564050980beadfda1e41aaba5004800a}\label{classllama__batch__allocr_a564050980beadfda1e41aaba5004800a} 
+void {\bfseries clear} ()
+\item 
+\Hypertarget{classllama__batch__allocr_a98ad37800ec55d80b1f91ecf27c8036f}\label{classllama__batch__allocr_a98ad37800ec55d80b1f91ecf27c8036f} 
+\doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} {\bfseries ubatch\+\_\+add} (const std::\+vector$<$ int32\+\_\+t $>$ \&idxs, uint32\+\_\+t n\+\_\+seqs, bool equal\+\_\+seqs)
+\item 
+\Hypertarget{classllama__batch__allocr_a835a3f82b95e341a5224b3816b1e9a19}\label{classllama__batch__allocr_a835a3f82b95e341a5224b3816b1e9a19} 
+void {\bfseries ubatch\+\_\+print} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \&ubatch, int debug)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__batch__allocr_a220e3f6eac3a8e55ffcd7fce78ae7176}\label{classllama__batch__allocr_a220e3f6eac3a8e55ffcd7fce78ae7176} 
+\doxymbox{\hyperlink{structllama__batch}{llama\+\_\+batch}} {\bfseries batch}
+\item 
+\Hypertarget{classllama__batch__allocr_a263e5227707762573dfc7e38f1647707}\label{classllama__batch__allocr_a263e5227707762573dfc7e38f1647707} 
+const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \texorpdfstring{$\ast$}{*} {\bfseries vocab}
+\item 
+\Hypertarget{classllama__batch__allocr_afd8df5a203f25f298da1996179479b5c}\label{classllama__batch__allocr_afd8df5a203f25f298da1996179479b5c} 
+const uint32\+\_\+t {\bfseries n\+\_\+pos\+\_\+per\+\_\+embd}
+\item 
+\Hypertarget{classllama__batch__allocr_a2db5ae35d48f49afb1f8b75933c5f7fb}\label{classllama__batch__allocr_a2db5ae35d48f49afb1f8b75933c5f7fb} 
+uint32\+\_\+t {\bfseries n\+\_\+embd}
+\item 
+\Hypertarget{classllama__batch__allocr_af1cf5afae76039b2c1121daaf50b0553}\label{classllama__batch__allocr_af1cf5afae76039b2c1121daaf50b0553} 
+uint32\+\_\+t {\bfseries n\+\_\+seq\+\_\+max}
+\item 
+\Hypertarget{classllama__batch__allocr_ad7f954b8ceca30a45d74c5f15d5835cd}\label{classllama__batch__allocr_ad7f954b8ceca30a45d74c5f15d5835cd} 
+uint32\+\_\+t {\bfseries n\+\_\+outputs}
+\item 
+\Hypertarget{classllama__batch__allocr_af7edf8252c90e427ade1483377ab4f63}\label{classllama__batch__allocr_af7edf8252c90e427ade1483377ab4f63} 
+std::\+array$<$ llama\+\_\+seq\+\_\+id, 1 $>$ {\bfseries seq\+\_\+id\+\_\+0} = \{\{ 0 \}\}
+\item 
+\Hypertarget{classllama__batch__allocr_a1ee5eaeae384ef673df57b1584a4c36f}\label{classllama__batch__allocr_a1ee5eaeae384ef673df57b1584a4c36f} 
+std::\+vector$<$ llama\+\_\+pos $>$ {\bfseries pos}
+\item 
+\Hypertarget{classllama__batch__allocr_ac86f73e60a8d2a4d5b9d18605c3add4b}\label{classllama__batch__allocr_ac86f73e60a8d2a4d5b9d18605c3add4b} 
+std::\+vector$<$ int32\+\_\+t $>$ {\bfseries n\+\_\+seq\+\_\+id}
+\item 
+\Hypertarget{classllama__batch__allocr_ad69361ad0ff1aa5ff626213591972134}\label{classllama__batch__allocr_ad69361ad0ff1aa5ff626213591972134} 
+std::\+vector$<$ llama\+\_\+seq\+\_\+id \texorpdfstring{$\ast$}{*} $>$ {\bfseries seq\+\_\+id}
+\item 
+\Hypertarget{classllama__batch__allocr_aa462abb0d6a94dc76c32bdbf90432b1e}\label{classllama__batch__allocr_aa462abb0d6a94dc76c32bdbf90432b1e} 
+std::\+vector$<$ llama\+\_\+seq\+\_\+id $>$ {\bfseries seq\+\_\+id\+\_\+unq}
+\item 
+\Hypertarget{classllama__batch__allocr_a711f5a6a717be9a4241b7f2cabbf37aa}\label{classllama__batch__allocr_a711f5a6a717be9a4241b7f2cabbf37aa} 
+std::\+vector$<$ int32\+\_\+t $>$ {\bfseries seq\+\_\+idx}
+\item 
+\Hypertarget{classllama__batch__allocr_a37cd412de8e5c8287bbd0bd4deae522d}\label{classllama__batch__allocr_a37cd412de8e5c8287bbd0bd4deae522d} 
+std::\+vector$<$ int8\+\_\+t $>$ {\bfseries output}
+\item 
+\Hypertarget{classllama__batch__allocr_ad240355b999e65699198e495cdbf52c2}\label{classllama__batch__allocr_ad240355b999e65699198e495cdbf52c2} 
+bool {\bfseries has\+\_\+cpl} = false
+\item 
+\Hypertarget{classllama__batch__allocr_a773cdd5c8bdbb682e11d176f24f939f4}\label{classllama__batch__allocr_a773cdd5c8bdbb682e11d176f24f939f4} 
+std::\+vector$<$ pos\+\_\+set\+\_\+t $>$ {\bfseries seq\+\_\+pos}
+\item 
+\Hypertarget{classllama__batch__allocr_a6ff31e9c65babbe063d1bd51f12e08a9}\label{classllama__batch__allocr_a6ff31e9c65babbe063d1bd51f12e08a9} 
+std::\+vector$<$ seq\+\_\+cpl\+\_\+t $>$ {\bfseries seq\+\_\+cpl}
+\item 
+\Hypertarget{classllama__batch__allocr_ab9824b23f5f051304ee543b68896ea15}\label{classllama__batch__allocr_ab9824b23f5f051304ee543b68896ea15} 
+std::\+vector$<$ seq\+\_\+set\+\_\+t $>$ {\bfseries seq\+\_\+set}
+\item 
+\Hypertarget{classllama__batch__allocr_a902a23cc8520c51ce5acc8ece3ea10c3}\label{classllama__batch__allocr_a902a23cc8520c51ce5acc8ece3ea10c3} 
+std::\+unordered\+\_\+map$<$ seq\+\_\+set\+\_\+t, idx\+\_\+vec\+\_\+t $>$ {\bfseries seq\+\_\+set\+\_\+map}
+\item 
+\Hypertarget{classllama__batch__allocr_a5cfbda453965f007146e5d72486acbe6}\label{classllama__batch__allocr_a5cfbda453965f007146e5d72486acbe6} 
+std::\+vector$<$ int32\+\_\+t $>$ {\bfseries out\+\_\+ids}
+\item 
+\Hypertarget{classllama__batch__allocr_a5b04116788550071022913eff4d67c15}\label{classllama__batch__allocr_a5b04116788550071022913eff4d67c15} 
+uint32\+\_\+t {\bfseries n\+\_\+used}
+\item 
+\Hypertarget{classllama__batch__allocr_af110f019690e455db71606c82ceb5771}\label{classllama__batch__allocr_af110f019690e455db71606c82ceb5771} 
+std::\+vector$<$ bool $>$ {\bfseries used}
+\item 
+\Hypertarget{classllama__batch__allocr_a88b448f0fe6881e44282acc3f0a7d1ac}\label{classllama__batch__allocr_a88b448f0fe6881e44282acc3f0a7d1ac} 
+int {\bfseries debug}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/batch.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/batch.\+cpp\end{DoxyCompactItemize}

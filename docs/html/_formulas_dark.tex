@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage{iftex}
+\usepackage{ifthen}
+\usepackage{epsfig}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\color{white}
+\pagecolor{black}
+\ifPDFTeX
+\usepackage{newunicodechar}
+  \makeatletter
+    \def\doxynewunicodechar#1#2{%
+    \@tempswafalse
+    \edef\nuc@tempa{\detokenize{#1}}%
+    \if\relax\nuc@tempa\relax
+      \nuc@emptyargerr
+    \else
+      \edef\@tempb{\expandafter\@car\nuc@tempa\@nil}%
+      \nuc@check
+      \if@tempswa
+        \@namedef{u8:\nuc@tempa}{#2}%
+      \fi
+    \fi
+  }
+  \makeatother
+  \doxynewunicodechar{⁻}{${}^{-}$}% Superscript minus
+  \doxynewunicodechar{²}{${}^{2}$}% Superscript two
+  \doxynewunicodechar{³}{${}^{3}$}% Superscript three
+
+\fi
+\pagestyle{empty}
+\begin{document}
+\[    \text {acl_dst }_i=\text {acl_src }_i \times \text {scale}
+\]
+\pagebreak
+
+\[   \text {out }_{i+1}=\text {out }_i+\text {step}
+\]
+\pagebreak
+
+\[    \text {acl_src }_i=e^{acl\_src_i}
+\]
+\pagebreak
+
+\[    \text {acl_dst }_i=acl\_dst_i^{\text {acl_exp }_i}
+\]
+\pagebreak
+
+\[slope[i] = m^{\left( start + i \cdot step \right)}, \quad 0 \le i < size
+\]
+\pagebreak
+
+\[slope[h] =
+\begin{cases}
+m_0^{(h + 1)}, & h < n\_head\_log2 \\
+m_1^{\left( 2 \cdot (h - n\_head\_log2) + 1 \right)}, & h \geq n\_head\_log2
+\end{cases}
+\quad , \quad \text{if } max\_bias > 0
+\]
+\pagebreak
+
+\[             \text{dst} = \max(0, src) + \text{negativeSlope} \cdot \min(0,
+              src)
+\]
+\pagebreak
+
+\[             y = \max(\min(x, max\_value), min\_value)
+\]
+\pagebreak
+
+\[            dst = src \times scale
+\]
+\pagebreak
+
+\[             \text { out }=\frac{x-\mathrm{E}[x]}{\sqrt{\text{Var}[x]+eps}}
+\]
+\pagebreak
+
+\[             \text{out} = \frac{x}{\sqrt{\sum{x^2}}}
+\]
+\pagebreak
+
+\[             \text{loss} = -\frac{1}{N} \sum_{i=1}^{N} \sum_{j=1}^{C} y_{ij} \cdot \log(\text{softmax}(x_{ij}))
+\]
+\pagebreak
+
+$N$
+\pagebreak
+
+$C$
+\pagebreak
+
+$x$
+\pagebreak
+
+$y$
+\pagebreak
+
+\[            \text { out }=\frac{x-\mathrm{E}[x]}{\sqrt{\text{Var}[x]+eps}}
+\]
+\pagebreak
+
+\[              dst = src0 + alpha \times src1
+\]
+\pagebreak
+
+\[              \text{RmsNorm}\left(x_i\right)=\frac{x_i}{\text{Rms}(\mathbf{x})} g_i,
+              \quad \text { where } \text{Rms}(\mathbf{x})=\sqrt{\frac{1}{n} \sum_{i=1}^n x_i^2+e p s}
+\]
+\pagebreak
+
+\[   dst = acl\_src0 + alpha \times acl\_src1
+\]
+\pagebreak
+
+\[   dst = acl\_src0 - alpha \times acl\_src1
+\]
+\pagebreak
+
+\[    \text {acl_dst }_i=\text {acl_src }_i \times \text {acl_other }_i
+\]
+\pagebreak
+
+\[    \text{dst}_i = \frac{\text{acl_src}_i}{\text{acl_other}_i}
+\]
+\pagebreak
+
+\[ \text {acl_dst }_i=\cos \left(\text {acl_src
+}_i\right) \]
+\pagebreak
+
+\[      \text {acl_dst }_i=\sin \left(\text {acl_src }_i\right)
+\]
+\pagebreak
+
+\end{document}

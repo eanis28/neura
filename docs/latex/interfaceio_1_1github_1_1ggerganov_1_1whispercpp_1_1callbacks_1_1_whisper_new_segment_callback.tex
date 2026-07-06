@@ -1,0 +1,45 @@
+\doxysection{io.\+github.\+ggerganov.\+whispercpp.\+callbacks.\+Whisper\+New\+Segment\+Callback Interface Reference}
+\hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_new_segment_callback}{}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_new_segment_callback}\index{io.github.ggerganov.whispercpp.callbacks.WhisperNewSegmentCallback@{io.github.ggerganov.whispercpp.callbacks.WhisperNewSegmentCallback}}
+Inheritance diagram for io.\+github.\+ggerganov.\+whispercpp.\+callbacks.\+Whisper\+New\+Segment\+Callback:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_new_segment_callback}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_new_segment_callback_a91fe3a0d0f2728bf04d7543e4a1e0ee0}{callback}} (Pointer ctx, Pointer state, int n\+\_\+new, Pointer user\+\_\+data)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Callback for the text segment. Called on every newly generated text segment. Use the whisper\+\_\+full\+\_\+...() functions to obtain the text segments. 
+
+\label{doc-func-members}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_new_segment_callback_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_new_segment_callback_a91fe3a0d0f2728bf04d7543e4a1e0ee0}\index{io.github.ggerganov.whispercpp.callbacks.WhisperNewSegmentCallback@{io.github.ggerganov.whispercpp.callbacks.WhisperNewSegmentCallback}!callback@{callback}}
+\index{callback@{callback}!io.github.ggerganov.whispercpp.callbacks.WhisperNewSegmentCallback@{io.github.ggerganov.whispercpp.callbacks.WhisperNewSegmentCallback}}
+\doxysubsubsection{\texorpdfstring{callback()}{callback()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_new_segment_callback_a91fe3a0d0f2728bf04d7543e4a1e0ee0} 
+void io.\+github.\+ggerganov.\+whispercpp.\+callbacks.\+Whisper\+New\+Segment\+Callback.\+callback (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{Pointer}]{state}{, }\item[{int}]{n\+\_\+new}{, }\item[{Pointer}]{user\+\_\+data}{}\end{DoxyParamCaption})}
+
+Callback method for the text segment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & \doxylink{requirements_The}{The} whisper context. \\
+\hline
+{\em state} & \doxylink{requirements_The}{The} whisper state. \\
+\hline
+{\em n\+\_\+new} & \doxylink{requirements_The}{The} number of newly generated text segments. \\
+\hline
+{\em user\+\_\+data} & User data. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this interface was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+bindings/\+java/\+src/\+main/\+java/\+io/\+github/\+ggerganov/\+whispercpp/\+callbacks/\+Whisper\+New\+Segment\+Callback.\+java\end{DoxyCompactItemize}

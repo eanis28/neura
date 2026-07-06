@@ -1,0 +1,88 @@
+\doxysection{httplib::\+Thread\+Pool Class Reference}
+\hypertarget{classhttplib_1_1_thread_pool}{}\label{classhttplib_1_1_thread_pool}\index{httplib::ThreadPool@{httplib::ThreadPool}}
+Inheritance diagram for httplib::\+Thread\+Pool:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classhttplib_1_1_thread_pool}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structhttplib_1_1_thread_pool_1_1worker}{worker}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_thread_pool_a37b2f9086f6a97b1f96bcc08d1562e8b}\label{classhttplib_1_1_thread_pool_a37b2f9086f6a97b1f96bcc08d1562e8b} 
+{\bfseries Thread\+Pool} (size\+\_\+t n, size\+\_\+t mqr=0)
+\item 
+\Hypertarget{classhttplib_1_1_thread_pool_aac78a365c5d7910e7367a83d21369ed2}\label{classhttplib_1_1_thread_pool_aac78a365c5d7910e7367a83d21369ed2} 
+{\bfseries Thread\+Pool} (const Thread\+Pool \&)=delete
+\item 
+bool \doxymbox{\hyperlink{classhttplib_1_1_thread_pool_aebbfc6f52584e6d6c4b2e61d5dba0f6c}{enqueue}} (std::\+function$<$ void()$>$ fn) override
+\item 
+void \doxymbox{\hyperlink{classhttplib_1_1_thread_pool_a9884cbaef9ed5f92152b82d2c93340ea}{shutdown}} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classhttplib_1_1_task_queue}{httplib::\+\+Task\+Queue}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual void {\bfseries on\+\_\+idle} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_thread_pool_ab387526d81649547c8cc80e8a2ed5262}\label{classhttplib_1_1_thread_pool_ab387526d81649547c8cc80e8a2ed5262} 
+std::\+vector$<$ std::\+thread $>$ {\bfseries threads\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_thread_pool_a4d0f69e884aa51fb069949ab47cc3319}\label{classhttplib_1_1_thread_pool_a4d0f69e884aa51fb069949ab47cc3319} 
+std::\+list$<$ std::\+function$<$ void()$>$ $>$ {\bfseries jobs\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_thread_pool_ad147150e368881c6c813434e9e509cff}\label{classhttplib_1_1_thread_pool_ad147150e368881c6c813434e9e509cff} 
+bool {\bfseries shutdown\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_thread_pool_ac83c54ec41889eb34f0a38a5ce5bf4a5}\label{classhttplib_1_1_thread_pool_ac83c54ec41889eb34f0a38a5ce5bf4a5} 
+size\+\_\+t {\bfseries max\+\_\+queued\+\_\+requests\+\_\+} = 0
+\item 
+\Hypertarget{classhttplib_1_1_thread_pool_a047e7cd75e07a81c51f1c9376d5dd42f}\label{classhttplib_1_1_thread_pool_a047e7cd75e07a81c51f1c9376d5dd42f} 
+std::\+condition\+\_\+variable {\bfseries cond\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_thread_pool_af95720a7fe4254a7fca6b15451ed5d1e}\label{classhttplib_1_1_thread_pool_af95720a7fe4254a7fca6b15451ed5d1e} 
+std::\+mutex {\bfseries mutex\+\_\+}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_thread_pool_a145c4e203b787f9b561489eb2032edb3}\label{classhttplib_1_1_thread_pool_a145c4e203b787f9b561489eb2032edb3} 
+struct {\bfseries worker}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classhttplib_1_1_thread_pool_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classhttplib_1_1_thread_pool_aebbfc6f52584e6d6c4b2e61d5dba0f6c}\index{httplib::ThreadPool@{httplib::ThreadPool}!enqueue@{enqueue}}
+\index{enqueue@{enqueue}!httplib::ThreadPool@{httplib::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{enqueue()}{enqueue()}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_thread_pool_aebbfc6f52584e6d6c4b2e61d5dba0f6c} 
+bool httplib::\+\+Thread\+Pool::\+enqueue (\begin{DoxyParamCaption}\item[{std::\+function$<$ void()$>$}]{fn}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classhttplib_1_1_task_queue}{httplib::\+\+Task\+Queue}}.
+
+\Hypertarget{classhttplib_1_1_thread_pool_a9884cbaef9ed5f92152b82d2c93340ea}\index{httplib::ThreadPool@{httplib::ThreadPool}!shutdown@{shutdown}}
+\index{shutdown@{shutdown}!httplib::ThreadPool@{httplib::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{shutdown()}{shutdown()}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_thread_pool_a9884cbaef9ed5f92152b82d2c93340ea} 
+void httplib::\+\+Thread\+Pool::\+shutdown (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classhttplib_1_1_task_queue}{httplib::\+\+Task\+Queue}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+server/\+httplib.\+h\end{DoxyCompactItemize}

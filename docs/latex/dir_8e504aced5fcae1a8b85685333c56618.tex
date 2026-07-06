@@ -1,0 +1,55 @@
+\doxysection{whisper.\+cpp/\+examples/\+bench Directory Reference}
+\hypertarget{dir_8e504aced5fcae1a8b85685333c56618}{}\label{dir_8e504aced5fcae1a8b85685333c56618}\index{whisper.cpp/examples/bench Directory Reference@{whisper.cpp/examples/bench Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_8e504aced5fcae1a8b85685333c56618_autotoc_md64}{}\doxysubsection{\texorpdfstring{whisper.\+cpp/\+examples/\+bench}{whisper.\+cpp/\+examples/\+bench}}\label{dir_8e504aced5fcae1a8b85685333c56618_autotoc_md64}
+A very basic tool for benchmarking the inference performance on your device. \doxylink{requirements_The}{The} tool simply runs the Encoder part of the transformer on some random audio data and records the execution time. This way we can have an objective comparison of the performance of the model for various setups.
+
+Benchmark results are tracked in the following Github issue:\+ \href{https://github.com/ggml-org/whisper.cpp/issues/89}{\texttt{https:\+/\+/\+github.\+com/\+ggml-\/org/\+whisper.\+cpp/\+issues/\+89}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ run\ the\ bench\ too\ on\ the\ small.en\ model\ using\ 4\ threads}
+\DoxyCodeLine{\$\ ./build/bin/whisper-\/bench\ -\/m\ ./models/ggml-\/small.en.bin\ -\/t\ 4}
+\DoxyCodeLine{}
+\DoxyCodeLine{whisper\_model\_load:\ loading\ model\ from\ './models/ggml-\/small.en.bin'}
+\DoxyCodeLine{whisper\_model\_load:\ n\_vocab\ \ \ \ \ \ \ =\ 51864}
+\DoxyCodeLine{whisper\_model\_load:\ n\_audio\_ctx\ \ \ =\ 1500}
+\DoxyCodeLine{whisper\_model\_load:\ n\_audio\_state\ =\ 768}
+\DoxyCodeLine{whisper\_model\_load:\ n\_audio\_head\ \ =\ 12}
+\DoxyCodeLine{whisper\_model\_load:\ n\_audio\_layer\ =\ 12}
+\DoxyCodeLine{whisper\_model\_load:\ n\_text\_ctx\ \ \ \ =\ 448}
+\DoxyCodeLine{whisper\_model\_load:\ n\_text\_state\ \ =\ 768}
+\DoxyCodeLine{whisper\_model\_load:\ n\_text\_head\ \ \ =\ 12}
+\DoxyCodeLine{whisper\_model\_load:\ n\_text\_layer\ \ =\ 12}
+\DoxyCodeLine{whisper\_model\_load:\ n\_mels\ \ \ \ \ \ \ \ =\ 80}
+\DoxyCodeLine{whisper\_model\_load:\ f16\ \ \ \ \ \ \ \ \ \ \ =\ 1}
+\DoxyCodeLine{whisper\_model\_load:\ type\ \ \ \ \ \ \ \ \ \ =\ 3}
+\DoxyCodeLine{whisper\_model\_load:\ mem\_required\ \ =\ 1048.00\ MB}
+\DoxyCodeLine{whisper\_model\_load:\ adding\ 1607\ extra\ tokens}
+\DoxyCodeLine{whisper\_model\_load:\ ggml\ ctx\ size\ =\ 533.05\ MB}
+\DoxyCodeLine{whisper\_model\_load:\ memory\ size\ =\ \ \ \ 68.48\ MB\ }
+\DoxyCodeLine{whisper\_model\_load:\ model\ size\ \ =\ \ \ 464.44\ MB}
+\DoxyCodeLine{}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ \ \ load\ time\ =\ \ \ 240.82\ ms}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ \ \ \ mel\ time\ =\ \ \ \ \ 0.00\ ms}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ sample\ time\ =\ \ \ \ \ 0.00\ ms}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ encode\ time\ =\ \ 1062.21\ ms\ /\ 88.52\ ms\ per\ layer}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ decode\ time\ =\ \ \ \ \ 0.00\ ms\ /\ 0.00\ ms\ per\ layer}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ \ total\ time\ =\ \ 1303.04\ ms}
+\DoxyCodeLine{}
+\DoxyCodeLine{system\_info:\ n\_threads\ =\ 4\ |\ AVX2\ =\ 0\ |\ AVX512\ =\ 0\ |\ NEON\ =\ 1\ |\ FP16\_VA\ =\ 1\ |\ WASM\_SIMD\ =\ 0\ |\ BLAS\ =\ 1\ |\ }
+\DoxyCodeLine{}
+\DoxyCodeLine{If\ you\ wish,\ you\ can\ submit\ these\ results\ here:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ https://github.com/ggml-\/org/whisper.cpp/issues/89}
+\DoxyCodeLine{}
+\DoxyCodeLine{Please\ include\ the\ following\ information:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ -\/\ CPU\ model}
+\DoxyCodeLine{\ \ -\/\ Operating\ system}
+\DoxyCodeLine{\ \ -\/\ Compiler}
+
+\end{DoxyCode}
+ 

@@ -1,0 +1,65 @@
+\doxysection{common.\+hpp}
+\hypertarget{ggml-zdnn_2common_8hpp_source}{}\label{ggml-zdnn_2common_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/zdnn/common.hpp@{whisper.cpp/ggml/src/ggml-\/zdnn/common.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GGML\_ZDNN\_COMMON\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GGML\_ZDNN\_COMMON\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}zdnn.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ GGML\_ZDNN\_NAME\ \ \ \ "{}zDNN"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ GGML\_ZDNN\_VERSION\ ZDNN\_VERNUM}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ ZDNN\_CHECK(stmt)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ zdnn\_status\ status\ =\ (stmt);\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ GGML\_ASSERT(status\ ==\ ZDNN\_OK);\ \(\backslash\)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0);}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__zdnn__device__context}{ggml\_backend\_zdnn\_device\_context}}\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{int}\ zdnn\_device;}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ zdnn\_device\_ref\_count;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_parmblkformat\_0;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_parmblkformat\_1;\ \ \textcolor{comment}{//\ checks\ for\ z17}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ max\_size;}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{char}\ name[128];}
+\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__zdnn__context}{ggml\_backend\_zdnn\_context}}\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{int}\ device;}
+\DoxyCodeLine{00035\ \ \ \ \ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ gf;}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__zdnn__buffer}{ggml\_backend\_zdnn\_buffer}}\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ data;}
+\DoxyCodeLine{00040\ \ \ \ \ \doxymbox{\hyperlink{structggml__backend__zdnn__buffer}{ggml\_backend\_zdnn\_buffer}}\ *\ extra;\ \ \textcolor{comment}{//\ for\ bias,\ etc.}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ zdnn\_tensor\_desc\ pre\_tfm\_desc;}
+\DoxyCodeLine{00044\ \ \ \ \ zdnn\_tensor\_desc\ tfm\_desc;}
+\DoxyCodeLine{00045\ \ \ \ \ zdnn\_ztensor\ \ \ \ \ ztensor;}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{char}\ name[GGML\_MAX\_NAME];}
+\DoxyCodeLine{00048\ \};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__zdnn__buffer__context}{ggml\_backend\_zdnn\_buffer\_context}}\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ all\_data;}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ all\_size;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{bool}\ owned;}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{int}\ n\_buffers;}
+\DoxyCodeLine{00056\ \ \ \ \ std::vector<std::unique\_ptr<ggml\_backend\_zdnn\_buffer>>\ buffers;}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GGML\_ZDNN\_COMMON\_HPP}}
+
+\end{DoxyCode}

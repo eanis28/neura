@@ -1,0 +1,35 @@
+\doxysection{action.\+h}
+\hypertarget{action_8h_source}{}\label{action_8h_source}\doxymbox{\hyperlink{action_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_action_adf6d17666645657d71bee9f12386db6b}{Action}}\ \{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_action_adf6d17666645657d71bee9f12386db6b}{Action}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_configuration}{Configuration}}\&\ cfg)\ :\ \doxymbox{\hyperlink{class_action_a2a268539cacb7ededd79efeb18935f8d}{config}}(cfg)\ \{\}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{class_action_abfc040fdc62410622a0e3835a713740f}{\string~Action}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_action_a018c91fe89cff73911c5862df0cd8f63}{execute}}()\ =\ 0;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{virtual}\ std::string\ \doxymbox{\hyperlink{class_action_a564b8be4c69e16668ba4f41ec7dd6cbf}{describe}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_configuration}{Configuration}}\&\ \doxymbox{\hyperlink{class_action_a2a268539cacb7ededd79efeb18935f8d}{config}};\ }
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_action_a13c6ee9594194b04786b10850402f6d3}{log}}(\textcolor{keyword}{const}\ std::string\&\ message)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00069\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_action_a31a34834f233fc45a14b944d48c1971d}{httpGet}}(\textcolor{keyword}{const}\ std::string\&\ url)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00082\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_action_a005ac4b700f13661b881a7df5d40b6a2}{httpPost}}(\textcolor{keyword}{const}\ std::string\&\ url,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ bearerToken,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ body,}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ contentType\ =\ \textcolor{stringliteral}{"{}application/json"{}})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ \doxymbox{\hyperlink{class_action_aea26611d135c5a8a585cfcfd4cf963fe}{urlEncode}}(\textcolor{keyword}{const}\ std::string\&\ raw);}
+\DoxyCodeLine{00100\ \};}
+
+\end{DoxyCode}

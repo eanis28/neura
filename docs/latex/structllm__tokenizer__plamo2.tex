@@ -1,0 +1,70 @@
+\doxysection{llm\+\_\+tokenizer\+\_\+plamo2 Struct Reference}
+\hypertarget{structllm__tokenizer__plamo2}{}\label{structllm__tokenizer__plamo2}\index{llm\_tokenizer\_plamo2@{llm\_tokenizer\_plamo2}}
+Inheritance diagram for llm\+\_\+tokenizer\+\_\+plamo2:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{structllm__tokenizer__plamo2}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_a936e3663a7847ea4c3e052e621cb2a7f}\label{structllm__tokenizer__plamo2_a936e3663a7847ea4c3e052e621cb2a7f} 
+{\bfseries llm\+\_\+tokenizer\+\_\+plamo2} (const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \&vocab)
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_ab3ee87893caf86cfdff092c791ca6f47}\label{structllm__tokenizer__plamo2_ab3ee87893caf86cfdff092c791ca6f47} 
+void {\bfseries build} (const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \&vocab)
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_ad08a34f0038d5d4f3c41ca69d0a43d9c}\label{structllm__tokenizer__plamo2_ad08a34f0038d5d4f3c41ca69d0a43d9c} 
+std::\+vector$<$ llama\+\_\+token $>$ {\bfseries encode} (const std::\+string \&text) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_addcd16c5fa1b66460d453616870f4f9c}\label{structllm__tokenizer__plamo2_addcd16c5fa1b66460d453616870f4f9c} 
+std::\+vector$<$ std::\+string $>$ {\bfseries tokens\+\_\+}
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_aee14508e808be6e91f97629f64f13cc2}\label{structllm__tokenizer__plamo2_aee14508e808be6e91f97629f64f13cc2} 
+std::\+vector$<$ llama\+\_\+token $>$ {\bfseries bytes\+\_\+}
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_a80edccaff7c04c86a5523dec4ed494b2}\label{structllm__tokenizer__plamo2_a80edccaff7c04c86a5523dec4ed494b2} 
+std::\+unordered\+\_\+map$<$ int64\+\_\+t, int32\+\_\+t $>$ {\bfseries to\+\_\+suffix\+\_\+id\+\_\+}
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_a4c419a9417c00dba0df9d30864a24add}\label{structllm__tokenizer__plamo2_a4c419a9417c00dba0df9d30864a24add} 
+std::\+vector$<$ std::\+vector$<$ int32\+\_\+t $>$ $>$ {\bfseries table\+\_\+}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_abeb2de086e566576686110af6cd700b1}\label{structllm__tokenizer__plamo2_abeb2de086e566576686110af6cd700b1} 
+static constexpr int32\+\_\+t {\bfseries TABLE\+\_\+\+PIECE\+\_\+\+LENGTH} = 0
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_a2954bc77d0834436885113746d4e12da}\label{structllm__tokenizer__plamo2_a2954bc77d0834436885113746d4e12da} 
+static constexpr int32\+\_\+t {\bfseries TABLE\+\_\+\+TOKEN\+\_\+\+ID} = 1
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_ad688d82ca9d41043b6f7465bcf320f14}\label{structllm__tokenizer__plamo2_ad688d82ca9d41043b6f7465bcf320f14} 
+static constexpr int32\+\_\+t {\bfseries TABLE\+\_\+\+SCORE} = 2
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_a5970ac513a13d461dd953aaa6da77ae3}\label{structllm__tokenizer__plamo2_a5970ac513a13d461dd953aaa6da77ae3} 
+static constexpr int32\+\_\+t {\bfseries TABLE\+\_\+\+PIECE\+\_\+\+ID} = 3
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_aef9b053e45aac82b97805721dd364836}\label{structllm__tokenizer__plamo2_aef9b053e45aac82b97805721dd364836} 
+static constexpr int32\+\_\+t {\bfseries PATH\+\_\+\+TOKEN\+\_\+\+LENGTH} = 0
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_a04e98243789c077f89d5e91430a8ced5}\label{structllm__tokenizer__plamo2_a04e98243789c077f89d5e91430a8ced5} 
+static constexpr int32\+\_\+t {\bfseries PATH\+\_\+\+TOKEN\+\_\+\+ID} = 1
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_accbf33fbfd580518ca658b6776fb7c24}\label{structllm__tokenizer__plamo2_accbf33fbfd580518ca658b6776fb7c24} 
+static constexpr int32\+\_\+t {\bfseries PATH\+\_\+\+NUM\+\_\+\+TOKENS} = 2
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_a830ea89465931decf6c718a518e77b7b}\label{structllm__tokenizer__plamo2_a830ea89465931decf6c718a518e77b7b} 
+static constexpr int32\+\_\+t {\bfseries INVALID\+\_\+\+SCORE} = -\/20000000
+\item 
+\Hypertarget{structllm__tokenizer__plamo2_a5420ae5e6cef9757f389c277cacf6b50}\label{structllm__tokenizer__plamo2_a5420ae5e6cef9757f389c277cacf6b50} 
+static constexpr int32\+\_\+t {\bfseries UNKNOWN\+\_\+\+SCORE} = -\/10000000
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/vocab.\+cpp\end{DoxyCompactItemize}

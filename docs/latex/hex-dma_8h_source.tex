@@ -1,0 +1,325 @@
+\doxysection{hex-\/dma.h}
+\hypertarget{hex-dma_8h_source}{}\label{hex-dma_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hex-\/dma.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hex-\/dma.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HTP\_DMA\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HTP\_DMA\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <HAP\_farf.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <hexagon\_types.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ Define\ the\ HW\ descriptor\ structs\ here\ since\ the\ ones\ in\ HexSDK\ are\ a\ bit\ out\ of\ date}}
+\DoxyCodeLine{00014\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdma__descriptor__1d__s}{dma\_descriptor\_1d\_s}}\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ next;}
+\DoxyCodeLine{00016\ \ \ \ \ uint32\_t\ size:24;}
+\DoxyCodeLine{00017\ \ \ \ \ uint32\_t\ desc\_size:2;}
+\DoxyCodeLine{00018\ \ \ \ \ uint32\_t\ dst\_comp:1;}
+\DoxyCodeLine{00019\ \ \ \ \ uint32\_t\ src\_comp:1;}
+\DoxyCodeLine{00020\ \ \ \ \ uint32\_t\ dst\_bypass:1;}
+\DoxyCodeLine{00021\ \ \ \ \ uint32\_t\ src\_bypass:1;}
+\DoxyCodeLine{00022\ \ \ \ \ uint32\_t\ order:1;}
+\DoxyCodeLine{00023\ \ \ \ \ uint32\_t\ done:1;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ src;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ dst;}
+\DoxyCodeLine{00026\ \}\ dma\_descriptor\_1d;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ <\ 75}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdma__descriptor__2d__s}{dma\_descriptor\_2d\_s}}\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ next;}
+\DoxyCodeLine{00032\ \ \ \ \ uint32\_t\ reserved0:24;}
+\DoxyCodeLine{00033\ \ \ \ \ uint32\_t\ desc\_size:2;}
+\DoxyCodeLine{00034\ \ \ \ \ uint32\_t\ dst\_comp:1;}
+\DoxyCodeLine{00035\ \ \ \ \ uint32\_t\ src\_comp:1;}
+\DoxyCodeLine{00036\ \ \ \ \ uint32\_t\ dst\_bypass:1;}
+\DoxyCodeLine{00037\ \ \ \ \ uint32\_t\ src\_bypass:1;}
+\DoxyCodeLine{00038\ \ \ \ \ uint32\_t\ order:1;}
+\DoxyCodeLine{00039\ \ \ \ \ uint32\_t\ done:1;}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ src;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ dst;}
+\DoxyCodeLine{00042\ \ \ \ \ uint32\_t\ desc\_type:8;}
+\DoxyCodeLine{00043\ \ \ \ \ uint32\_t\ reserved1:24;}
+\DoxyCodeLine{00044\ \ \ \ \ uint32\_t\ row\_size:16;}
+\DoxyCodeLine{00045\ \ \ \ \ uint32\_t\ nrows:16;}
+\DoxyCodeLine{00046\ \ \ \ \ uint32\_t\ src\_stride:16;}
+\DoxyCodeLine{00047\ \ \ \ \ uint32\_t\ dst\_stride:16;}
+\DoxyCodeLine{00048\ \ \ \ \ uint32\_t\ src\_offset:16;}
+\DoxyCodeLine{00049\ \ \ \ \ uint32\_t\ dst\_offset:16;}
+\DoxyCodeLine{00050\ \}\ dma\_descriptor\_2d;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdma__descriptor__2d__s}{dma\_descriptor\_2d\_s}}\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ next;}
+\DoxyCodeLine{00056\ \ \ \ \ uint32\_t\ dst\_stride:24;}
+\DoxyCodeLine{00057\ \ \ \ \ uint32\_t\ desc\_size:2;}
+\DoxyCodeLine{00058\ \ \ \ \ uint32\_t\ dst\_comp:1;}
+\DoxyCodeLine{00059\ \ \ \ \ uint32\_t\ src\_comp:1;}
+\DoxyCodeLine{00060\ \ \ \ \ uint32\_t\ dst\_bypass:1;}
+\DoxyCodeLine{00061\ \ \ \ \ uint32\_t\ src\_bypass:1;}
+\DoxyCodeLine{00062\ \ \ \ \ uint32\_t\ order:1;}
+\DoxyCodeLine{00063\ \ \ \ \ uint32\_t\ done:1;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ src;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ dst;}
+\DoxyCodeLine{00066\ \ \ \ \ uint32\_t\ desc\_type:8;}
+\DoxyCodeLine{00067\ \ \ \ \ uint32\_t\ reserved0:24;}
+\DoxyCodeLine{00068\ \ \ \ \ uint32\_t\ row\_size:24;}
+\DoxyCodeLine{00069\ \ \ \ \ uint32\_t\ nrows\_lo:8;}
+\DoxyCodeLine{00070\ \ \ \ \ uint32\_t\ nrows\_hi:8;}
+\DoxyCodeLine{00071\ \ \ \ \ uint32\_t\ src\_stride:24;}
+\DoxyCodeLine{00072\ \ \ \ \ uint32\_t\ offset:24;}
+\DoxyCodeLine{00073\ \ \ \ \ uint32\_t\ reserved1:8;}
+\DoxyCodeLine{00074\ \}\ dma\_descriptor\_2d;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ *dst;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *src;}
+\DoxyCodeLine{00081\ \}\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00084\ \ \ \ \ dma\_descriptor\_2d\ *\ desc;\ \ \textcolor{comment}{//\ descriptor\ pointers}}
+\DoxyCodeLine{00085\ \ \ \ \ dma\_descriptor\_2d\ *\ tail;\ \ \textcolor{comment}{//\ tail\ pointer}}
+\DoxyCodeLine{00086\ \ \ \ \ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ \ \ \ \ \ \ \ \ \ \ *\ dptr;\ \ \textcolor{comment}{//\ dst/src\ pointers}}
+\DoxyCodeLine{00087\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ push\_idx;}
+\DoxyCodeLine{00088\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ pop\_idx;}
+\DoxyCodeLine{00089\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ capacity;}
+\DoxyCodeLine{00090\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ idx\_mask;}
+\DoxyCodeLine{00091\ \}\ \doxymbox{\hyperlink{structdma__queue}{dma\_queue}};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ dma\_queue\_create(\textcolor{keywordtype}{size\_t}\ capacity);}
+\DoxyCodeLine{00094\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ dma\_queue\_delete(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q);}
+\DoxyCodeLine{00095\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ dma\_queue\_flush(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{comment}{//\ TODO:\ technically\ we\ don't\ need\ these\ and\ could\ use\ Q6\_dmstart/wait/etc\ instead}}
+\DoxyCodeLine{00098\ \textcolor{comment}{//\ but\ those\ do\ not\ seem\ to\ always\ compiler\ properly.}}
+\DoxyCodeLine{00099\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ dmstart(\textcolor{keywordtype}{void}\ *\ next)\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}\ release(\%0):at"{}}\ :\ :\ \textcolor{stringliteral}{"{}r"{}}(next));}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}\ dmstart(\%0)"{}}\ :\ :\ \textcolor{stringliteral}{"{}r"{}}(next));}
+\DoxyCodeLine{00102\ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ dmlink(\textcolor{keywordtype}{void}\ *\ cur,\ \textcolor{keywordtype}{void}\ *\ next)\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}\ release(\%0):at"{}}\ :\ :\ \textcolor{stringliteral}{"{}r"{}}(next));}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}\ dmlink(\%0,\ \%1)"{}}\ :\ :\ \textcolor{stringliteral}{"{}r"{}}(cur),\ \textcolor{stringliteral}{"{}r"{}}(next));}
+\DoxyCodeLine{00107\ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dmpoll(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ret\ =\ 0;}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}\ \%0\ =\ dmpoll"{}}\ :\ \textcolor{stringliteral}{"{}=r"{}}(ret)\ :\ :\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{00113\ \}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dmwait(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ret\ =\ 0;}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}\ \%0\ =\ dmwait"{}}\ :\ \textcolor{stringliteral}{"{}=r"{}}(ret)\ :\ :\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{00119\ \}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dma\_make\_ptr(\textcolor{keywordtype}{void}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *src)}
+\DoxyCodeLine{00122\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ p\ =\ \{\ dst,\ src\ \};}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordflow}{return}\ p;}
+\DoxyCodeLine{00125\ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ <\ 73}}
+\DoxyCodeLine{00128\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32\_t\ dma\_src\_l2\_bypass\_on\ =\ 1;}
+\DoxyCodeLine{00129\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32\_t\ dma\_dst\_l2\_bypass\_on\ =\ 0;}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00131\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32\_t\ dma\_src\_l2\_bypass\_on\ =\ 1;}
+\DoxyCodeLine{00132\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32\_t\ dma\_dst\_l2\_bypass\_on\ =\ 1;}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ dma\_queue\_push\_single\_1d(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q,\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dptr,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordflow}{if}\ (((q-\/>push\_idx\ +\ 1)\ \&\ q-\/>idx\_mask)\ ==\ q-\/>pop\_idx)\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}dma-\/push:\ queue\ full\(\backslash\)n"{}});}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00139\ \ \ \ \ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ dma\_descriptor\_1d\ *\ desc\ =\ (dma\_descriptor\_1d\ *)\ \&q-\/>desc[q-\/>push\_idx];}
+\DoxyCodeLine{00142\ \ \ \ \ desc-\/>next\ \ \ \ \ \ \ =\ NULL;}
+\DoxyCodeLine{00143\ \ \ \ \ desc-\/>desc\_size\ \ =\ 0;\ \textcolor{comment}{//\ 1D\ mode}}
+\DoxyCodeLine{00144\ \ \ \ \ desc-\/>src\_bypass\ =\ dma\_src\_l2\_bypass\_on;}
+\DoxyCodeLine{00145\ \ \ \ \ desc-\/>dst\_bypass\ =\ dma\_dst\_l2\_bypass\_on;}
+\DoxyCodeLine{00146\ \ \ \ \ desc-\/>order\ \ \ \ \ \ =\ 1;}
+\DoxyCodeLine{00147\ \ \ \ \ desc-\/>done\ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00148\ \ \ \ \ desc-\/>src\ \ \ \ \ \ \ \ =\ (\textcolor{keywordtype}{void}\ *)\ dptr.src;}
+\DoxyCodeLine{00149\ \ \ \ \ desc-\/>dst\ \ \ \ \ \ \ \ =\ (\textcolor{keywordtype}{void}\ *)\ dptr.dst;}
+\DoxyCodeLine{00150\ \ \ \ \ desc-\/>size\ \ \ \ \ \ \ =\ size;}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ q-\/>dptr[q-\/>push\_idx]\ =\ dptr;}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ dmlink(q-\/>tail,\ desc);}
+\DoxyCodeLine{00155\ \ \ \ \ q-\/>tail\ =\ (dma\_descriptor\_2d\ *)\ desc;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{comment}{//\ FARF(ERROR,\ "{}dma-\/push:\ i\ \%u\ row-\/size\ \%u\ nrows\ \%d\ dst\ \%p\ src\ \%p\(\backslash\)n"{},\ q-\/>push\_idx,\ row\_size,\ nrows,\ dptr.dst,\ dptr.src);}}
+\DoxyCodeLine{00158\ \ \ \ \ q-\/>push\_idx\ =\ (q-\/>push\_idx\ +\ 1)\ \&\ q-\/>idx\_mask;}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00160\ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ dma\_queue\_push\_single\_2d(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q,\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dptr,\ \textcolor{keywordtype}{size\_t}\ dst\_stride,\ \textcolor{keywordtype}{size\_t}\ src\_stride,\ \textcolor{keywordtype}{size\_t}\ row\_size,\ \textcolor{keywordtype}{size\_t}\ nrows)\ \{}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordflow}{if}\ (((q-\/>push\_idx\ +\ 1)\ \&\ q-\/>idx\_mask)\ ==\ q-\/>pop\_idx)\ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}dma-\/push:\ queue\ full\(\backslash\)n"{}});}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00166\ \ \ \ \ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ dma\_descriptor\_2d\ *\ desc\ =\ \&q-\/>desc[q-\/>push\_idx];}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ desc-\/>next\ \ \ \ \ \ \ \ \ \ \ =\ NULL;}
+\DoxyCodeLine{00171\ \ \ \ \ desc-\/>reserved0\ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00172\ \ \ \ \ desc-\/>reserved1\ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00173\ \ \ \ \ desc-\/>desc\_size\ \ \ \ \ \ =\ 1;\ \textcolor{comment}{//\ 2d\ mode}}
+\DoxyCodeLine{00174\ \ \ \ \ desc-\/>src\_bypass\ \ \ \ \ =\ dma\_src\_l2\_bypass\_on;}
+\DoxyCodeLine{00175\ \ \ \ \ desc-\/>dst\_bypass\ \ \ \ \ =\ dma\_dst\_l2\_bypass\_on;}
+\DoxyCodeLine{00176\ \ \ \ \ desc-\/>src\_comp\ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00177\ \ \ \ \ desc-\/>dst\_comp\ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00178\ \ \ \ \ desc-\/>order\ \ \ \ \ \ \ \ \ \ =\ 1;}
+\DoxyCodeLine{00179\ \ \ \ \ desc-\/>done\ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00180\ \ \ \ \ desc-\/>src\_stride\ \ \ \ \ =\ src\_stride;}
+\DoxyCodeLine{00181\ \ \ \ \ desc-\/>dst\_stride\ \ \ \ \ =\ dst\_stride;}
+\DoxyCodeLine{00182\ \ \ \ \ desc-\/>src\ \ \ \ \ \ \ \ \ \ \ \ =\ (\textcolor{keywordtype}{void}\ *)\ dptr.src;}
+\DoxyCodeLine{00183\ \ \ \ \ desc-\/>dst\ \ \ \ \ \ \ \ \ \ \ \ =\ (\textcolor{keywordtype}{void}\ *)\ dptr.dst;}
+\DoxyCodeLine{00184\ \ \ \ \ desc-\/>row\_size\ \ \ \ \ \ \ =\ row\_size;}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ <\ 75}}
+\DoxyCodeLine{00187\ \ \ \ \ desc-\/>desc\_type\ \ \ \ \ \ =\ 0;\ \textcolor{comment}{//\ 2d\ (16-\/bit)\ mode}}
+\DoxyCodeLine{00188\ \ \ \ \ desc-\/>nrows\ \ \ \ \ \ \ \ \ \ =\ nrows;}
+\DoxyCodeLine{00189\ \ \ \ \ desc-\/>src\_offset\ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00190\ \ \ \ \ desc-\/>dst\_offset\ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00192\ \ \ \ \ desc-\/>desc\_type\ \ \ \ \ \ =\ 9;\ \textcolor{comment}{//\ 2d\ (24-\/bit)\ mode}}
+\DoxyCodeLine{00193\ \ \ \ \ desc-\/>nrows\_lo\ \ \ \ \ \ \ =\ (nrows\ \&\ 0xff);}
+\DoxyCodeLine{00194\ \ \ \ \ desc-\/>nrows\_hi\ \ \ \ \ \ \ =\ (nrows\ >>\ 8);}
+\DoxyCodeLine{00195\ \ \ \ \ desc-\/>offset\ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ q-\/>dptr[q-\/>push\_idx]\ =\ dptr;}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ dmlink(q-\/>tail,\ desc);}
+\DoxyCodeLine{00201\ \ \ \ \ q-\/>tail\ =\ desc;}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ FARF(ERROR,\ "{}dma-\/push:\ i\ \%u\ row-\/size\ \%u\ nrows\ \%d\ dst\ \%p\ src\ \%p\(\backslash\)n"{},\ q-\/>push\_idx,\ row\_size,\ nrows,\ dptr.dst,\ dptr.src);}}
+\DoxyCodeLine{00204\ \ \ \ \ q-\/>push\_idx\ =\ (q-\/>push\_idx\ +\ 1)\ \&\ q-\/>idx\_mask;}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00206\ \}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dma\_queue\_pop(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q)\ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dptr\ \ =\ \{\ NULL\ \};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordflow}{if}\ (q-\/>push\_idx\ ==\ q-\/>pop\_idx)\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dptr;}
+\DoxyCodeLine{00213\ \ \ \ \ \}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ dma\_descriptor\_2d\ *\ desc\ =\ \&q-\/>desc[q-\/>pop\_idx];}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{comment}{//\ Wait\ for\ desc\ to\ complete}}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordflow}{while}\ (1)\ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ dmpoll();}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (desc-\/>done)\ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ FARF(ERROR,\ "{}dma-\/pop:\ waiting\ for\ DMA\ :\ \%u\(\backslash\)n"{},\ q-\/>pop\_idx);}}
+\DoxyCodeLine{00224\ \ \ \ \ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ dptr\ =\ q-\/>dptr[q-\/>pop\_idx];}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ FARF(ERROR,\ "{}dma-\/pop:\ i\ \%u\ dst\ \%p\ src\ \%p\(\backslash\)n"{},\ q-\/>pop\_idx,\ dptr.dst,\ dptr.src);}}
+\DoxyCodeLine{00229\ \ \ \ \ q-\/>pop\_idx\ =\ (q-\/>pop\_idx\ +\ 1)\ \&\ q-\/>idx\_mask;}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordflow}{return}\ dptr;}
+\DoxyCodeLine{00231\ \}}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dma\_queue\_pop\_nowait(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q)\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dptr\ \ =\ \{\ NULL\ \};}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keywordflow}{if}\ (q-\/>push\_idx\ ==\ q-\/>pop\_idx)\ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dptr;}
+\DoxyCodeLine{00238\ \ \ \ \ \}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ dptr\ =\ q-\/>dptr[q-\/>pop\_idx];}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{comment}{//\ FARF(ERROR,\ "{}dma-\/pop-\/nowait:\ i\ \%u\ dst\ \%p\ src\ \%p\(\backslash\)n"{},\ q-\/>pop\_idx,\ dptr.dst,\ dptr.src);}}
+\DoxyCodeLine{00243\ \ \ \ \ q-\/>pop\_idx\ =\ (q-\/>pop\_idx\ +\ 1)\ \&\ q-\/>idx\_mask;}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keywordflow}{return}\ dptr;}
+\DoxyCodeLine{00245\ \}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ dma\_queue\_empty(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q)\ \{}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keywordflow}{return}\ q-\/>push\_idx\ ==\ q-\/>pop\_idx;}
+\DoxyCodeLine{00249\ \}}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint32\_t\ dma\_queue\_depth(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q)\ \{}
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keywordflow}{return}\ (q-\/>push\_idx\ -\/\ q-\/>pop\_idx)\ \&\ q-\/>idx\_mask;}
+\DoxyCodeLine{00253\ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint32\_t\ dma\_queue\_capacity(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q)\ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keywordflow}{return}\ q-\/>capacity;}
+\DoxyCodeLine{00257\ \}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ <\ 75}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{comment}{//\ Overflow-\/safe\ DMA\ push:\ all\ 2d\ descriptor\ fields\ (row\_size,\ nrows,\ src\_stride,\ dst\_stride)\ are\ 16-\/bit,\ max\ 65535.}}
+\DoxyCodeLine{00262\ \textcolor{comment}{//\ This\ version\ transparently\ handles\ values\ that\ exceed\ the\ 16-\/bit\ limit\ and\ submits\ chained\ DMA\ transtions.}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ DMA\_MAX\_FIELD\_VAL\ 65535u}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ dma\_queue\_push(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *q,\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dptr,\ \textcolor{keywordtype}{size\_t}\ dst\_stride,\ \textcolor{keywordtype}{size\_t}\ src\_stride,\ \textcolor{keywordtype}{size\_t}\ row\_size,\ \textcolor{keywordtype}{size\_t}\ nrows)\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{comment}{//\ Fast\ path:\ everything\ fits\ in\ 16\ bits}}
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{keywordflow}{if}\ (nrows\ ==\ 0\ ||\ \_\_builtin\_expect(}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ row\_size\ \ \ <=\ DMA\_MAX\_FIELD\_VAL\ \&\&}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ nrows\ \ \ \ \ \ <=\ DMA\_MAX\_FIELD\_VAL\ \&\&}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ src\_stride\ <=\ DMA\_MAX\_FIELD\_VAL\ \&\&}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ dst\_stride\ <=\ DMA\_MAX\_FIELD\_VAL,\ 1))\ \{}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dma\_queue\_push\_single\_2d(q,\ dptr,\ dst\_stride,\ src\_stride,\ row\_size,\ nrows);}
+\DoxyCodeLine{00274\ \ \ \ \ \}}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{comment}{//\ Contiguous\ block}}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{comment}{//\ Use\ 1d\ DMA\ mode\ which\ supports\ sizes\ up\ to\ 24-\/bits\ (16MB)}}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keywordflow}{if}\ (nrows\ ==\ 1\ ||\ (row\_size\ ==\ src\_stride\ \&\&\ row\_size\ ==\ dst\_stride))\ \{}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ total\ =\ row\_size\ *\ nrows;}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dma\_queue\_push\_single\_1d(q,\ dptr,\ total);}
+\DoxyCodeLine{00281\ \ \ \ \ \}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{comment}{//\ Stride\ overflow\ —\ fall\ back\ to\ row-\/by-\/row.}}
+\DoxyCodeLine{00284\ \ \ \ \ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *src\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)\ dptr.src;}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ uint8\_t\ \ \ \ \ \ \ *dst\ =\ (uint8\_t\ *)\ \ \ \ \ \ \ dptr.dst;}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ r\ =\ 0;\ r\ <\ nrows;\ ++r)\ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ p\ =\ dma\_make\_ptr(dst\ +\ r\ *\ dst\_stride,\ src\ +\ r\ *\ src\_stride);}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!dma\_queue\_push\_single\_1d(q,\ p,\ row\_size))}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ +\ 1\ <\ nrows)}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dma\_queue\_pop(q);}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00295\ \ \ \ \ \}}
+\DoxyCodeLine{00296\ \}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ HVX\_ARCH\ >=\ 75}}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ dma\_queue\_push(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *q,\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dptr,\ \textcolor{keywordtype}{size\_t}\ dst\_stride,\ \textcolor{keywordtype}{size\_t}\ src\_stride,\ \textcolor{keywordtype}{size\_t}\ row\_size,\ \textcolor{keywordtype}{size\_t}\ nrows)\ \{}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{comment}{//\ On\ v75\ and\ up\ we\ always\ use\ 2d\ 24-\/bit\ mode}}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keywordflow}{return}\ dma\_queue\_push\_single\_2d(q,\ dptr,\ dst\_stride,\ src\_stride,\ row\_size,\ nrows);}
+\DoxyCodeLine{00303\ \}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ dma\_queue\_push\_ddr\_to\_vtcm(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q,\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dptr,\ \textcolor{keywordtype}{size\_t}\ dst\_row\_size,\ \textcolor{keywordtype}{size\_t}\ src\_row\_size,\ \textcolor{keywordtype}{size\_t}\ nrows)\ \{}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{keywordflow}{return}\ dma\_queue\_push(q,\ dptr,\ dst\_row\_size,\ src\_row\_size,\ src\_row\_size,\ nrows);}
+\DoxyCodeLine{00309\ \}}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ dma\_queue\_push\_vtcm\_to\_ddr(\doxymbox{\hyperlink{structdma__queue}{dma\_queue}}\ *\ q,\ \doxymbox{\hyperlink{structdma__ptr}{dma\_ptr}}\ dptr,\ \textcolor{keywordtype}{size\_t}\ dst\_row\_size,\ \textcolor{keywordtype}{size\_t}\ src\_row\_size,\ \textcolor{keywordtype}{size\_t}\ nrows)\ \{}
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{keywordflow}{return}\ dma\_queue\_push(q,\ dptr,\ dst\_row\_size,\ src\_row\_size,\ dst\_row\_size,\ nrows);}
+\DoxyCodeLine{00313\ \}}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00316\ \}\ \ \textcolor{comment}{//\ extern\ "{}C"{}}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HTP\_DMA\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

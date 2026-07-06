@@ -1,0 +1,52 @@
+\doxysection{webgpu\+\_\+buf\+\_\+pool Struct Reference}
+\hypertarget{structwebgpu__buf__pool}{}\label{structwebgpu__buf__pool}\index{webgpu\_buf\_pool@{webgpu\_buf\_pool}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structwebgpu__buf__pool_a8fae80d5c02a2c059fa559ffce299c88}\label{structwebgpu__buf__pool_a8fae80d5c02a2c059fa559ffce299c88} 
+void {\bfseries init} (wgpu::\+\+Device device, int num\+\_\+bufs, size\+\_\+t buf\+\_\+size, wgpu::\+\+Buffer\+Usage dev\+\_\+buf\+\_\+usage, bool should\+\_\+grow=false, size\+\_\+t max\+\_\+pool\+\_\+size=WEBGPU\+\_\+\+NUM\+\_\+\+PARAM\+\_\+\+BUFS \texorpdfstring{$\ast$}{*}2)
+\item 
+\Hypertarget{structwebgpu__buf__pool_a60b9d8939c37ffbf2e69fa3078aae446}\label{structwebgpu__buf__pool_a60b9d8939c37ffbf2e69fa3078aae446} 
+wgpu::\+\+Buffer {\bfseries alloc\+\_\+bufs} ()
+\item 
+\Hypertarget{structwebgpu__buf__pool_ad57dd05bb5d59e5a7a391cef7d866006}\label{structwebgpu__buf__pool_ad57dd05bb5d59e5a7a391cef7d866006} 
+void {\bfseries free\+\_\+bufs} (std::\+vector$<$ wgpu::\+\+Buffer $>$ bufs)
+\item 
+\Hypertarget{structwebgpu__buf__pool_a6cb64add0d8793abae3007e446b3cc83}\label{structwebgpu__buf__pool_a6cb64add0d8793abae3007e446b3cc83} 
+void {\bfseries cleanup} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structwebgpu__buf__pool_ad5b87acf85bf9f94184e3fec1248646b}\label{structwebgpu__buf__pool_ad5b87acf85bf9f94184e3fec1248646b} 
+std::\+vector$<$ wgpu::\+\+Buffer $>$ {\bfseries free}
+\item 
+\Hypertarget{structwebgpu__buf__pool_ac65e490030210ee71b946bd09d31c3b6}\label{structwebgpu__buf__pool_ac65e490030210ee71b946bd09d31c3b6} 
+std::\+mutex {\bfseries mutex}
+\item 
+\Hypertarget{structwebgpu__buf__pool_ab3b6be4c67744d68c89fa652edd2d564}\label{structwebgpu__buf__pool_ab3b6be4c67744d68c89fa652edd2d564} 
+std::\+condition\+\_\+variable {\bfseries cv}
+\item 
+\Hypertarget{structwebgpu__buf__pool_ae58e16273d65161dd56a877864aea95c}\label{structwebgpu__buf__pool_ae58e16273d65161dd56a877864aea95c} 
+size\+\_\+t {\bfseries cur\+\_\+pool\+\_\+size}
+\item 
+\Hypertarget{structwebgpu__buf__pool_a62d5943262fed249fb96860e83406429}\label{structwebgpu__buf__pool_a62d5943262fed249fb96860e83406429} 
+size\+\_\+t {\bfseries max\+\_\+pool\+\_\+size}
+\item 
+\Hypertarget{structwebgpu__buf__pool_aa6db3ba7055cd92a6bf78009d6580f38}\label{structwebgpu__buf__pool_aa6db3ba7055cd92a6bf78009d6580f38} 
+wgpu::\+\+Device {\bfseries device}
+\item 
+\Hypertarget{structwebgpu__buf__pool_a273bc3032c7bba39ed495ea71295034f}\label{structwebgpu__buf__pool_a273bc3032c7bba39ed495ea71295034f} 
+wgpu::\+\+Buffer\+Usage {\bfseries dev\+\_\+buf\+\_\+usage}
+\item 
+\Hypertarget{structwebgpu__buf__pool_a89987e2e7f9089e0f2300a145a4a8577}\label{structwebgpu__buf__pool_a89987e2e7f9089e0f2300a145a4a8577} 
+size\+\_\+t {\bfseries buf\+\_\+size}
+\item 
+\Hypertarget{structwebgpu__buf__pool_a9a90d42f066d300bde80be0491e2d525}\label{structwebgpu__buf__pool_a9a90d42f066d300bde80be0491e2d525} 
+bool {\bfseries should\+\_\+grow}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/webgpu/\+ggml-\/webgpu.\+cpp\end{DoxyCompactItemize}

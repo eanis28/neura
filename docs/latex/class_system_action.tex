@@ -1,0 +1,263 @@
+\doxysection{System\+Action Class Reference}
+\hypertarget{class_system_action}{}\label{class_system_action}\index{SystemAction@{SystemAction}}
+
+
+\doxylink{class_action}{Action} that controls OS-\/level media playback.  
+
+
+
+
+{\ttfamily \+\#include $<$System\+Action.\+h$>$}
+
+Inheritance diagram for System\+Action:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_system_action}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_system_action_a60846f8630dbc52c84e96fab59841604}{System\+Action}} (const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&cfg, \doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{Media\+Command}} cmd=\doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662a1252c45651289c0b553a30d27bb5ae9b}{Media\+Command::\+\+TOGGLE}})
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{class_system_action}{System\+Action} with the given configuration and command. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_system_action_af99d42d8f8416f5f454a7594c875944c}{execute}} () override
+\begin{DoxyCompactList}\small\item\em Executes the configured media key command on the host OS. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_system_action_ad2f7ac9470ceb9cfae3d9451f4a8e1a8}{describe}} () const override
+\begin{DoxyCompactList}\small\item\em Returns a human-\/readable description of this action. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_system_action_ac99b06fac5cee3b73332c4d60f12f697}{set\+Command}} (\doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{Media\+Command}} cmd)
+\begin{DoxyCompactList}\small\item\em Replaces the media command that will be sent on the next \doxylink{class_system_action_af99d42d8f8416f5f454a7594c875944c}{execute()}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_action_adf6d17666645657d71bee9f12386db6b}{Action}} (const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&cfg)
+\begin{DoxyCompactList}\small\item\em Constructs an \doxylink{class_action}{Action} with the application-\/wide configuration. \end{DoxyCompactList}\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+Action} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor — ensures correct cleanup of derived classes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{class_system_action_a543a25731e5b2a4595c9ddc73d92c615}{send\+Media\+Key}} (const std::\+string \&linux\+Cmd, const std::\+string \&mac\+Cmd, const std::\+string \&win\+Cmd) const
+\begin{DoxyCompactList}\small\item\em Dispatches the platform-\/appropriate media key command. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_system_action_a3075a13ef1971969efb38bf187f97e43}{send\+Media\+Key\+Play}} () const
+\begin{DoxyCompactList}\small\item\em Sends the OS-\/level "{}\+Play"{} media key. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_system_action_a21ffe7cc708a92c633abbcde5763edc6}{send\+Media\+Key\+Pause}} () const
+\begin{DoxyCompactList}\small\item\em Sends the OS-\/level "{}\+Pause"{} media key. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_system_action_ac21dafd160063cbafe9da06ce23fd925}{detect\+Active\+Player}} () const
+\begin{DoxyCompactList}\small\item\em Probes the OS for the currently active media player. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_system_action_a674f113e10cd7ec8caacb9c4c056680f}\label{class_system_action_a674f113e10cd7ec8caacb9c4c056680f} 
+\doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{Media\+Command}} {\bfseries command}
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} media command to dispatch on \doxylink{class_system_action_af99d42d8f8416f5f454a7594c875944c}{execute()}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_action_a13c6ee9594194b04786b10850402f6d3}{log}} (const std::\+string \&message) const
+\begin{DoxyCompactList}\small\item\em Writes a timestamped log line to {\ttfamily stdout}. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_action_a31a34834f233fc45a14b944d48c1971d}{http\+Get}} (const std::\+string \&url) const
+\begin{DoxyCompactList}\small\item\em Performs a synchronous HTTP GET request via libcurl. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_action_a005ac4b700f13661b881a7df5d40b6a2}{http\+Post}} (const std::\+string \&url, const std::\+string \&bearer\+Token, const std::\+string \&body, const std::\+string \&content\+Type="{}application/\+json"{}) const
+\begin{DoxyCompactList}\small\item\em Performs a synchronous HTTP POST request via libcurl. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+string \doxymbox{\hyperlink{class_action_aea26611d135c5a8a585cfcfd4cf963fe}{url\+Encode}} (const std::\+string \&raw)
+\begin{DoxyCompactList}\small\item\em Percent-\/encodes a raw string according to RFC 3986. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+const \doxymbox{\hyperlink{class_configuration}{Configuration}} \& {\bfseries config}
+\begin{DoxyCompactList}\small\item\em Shared, read-\/only application configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_action}{Action} that controls OS-\/level media playback. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang
+\end{DoxyAuthor}
+
+
+Inherits from \doxylink{class_action}{Action} and implements \doxylink{class_system_action_af99d42d8f8416f5f454a7594c875944c}{execute()} by calling the platform appropriate shell command that simulates a media key press. \doxylink{requirements_The}{The} active media player is detected at execution time and logged for diagnostics. 
+
+\label{doc-constructors}
+\Hypertarget{class_system_action_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_system_action_a60846f8630dbc52c84e96fab59841604}\index{SystemAction@{SystemAction}!SystemAction@{SystemAction}}
+\index{SystemAction@{SystemAction}!SystemAction@{SystemAction}}
+\doxysubsubsection{\texorpdfstring{SystemAction()}{SystemAction()}}
+{\footnotesize\ttfamily \label{class_system_action_a60846f8630dbc52c84e96fab59841604} 
+System\+Action::\+\+System\+Action (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&}]{cfg}{, }\item[{\doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{Media\+Command}}}]{cmd}{ = {\ttfamily \doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662a1252c45651289c0b553a30d27bb5ae9b}{Media\+Command::\+\+TOGGLE}}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructs a \doxylink{class_system_action}{System\+Action} with the given configuration and command. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em cfg} & Application-\/wide configuration forwarded to the base \doxylink{class_action}{Action}. \\
+\hline
+{\em cmd} & \doxylink{requirements_The}{The} media command to issue on \doxylink{class_system_action_af99d42d8f8416f5f454a7594c875944c}{execute()}. Defaults to \doxylink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662a1252c45651289c0b553a30d27bb5ae9b}{Media\+Command::\+\+TOGGLE}. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_system_action_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_system_action_ad2f7ac9470ceb9cfae3d9451f4a8e1a8}\index{SystemAction@{SystemAction}!describe@{describe}}
+\index{describe@{describe}!SystemAction@{SystemAction}}
+\doxysubsubsection{\texorpdfstring{describe()}{describe()}}
+{\footnotesize\ttfamily \label{class_system_action_ad2f7ac9470ceb9cfae3d9451f4a8e1a8} 
+std::\+string System\+Action::\+describe (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Returns a human-\/readable description of this action. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Includes the command type (PLAY /\+ PAUSE /\+ TOGGLE) and, where available, the name of the active media player.
+
+\begin{DoxyReturn}{Returns}
+Descriptive string, e.\+g. "{}\+System\+Action:\+ TOGGLE (\+Spotify)"{}. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{class_action_a564b8be4c69e16668ba4f41ec7dd6cbf}{Action}}.
+
+\Hypertarget{class_system_action_ac21dafd160063cbafe9da06ce23fd925}\index{SystemAction@{SystemAction}!detectActivePlayer@{detectActivePlayer}}
+\index{detectActivePlayer@{detectActivePlayer}!SystemAction@{SystemAction}}
+\doxysubsubsection{\texorpdfstring{detectActivePlayer()}{detectActivePlayer()}}
+{\footnotesize\ttfamily \label{class_system_action_ac21dafd160063cbafe9da06ce23fd925} 
+std::\+string System\+Action::\+detect\+Active\+Player (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Probes the OS for the currently active media player. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Used for diagnostic logging inside \doxylink{class_system_action_ad2f7ac9470ceb9cfae3d9451f4a8e1a8}{describe()} and \doxylink{class_system_action_af99d42d8f8416f5f454a7594c875944c}{execute()}. Detection strategy is platform-\/specific (e.\+g. D-\/\+Bus on Linux, Apple\+Script on mac\+OS, WMI on Windows).
+
+\begin{DoxyReturn}{Returns}
+Name of the active player (e.\+g. "{}\+Spotify"{}, "{}\+VLC"{}), or an empty string if none could be detected. 
+\end{DoxyReturn}
+\Hypertarget{class_system_action_af99d42d8f8416f5f454a7594c875944c}\index{SystemAction@{SystemAction}!execute@{execute}}
+\index{execute@{execute}!SystemAction@{SystemAction}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_system_action_af99d42d8f8416f5f454a7594c875944c} 
+bool System\+Action::\+execute (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Executes the configured media key command on the host OS. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Detects the active media player, selects the correct platform command, and dispatches it via \doxylink{class_system_action_a543a25731e5b2a4595c9ddc73d92c615}{send\+Media\+Key()}. Logs the outcome.
+
+\begin{DoxyReturn}{Returns}
+true if the OS command was dispatched successfully, false if the command failed or the platform is unsupported. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{class_action_a018c91fe89cff73911c5862df0cd8f63}{Action}}.
+
+\Hypertarget{class_system_action_a543a25731e5b2a4595c9ddc73d92c615}\index{SystemAction@{SystemAction}!sendMediaKey@{sendMediaKey}}
+\index{sendMediaKey@{sendMediaKey}!SystemAction@{SystemAction}}
+\doxysubsubsection{\texorpdfstring{sendMediaKey()}{sendMediaKey()}}
+{\footnotesize\ttfamily \label{class_system_action_a543a25731e5b2a4595c9ddc73d92c615} 
+bool System\+Action::\+send\+Media\+Key (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{linux\+Cmd}{, }\item[{const std::\+string \&}]{mac\+Cmd}{, }\item[{const std::\+string \&}]{win\+Cmd}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Dispatches the platform-\/appropriate media key command. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Selects exactly one of the three provided command strings based on the compiled target platform and runs it via std::\+system().
+
+
+\begin{DoxyParams}{Parameters}
+{\em linux\+Cmd} & Shell command for Linux, e.\+g. "{}xdotool key XF86\+Audio\+Play"{}. \\
+\hline
+{\em mac\+Cmd} & Shell command for mac\+OS, e.\+g. "{}osascript -\/e \textquotesingle{}...\textquotesingle{}"{}. \\
+\hline
+{\em win\+Cmd} & Shell command for Windows, e.\+g. "{}powershell -\/\+Command \textquotesingle{}...\textquotesingle{}"{}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if std::\+system() returns 0 (success). 
+
+false on non-\/zero exit code or unsupported platform. 
+\end{DoxyReturn}
+\Hypertarget{class_system_action_a21ffe7cc708a92c633abbcde5763edc6}\index{SystemAction@{SystemAction}!sendMediaKeyPause@{sendMediaKeyPause}}
+\index{sendMediaKeyPause@{sendMediaKeyPause}!SystemAction@{SystemAction}}
+\doxysubsubsection{\texorpdfstring{sendMediaKeyPause()}{sendMediaKeyPause()}}
+{\footnotesize\ttfamily \label{class_system_action_a21ffe7cc708a92c633abbcde5763edc6} 
+bool System\+Action::\+send\+Media\+Key\+Pause (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Sends the OS-\/level "{}\+Pause"{} media key. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Convenience wrapper around \doxylink{class_system_action_a543a25731e5b2a4595c9ddc73d92c615}{send\+Media\+Key()} with pre-\/built platform command strings for the pause action.
+
+\begin{DoxyReturn}{Returns}
+true on success, false on failure. 
+\end{DoxyReturn}
+\Hypertarget{class_system_action_a3075a13ef1971969efb38bf187f97e43}\index{SystemAction@{SystemAction}!sendMediaKeyPlay@{sendMediaKeyPlay}}
+\index{sendMediaKeyPlay@{sendMediaKeyPlay}!SystemAction@{SystemAction}}
+\doxysubsubsection{\texorpdfstring{sendMediaKeyPlay()}{sendMediaKeyPlay()}}
+{\footnotesize\ttfamily \label{class_system_action_a3075a13ef1971969efb38bf187f97e43} 
+bool System\+Action::\+send\+Media\+Key\+Play (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Sends the OS-\/level "{}\+Play"{} media key. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Convenience wrapper around \doxylink{class_system_action_a543a25731e5b2a4595c9ddc73d92c615}{send\+Media\+Key()} with pre-\/built platform command strings for the play action.
+
+\begin{DoxyReturn}{Returns}
+true on success, false on failure. 
+\end{DoxyReturn}
+\Hypertarget{class_system_action_ac99b06fac5cee3b73332c4d60f12f697}\index{SystemAction@{SystemAction}!setCommand@{setCommand}}
+\index{setCommand@{setCommand}!SystemAction@{SystemAction}}
+\doxysubsubsection{\texorpdfstring{setCommand()}{setCommand()}}
+{\footnotesize\ttfamily \label{class_system_action_ac99b06fac5cee3b73332c4d60f12f697} 
+void System\+Action::\+set\+Command (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{Media\+Command}}}]{cmd}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Replaces the media command that will be sent on the next \doxylink{class_system_action_af99d42d8f8416f5f454a7594c875944c}{execute()}. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em cmd} & \doxylink{requirements_The}{The} new \doxylink{_system_action_8h_a31d3c4c03b7b13a23e29a188a7395662}{Media\+Command} to use. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_system_action_8h}{System\+Action.\+h}}\item 
+System\+Action.\+cpp\end{DoxyCompactItemize}

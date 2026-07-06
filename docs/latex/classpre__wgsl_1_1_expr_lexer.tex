@@ -1,0 +1,50 @@
+\doxysection{pre\+\_\+wgsl::\+Expr\+Lexer Class Reference}
+\hypertarget{classpre__wgsl_1_1_expr_lexer}{}\label{classpre__wgsl_1_1_expr_lexer}\index{pre\_wgsl::ExprLexer@{pre\_wgsl::ExprLexer}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structpre__wgsl_1_1_expr_lexer_1_1_tok}{Tok}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_lexer_afd08cb488c42a85374cdeb53f2d9843c}\label{classpre__wgsl_1_1_expr_lexer_afd08cb488c42a85374cdeb53f2d9843c} 
+enum {\bfseries Kind} \{ \newline
+{\bfseries END}
+, {\bfseries IDENT}
+, {\bfseries NUMBER}
+, {\bfseries OP}
+, \newline
+{\bfseries LPAREN}
+, {\bfseries RPAREN}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_lexer_aa07bba669e0904cf2613fa8eb75f8107}\label{classpre__wgsl_1_1_expr_lexer_aa07bba669e0904cf2613fa8eb75f8107} 
+{\bfseries Expr\+Lexer} (std::\+string\+\_\+view sv)
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_lexer_a6242aeb0a9a46bbf340e73155ce5a142}\label{classpre__wgsl_1_1_expr_lexer_a6242aeb0a9a46bbf340e73155ce5a142} 
+\doxymbox{\hyperlink{structpre__wgsl_1_1_expr_lexer_1_1_tok}{Tok}} {\bfseries next} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_lexer_a22353794ebd03f9db9c0a4cc7846ba23}\label{classpre__wgsl_1_1_expr_lexer_a22353794ebd03f9db9c0a4cc7846ba23} 
+void {\bfseries skip\+WS} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_lexer_a67ff6a67fd588cca1bc95a8179fe7cec}\label{classpre__wgsl_1_1_expr_lexer_a67ff6a67fd588cca1bc95a8179fe7cec} 
+std::\+string\+\_\+view {\bfseries src}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_lexer_a97d6f785413d701c5e62b6368674630c}\label{classpre__wgsl_1_1_expr_lexer_a97d6f785413d701c5e62b6368674630c} 
+size\+\_\+t {\bfseries pos}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/webgpu/\+pre\+\_\+wgsl.\+hpp\end{DoxyCompactItemize}

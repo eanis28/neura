@@ -1,0 +1,38 @@
+\doxysection{llama\+\_\+adapter\+\_\+lora Struct Reference}
+\hypertarget{structllama__adapter__lora}{}\label{structllama__adapter__lora}\index{llama\_adapter\_lora@{llama\_adapter\_lora}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__adapter__lora_a1a31ee28a7a53522c7e7e3ccba9c6574}\label{structllama__adapter__lora_a1a31ee28a7a53522c7e7e3ccba9c6574} 
+\doxymbox{\hyperlink{structllama__adapter__lora__weight}{llama\+\_\+adapter\+\_\+lora\+\_\+weight}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+weight} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}w)
+\item 
+\Hypertarget{structllama__adapter__lora_ab5427a3f83a0e9c6fa20725ed4030f6a}\label{structllama__adapter__lora_ab5427a3f83a0e9c6fa20725ed4030f6a} 
+uint32\+\_\+t {\bfseries get\+\_\+n\+\_\+nodes} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__adapter__lora_a2833a0ac14e618d1d613f645155a3095}\label{structllama__adapter__lora_a2833a0ac14e618d1d613f645155a3095} 
+std::\+unordered\+\_\+map$<$ std::\+string, \doxymbox{\hyperlink{structllama__adapter__lora__weight}{llama\+\_\+adapter\+\_\+lora\+\_\+weight}} $>$ {\bfseries ab\+\_\+map}
+\item 
+\Hypertarget{structllama__adapter__lora_ac23589e745fd5b1fa41424be6ac0a203}\label{structllama__adapter__lora_ac23589e745fd5b1fa41424be6ac0a203} 
+std::\+vector$<$ ggml\+\_\+context\+\_\+ptr $>$ {\bfseries ctxs}
+\item 
+\Hypertarget{structllama__adapter__lora_a3a8391aee37ffd89a46c1de48e98bd8e}\label{structllama__adapter__lora_a3a8391aee37ffd89a46c1de48e98bd8e} 
+std::\+vector$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+ptr $>$ {\bfseries bufs}
+\item 
+\Hypertarget{structllama__adapter__lora_a52f842449a2d62262876a0e0d4bb21ea}\label{structllama__adapter__lora_a52f842449a2d62262876a0e0d4bb21ea} 
+float {\bfseries alpha}
+\item 
+\Hypertarget{structllama__adapter__lora_a5f435e997936673cfecb09598b26a32f}\label{structllama__adapter__lora_a5f435e997936673cfecb09598b26a32f} 
+std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ {\bfseries gguf\+\_\+kv}
+\item 
+\Hypertarget{structllama__adapter__lora_a7e88a28ec761f1cfe9e1ad53d926daeb}\label{structllama__adapter__lora_a7e88a28ec761f1cfe9e1ad53d926daeb} 
+std::\+vector$<$ llama\+\_\+token $>$ {\bfseries alora\+\_\+invocation\+\_\+tokens}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/adapter.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/adapter.\+cpp\end{DoxyCompactItemize}

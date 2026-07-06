@@ -1,0 +1,43 @@
+\doxysection{wav\+\_\+writer Class Reference}
+\hypertarget{classwav__writer}{}\label{classwav__writer}\index{wav\_writer@{wav\_writer}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classwav__writer_a5b274c9511d31ea5e220330872ee6074}\label{classwav__writer_a5b274c9511d31ea5e220330872ee6074} 
+bool {\bfseries open} (const std::\+string \&filename, const uint32\+\_\+t sample\+\_\+rate, const uint16\+\_\+t bits\+\_\+per\+\_\+sample, const uint16\+\_\+t channels)
+\item 
+\Hypertarget{classwav__writer_a967db8749aef55aa9f0572d3e7aebaca}\label{classwav__writer_a967db8749aef55aa9f0572d3e7aebaca} 
+bool {\bfseries close} ()
+\item 
+\Hypertarget{classwav__writer_a2c9e2f839269f967f97c0b6269cd2fb6}\label{classwav__writer_a2c9e2f839269f967f97c0b6269cd2fb6} 
+bool {\bfseries write} (const float \texorpdfstring{$\ast$}{*}data, size\+\_\+t length)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classwav__writer_a8cdb01ed534e71f7fa7d22574af02cf2}\label{classwav__writer_a8cdb01ed534e71f7fa7d22574af02cf2} 
+bool {\bfseries write\+\_\+header} (const uint32\+\_\+t sample\+\_\+rate, const uint16\+\_\+t bits\+\_\+per\+\_\+sample, const uint16\+\_\+t channels)
+\item 
+\Hypertarget{classwav__writer_a6317fafb185716297b4d4e4476e9b2f8}\label{classwav__writer_a6317fafb185716297b4d4e4476e9b2f8} 
+bool {\bfseries write\+\_\+audio} (const float \texorpdfstring{$\ast$}{*}data, size\+\_\+t length)
+\item 
+\Hypertarget{classwav__writer_af595a2e34d1a94f6123f0a4d07a338ea}\label{classwav__writer_af595a2e34d1a94f6123f0a4d07a338ea} 
+bool {\bfseries open\+\_\+wav} (const std::\+string \&filename)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classwav__writer_a3be2b1c405ad491377b08cb6445c25d8}\label{classwav__writer_a3be2b1c405ad491377b08cb6445c25d8} 
+std::\+ofstream {\bfseries file}
+\item 
+\Hypertarget{classwav__writer_a8874304ef610298bee8bd3c2e526bfd3}\label{classwav__writer_a8874304ef610298bee8bd3c2e526bfd3} 
+uint32\+\_\+t {\bfseries data\+Size} = 0
+\item 
+\Hypertarget{classwav__writer_adbbea01663731e44038add9b6441106d}\label{classwav__writer_adbbea01663731e44038add9b6441106d} 
+std::\+string {\bfseries wav\+\_\+filename}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+common.\+h\end{DoxyCompactItemize}

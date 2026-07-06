@@ -1,0 +1,49 @@
+\doxysection{gguf\+\_\+reader Struct Reference}
+\hypertarget{structgguf__reader}{}\label{structgguf__reader}\index{gguf\_reader@{gguf\_reader}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgguf__reader_a5491c8de0cd048753e699692bc16c403}\label{structgguf__reader_a5491c8de0cd048753e699692bc16c403} 
+{\bfseries gguf\+\_\+reader} (FILE \texorpdfstring{$\ast$}{*}file)
+\item 
+\Hypertarget{structgguf__reader_a694258eea3b9386b82e7353db5e61a96}\label{structgguf__reader_a694258eea3b9386b82e7353db5e61a96} 
+{\footnotesize template$<$typename T$>$ }\\bool {\bfseries read} (T \&dst) const
+\item 
+\Hypertarget{structgguf__reader_af240d3937cf36f03f42b6e28bbb95a00}\label{structgguf__reader_af240d3937cf36f03f42b6e28bbb95a00} 
+{\footnotesize template$<$typename T$>$ }\\bool {\bfseries read} (std::\+vector$<$ T $>$ \&dst, const size\+\_\+t n) const
+\item 
+\Hypertarget{structgguf__reader_a9360e8c3ecc1b1089a909b3626ef342e}\label{structgguf__reader_a9360e8c3ecc1b1089a909b3626ef342e} 
+bool {\bfseries read} (bool \&dst) const
+\item 
+\Hypertarget{structgguf__reader_acc73e6ec4206e57ee0b5d3c50992e14b}\label{structgguf__reader_acc73e6ec4206e57ee0b5d3c50992e14b} 
+bool {\bfseries read} (enum ggml\+\_\+type \&dst) const
+\item 
+\Hypertarget{structgguf__reader_a448604eba38a2210e33258eee5170099}\label{structgguf__reader_a448604eba38a2210e33258eee5170099} 
+bool {\bfseries read} (enum gguf\+\_\+type \&dst) const
+\item 
+\Hypertarget{structgguf__reader_a03ca3d9c6ab3f88a43ee1e637a3d7e6c}\label{structgguf__reader_a03ca3d9c6ab3f88a43ee1e637a3d7e6c} 
+bool {\bfseries read} (std::\+string \&dst) const
+\item 
+\Hypertarget{structgguf__reader_a6a01421d2925ec25344a6c0ebb297218}\label{structgguf__reader_a6a01421d2925ec25344a6c0ebb297218} 
+bool {\bfseries read} (void \texorpdfstring{$\ast$}{*}dst, const size\+\_\+t size) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgguf__reader_a48581d82c7066678c57650dad809356a}\label{structgguf__reader_a48581d82c7066678c57650dad809356a} 
+static uint64\+\_\+t {\bfseries file\+\_\+remain} (FILE \texorpdfstring{$\ast$}{*}file)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgguf__reader_a26ac2df6230866c413ca2d1e126a178a}\label{structgguf__reader_a26ac2df6230866c413ca2d1e126a178a} 
+FILE \texorpdfstring{$\ast$}{*} {\bfseries file}
+\item 
+\Hypertarget{structgguf__reader_ac45c87523d5e3d2a31803e9d6fd4f8ae}\label{structgguf__reader_ac45c87523d5e3d2a31803e9d6fd4f8ae} 
+uint64\+\_\+t {\bfseries nbytes\+\_\+remain}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+gguf.\+cpp\end{DoxyCompactItemize}

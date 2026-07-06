@@ -1,0 +1,97 @@
+\doxysection{ov::\+frontend::\+ggml::\+Node\+Context Class Reference}
+\hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context}{}\label{classov_1_1frontend_1_1ggml_1_1_node_context}\index{ov::frontend::ggml::NodeContext@{ov::frontend::ggml::NodeContext}}
+Inheritance diagram for ov::\+frontend::\+ggml::\+Node\+Context:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classov_1_1frontend_1_1ggml_1_1_node_context}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_aab77beda7b65145d65de9b364fd6b10a}\label{classov_1_1frontend_1_1ggml_1_1_node_context_aab77beda7b65145d65de9b364fd6b10a} 
+{\bfseries Node\+Context} (const std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{Ggml\+Decoder}} $>$ \&decoder, std::\+shared\+\_\+ptr$<$ Tensor\+Map $>$ \&tensor\+\_\+map, int node\+\_\+idx, \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_translate_session}{Translate\+Session}} \texorpdfstring{$\ast$}{*}translate\+\_\+session=nullptr)
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a3cc2001f721e4e55aa4a142ecd13144e}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a3cc2001f721e4e55aa4a142ecd13144e} 
+\doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_translate_session}{Translate\+Session}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+translate\+\_\+session} () const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_abffb3f4526a8d0e421899a49849e088e}\label{classov_1_1frontend_1_1ggml_1_1_node_context_abffb3f4526a8d0e421899a49849e088e} 
+const std::\+vector$<$ std::\+string $>$ \& {\bfseries get\+\_\+input\+\_\+names} () const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a44d613c4704e60ea55aa4974353b1ca1}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a44d613c4704e60ea55aa4974353b1ca1} 
+size\+\_\+t {\bfseries get\+\_\+input\+\_\+size} () const override
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a7075aa1462004f86c71e1b1315af50ac}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a7075aa1462004f86c71e1b1315af50ac} 
+ov::\+element::\+\+Type {\bfseries get\+\_\+input\+\_\+type} (size\+\_\+t index) const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a030b21c3399f85e4f7d0f34ce6d38ac6}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a030b21c3399f85e4f7d0f34ce6d38ac6} 
+Partial\+Shape {\bfseries get\+\_\+input\+\_\+shape} (size\+\_\+t input\+\_\+index) const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a0be85380e27444cc0abfa4c90c7ab23e}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a0be85380e27444cc0abfa4c90c7ab23e} 
+std::\+vector$<$ size\+\_\+t $>$ {\bfseries get\+\_\+input\+\_\+stride} (size\+\_\+t index) const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_af24e940e9a9798bdec29755bc48cc373}\label{classov_1_1frontend_1_1ggml_1_1_node_context_af24e940e9a9798bdec29755bc48cc373} 
+std::\+string {\bfseries get\+\_\+output\+\_\+name} () const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a50bcb780dbd9f955cba630cef156fadb}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a50bcb780dbd9f955cba630cef156fadb} 
+Partial\+Shape {\bfseries get\+\_\+output\+\_\+shape} () const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a6228184f5c7ee3a4b96196d4d3ca61a4}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a6228184f5c7ee3a4b96196d4d3ca61a4} 
+int32\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+input\+\_\+op\+\_\+params} (size\+\_\+t index) const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a4ea3ab860f33a6f66ff7c5b04aad5c61}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a4ea3ab860f33a6f66ff7c5b04aad5c61} 
+int32\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+output\+\_\+op\+\_\+params} () const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_ac9c7453456df300da39c43cc4d9021ce}\label{classov_1_1frontend_1_1ggml_1_1_node_context_ac9c7453456df300da39c43cc4d9021ce} 
+ov::\+element::\+\+Type {\bfseries get\+\_\+output\+\_\+type} () const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_abcb04d8ea97463fe58a64a35e83ad25a}\label{classov_1_1frontend_1_1ggml_1_1_node_context_abcb04d8ea97463fe58a64a35e83ad25a} 
+Output$<$ Node $>$ {\bfseries get\+\_\+input} (int idx) const override
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a7b57c0db00419d606764058b72369117}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a7b57c0db00419d606764058b72369117} 
+Output$<$ Node $>$ {\bfseries get\+\_\+input} (const std::\+string \&name) const override
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a81b429828f6f8421341444818560f1da}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a81b429828f6f8421341444818560f1da} 
+bool {\bfseries has\+\_\+input} (const std::\+string \&name) const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_abff26dfc36ff20c6e85b5c72c8382482}\label{classov_1_1frontend_1_1ggml_1_1_node_context_abff26dfc36ff20c6e85b5c72c8382482} 
+const std::\+string \& {\bfseries get\+\_\+name} () const override
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_ac4a89e392ff5966ecbf67dbcbec7d66b}\label{classov_1_1frontend_1_1ggml_1_1_node_context_ac4a89e392ff5966ecbf67dbcbec7d66b} 
+ov::\+\+Any {\bfseries get\+\_\+attribute\+\_\+as\+\_\+any} (const std::\+string \&name) const override
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a3103d1ca91bc59e71682920bc20a8144}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a3103d1ca91bc59e71682920bc20a8144} 
+int {\bfseries get\+\_\+op\+\_\+case} () const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_ab027778589596fd9e06c0578c218b285}\label{classov_1_1frontend_1_1ggml_1_1_node_context_ab027778589596fd9e06c0578c218b285} 
+bool {\bfseries is\+\_\+static} () const
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a443add61bc012daf68188304cd62af54}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a443add61bc012daf68188304cd62af54} 
+bool {\bfseries is\+\_\+stateful} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_ad085664e003e5ab8642f404f5e2d4ec0}\label{classov_1_1frontend_1_1ggml_1_1_node_context_ad085664e003e5ab8642f404f5e2d4ec0} 
+std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{Ggml\+Decoder}} $>$ {\bfseries m\+\_\+decoder}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a54efa0aa979bc3adb4f82e13155fcd39}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a54efa0aa979bc3adb4f82e13155fcd39} 
+std::\+shared\+\_\+ptr$<$ Tensor\+Map $>$ \& {\bfseries m\+\_\+tensor\+\_\+map}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a6eb368eec88e2df4f6227106d3f3103a}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a6eb368eec88e2df4f6227106d3f3103a} 
+int {\bfseries m\+\_\+node\+\_\+idx}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_a4193f6d5b6d2823af4a2779f4ee41612}\label{classov_1_1frontend_1_1ggml_1_1_node_context_a4193f6d5b6d2823af4a2779f4ee41612} 
+\doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_translate_session}{Translate\+Session}} \texorpdfstring{$\ast$}{*} {\bfseries m\+\_\+translate\+\_\+session}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_acfd97e0f51d0222052dcbe7afea3b933}\label{classov_1_1frontend_1_1ggml_1_1_node_context_acfd97e0f51d0222052dcbe7afea3b933} 
+std::\+vector$<$ std::\+string $>$ {\bfseries m\+\_\+input\+\_\+names}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_node_context_ab409edcbdb04e8660f57ce4b0f64e988}\label{classov_1_1frontend_1_1ggml_1_1_node_context_ab409edcbdb04e8660f57ce4b0f64e988} 
+std::\+vector$<$ std::\+string $>$ {\bfseries m\+\_\+output\+\_\+names}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/openvino/\+openvino/\+node\+\_\+context.\+h\end{DoxyCompactItemize}

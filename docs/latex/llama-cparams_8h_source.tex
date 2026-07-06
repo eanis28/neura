@@ -1,0 +1,53 @@
+\doxysection{llama-\/cparams.h}
+\hypertarget{llama-cparams_8h_source}{}\label{llama-cparams_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/cparams.h@{whisper.cpp/examples/talk-\/llama/llama-\/cparams.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ LLAMA\_MAX\_SEQ\ 256}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ uint32\_t\ n\_ctx;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ context\ size\ used\ during\ inference}}
+\DoxyCodeLine{00011\ \ \ \ \ uint32\_t\ n\_ctx\_seq;\ \ \ \ \ \ \ \textcolor{comment}{//\ context\ for\ a\ single\ sequence}}
+\DoxyCodeLine{00012\ \ \ \ \ uint32\_t\ n\_batch;}
+\DoxyCodeLine{00013\ \ \ \ \ uint32\_t\ n\_ubatch;}
+\DoxyCodeLine{00014\ \ \ \ \ uint32\_t\ n\_seq\_max;}
+\DoxyCodeLine{00015\ \ \ \ \ int32\_t\ \ n\_threads;\ \ \ \ \ \ \ \textcolor{comment}{//\ number\ of\ threads\ to\ use\ for\ generation}}
+\DoxyCodeLine{00016\ \ \ \ \ int32\_t\ \ n\_threads\_batch;\ \textcolor{comment}{//\ number\ of\ threads\ to\ use\ for\ batch\ processing}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{float}\ rope\_freq\_base;}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{float}\ rope\_freq\_scale;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ uint32\_t\ n\_ctx\_orig\_yarn;}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//\ These\ hyperparameters\ are\ not\ exposed\ in\ GGUF,\ because\ all}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ existing\ YaRN\ models\ use\ the\ same\ values\ for\ them.}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{float}\ yarn\_ext\_factor;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{float}\ yarn\_attn\_factor;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{float}\ yarn\_beta\_fast;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{float}\ yarn\_beta\_slow;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{bool}\ embeddings;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{bool}\ causal\_attn;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{bool}\ offload\_kqv;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{bool}\ flash\_attn;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{bool}\ auto\_fa;}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{bool}\ fused\_gdn\_ar;\ \ \ \ \ \ \ \textcolor{comment}{//\ use\ fused\ gated\ delta\ net\ (autoregressive)}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{bool}\ fused\_gdn\_ch;\ \ \ \ \ \ \ \textcolor{comment}{//\ use\ fused\ gated\ delta\ net\ (chunked)}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{bool}\ auto\_fgdn;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{bool}\ no\_perf;}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{bool}\ warmup;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{bool}\ op\_offload;}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{bool}\ kv\_unified;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{bool}\ pipeline\_parallel;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_pooling\_type\ pooling\_type;}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ ggml\_backend\_sched\_eval\_callback\ cb\_eval;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ cb\_eval\_user\_data;}
+\DoxyCodeLine{00047\ \};}
+
+\end{DoxyCode}

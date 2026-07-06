@@ -1,0 +1,159 @@
+\doxysection{whisper\+\_\+state Struct Reference}
+\hypertarget{structwhisper__state}{}\label{structwhisper__state}\index{whisper\_state@{whisper\_state}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structwhisper__state_1_1vad__segment__info}{vad\+\_\+segment\+\_\+info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structwhisper__state_af0323dc19ca51c5817a9b8463c443ccc}\label{structwhisper__state_af0323dc19ca51c5817a9b8463c443ccc} 
+int64\+\_\+t {\bfseries t\+\_\+sample\+\_\+us} = 0
+\item 
+\Hypertarget{structwhisper__state_a8cd9fdfb497f143b3fe9fd22b1cfaf19}\label{structwhisper__state_a8cd9fdfb497f143b3fe9fd22b1cfaf19} 
+int64\+\_\+t {\bfseries t\+\_\+encode\+\_\+us} = 0
+\item 
+\Hypertarget{structwhisper__state_a036368746ea041755f2c15bce54bd9f2}\label{structwhisper__state_a036368746ea041755f2c15bce54bd9f2} 
+int64\+\_\+t {\bfseries t\+\_\+decode\+\_\+us} = 0
+\item 
+\Hypertarget{structwhisper__state_a259e69ced2f262aea62d80f6c327c05c}\label{structwhisper__state_a259e69ced2f262aea62d80f6c327c05c} 
+int64\+\_\+t {\bfseries t\+\_\+batchd\+\_\+us} = 0
+\item 
+\Hypertarget{structwhisper__state_a7c5df2a9ccac26d3ea339c1ce558b03a}\label{structwhisper__state_a7c5df2a9ccac26d3ea339c1ce558b03a} 
+int64\+\_\+t {\bfseries t\+\_\+prompt\+\_\+us} = 0
+\item 
+\Hypertarget{structwhisper__state_a2c0b719d205790e7d9ae6f521b926f0a}\label{structwhisper__state_a2c0b719d205790e7d9ae6f521b926f0a} 
+int64\+\_\+t {\bfseries t\+\_\+mel\+\_\+us} = 0
+\item 
+\Hypertarget{structwhisper__state_aebcbd2bf6974716198fe61a443d05278}\label{structwhisper__state_aebcbd2bf6974716198fe61a443d05278} 
+int32\+\_\+t {\bfseries n\+\_\+sample} = 0
+\item 
+\Hypertarget{structwhisper__state_a896cadba12489e36461c201d66e5453f}\label{structwhisper__state_a896cadba12489e36461c201d66e5453f} 
+int32\+\_\+t {\bfseries n\+\_\+encode} = 0
+\item 
+\Hypertarget{structwhisper__state_aa6c0122ac4f5fe933a3c45cebd931bff}\label{structwhisper__state_aa6c0122ac4f5fe933a3c45cebd931bff} 
+int32\+\_\+t {\bfseries n\+\_\+decode} = 0
+\item 
+\Hypertarget{structwhisper__state_a6cc3a41fc43dbde99e5460769d497c0b}\label{structwhisper__state_a6cc3a41fc43dbde99e5460769d497c0b} 
+int32\+\_\+t {\bfseries n\+\_\+batchd} = 0
+\item 
+\Hypertarget{structwhisper__state_aab000539a0f9fccbd3c51b01f9a2712c}\label{structwhisper__state_aab000539a0f9fccbd3c51b01f9a2712c} 
+int32\+\_\+t {\bfseries n\+\_\+prompt} = 0
+\item 
+\Hypertarget{structwhisper__state_afb517f4b769f50187d3c0b2ac3566907}\label{structwhisper__state_afb517f4b769f50187d3c0b2ac3566907} 
+int32\+\_\+t {\bfseries n\+\_\+fail\+\_\+p} = 0
+\item 
+\Hypertarget{structwhisper__state_a9d4e83f75ac86cd5d6b15da54b9ea4cb}\label{structwhisper__state_a9d4e83f75ac86cd5d6b15da54b9ea4cb} 
+int32\+\_\+t {\bfseries n\+\_\+fail\+\_\+h} = 0
+\item 
+\Hypertarget{structwhisper__state_a0a430d763a7406d06590ed52cb62ba8b}\label{structwhisper__state_a0a430d763a7406d06590ed52cb62ba8b} 
+int32\+\_\+t {\bfseries kv\+\_\+self\+\_\+n\+\_\+dec} = 0
+\item 
+\Hypertarget{structwhisper__state_a8fe101a3a740f83fcf6cae62184fd41a}\label{structwhisper__state_a8fe101a3a740f83fcf6cae62184fd41a} 
+\doxymbox{\hyperlink{structwhisper__kv__cache}{whisper\+\_\+kv\+\_\+cache}} {\bfseries kv\+\_\+self}
+\item 
+\Hypertarget{structwhisper__state_ab733ce5564ecca184cfaa06cd197475c}\label{structwhisper__state_ab733ce5564ecca184cfaa06cd197475c} 
+\doxymbox{\hyperlink{structwhisper__kv__cache}{whisper\+\_\+kv\+\_\+cache}} {\bfseries kv\+\_\+cross}
+\item 
+\Hypertarget{structwhisper__state_a8c6fe865b6a75348b877a73406a345f9}\label{structwhisper__state_a8c6fe865b6a75348b877a73406a345f9} 
+\doxymbox{\hyperlink{structwhisper__kv__cache}{whisper\+\_\+kv\+\_\+cache}} {\bfseries kv\+\_\+pad}
+\item 
+\Hypertarget{structwhisper__state_ade0891e275e281b63ba6d84e7fea975d}\label{structwhisper__state_ade0891e275e281b63ba6d84e7fea975d} 
+\doxymbox{\hyperlink{structwhisper__mel}{whisper\+\_\+mel}} {\bfseries mel}
+\item 
+\Hypertarget{structwhisper__state_a6d92a2e262e625a5b6d9b0839ffe6a5f}\label{structwhisper__state_a6d92a2e262e625a5b6d9b0839ffe6a5f} 
+\doxymbox{\hyperlink{structwhisper__batch}{whisper\+\_\+batch}} {\bfseries batch}
+\item 
+\Hypertarget{structwhisper__state_ac527b879fa28afc7a2c03e4eb4c85695}\label{structwhisper__state_ac527b879fa28afc7a2c03e4eb4c85695} 
+\doxymbox{\hyperlink{structwhisper__decoder}{whisper\+\_\+decoder}} {\bfseries decoders} \+[WHISPER\+\_\+\+MAX\+\_\+\+DECODERS]\+
+\item 
+\Hypertarget{structwhisper__state_affc0a450a16b775d1c6fe733ad452dc6}\label{structwhisper__state_affc0a450a16b775d1c6fe733ad452dc6} 
+std::\+vector$<$ ggml\+\_\+backend\+\_\+t $>$ {\bfseries backends}
+\item 
+\Hypertarget{structwhisper__state_a2e22451cefbff7cca55791545d36bf34}\label{structwhisper__state_a2e22451cefbff7cca55791545d36bf34} 
+\doxymbox{\hyperlink{structwhisper__sched}{whisper\+\_\+sched}} {\bfseries sched\+\_\+conv}
+\item 
+\Hypertarget{structwhisper__state_a837e2ce8dd73758f7eaeebee8167c1ad}\label{structwhisper__state_a837e2ce8dd73758f7eaeebee8167c1ad} 
+\doxymbox{\hyperlink{structwhisper__sched}{whisper\+\_\+sched}} {\bfseries sched\+\_\+encode}
+\item 
+\Hypertarget{structwhisper__state_a551dd80657af87918c091b2d85a08517}\label{structwhisper__state_a551dd80657af87918c091b2d85a08517} 
+\doxymbox{\hyperlink{structwhisper__sched}{whisper\+\_\+sched}} {\bfseries sched\+\_\+cross}
+\item 
+\Hypertarget{structwhisper__state_a78aea0cab15b9d7e983e5bc21a068b6e}\label{structwhisper__state_a78aea0cab15b9d7e983e5bc21a068b6e} 
+\doxymbox{\hyperlink{structwhisper__sched}{whisper\+\_\+sched}} {\bfseries sched\+\_\+decode}
+\item 
+\Hypertarget{structwhisper__state_a8f17958857587bf1d3b73fbfa2a3957c}\label{structwhisper__state_a8f17958857587bf1d3b73fbfa2a3957c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries embd\+\_\+conv} = nullptr
+\item 
+\Hypertarget{structwhisper__state_a0de93d604d5db85699c5ddafdd5713b6}\label{structwhisper__state_a0de93d604d5db85699c5ddafdd5713b6} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries embd\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structwhisper__state_a0e92a626e36c4a095e7d820d6fb5b438}\label{structwhisper__state_a0e92a626e36c4a095e7d820d6fb5b438} 
+std::\+vector$<$ float $>$ {\bfseries inp\+\_\+mel}
+\item 
+\Hypertarget{structwhisper__state_a4b69ddd1f26d877702685fdf3d76763d}\label{structwhisper__state_a4b69ddd1f26d877702685fdf3d76763d} 
+std::\+vector$<$ float $>$ {\bfseries inp\+\_\+mask}
+\item 
+\Hypertarget{structwhisper__state_ac172e4ea8dd3f36af2be38e22728a46f}\label{structwhisper__state_ac172e4ea8dd3f36af2be38e22728a46f} 
+std::\+vector$<$ float $>$ {\bfseries logits}
+\item 
+\Hypertarget{structwhisper__state_a8a92ef1be45134d686eff78e96376310}\label{structwhisper__state_a8a92ef1be45134d686eff78e96376310} 
+std::\+vector$<$ \doxymbox{\hyperlink{structwhisper__segment}{whisper\+\_\+segment}} $>$ {\bfseries result\+\_\+all}
+\item 
+\Hypertarget{structwhisper__state_a25947af2577609ae5a72e27bd8939818}\label{structwhisper__state_a25947af2577609ae5a72e27bd8939818} 
+std::\+vector$<$ whisper\+\_\+token $>$ {\bfseries prompt\+\_\+past0}
+\item 
+\Hypertarget{structwhisper__state_a3550af2540e314cbe941307600f080d0}\label{structwhisper__state_a3550af2540e314cbe941307600f080d0} 
+std::\+vector$<$ whisper\+\_\+token $>$ {\bfseries prompt\+\_\+past1}
+\item 
+\Hypertarget{structwhisper__state_ab9010a34c3242cde3527de9fd70f22cf}\label{structwhisper__state_ab9010a34c3242cde3527de9fd70f22cf} 
+int {\bfseries lang\+\_\+id} = 0
+\item 
+\Hypertarget{structwhisper__state_a6d3eb190f0a0da47ade2587f912b0022}\label{structwhisper__state_a6d3eb190f0a0da47ade2587f912b0022} 
+std::\+string {\bfseries path\+\_\+model}
+\item 
+\Hypertarget{structwhisper__state_a94384137d9659d9a62f1eb574c745d62}\label{structwhisper__state_a94384137d9659d9a62f1eb574c745d62} 
+int64\+\_\+t {\bfseries t\+\_\+beg} = 0
+\item 
+\Hypertarget{structwhisper__state_ad158fee1f189788574cea3b4e3b82b59}\label{structwhisper__state_ad158fee1f189788574cea3b4e3b82b59} 
+int64\+\_\+t {\bfseries t\+\_\+last} = 0
+\item 
+\Hypertarget{structwhisper__state_ad68ecad53685510c9036537c36ef2b0e}\label{structwhisper__state_ad68ecad53685510c9036537c36ef2b0e} 
+whisper\+\_\+token {\bfseries tid\+\_\+last}
+\item 
+\Hypertarget{structwhisper__state_abb9662deaecbba8ad3b8d7aa1316a5d4}\label{structwhisper__state_abb9662deaecbba8ad3b8d7aa1316a5d4} 
+std::\+vector$<$ float $>$ {\bfseries energy}
+\item 
+\Hypertarget{structwhisper__state_ad2e855ef83b65dc86df9f2d246b8018b}\label{structwhisper__state_ad2e855ef83b65dc86df9f2d246b8018b} 
+float {\bfseries no\+\_\+speech\+\_\+prob} = 0.\+0f
+\item 
+\Hypertarget{structwhisper__state_a6571bb8bac08e9096d5315bda96a6766}\label{structwhisper__state_a6571bb8bac08e9096d5315bda96a6766} 
+\doxymbox{\hyperlink{structwhisper__aheads__masks}{whisper\+\_\+aheads\+\_\+masks}} {\bfseries aheads\+\_\+masks}
+\item 
+\Hypertarget{structwhisper__state_a173a3b4cd2b3f1cb2387a8bc8d9749f9}\label{structwhisper__state_a173a3b4cd2b3f1cb2387a8bc8d9749f9} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries aheads\+\_\+cross\+\_\+\+QKs} = nullptr
+\item 
+\Hypertarget{structwhisper__state_aec53459816250809ea0d75858f4738ae}\label{structwhisper__state_aec53459816250809ea0d75858f4738ae} 
+std::\+vector$<$ float $>$ {\bfseries aheads\+\_\+cross\+\_\+\+QKs\+\_\+data}
+\item 
+\Hypertarget{structwhisper__state_a9f95e75be90b22506ff30c7c7cc7ccd4}\label{structwhisper__state_a9f95e75be90b22506ff30c7c7cc7ccd4} 
+int32\+\_\+t {\bfseries exp\+\_\+n\+\_\+audio\+\_\+ctx} = 0
+\item 
+\Hypertarget{structwhisper__state_a0c0f4ce42fea09569bc035a507e21568}\label{structwhisper__state_a0c0f4ce42fea09569bc035a507e21568} 
+\doxymbox{\hyperlink{structwhisper__vad__context}{whisper\+\_\+vad\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries vad\+\_\+context} = nullptr
+\item 
+\Hypertarget{structwhisper__state_adcef83a6b6f6552c898500bd1d71844f}\label{structwhisper__state_adcef83a6b6f6552c898500bd1d71844f} 
+std::\+vector$<$ \doxymbox{\hyperlink{structwhisper__state_1_1vad__segment__info}{vad\+\_\+segment\+\_\+info}} $>$ {\bfseries vad\+\_\+segments}
+\item 
+\Hypertarget{structwhisper__state_a71e8cfe9399543c72fee008209046460}\label{structwhisper__state_a71e8cfe9399543c72fee008209046460} 
+bool {\bfseries has\+\_\+vad\+\_\+segments} = false
+\item 
+\Hypertarget{structwhisper__state_ac503a081f0a225185c9d3f3145b1622d}\label{structwhisper__state_ac503a081f0a225185c9d3f3145b1622d} 
+std::\+vector$<$ \doxymbox{\hyperlink{structvad__time__mapping}{vad\+\_\+time\+\_\+mapping}} $>$ {\bfseries vad\+\_\+mapping\+\_\+table}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+src/\+whisper.\+cpp\end{DoxyCompactItemize}

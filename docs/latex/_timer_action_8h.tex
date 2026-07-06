@@ -1,0 +1,56 @@
+\doxysection{Timer\+Action.\+h File Reference}
+\hypertarget{_timer_action_8h}{}\label{_timer_action_8h}\index{TimerAction.h@{TimerAction.h}}
+
+
+Declaration of the \doxylink{class_timer_action}{Timer\+Action} class and associated global timer state.  
+
+
+{\ttfamily \+\#include $<$atomic$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_timer_action}{Timer\+Action}}
+\begin{DoxyCompactList}\small\item\em Handles setting and managing a countdown timer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+std::\+atomic$<$ bool $>$ \doxymbox{\hyperlink{_timer_action_8h_a39f8f353a43542ebb8d5036855a8c6dc}{g\+\_\+timer\+Active}}
+\begin{DoxyCompactList}\small\item\em Indicates whether a countdown timer is currently active. \end{DoxyCompactList}\item 
+std::\+atomic$<$ int $>$ \doxymbox{\hyperlink{_timer_action_8h_acb2f0e3d5fdc7274da47ea4bf511c40f}{g\+\_\+timer\+Remaining}}
+\begin{DoxyCompactList}\small\item\em Stores the remaining time in seconds for the active countdown timer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Declaration of the \doxylink{class_timer_action}{Timer\+Action} class and associated global timer state. 
+
+This file defines the \doxylink{class_timer_action}{Timer\+Action} class, which provides functionality for setting a countdown timer. It also declares two global atomic variables used to track the timer\textquotesingle{}s active state and remaining time across threads.
+
+\begin{DoxyAuthor}{Author}
+Eliza Anis 
+\end{DoxyAuthor}
+
+
+\label{doc-var-members}
+\Hypertarget{_timer_action_8h_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{_timer_action_8h_a39f8f353a43542ebb8d5036855a8c6dc}\index{TimerAction.h@{TimerAction.h}!g\_timerActive@{g\_timerActive}}
+\index{g\_timerActive@{g\_timerActive}!TimerAction.h@{TimerAction.h}}
+\doxysubsubsection{\texorpdfstring{g\_timerActive}{g\_timerActive}}
+{\footnotesize\ttfamily \label{_timer_action_8h_a39f8f353a43542ebb8d5036855a8c6dc} 
+std::\+atomic$<$bool$>$ g\+\_\+timer\+Active\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Indicates whether a countdown timer is currently active. 
+
+This global atomic flag is set to true when a timer is running and false when no timer is active. It is used to prevent multiple concurrent timers. \Hypertarget{_timer_action_8h_acb2f0e3d5fdc7274da47ea4bf511c40f}\index{TimerAction.h@{TimerAction.h}!g\_timerRemaining@{g\_timerRemaining}}
+\index{g\_timerRemaining@{g\_timerRemaining}!TimerAction.h@{TimerAction.h}}
+\doxysubsubsection{\texorpdfstring{g\_timerRemaining}{g\_timerRemaining}}
+{\footnotesize\ttfamily \label{_timer_action_8h_acb2f0e3d5fdc7274da47ea4bf511c40f} 
+std::\+atomic$<$int$>$ g\+\_\+timer\+Remaining\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Stores the remaining time in seconds for the active countdown timer. 
+
+This global atomic integer is decremented each second while a timer is running. A value of zero indicates the timer has expired. 

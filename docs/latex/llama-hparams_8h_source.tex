@@ -1,0 +1,359 @@
+\doxysection{llama-\/hparams.h}
+\hypertarget{llama-hparams_8h_source}{}\label{llama-hparams_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/hparams.h@{whisper.cpp/examples/talk-\/llama/llama-\/hparams.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ bump\ if\ necessary}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ LLAMA\_MAX\_LAYERS\ \ 512}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ LLAMA\_MAX\_EXPERTS\ 512\ }\textcolor{comment}{//\ Qwen3\ Next}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{enum}\ llama\_expert\_gating\_func\_type\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ LLAMA\_EXPERT\_GATING\_FUNC\_TYPE\_NONE\ \ \ \ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00014\ \ \ \ \ LLAMA\_EXPERT\_GATING\_FUNC\_TYPE\_SOFTMAX\ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00015\ \ \ \ \ LLAMA\_EXPERT\_GATING\_FUNC\_TYPE\_SIGMOID\ \ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00016\ \ \ \ \ LLAMA\_EXPERT\_GATING\_FUNC\_TYPE\_SOFTMAX\_WEIGHT\ =\ 3,\ \textcolor{comment}{//\ applied\ to\ the\ router\ weights\ instead\ of\ the\ logits}}
+\DoxyCodeLine{00017\ \};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{enum}\ llama\_swa\_type\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ LLAMA\_SWA\_TYPE\_NONE\ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00021\ \ \ \ \ LLAMA\_SWA\_TYPE\_STANDARD\ \ =\ 1,}
+\DoxyCodeLine{00022\ \ \ \ \ LLAMA\_SWA\_TYPE\_CHUNKED\ \ \ =\ 2,}
+\DoxyCodeLine{00023\ \ \ \ \ LLAMA\_SWA\_TYPE\_SYMMETRIC\ =\ 3,}
+\DoxyCodeLine{00024\ \};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__hparams__posnet}{llama\_hparams\_posnet}}\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ uint32\_t\ n\_embd;}
+\DoxyCodeLine{00028\ \ \ \ \ uint32\_t\ n\_layer;}
+\DoxyCodeLine{00029\ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__hparams__convnext}{llama\_hparams\_convnext}}\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ uint32\_t\ n\_embd;}
+\DoxyCodeLine{00033\ \ \ \ \ uint32\_t\ n\_layer;}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{bool}\ vocab\_only;}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{bool}\ no\_alloc;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{bool}\ rope\_finetuned;}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_par\_res;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{bool}\ swin\_norm;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ uint32\_t\ n\_ctx\_train;\ \textcolor{comment}{//\ context\ size\ the\ model\ was\ trained\ on}}
+\DoxyCodeLine{00044\ \ \ \ \ uint32\_t\ n\_embd;}
+\DoxyCodeLine{00045\ \ \ \ \ uint32\_t\ n\_layer;}
+\DoxyCodeLine{00046\ \ \ \ \ int32\_t\ n\_layer\_kv\_from\_start\ =\ -\/1;\ \textcolor{comment}{//\ if\ non-\/negative,\ the\ first\ n\_layer\_kv\_from\_start\ layers\ have\ KV\ cache}}
+\DoxyCodeLine{00047\ \ \ \ \ uint32\_t\ n\_expert\ =\ 0;}
+\DoxyCodeLine{00048\ \ \ \ \ uint32\_t\ n\_expert\_used\ =\ 0;}
+\DoxyCodeLine{00049\ \ \ \ \ uint32\_t\ n\_rel\_attn\_bkts\ =\ 0;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{//\ different\ head\ size\ for\ full\_attention\ and\ SWA\ layers}}
+\DoxyCodeLine{00052\ \ \ \ \ uint32\_t\ n\_embd\_head\_k\_full;\ \textcolor{comment}{//\ dimension\ of\ keys\ (d\_k).\ d\_q\ is\ assumed\ to\ be\ the\ same,\ but\ there\ are\ n\_head\ q\ heads,\ and\ only\ n\_head\_kv\ k-\/v\ heads}}
+\DoxyCodeLine{00053\ \ \ \ \ uint32\_t\ n\_embd\_head\_v\_full;\ \textcolor{comment}{//\ dimension\ of\ values\ (d\_v)\ aka\ n\_embd\_head}}
+\DoxyCodeLine{00054\ \ \ \ \ uint32\_t\ n\_embd\_head\_k\_swa;}
+\DoxyCodeLine{00055\ \ \ \ \ uint32\_t\ n\_embd\_head\_v\_swa;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ different\ RoPE\ dimensions\ for\ full\_attention\ and\ SWA\ layers}}
+\DoxyCodeLine{00058\ \ \ \ \ uint32\_t\ n\_rot\_full;}
+\DoxyCodeLine{00059\ \ \ \ \ uint32\_t\ n\_rot\_swa;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ note:\ deepseek2\ using\ MLA\ converts\ into\ MQA\ with\ larger\ heads,\ then\ decompresses\ to\ MHA}}
+\DoxyCodeLine{00062\ \ \ \ \ uint32\_t\ n\_embd\_head\_k\_mla\_impl\ =\ 0;}
+\DoxyCodeLine{00063\ \ \ \ \ uint32\_t\ n\_embd\_head\_v\_mla\_impl\ =\ 0;}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ for\ WavTokenizer}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__hparams__posnet}{llama\_hparams\_posnet}}\ \ \ posnet;}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__hparams__convnext}{llama\_hparams\_convnext}}\ convnext;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ uint32\_t\ n\_shortconv\_l\_cache\ \ =\ 0;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ std::array<uint32\_t,\ LLAMA\_MAX\_LAYERS>\ n\_head\_arr;}
+\DoxyCodeLine{00072\ \ \ \ \ std::array<uint32\_t,\ LLAMA\_MAX\_LAYERS>\ n\_head\_kv\_arr;}
+\DoxyCodeLine{00073\ \ \ \ \ std::array<uint32\_t,\ LLAMA\_MAX\_LAYERS>\ n\_ff\_arr;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ uint32\_t\ n\_layer\_dense\_lead\ =\ 0;}
+\DoxyCodeLine{00076\ \ \ \ \ uint32\_t\ n\_lora\_q\ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00077\ \ \ \ \ uint32\_t\ n\_lora\_kv\ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00078\ \ \ \ \ uint32\_t\ n\_ff\_exp\ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00079\ \ \ \ \ uint32\_t\ n\_ff\_shexp\ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00080\ \ \ \ \ uint32\_t\ n\_ff\_chexp\ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00081\ \ \ \ \ uint32\_t\ n\_expert\_shared\ \ \ \ =\ 0;}
+\DoxyCodeLine{00082\ \ \ \ \ uint32\_t\ n\_norm\_groups\ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00083\ \ \ \ \ uint32\_t\ n\_expert\_groups\ \ \ \ =\ 0;}
+\DoxyCodeLine{00084\ \ \ \ \ uint32\_t\ n\_group\_used\ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00085\ \ \ \ \ uint32\_t\ n\_group\_experts\ \ \ \ =\ 0;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ expert\_group\_scale\ \ \ =\ 0.05f;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ expert\_weights\_scale\ =\ 0.0f;}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ expert\_weights\_norm\ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00090\ \ \ \ \ uint32\_t\ expert\_gating\_func\ \ \ =\ LLAMA\_EXPERT\_GATING\_FUNC\_TYPE\_NONE;}
+\DoxyCodeLine{00091\ \ \ \ \ uint32\_t\ moe\_every\_n\_layers\ \ \ =\ 0;}
+\DoxyCodeLine{00092\ \ \ \ \ uint32\_t\ moe\_latent\_size\ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00093\ \ \ \ \ uint32\_t\ nextn\_predict\_layers\ =\ 0;}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_norm\_eps;}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_norm\_rms\_eps;}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_norm\_group\_eps;}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_attn\_logit\_softcapping\ \ \ =\ 50.0f;}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_router\_logit\_softcapping\ =\ 30.0f;}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_final\_logit\_softcapping\ \ =\ 30.0f;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ for\ RWKV}}
+\DoxyCodeLine{00104\ \ \ \ \ uint32\_t\ rescale\_every\_n\_layers\ =\ 0;}
+\DoxyCodeLine{00105\ \ \ \ \ uint32\_t\ time\_mix\_extra\_dim\ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00106\ \ \ \ \ uint32\_t\ time\_decay\_extra\_dim\ \ \ =\ 0;}
+\DoxyCodeLine{00107\ \ \ \ \ uint32\_t\ wkv\_head\_size\ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00108\ \ \ \ \ uint32\_t\ token\_shift\_count\ \ \ \ \ \ =\ 2;}
+\DoxyCodeLine{00109\ \ \ \ \ uint32\_t\ n\_lora\_decay\ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00110\ \ \ \ \ uint32\_t\ n\_lora\_iclr\ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00111\ \ \ \ \ uint32\_t\ n\_lora\_value\_res\_mix\ \ \ =\ 0;}
+\DoxyCodeLine{00112\ \ \ \ \ uint32\_t\ n\_lora\_gate\ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ rope\_attn\_factor\ =\ 1.0f;}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ rope\_freq\_base\_train;}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ rope\_freq\_base\_train\_swa\ \ =\ 10000.0f;}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ rope\_freq\_scale\_train;}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ rope\_freq\_scale\_train\_swa\ =\ 1.0f;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ uint32\_t\ n\_ctx\_orig\_yarn;}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ rope\_yarn\_log\_mul\ =\ 0.0f;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ yarn\_ext\_factor\ \ =\ -\/1.0f;}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ yarn\_attn\_factor\ =\ \ 1.0f;}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ yarn\_beta\_fast\ \ \ =\ 32.0f;}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ yarn\_beta\_slow\ \ \ =\ \ 1.0f;}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ std::array<int,\ 4>\ rope\_sections;}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{comment}{//\ Sliding\ Window\ Attention\ (SWA)}}
+\DoxyCodeLine{00131\ \ \ \ \ llama\_swa\_type\ swa\_type\ =\ LLAMA\_SWA\_TYPE\_NONE;}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{//\ the\ size\ of\ the\ sliding\ window\ (0\ -\/\ no\ SWA)}}
+\DoxyCodeLine{00133\ \ \ \ \ uint32\_t\ n\_swa\ =\ 0;}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{comment}{//\ if\ swa\_layers[il]\ ==\ 1,\ then\ layer\ il\ is\ SWA}}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{comment}{//\ if\ swa\_layers[il]\ ==\ 0,\ then\ layer\ il\ is\ dense\ (i.e.\ non-\/SWA)}}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{//\ by\ default,\ all\ layers\ are\ dense}}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{comment}{//\ note:\ using\ uint32\_t\ type\ for\ compatibility\ reason}}
+\DoxyCodeLine{00138\ \ \ \ \ std::array<uint32\_t,\ LLAMA\_MAX\_LAYERS>\ swa\_layers;}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//\ for\ State\ Space\ Models}}
+\DoxyCodeLine{00141\ \ \ \ \ uint32\_t\ ssm\_d\_conv\ \ =\ 0;}
+\DoxyCodeLine{00142\ \ \ \ \ uint32\_t\ ssm\_d\_inner\ =\ 0;}
+\DoxyCodeLine{00143\ \ \ \ \ uint32\_t\ ssm\_d\_state\ =\ 0;}
+\DoxyCodeLine{00144\ \ \ \ \ uint32\_t\ ssm\_dt\_rank\ =\ 0;}
+\DoxyCodeLine{00145\ \ \ \ \ uint32\_t\ ssm\_n\_group\ =\ 0;}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{comment}{//\ for\ Kimi\ Linear\ KDA}}
+\DoxyCodeLine{00148\ \ \ \ \ uint32\_t\ n\_embd\_head\_kda\ =\ 0;}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{//\ for\ hybrid\ state\ space\ models}}
+\DoxyCodeLine{00151\ \ \ \ \ std::array<bool,\ LLAMA\_MAX\_LAYERS>\ recurrent\_layer\_arr;}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{bool}\ ssm\_dt\_b\_c\_rms\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_clamp\_kqv\ \ \ \ \ \ =\ 0.0f;}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_max\_alibi\_bias\ =\ 0.0f;}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_logit\_scale\ \ \ \ =\ 0.0f;}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{//\ Additional\ scale\ factors\ (Granite/Granite\ MoE)}}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_residual\_scale\ \ =\ 0.0f;}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_embedding\_scale\ =\ 0.0f;}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{float}\ f\_attention\_scale\ =\ 0.0f;}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{comment}{//\ grok-\/2}}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ f\_attn\_out\_scale\ =\ 0.0f;}
+\DoxyCodeLine{00166\ \ \ \ \ uint32\_t\ attn\_temp\_length\ =\ 0;}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordtype}{bool}\ causal\_attn\ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_alibi\ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordtype}{bool}\ attn\_soft\_cap\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_kq\_norm\ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{//\ for\ Classifiers}}
+\DoxyCodeLine{00174\ \ \ \ \ uint32\_t\ n\_cls\_out\ =\ 1;}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{comment}{//\ output\ embedding\ dimension\ (0\ =\ use\ n\_embd)}}
+\DoxyCodeLine{00177\ \ \ \ \ uint32\_t\ n\_embd\_out\_impl\ =\ 0;}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//\ llama4\ smallthinker}}
+\DoxyCodeLine{00180\ \ \ \ \ uint32\_t\ n\_moe\_layer\_step\ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00181\ \ \ \ \ uint32\_t\ n\_no\_rope\_layer\_step\ \ \ \ =\ 4;}
+\DoxyCodeLine{00182\ \ \ \ \ uint32\_t\ n\_attn\_temp\_floor\_scale\ =\ 0;}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ f\_attn\_temp\_scale\ \ \ \ \ \ \ =\ 0.0f;}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ f\_attn\_temp\_offset\ \ \ \ \ \ =\ 0.0f;\ \textcolor{comment}{//\ offset\ position\ index}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{comment}{//\ gemma3n\ altup}}
+\DoxyCodeLine{00187\ \ \ \ \ uint32\_t\ n\_altup\ \ \ \ \ \ =\ 4;\ \textcolor{comment}{//\ altup\_num\_inputs}}
+\DoxyCodeLine{00188\ \ \ \ \ uint32\_t\ i\_altup\_act\ \ =\ 0;\ \textcolor{comment}{//\ altup\_active\_idx}}
+\DoxyCodeLine{00189\ \ \ \ \ uint32\_t\ laurel\_rank\ \ =\ 64;}
+\DoxyCodeLine{00190\ \ \ \ \ uint32\_t\ n\_embd\_altup\ =\ 256;}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{comment}{//\ needed\ for\ sentence-\/transformers\ dense\ layers}}
+\DoxyCodeLine{00193\ \ \ \ \ uint32\_t\ dense\_2\_feat\_in\ \ =\ 0;\ \ \textcolor{comment}{//\ in\_features\ of\ the\ 2\_Dense}}
+\DoxyCodeLine{00194\ \ \ \ \ uint32\_t\ dense\_2\_feat\_out\ =\ 0;\ \ \textcolor{comment}{//\ out\_features\ of\ the\ 2\_Dense}}
+\DoxyCodeLine{00195\ \ \ \ \ uint32\_t\ dense\_3\_feat\_in\ \ =\ 0;\ \ \textcolor{comment}{//\ in\_features\ of\ the\ 3\_Dense}}
+\DoxyCodeLine{00196\ \ \ \ \ uint32\_t\ dense\_3\_feat\_out\ =\ 0;\ \ \textcolor{comment}{//\ out\_features\ of\ the\ 3\_Dense}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{//\ xIELU}}
+\DoxyCodeLine{00199\ \ \ \ \ std::array<float,\ LLAMA\_MAX\_LAYERS>\ xielu\_alpha\_n;}
+\DoxyCodeLine{00200\ \ \ \ \ std::array<float,\ LLAMA\_MAX\_LAYERS>\ xielu\_alpha\_p;}
+\DoxyCodeLine{00201\ \ \ \ \ std::array<float,\ LLAMA\_MAX\_LAYERS>\ xielu\_beta;}
+\DoxyCodeLine{00202\ \ \ \ \ std::array<float,\ LLAMA\_MAX\_LAYERS>\ xielu\_eps;}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{comment}{//\ DSA\ (deepseek\ sparse\ attention)}}
+\DoxyCodeLine{00205\ \ \ \ \ uint32\_t\ indexer\_n\_head\ \ \ \ =\ 0;}
+\DoxyCodeLine{00206\ \ \ \ \ uint32\_t\ indexer\_head\_size\ =\ 0;}
+\DoxyCodeLine{00207\ \ \ \ \ uint32\_t\ indexer\_top\_k\ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{comment}{//\ qwen3vl\ deepstack}}
+\DoxyCodeLine{00210\ \ \ \ \ uint32\_t\ n\_deepstack\_layers\ =\ 0;}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{comment}{//\ needed\ by\ encoder-\/decoder\ models\ (e.g.\ T5,\ FLAN-\/T5)}}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{comment}{//\ ref:\ https://github.com/ggml-\/org/llama.cpp/pull/8141}}
+\DoxyCodeLine{00214\ \ \ \ \ llama\_token\ dec\_start\_token\_id\ =\ LLAMA\_TOKEN\_NULL;}
+\DoxyCodeLine{00215\ \ \ \ \ uint32\_t\ \ \ \ dec\_n\_layer\ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_pooling\_type\ \ \ \ \ \ pooling\_type\ \ \ \ \ \ \ \ \ \ \ \ =\ LLAMA\_POOLING\_TYPE\_NONE;}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_rope\_type\ \ \ \ \ \ \ \ \ rope\_type\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ LLAMA\_ROPE\_TYPE\_NONE;}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_rope\_scaling\_type\ rope\_scaling\_type\_train\ =\ LLAMA\_ROPE\_SCALING\_TYPE\_NONE;}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{comment}{//\ Step35:\ optional\ per-\/layer\ clamps\ for\ (Swi)GLU}}
+\DoxyCodeLine{00223\ \ \ \ \ std::array<float,\ LLAMA\_MAX\_LAYERS>\ swiglu\_clamp\_exp;\ \textcolor{comment}{//\ clamping\ for\ expert\ FFN}}
+\DoxyCodeLine{00224\ \ \ \ \ std::array<float,\ LLAMA\_MAX\_LAYERS>\ swiglu\_clamp\_shexp;\ \textcolor{comment}{//\ shared\ expert}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{comment}{//\ this\ value\ n\_pattern\ means\ that\ every\ nth\ layer\ is\ dense\ (i.e.\ non-\/SWA)}}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{comment}{//\ dense\_first\ means\ whether\ the\ pattern\ is\ start\ with\ a\ dense\ layer}}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ note\ that\ if\ n\_pattern\ ==\ 0,\ all\ layers\ are\ SWA}}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ if\ n\_pattern\ ==\ 1,\ all\ layers\ are\ dense}}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{comment}{//\ example\ 1:\ n\_pattern\ =\ 3,\ dense\_first\ =\ false}}
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 0:\ swa}}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 1:\ swa}}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 2:\ dense}}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 3:\ swa}}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 4:\ swa}}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 5:\ dense}}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 6:\ swa}}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{comment}{//\ \ \ etc\ ...}}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{comment}{//\ example\ 2:\ n\_pattern\ =\ 2,\ dense\_first\ =\ true}}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 0:\ dense}}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 1:\ swa}}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 2:\ dense}}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{comment}{//\ \ \ il\ ==\ 3:\ swa}}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{comment}{//\ \ \ etc\ ...}}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_swa\_pattern(uint32\_t\ n\_pattern,\ \textcolor{keywordtype}{bool}\ dense\_first\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{comment}{//\ return\ true\ if\ one\ of\ the\ layers\ is\ SWA}}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_swa\_any()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ uint32\_t\ n\_head(uint32\_t\ il\ =\ 0)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ uint32\_t\ n\_head\_kv(uint32\_t\ il\ =\ 0)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ uint32\_t\ n\_ff(uint32\_t\ il\ =\ 0)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ uint32\_t\ n\_gqa(uint32\_t\ il\ =\ 0)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ uint32\_t\ n\_rot(uint32\_t\ il\ =\ 0)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{comment}{//\ dimension\ of\ main\ +\ auxiliary\ input\ embeddings}}
+\DoxyCodeLine{00261\ \ \ \ \ uint32\_t\ n\_embd\_inp()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{comment}{//\ dimension\ of\ output\ embeddings}}
+\DoxyCodeLine{00264\ \ \ \ \ uint32\_t\ n\_embd\_out()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{comment}{//\ dimension\ of\ key/value\ embeddings\ for\ each\ head\ (per\ layer)}}
+\DoxyCodeLine{00267\ \ \ \ \ uint32\_t\ n\_embd\_head\_k(uint32\_t\ il\ =\ 0)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00268\ \ \ \ \ uint32\_t\ n\_embd\_head\_v(uint32\_t\ il\ =\ 0)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{comment}{//\ dimension\ of\ key\ embeddings\ across\ all\ k-\/v\ heads}}
+\DoxyCodeLine{00271\ \ \ \ \ uint32\_t\ n\_embd\_k\_gqa(uint32\_t\ il\ =\ 0)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{comment}{//\ dimension\ of\ value\ embeddings\ across\ all\ k-\/v\ heads}}
+\DoxyCodeLine{00274\ \ \ \ \ uint32\_t\ n\_embd\_v\_gqa(uint32\_t\ il\ =\ 0)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{comment}{//\ true\ if\ any\ layer\ has\ a\ different\ n\_embd\_k\_gqa/n\_embd\_v\_gqa}}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_n\_embd\_k\_gqa\_variable()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_n\_embd\_v\_gqa\_variable()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{comment}{//\ return\ the\ maximum\ n\_embd\_k\_gqa/n\_embd\_v\_gqa\ across\ all\ layers}}
+\DoxyCodeLine{00281\ \ \ \ \ uint32\_t\ n\_embd\_k\_gqa\_max()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00282\ \ \ \ \ uint32\_t\ n\_embd\_v\_gqa\_max()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{comment}{//\ dimension\ of\ the\ rolling\ state\ embeddings}}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{comment}{//\ corresponds\ to\ Mamba's\ conv\_states\ size\ or\ RWKV's\ token\_shift\ states\ size}}
+\DoxyCodeLine{00286\ \ \ \ \ uint32\_t\ n\_embd\_r()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{comment}{//\ dimension\ of\ the\ recurrent\ state\ embeddings}}
+\DoxyCodeLine{00289\ \ \ \ \ uint32\_t\ n\_embd\_s()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{comment}{//\ whether\ or\ not\ the\ given\ layer\ is\ recurrent\ (for\ hybrid\ models)}}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_recurrent(uint32\_t\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ uint32\_t\ n\_pos\_per\_embd()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_swa(uint32\_t\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{comment}{//\ note:\ currently\ only\ support\ if\ either\ all\ or\ none\ of\ the\ layers\ are\ MLA}}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_mla()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ uint32\_t\ n\_embd\_head\_k\_mla()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00302\ \ \ \ \ uint32\_t\ n\_embd\_head\_v\_mla()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_kv(uint32\_t\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{comment}{//\ number\ of\ layers\ for\ which\ has\_kv()\ returns\ true}}
+\DoxyCodeLine{00307\ \ \ \ \ uint32\_t\ n\_layer\_kv()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{comment}{//\ note\ that\ this\ function\ uses\ different\ SWA\ parameters\ from\ those\ in\ the\ hparams}}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{comment}{//\ note:\ inlined\ on\ purpose\ for\ performance\ reasons}}
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{comment}{//\ TODO:\ think\ of\ a\ better\ place\ for\ this\ function}}
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{comment}{//\ TODO:\ pack\ the\ SWA\ params\ in\ a\ struct?}}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ is\_masked\_swa(uint32\_t\ n\_swa,\ llama\_swa\_type\ swa\_type,\ llama\_pos\ p0,\ llama\_pos\ p1)\ \{}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ assert(p0\ >=\ 0\ \&\&\ p1\ >=\ 0);}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (swa\_type)\ \{}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ LLAMA\_SWA\_TYPE\_NONE:}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ LLAMA\_SWA\_TYPE\_STANDARD:}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p1\ -\/\ p0\ >=\ (int32\_t)\ n\_swa)\ \{}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ LLAMA\_SWA\_TYPE\_CHUNKED:}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_pos\ pos\_chunk\_start\ =\ (p1\ /\ n\_swa)\ *\ n\_swa;}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p0\ <\ pos\_chunk\_start)\ \{}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ LLAMA\_SWA\_TYPE\_SYMMETRIC:}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ half\_n\_swa\ =\ (int32\_t)\ n\_swa\ /\ 2;}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ pos\_diff\ =\ p1\ -\/\ p0;}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Mask\ if\ outside\ the\ symmetric\ window}}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos\_diff\ <\ -\/half\_n\_swa\ ||\ pos\_diff\ >\ half\_n\_swa)\ \{}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00347\ \ \ \ \ \}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_mrope()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00351\ \};}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \textcolor{keyword}{static\_assert}(std::is\_trivially\_copyable<llama\_hparams>::value,\ \textcolor{stringliteral}{"{}llama\_hparams\ must\ be\ trivially\ copyable"{}});}
+
+\end{DoxyCode}

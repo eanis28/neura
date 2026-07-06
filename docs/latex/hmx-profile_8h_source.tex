@@ -1,0 +1,40 @@
+\doxysection{hmx-\/profile.h}
+\hypertarget{hmx-profile_8h_source}{}\label{hmx-profile_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hmx-\/profile.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hmx-\/profile.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Conditional\ fine-\/grained\ profiling\ macros\ for\ HMX\ operations.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Define\ ENABLE\_PROFILE\_TIMERS\ (via\ compiler\ flag\ or\ before\ including\ this}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ header)\ to\ instrument\ sub-\/operation\ latencies\ with\ HAP\ qtimer.\ \ When\ the}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ macro\ is\ not\ defined\ the\ TIMER\_*\ helpers\ expand\ to\ nothing\ so\ there\ is\ zero}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ overhead.}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Usage:}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ \ \ TIMER\_DEFINE(my\_phase);\ \ \ \ \ \ \ \ \ \ //\ declare\ accumulator\ variable}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \ \ TIMER\_START(my\_phase);\ \ \ \ \ \ \ \ \ \ \ //\ snapshot\ start\ time}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ \ \ ...\ work\ ...}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \ \ TIMER\_STOP(my\_phase);\ \ \ \ \ \ \ \ \ \ \ \ //\ accumulate\ elapsed\ ticks}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ \ \ FARF(ALWAYS,\ "{}my\_phase:\ \%lld\ us"{},\ TIMER\_US(my\_phase));}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifndef\ HMX\_PROFILE\_H}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ HMX\_PROFILE\_H}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <HAP\_perf.h>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ \#define\ ENABLE\_PROFILE\_TIMERS}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#if\ defined(ENABLE\_PROFILE\_TIMERS)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ \ define\ TIMER\_DEFINE(name)\ int64\_t\ name\#\#\_ticks\ =\ 0}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ \ define\ TIMER\_START(name)\ \ int64\_t\ name\#\#\_t0\ =\ HAP\_perf\_get\_qtimer\_count()}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ \ define\ TIMER\_STOP(name)\ \ \ name\#\#\_ticks\ +=\ HAP\_perf\_get\_qtimer\_count()\ -\/\ name\#\#\_t0}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#\ \ define\ TIMER\_US(name)\ \ \ \ \ HAP\_perf\_qtimer\_count\_to\_us(name\#\#\_ticks)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#\ \ define\ TIMER\_DEFINE(name)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ \ define\ TIMER\_START(name)}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ \ define\ TIMER\_STOP(name)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#\ \ define\ TIMER\_US(name)\ \ \ \ \ 0LL}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HMX\_PROFILE\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,188 @@
+\doxysection{ggml-\/openvino-\/extra.h}
+\hypertarget{ggml-openvino-extra_8h_source}{}\label{ggml-openvino-extra_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/ggml-\/openvino-\/extra.h@{whisper.cpp/ggml/src/ggml-\/openvino/ggml-\/openvino-\/extra.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}openvino/runtime/core.hpp"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ CL\_TARGET\_OPENCL\_VERSION\ 300}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <CL/cl.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <openvino/core/node.hpp>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <openvino/runtime/remote\_context.hpp>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <openvino/runtime/tensor.hpp>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ ExtraQuantType\ enum\ -\/\ defines\ requantization\ target\ formats}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{enum\ class}\ ExtraQuantType\ \{\ F16,\ Q4\_0\_C,\ Q8\_1\_C,\ Q4\_0\_128,\ Q8\_0\_C,\ Q8\_0\_32\ \};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ ov::Core\ \&\ ov\_singleton\_core();}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ Get\ the\ remote\ context\ for\ the\ current\ device\ (returns\ empty\ optional\ for\ CPU)}}
+\DoxyCodeLine{00023\ std::optional<ov::RemoteContext>\ ggml\_openvino\_get\_remote\_context();}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ Get\ the\ compile\ config\ for\ the\ current\ device}}
+\DoxyCodeLine{00026\ \textcolor{keyword}{const}\ ov::AnyMap\ \&\ ggml\_openvino\_get\_compile\_config();}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ Get\ the\ OpenCL\ command\ queue\ for\ GPU\ operations\ (returns\ nullptr\ for\ CPU/NPU)}}
+\DoxyCodeLine{00029\ cl\_command\_queue\ ggml\_openvino\_get\_cl\_queue();}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ Intel\ USM\ extension\ function\ type}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ cl\_int(CL\_API\_CALL\ *\ clEnqueueMemFillINTEL\_fn)(cl\_command\_queue\ queue,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ dst\_ptr,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ pattern,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pattern\_size,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cl\_uint\ num\_events\_in\_wait\_list,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ cl\_event\ *\ event\_wait\_list,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cl\_event\ *\ event);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ cl\_int(CL\_API\_CALL\ *\ clEnqueueMemcpyINTEL\_fn)(cl\_command\_queue\ queue,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cl\_bool\ blocking,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ dst\_ptr,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ src\_ptr,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cl\_uint\ num\_events\_in\_wait\_list,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ cl\_event\ *\ event\_wait\_list,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cl\_event\ *\ event);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ Get\ the\ clEnqueueMemFillINTEL\ function\ pointer\ (returns\ nullptr\ if\ not\ available)}}
+\DoxyCodeLine{00051\ clEnqueueMemFillINTEL\_fn\ ggml\_openvino\_get\_clEnqueueMemFillINTEL();}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ Get\ the\ clEnqueueMemcpyINTEL\ function\ pointer\ (returns\ nullptr\ if\ not\ available)}}
+\DoxyCodeLine{00054\ clEnqueueMemcpyINTEL\_fn\ ggml\_openvino\_get\_clEnqueueMemcpyINTEL();}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ =====================================================}}
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ Global\ Device\ Configuration\ (singleton)}}
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ =====================================================}}
+\DoxyCodeLine{00059\ \textcolor{comment}{//\ Initialized\ once\ during\ backend\ init\ from\ GGML\_OPENVINO\_DEVICE\ env\ var}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__openvino__device__config}{ggml\_openvino\_device\_config}}\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ std::string\ device\_name\ =\ \textcolor{stringliteral}{"{}CPU"{}};}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_npu\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{bool}\ initialized\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00065\ \ \ \ \ std::optional<ov::RemoteContext>\ remote\_context;}
+\DoxyCodeLine{00066\ \ \ \ \ ov::AnyMap\ compile\_config;}
+\DoxyCodeLine{00067\ \ \ \ \ cl\_command\_queue\ cl\_queue\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ init();}
+\DoxyCodeLine{00070\ \ \ \ \ \doxymbox{\hyperlink{structggml__openvino__device__config}{\string~ggml\_openvino\_device\_config}}();}
+\DoxyCodeLine{00071\ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{//\ Get\ the\ global\ device\ config\ singleton}}
+\DoxyCodeLine{00074\ \doxymbox{\hyperlink{structggml__openvino__device__config}{ggml\_openvino\_device\_config}}\ \&\ ggml\_openvino\_get\_device\_config();}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ Initialize\ device\ config\ (call\ during\ backend\ init)}}
+\DoxyCodeLine{00077\ \textcolor{keywordtype}{void}\ ggml\_openvino\_init\_device\_config();}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{comment}{//\ Get\ the\ device\ name}}
+\DoxyCodeLine{00080\ \textcolor{keyword}{const}\ std::string\ \&\ ggml\_openvino\_get\_device\_name();}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{//\ Check\ if\ running\ on\ NPU}}
+\DoxyCodeLine{00083\ \textcolor{keywordtype}{bool}\ ggml\_openvino\_is\_npu();}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{comment}{//\ Get\ requantization\ type\ for\ a\ tensor\ type\ (returns\ nullopt\ if\ no\ requant\ needed)}}
+\DoxyCodeLine{00086\ std::optional<ExtraQuantType>\ ggml\_openvino\_get\_requant\_type(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{bool}\ no\_requant\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{comment}{//\ =====================================================}}
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ OpenVINO\ Tensor\ Extra\ Types}}
+\DoxyCodeLine{00090\ \textcolor{comment}{//\ =====================================================}}
+\DoxyCodeLine{00091\ \textcolor{comment}{//\ These\ types\ are\ stored\ in\ tensor-\/>extra\ by\ the\ OpenVINO\ backend\ buffer.}}
+\DoxyCodeLine{00092\ \textcolor{comment}{//\ They\ allow:}}
+\DoxyCodeLine{00093\ \textcolor{comment}{//\ 1.\ Pre-\/built\ ov::Constant\ nodes\ for\ weights\ (avoiding\ memcpy\ during\ graph\ construction)}}
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ 2.\ ov::Tensor\ wrappers\ for\ KV\ cache\ /\ compute\ tensors\ (for\ direct\ use\ with\ infer\_request)}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{comment}{//\ Base\ class\ for\ OpenVINO\ tensor\ extra\ data}}
+\DoxyCodeLine{00097\ \textcolor{keyword}{struct\ }ggml\_openvino\_extra\_base\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{enum\ class}\ Type\ \{\ WEIGHT,\ QUANTIZED\_WEIGHT,\ TENSOR\ \};}
+\DoxyCodeLine{00099\ \ \ \ \ Type\ type;}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~ggml\_openvino\_extra\_base()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00101\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{explicit}\ ggml\_openvino\_extra\_base(Type\ t)\ :\ type(t)\ \{\}}
+\DoxyCodeLine{00103\ \};}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{comment}{//\ Extra\ data\ for\ F16/F32/BF16\ weight\ tensors\ -\/\ stores\ the\ pre-\/built\ weight\ node}}
+\DoxyCodeLine{00106\ \textcolor{keyword}{struct\ }ggml\_openvino\_weight\_extra\ :\ \textcolor{keyword}{public}\ ggml\_openvino\_extra\_base\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ ov::Tensor\ weights;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ underlying\ weight\ data\ tensor}}
+\DoxyCodeLine{00108\ \ \ \ \ std::shared\_ptr<ov::Node>\ weight\_node;\ \ \textcolor{comment}{//\ Pre-\/built\ OpenVINO\ weight\ node}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ ggml\_openvino\_weight\_extra(ov::Tensor\ w,\ std::shared\_ptr<ov::Node>\ n)\ :}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ ggml\_openvino\_extra\_base(Type::WEIGHT),}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ weights(std::move(w)),}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ weight\_node(std::move(n))\ \{\}}
+\DoxyCodeLine{00114\ \};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{comment}{//\ Extra\ data\ for\ quantized\ weight\ tensors\ -\/\ stores\ extracted\ weights/scales/zp\ and\ weight\ node}}
+\DoxyCodeLine{00117\ \textcolor{keyword}{struct\ }ggml\_openvino\_quantized\_weight\_extra\ :\ \textcolor{keyword}{public}\ ggml\_openvino\_extra\_base\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ ov::Tensor\ weights;\ \ \ \textcolor{comment}{//\ U4\ or\ U8\ extracted\ weights}}
+\DoxyCodeLine{00119\ \ \ \ \ ov::Tensor\ scales;\ \ \ \ \textcolor{comment}{//\ F16\ scales}}
+\DoxyCodeLine{00120\ \ \ \ \ ov::Tensor\ zp;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ U4\ or\ U8\ zero\ points\ (same\ type\ as\ weights)}}
+\DoxyCodeLine{00121\ \ \ \ \ std::shared\_ptr<ov::Node>\ weight\_node;\ \ \textcolor{comment}{//\ Pre-\/built\ OpenVINO\ weight\ subgraph}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ ggml\_openvino\_quantized\_weight\_extra(ov::Tensor\ w,\ ov::Tensor\ s,\ ov::Tensor\ z,\ std::shared\_ptr<ov::Node>\ n)\ :}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ ggml\_openvino\_extra\_base(Type::QUANTIZED\_WEIGHT),}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ weights(std::move(w)),}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ scales(std::move(s)),}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ zp(std::move(z)),}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ weight\_node(std::move(n))\ \{\}}
+\DoxyCodeLine{00129\ \};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{comment}{//\ Extra\ data\ for\ KV\ cache\ /\ compute\ tensors\ -\/\ stores\ ov::Tensor\ for\ infer\_request}}
+\DoxyCodeLine{00132\ \textcolor{keyword}{struct\ }ggml\_openvino\_tensor\_extra\ :\ \textcolor{keyword}{public}\ ggml\_openvino\_extra\_base\ \{}
+\DoxyCodeLine{00133\ \ \ \ \ std::shared\_ptr<ov::Tensor>\ tensor;\ \ \textcolor{comment}{//\ For\ direct\ use\ with\ infer\_request}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{explicit}\ ggml\_openvino\_tensor\_extra(std::shared\_ptr<ov::Tensor>\ t)}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ :\ ggml\_openvino\_extra\_base(Type::TENSOR),\ tensor(std::move(t))\ \{\}}
+\DoxyCodeLine{00137\ \};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{comment}{//\ =====================================================}}
+\DoxyCodeLine{00140\ \textcolor{comment}{//\ Extracted\ Size\ Calculation\ for\ Quantized\ Tensors}}
+\DoxyCodeLine{00141\ \textcolor{comment}{//\ =====================================================}}
+\DoxyCodeLine{00142\ \textcolor{comment}{//\ For\ quantized\ tensors,\ we\ need\ extra\ space\ to\ store\ extracted\ weights,\ scales,\ and\ zero\ points.}}
+\DoxyCodeLine{00143\ \textcolor{comment}{//\ Returns\ the\ total\ size\ needed\ in\ the\ buffer\ for\ extracted\ data.}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__openvino__extracted__layout}{ggml\_openvino\_extracted\_layout}}\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ total\_size\ =\ 0;\ \ \ \ \ \ \textcolor{comment}{//\ Total\ bytes\ needed}}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ weights\_offset\ =\ 0;\ \ \textcolor{comment}{//\ Offset\ to\ weights\ in\ buffer}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ weights\_size\ =\ 0;\ \ \ \ \textcolor{comment}{//\ Size\ of\ weights\ in\ bytes}}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ scales\_offset\ =\ 0;\ \ \ \textcolor{comment}{//\ Offset\ to\ scales\ in\ buffer}}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ scales\_size\ =\ 0;\ \ \ \ \ \textcolor{comment}{//\ Size\ of\ scales\ in\ bytes}}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ zp\_offset\ =\ 0;\ \ \ \ \ \ \ \textcolor{comment}{//\ Offset\ to\ zero\ points\ in\ buffer}}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ zp\_size\ =\ 0;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Size\ of\ zero\ points\ in\ bytes\ (U4\ or\ U8)}}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_u4;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ true\ for\ U4\ weights,\ false\ for\ U8}}
+\DoxyCodeLine{00154\ \ \ \ \ int64\_t\ weights\_per\_block;\ \ \textcolor{comment}{//\ weights\ per\ scale/zp\ block}}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_symmetric;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ true\ for\ symmetric\ quantization}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{comment}{//\ Requantization\ info}}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_requant\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ true\ if\ this\ tensor\ needs\ requantization}}
+\DoxyCodeLine{00159\ \ \ \ \ std::optional<ExtraQuantType>\ requant\_type;\ \ \ \textcolor{comment}{//\ target\ requant\ type\ if\ is\_requant}}
+\DoxyCodeLine{00160\ \};}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{comment}{//\ Calculate\ the\ buffer\ layout\ for\ extracted\ quantized\ data}}
+\DoxyCodeLine{00163\ \doxymbox{\hyperlink{structggml__openvino__extracted__layout}{ggml\_openvino\_extracted\_layout}}\ ggml\_openvino\_get\_extracted\_layout(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{bool}\ use\_bias\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \doxymbox{\hyperlink{structggml__openvino__tensor__extra}{ggml\_openvino\_tensor\_extra}}\ *\ ggml\_openvino\_create\_tensor\_extra(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{bool}\ is\_remote);}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{comment}{//\ Register\ an\ extra\ with\ the\ tensor's\ OpenVINO\ buffer\ context\ for\ proper\ lifetime\ management.}}
+\DoxyCodeLine{00168\ \textcolor{comment}{//\ This\ sets\ tensor-\/>extra\ and\ tracks\ the\ extra\ in\ the\ buffer\ context\ for\ cleanup.}}
+\DoxyCodeLine{00169\ \textcolor{keywordtype}{void}\ ggml\_openvino\_buffer\_register\_extra(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \doxymbox{\hyperlink{structggml__openvino__extra__base}{ggml\_openvino\_extra\_base}}\ *\ extra);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{comment}{//\ =====================================================}}
+\DoxyCodeLine{00172\ \textcolor{comment}{//\ OpenVINO\ Backend\ Context\ and\ Interface}}
+\DoxyCodeLine{00173\ \textcolor{comment}{//\ =====================================================}}
+\DoxyCodeLine{00174\ \textcolor{keyword}{struct\ }ggml\_backend\_openvino\_context\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keywordtype}{int}\ device\ =\ 0;}
+\DoxyCodeLine{00176\ \ \ \ \ std::string\ name\ =\ \textcolor{stringliteral}{"{}OpenVINO"{}};}
+\DoxyCodeLine{00177\ \ \ \ \ std::string\ description\ =\ \textcolor{stringliteral}{"{}OpenVINO\ Backend\ Context"{}};}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ std::shared\_ptr<void>\ runtime\_context\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ ggml\_backend\_openvino\_context()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00182\ \};}
+
+\end{DoxyCode}

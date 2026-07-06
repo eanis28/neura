@@ -1,0 +1,1380 @@
+\doxysection{vecdotq.\+hpp}
+\hypertarget{vecdotq_8hpp_source}{}\label{vecdotq_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/vecdotq.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/vecdotq.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2025\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_VECDOTQ\_HPP}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_VECDOTQ\_HPP}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}dpct/helper.hpp"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}quants.hpp"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{typedef}\ float\ (*vec\_dot\_q\_sycl\_t)(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vbq,\ \textcolor{keyword}{const}\ block\_q8\_1\ *\ \_\_restrict\_\_\ bq8\_1,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&\ iqs);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ get\_int\_b1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&\ i32)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ x8\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)\ x;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ x32\ \ =\ x8[4*i32\ +\ 0]\ <<\ \ 0;}
+\DoxyCodeLine{00027\ \ \ \ \ x32\ \ \ \ \ |=\ x8[4*i32\ +\ 1]\ <<\ \ 8;}
+\DoxyCodeLine{00028\ \ \ \ \ x32\ \ \ \ \ |=\ x8[4*i32\ +\ 2]\ <<\ 16;}
+\DoxyCodeLine{00029\ \ \ \ \ x32\ \ \ \ \ |=\ x8[4*i32\ +\ 3]\ <<\ 24;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{return}\ x32;}
+\DoxyCodeLine{00032\ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ get\_int\_from\_int8(\textcolor{keyword}{const}\ int8\_t*\ x8,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ i32)\ \{}
+\DoxyCodeLine{00036\ \ \ \textcolor{keyword}{const}\ uint16\_t*\ x16\ =}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ (\textcolor{keyword}{const}\ uint16\_t*)(x8\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ *\ i32);\ \textcolor{comment}{//\ assume\ at\ least\ 2\ byte}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ alignment}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{int}\ x32\ =\ 0;}
+\DoxyCodeLine{00041\ \ \ x32\ |=\ x16[0]\ <<\ 0;}
+\DoxyCodeLine{00042\ \ \ x32\ |=\ x16[1]\ <<\ 16;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \textcolor{keywordflow}{return}\ x32;}
+\DoxyCodeLine{00045\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ get\_int\_from\_uint8(}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t*\ x8,}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ i32)\ \{}
+\DoxyCodeLine{00050\ \ \ \textcolor{keyword}{const}\ uint16\_t*\ x16\ =}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ (\textcolor{keyword}{const}\ uint16\_t*)(x8\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ *\ i32);\ \textcolor{comment}{//\ assume\ at\ least\ 2\ byte}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ alignment}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \textcolor{keywordtype}{int}\ x32\ =\ 0;}
+\DoxyCodeLine{00055\ \ \ x32\ |=\ x16[0]\ <<\ 0;}
+\DoxyCodeLine{00056\ \ \ x32\ |=\ x16[1]\ <<\ 16;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \textcolor{keywordflow}{return}\ x32;}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ get\_int\_from\_int8\_aligned(}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t*\ x8,}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ i32)\ \{}
+\DoxyCodeLine{00064\ \ \ \textcolor{keywordflow}{return}\ *(}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}*)(x8\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ *\ i32));\ \textcolor{comment}{//\ assume\ at\ least\ 4\ byte\ alignment}}
+\DoxyCodeLine{00066\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ get\_int\_from\_uint8\_aligned(}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t*\ x8,}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ i32)\ \{}
+\DoxyCodeLine{00071\ \ \ \textcolor{keywordflow}{return}\ *(}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}*)(x8\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ *\ i32));\ \textcolor{comment}{//\ assume\ at\ least\ 4\ byte\ alignment}}
+\DoxyCodeLine{00073\ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ get\_int\_from\_table\_16(\textcolor{keyword}{const}\ uint32\_t\ \&q4,}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *values,}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \&val1,\ \textcolor{keywordtype}{int}\ \&val2)\ \{}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ uint32\_t\ aux32;\ \textcolor{keyword}{const}\ uint8\_t\ *\ q8\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)\&aux32;}
+\DoxyCodeLine{00080\ \ \ \ \ aux32\ =\ q4\ \&\ 0x0f0f0f0f;}
+\DoxyCodeLine{00081\ \ \ \ \ uint16\_t\ v1\ =\ values[q8[0]]\ |\ (values[q8[1]]\ <<\ 8);}
+\DoxyCodeLine{00082\ \ \ \ \ uint16\_t\ v2\ =\ values[q8[2]]\ |\ (values[q8[3]]\ <<\ 8);}
+\DoxyCodeLine{00083\ \ \ \ \ val1\ =\ v1\ |\ (v2\ <<\ 16);}
+\DoxyCodeLine{00084\ \ \ \ \ aux32\ =\ (q4\ >>\ 4)\ \&\ 0x0f0f0f0f;}
+\DoxyCodeLine{00085\ \ \ \ \ v1\ =\ values[q8[0]]\ |\ (values[q8[1]]\ <<\ 8);}
+\DoxyCodeLine{00086\ \ \ \ \ v2\ =\ values[q8[2]]\ |\ (values[q8[3]]\ <<\ 8);}
+\DoxyCodeLine{00087\ \ \ \ \ val2\ =\ v1\ |\ (v2\ <<\ 16);}
+\DoxyCodeLine{00088\ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ sycl::int2\ get\_int\_from\_table\_16(}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ q4,\ \textcolor{keyword}{const}\ int8\_t*\ table)\ \{}
+\DoxyCodeLine{00092\ \ \ \textcolor{keyword}{const}\ uint32\_t*\ table32\ =\ (\textcolor{keyword}{const}\ uint32\_t*)table;}
+\DoxyCodeLine{00093\ \ \ uint32\_t\ tmp[2];}
+\DoxyCodeLine{00094\ \ \ \textcolor{keyword}{const}\ uint32\_t\ low\_high\_selection\_indices\ =}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ (0x32103210\ |\ ((q4\ \&\ 0x88888888)\ >>\ 1));}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00097\ \ \ \textcolor{keywordflow}{for}\ (uint32\_t\ i\ =\ 0;\ i\ <\ 2;\ ++i)\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ shift\ =\ 16\ *\ i;}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ low\ =}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ dpct::byte\_level\_permute(table32[0],\ table32[1],\ q4\ >>\ shift);}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ high\ =}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ dpct::byte\_level\_permute(table32[2],\ table32[3],\ q4\ >>\ shift);}
+\DoxyCodeLine{00104\ \ \ \ \ tmp[i]\ =\ dpct::byte\_level\_permute(}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ low,\ high,\ low\_high\_selection\_indices\ >>\ shift);}
+\DoxyCodeLine{00106\ \ \ \}}
+\DoxyCodeLine{00107\ \ \ \textcolor{keywordflow}{return}\ sycl::int2(}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ dpct::byte\_level\_permute(tmp[0],\ tmp[1],\ 0x6420),}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ dpct::byte\_level\_permute(tmp[0],\ tmp[1],\ 0x7531));}
+\DoxyCodeLine{00110\ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ VDR\_Q2\_K\_Q8\_1\_MMVQ\ 1}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{comment}{//\ contiguous\ v/x\ values}}
+\DoxyCodeLine{00115\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q2\_K\_q8\_1\_impl\_mmvq(}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&v,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\_\_restrict\_\_\ u,\ \textcolor{keyword}{const}\ uint8\_t\ *\_\_restrict\_\_\ scales,}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ \&dm2,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\_\_restrict\_\_\ d8)\ \{}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\_d\ =\ 0.0f;}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\_m\ =\ 0.0f;}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR2\_K;\ ++i)\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sc\ =\ scales[2*i];}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi\ =\ (v\ >>\ (2*i))\ \&\ 0x03030303;}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ sumf\_d\ +=}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ d8[i]\ *\ (dpct::dp4a(vi,\ u[i],\ 0)\ *\ (sc\ \&\ 0xF));\ \textcolor{comment}{//\ SIMD\ dot\ product}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fill\ int\ with\ 4x\ m}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ m\ =\ sc\ >>\ 4;}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ m\ |=\ m\ <<\ \ 8;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ m\ |=\ m\ <<\ 16;}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ sumf\_m\ +=\ d8[i]\ *}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m,\ u[i],}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0);\ \textcolor{comment}{//\ multiply\ constant\ q2\_K\ part\ with\ sum\ of\ q8\_1\ values}}
+\DoxyCodeLine{00139\ \ \ \ \ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ dm2f\ =}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ dm2.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordflow}{return}\ dm2f.x()\ *\ sumf\_d\ -\/\ dm2f.y()\ *\ sumf\_m;}
+\DoxyCodeLine{00145\ \}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ VDR\_Q3\_K\_Q8\_1\_MMVQ\ 1}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{comment}{//\ contiguous\ v/x\ values}}
+\DoxyCodeLine{00151\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q3\_K\_q8\_1\_impl\_mmvq(}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&vl,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&vh,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\_\_restrict\_\_\ u,}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\_\_restrict\_\_\ scales,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&scale\_offset,}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \&d3,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\_\_restrict\_\_\ d8)\ \{}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\ =\ 0.0f;}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR3\_K;\ ++i)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ isc\ =\ scale\_offset\ +\ 2*i;}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ isc\_low\ =\ isc\ \%\ (QK\_K/32);}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sc\_shift\_low\ =\ 4\ *\ (isc\ /\ (QK\_K/32));}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sc\_low\ \ =\ (scales[isc\_low]\ >>\ sc\_shift\_low)\ \&\ 0xF;}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ isc\_high\ =\ isc\ \%\ (QK\_K/64);}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sc\_shift\_high\ =\ 2\ *\ (isc\ /\ (QK\_K/64));}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sc\_high\ =\ ((scales[(QK\_K/32)\ +\ isc\_high]\ >>\ sc\_shift\_high)\ \&\ 3)\ <<\ 4;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sc\ =\ (sc\_low\ |\ sc\_high)\ -\/\ 32;}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vil\ =\ (vl\ >>\ (2*i))\ \&\ 0x03030303;}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vih\ =\ ((vh\ >>\ i)\ <<\ 2)\ \&\ 0x04040404;}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi\ =}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ dpct::vectorized\_binary<sycl::char4>(vil,\ vih,\ \doxymbox{\hyperlink{structdpct_1_1sub__sat}{dpct::sub\_sat}}());}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ sumf\ +=\ d8[i]\ *\ (dpct::dp4a(vi,\ u[i],\ 0)\ *\ sc);\ \textcolor{comment}{//\ SIMD\ dot\ product}}
+\DoxyCodeLine{00180\ \ \ \ \ \}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordflow}{return}\ d3\ *\ sumf;}
+\DoxyCodeLine{00183\ \}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ VDR\_Q4\_K\_Q8\_1\_MMVQ\ 2}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{comment}{//\ contiguous\ v/x\ values}}
+\DoxyCodeLine{00188\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q4\_K\_q8\_1\_impl\_vmmq(}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\_\_restrict\_\_\ v,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\_\_restrict\_\_\ u,}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\_\_restrict\_\_\ sc,\ \textcolor{keyword}{const}\ uint8\_t\ *\_\_restrict\_\_\ m,}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ \&dm4,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\_\_restrict\_\_\ d8)\ \{}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\_d\ =\ 0.0f;}
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\_m\ =\ 0.0f;}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR4\_K;\ ++i)\ \{}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v0i\ =\ (v[0]\ >>\ (4*i))\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v1i\ =\ (v[1]\ >>\ (4*i))\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ dot1\ =}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(v1i,\ u[2\ *\ i\ +\ 1],}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(v0i,\ u[2\ *\ i\ +\ 0],\ 0));\ \textcolor{comment}{//\ SIMD\ dot\ product}}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ dot2\ =}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(0x01010101,\ u[2\ *\ i\ +\ 1],}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(0x01010101,\ u[2\ *\ i\ +\ 0],\ 0));\ \textcolor{comment}{//\ sum\ of\ u}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ sumf\_d\ +=\ d8[i]\ *\ (dot1\ *\ sc[i]);}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ sumf\_m\ +=\ d8[i]\ *\ (dot2\ *\ m[i]);\ \ \textcolor{comment}{//\ multiply\ constant\ part\ of\ q4\_K\ with\ sum\ of\ q8\_1\ values}}
+\DoxyCodeLine{00210\ \ \ \ \ \}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ dm4f\ =}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ dm4.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keywordflow}{return}\ dm4f.x()\ *\ sumf\_d\ -\/\ dm4f.y()\ *\ sumf\_m;}
+\DoxyCodeLine{00216\ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ VDR\_Q5\_K\_Q8\_1\_MMVQ\ 2}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \textcolor{comment}{//\ contiguous\ v/x\ values}}
+\DoxyCodeLine{00222\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q5\_K\_q8\_1\_impl\_vmmq(}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\_\_restrict\_\_\ vl,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\_\_restrict\_\_\ vh,}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\_\_restrict\_\_\ u,\ \textcolor{keyword}{const}\ uint8\_t\ *\_\_restrict\_\_\ sc,}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\_\_restrict\_\_\ m,\ \textcolor{keyword}{const}\ sycl::half2\ \&dm5,}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\_\_restrict\_\_\ d8)\ \{}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\_d\ =\ 0.0f;}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\_m\ =\ 0.0f;}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR5\_K;\ ++i)\ \{}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vl0i\ =\ (vl[0]\ >>\ (4*i))\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vl1i\ =\ (vl[1]\ >>\ (4*i))\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vh0i\ =\ ((vh[0]\ >>\ i)\ <<\ 4)\ \&\ 0x10101010;}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vh1i\ =\ ((vh[1]\ >>\ i)\ <<\ 4)\ \&\ 0x10101010;}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v0i\ =\ vl0i\ |\ vh0i;}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v1i\ =\ vl1i\ |\ vh1i;}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ dot1\ =}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(v0i,\ u[2\ *\ i\ +\ 0],}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(v1i,\ u[2\ *\ i\ +\ 1],\ 0));\ \textcolor{comment}{//\ SIMD\ dot\ product}}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ dot2\ =}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(0x01010101,\ u[2\ *\ i\ +\ 0],}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(0x01010101,\ u[2\ *\ i\ +\ 1],\ 0));\ \textcolor{comment}{//\ sum\ of\ u}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ sumf\_d\ +=\ d8[i]\ *\ (dot1\ *\ sc[i]);}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ sumf\_m\ +=\ d8[i]\ *\ (dot2\ *\ m[i]);}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ \}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ dm5f\ =}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ dm5.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keywordflow}{return}\ dm5f.x()\ *\ sumf\_d\ -\/\ dm5f.y()\ *\ sumf\_m;}
+\DoxyCodeLine{00258\ \}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ VDR\_Q6\_K\_Q8\_1\_MMVQ\ 1}}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \textcolor{comment}{//\ contiguous\ v/x\ values}}
+\DoxyCodeLine{00264\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00265\ vec\_dot\_q6\_K\_q8\_1\_impl\_mmvq(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&vl,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&vh,}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\_\_restrict\_\_\ u,}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ *\_\_restrict\_\_\ scales,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \&d,}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\_\_restrict\_\_\ d8)\ \{}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\ =\ 0.0f;}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR6\_K;\ ++i)\ \{}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sc\ =\ scales[4*i];}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vil\ =\ (vl\ >>\ (4*i))\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vih\ =\ ((vh\ >>\ (4*i))\ <<\ 4)\ \&\ 0x30303030;}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi\ =\ dpct::vectorized\_binary<sycl::char4>(}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ (vil\ |\ vih),\ 0x20202020,\ \doxymbox{\hyperlink{structdpct_1_1sub__sat}{dpct::sub\_sat}}());\ \textcolor{comment}{//\ vi\ =\ (vil\ |\ vih)\ -\/\ 32}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ sumf\ +=\ d8[i]\ *\ (dpct::dp4a(vi,\ u[i],\ 0)\ *\ sc);\ \textcolor{comment}{//\ SIMD\ dot\ product}}
+\DoxyCodeLine{00284\ \ \ \ \ \}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keywordflow}{return}\ d*sumf;}
+\DoxyCodeLine{00287\ \}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \textcolor{comment}{//\ VDR\ =\ vec\ dot\ ratio,\ how\ many\ contiguous\ integers\ each\ thread\ processes\ when\ the\ vec\ dot\ kernel\ is\ called}}
+\DoxyCodeLine{00290\ \textcolor{comment}{//\ MMVQ\ =\ mul\_mat\_vec\_q,\ MMQ\ =\ mul\_mat\_q}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \textcolor{keyword}{template}\ <ggml\_type\ T>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structreorder__vec__dot__q__sycl}{reorder\_vec\_dot\_q\_sycl}}\ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{keyword}{static\_assert}(T\ !=\ T,\ \textcolor{stringliteral}{"{}ggml\_type\ for\ reorder\ vecdot\ not\ implemented"{}});}
+\DoxyCodeLine{00294\ \};}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{keyword}{template}\ <>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structreorder__vec__dot__q__sycl}{reorder\_vec\_dot\_q\_sycl}}<GGML\_TYPE\_Q4\_0>\ \{}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ ggml\_type\ gtype\ =\ GGML\_TYPE\_Q4\_0;}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keyword}{using\ }q4\_0\_block\ \ =\ \doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t}{ggml\_sycl\_reordered::block\_q\_t<GGML\_TYPE\_Q4\_0>}};}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keyword}{using\ }q4\_0\_traits\ =\ \textcolor{keyword}{typename}\ \doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t_3_01_g_g_m_l___t_y_p_e___q4__0_01_4_1_1traits}{q4\_0\_block::traits}};}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \ \ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q4\_0\_q8\_1\_impl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ v,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ u,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \&\ d4,\ \textcolor{keyword}{const}\ sycl::half2\ \&\ ds8)\ \{}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ q4\_0\_traits::vdr\_mmvq;\ ++i)\ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi0\ =\ (v[i]\ >>\ 0)\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi1\ =\ (v[i]\ >>\ 4)\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi0,\ u[2\ *\ i\ +\ 0],\ sumi);}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi1,\ u[2\ *\ i\ +\ 1],\ sumi);}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ ds8f\ =\ ds8.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ second\ part\ effectively\ subtracts\ 8\ from\ each\ quant\ value}}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ d4\ *\ (sumi\ *\ ds8f.x()\ -\/\ (8\ *\ q4\_0\_traits::vdr\_mmvq\ /\ q4\_0\_traits::qi)\ *\ ds8f.y());}
+\DoxyCodeLine{00319\ \ \ \ \ \}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \ \ \ \ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ operator()(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vbq,\ \textcolor{keyword}{const}\ std::pair<int,\ int>\ ibx\_offset,}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::pair<int,\ int>\ d\_offset,\ \textcolor{keyword}{const}\ int8\_t\ *\ q8\_1\_quant\_ptr,}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ *\ q8\_1\_ds,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&\ iqs)\ \{}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ bq4\_0\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }uint8\_t\ *\textcolor{keyword}{>}(vbq)\ +\ ibx\_offset.first;}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ggml\_half\ d\ =\ *(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }ggml\_half\ *\textcolor{keyword}{>}(\textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }uint8\_t\ *\textcolor{keyword}{>}(vbq)\ +\ d\_offset.first));}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ v[q4\_0\_traits::vdr\_mmvq];}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ u[2\ *\ q4\_0\_traits::vdr\_mmvq];}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ q4\_0\_traits::vdr\_mmvq;\ ++i)\ \{}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ v[i]\ \ \ \ \ \ \ \ \ =\ get\_int\_from\_uint8(bq4\_0,\ iqs\ +\ i);}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ u[2\ *\ i\ +\ 0]\ =\ get\_int\_from\_int8\_aligned(q8\_1\_quant\_ptr,\ iqs\ +\ i);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ u[2\ *\ i\ +\ 1]\ =\ get\_int\_from\_int8\_aligned(q8\_1\_quant\_ptr,\ iqs\ +\ i\ +\ q4\_0\_traits::qi);}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q4\_0\_q8\_1\_impl(v,\ u,\ d,\ *q8\_1\_ds);}
+\DoxyCodeLine{00338\ \ \ \ \ \};}
+\DoxyCodeLine{00339\ \};}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ vec\_dot\_q4\_K\_q8\_1\_common(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ \_\_restrict\_\_\ q4,\ \textcolor{keyword}{const}\ uint16\_t\ *\ \_\_restrict\_\_\ scales,}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ggml\_half2\ \&\ dm,\ \textcolor{keyword}{const}\ block\_q8\_1\ *\ \_\_restrict\_\_\ bq8\_1,}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&\ \ \ \ \ \ \ \ iqs)\ \{}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ v[2];}
+\DoxyCodeLine{00345\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ u[2\ *\ QR4\_K];}
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{keywordtype}{float}\ d8[QR4\_K];}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ \ \ v[0]\ =\ q4[0];}
+\DoxyCodeLine{00349\ \ \ \ \ v[1]\ =\ q4[4];}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \ \ \ \ uint16\_t\ \ aux[2];}
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j\ =\ (QR4\_K\ *\ ((iqs\ /\ 2)\ /\ (QI8\_1\ /\ 2)))\ /\ 2;}
+\DoxyCodeLine{00353\ \ \ \ \ \textcolor{keywordflow}{if}\ (j\ <\ 2)\ \{}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ aux[0]\ =\ scales[j\ +\ 0]\ \&\ 0x3f3f;}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ aux[1]\ =\ scales[j\ +\ 2]\ \&\ 0x3f3f;}
+\DoxyCodeLine{00356\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ aux[0]\ =\ ((scales[j\ +\ 2]\ >>\ 0)\ \&\ 0x0f0f)\ |\ ((scales[j\ -\/\ 2]\ \&\ 0xc0c0)\ >>\ 2);}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ aux[1]\ =\ ((scales[j\ +\ 2]\ >>\ 4)\ \&\ 0x0f0f)\ |\ ((scales[j\ -\/\ 0]\ \&\ 0xc0c0)\ >>\ 2);}
+\DoxyCodeLine{00359\ \ \ \ \ \}}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ sc\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)\ aux;}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ m\ \ =\ sc\ +\ 2;}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bq8\_offset\ =\ QR4\_K\ *\ ((iqs\ /\ 2)\ /\ (QI8\_1\ /\ 2));}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR4\_K;\ ++i)\ \{}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\ bq8i\ =\ bq8\_1\ +\ bq8\_offset\ +\ i;}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ d8[i]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ bq8i-\/>ds[0];}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ q8\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)\ bq8i-\/>qs\ +\ ((iqs\ /\ 2)\ \%\ 4);}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ u[2\ *\ i\ +\ 0]\ \ \ =\ q8[0];}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ u[2\ *\ i\ +\ 1]\ \ \ =\ q8[4];}
+\DoxyCodeLine{00373\ \ \ \ \ \}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q4\_K\_q8\_1\_impl\_vmmq(v,\ u,\ sc,\ m,\ dm,\ d8);}
+\DoxyCodeLine{00376\ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \textcolor{keyword}{template}\ <>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structreorder__vec__dot__q__sycl}{reorder\_vec\_dot\_q\_sycl}}<GGML\_TYPE\_Q4\_K>\ \{}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ ggml\_type\ gtype\ =\ GGML\_TYPE\_Q4\_K;}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keyword}{using\ }q4\_k\_block\ \ =\ \doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t}{ggml\_sycl\_reordered::block\_q\_t<GGML\_TYPE\_Q4\_K>}};}
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keyword}{using\ }q4\_k\_traits\ =\ \textcolor{keyword}{typename}\ \doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t_3_01_g_g_m_l___t_y_p_e___q4___k_01_4_1_1traits}{q4\_k\_block::traits}};}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \ \ \ \ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ operator()(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vbq,\ \textcolor{keyword}{const}\ std::pair<int,\ int>\ ibx\_offset,}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::pair<int,\ int>\ d\_offset,\ \textcolor{keyword}{const}\ int8\_t\ *\ q8\_1\_quant\_ptr,}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ *\ q8\_1\_ds,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&\ iqs)\ \{}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ \ base\ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }uint8\_t\ *\textcolor{keyword}{>}(vbq);}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ \ qs\ \ \ \ \ \ \ \ \ \ \ \ \ =\ base\ +\ ibx\_offset.first;}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ \ scs\ \ \ \ \ \ \ \ \ \ \ \ =\ base\ +\ d\_offset.first;}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ggml\_half2\ *\ dms\ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }ggml\_half2\ *\textcolor{keyword}{>}(base\ +\ d\_offset.second);}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ bq8\_offset\ =\ QR4\_K\ *\ ((iqs\ /\ 2)\ /\ (QI8\_1\ /\ 2));}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ \ \ \ \ \ q4\ \ \ \ \ \ \ \ \ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)\ (qs\ +\ 16\ *\ bq8\_offset\ +\ 4\ *\ ((iqs\ /\ 2)\ \%\ 4));}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ scales\ \ \ \ \ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)\ scs;}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ v[2];}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ u[2\ *\ QR4\_K];}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ d8[QR4\_K];}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ v[0]\ =\ q4[0];}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ v[1]\ =\ q4[4];}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ uint16\_t\ \ aux[2];}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j\ =\ (QR4\_K\ *\ ((iqs\ /\ 2)\ /\ (QI8\_1\ /\ 2)))\ /\ 2;}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (j\ <\ 2)\ \{}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ aux[0]\ =\ scales[j\ +\ 0]\ \&\ 0x3f3f;}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ aux[1]\ =\ scales[j\ +\ 2]\ \&\ 0x3f3f;}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ aux[0]\ =\ ((scales[j\ +\ 2]\ >>\ 0)\ \&\ 0x0f0f)\ |\ ((scales[j\ -\/\ 2]\ \&\ 0xc0c0)\ >>\ 2);}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ aux[1]\ =\ ((scales[j\ +\ 2]\ >>\ 4)\ \&\ 0x0f0f)\ |\ ((scales[j\ -\/\ 0]\ \&\ 0xc0c0)\ >>\ 2);}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ sc\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)\ aux;}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ m\ \ =\ sc\ +\ 2;}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR4\_K;\ ++i)\ \{}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int8\_t*\ quant\_base\_ptr\ =\ q8\_1\_quant\_ptr\ +\ (bq8\_offset\ +\ i)\ *\ QK8\_1;}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ sycl::half2\ ds\_values\ =\ *(q8\_1\_ds\ +\ bq8\_offset\ +\ i);}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ d8[i]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ ds\_values[0];}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ q8\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)\ quant\_base\_ptr\ +\ ((iqs\ /\ 2)\ \%\ 4);}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ u[2\ *\ i\ +\ 0]\ \ \ =\ q8[0];}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ u[2\ *\ i\ +\ 1]\ \ \ =\ q8[4];}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q4\_K\_q8\_1\_impl\_vmmq(v,\ u,\ sc,\ m,\ *dms,\ d8);}
+\DoxyCodeLine{00428\ \ \ \ \ \}}
+\DoxyCodeLine{00429\ \};}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \textcolor{keyword}{template}\ <>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structreorder__vec__dot__q__sycl}{reorder\_vec\_dot\_q\_sycl}}<GGML\_TYPE\_Q6\_K>\ \{}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ ggml\_type\ gtype\ =\ GGML\_TYPE\_Q6\_K;}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keyword}{using\ }q6\_k\_block\ \ =\ \doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t}{ggml\_sycl\_reordered::block\_q\_t<GGML\_TYPE\_Q6\_K>}};}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keyword}{using\ }q6\_k\_traits\ =\ \textcolor{keyword}{typename}\ \doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_1_1traits}{q6\_k\_block::traits}};}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \ \ \ \ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q6\_K\_q8\_1\_impl\_mmvq(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vl,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vh,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ \_\_restrict\_\_\ u,}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ *\ \_\_restrict\_\_\ scales,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d,}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ \_\_restrict\_\_\ d8)\ \{}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\ =\ 0.0f;}
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR6\_K;\ ++i)\ \{}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sc\ =\ scales[4\ *\ i];}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vil\ =\ (vl\ >>\ (4\ *\ i))\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vih\ =\ ((vh\ >>\ (4\ *\ i))\ <<\ 4)\ \&\ 0x30303030;}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi\ =\ dpct::vectorized\_binary<sycl::char4>((vil\ |\ vih),\ 0x20202020,}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structdpct_1_1sub__sat}{dpct::sub\_sat}}());\ \ \textcolor{comment}{//\ vi\ =\ (vil\ |\ vih)\ -\/\ 32}}
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ sumf\ +=\ d8[i]\ *\ (dpct::dp4a(vi,\ u[i],\ 0)\ *\ sc);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SIMD\ dot\ product}}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ sumf;}
+\DoxyCodeLine{00457\ \ \ \ \ \}}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00459\ \ \ \ \ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ operator()(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vbq,\ \textcolor{keyword}{const}\ std::pair<int,\ int>\ ibx\_offset,}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::pair<int,\ int>\ d\_offset,\ \textcolor{keyword}{const}\ int8\_t\ *\ q8\_1\_quant\_ptr,\ \textcolor{keyword}{const}\ sycl::half2\ *\ q8\_1\_ds,}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ iqs)\ \{}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ base\ \ \ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }uint8\_t\ *\textcolor{keyword}{>}(vbq);}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ ql\ \ \ \ \ =\ base\ +\ ibx\_offset.first;}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ qh\ \ \ \ \ =\ base\ +\ ibx\_offset.second;}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ *\ \ \ \ scales\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }int8\_t\ *\textcolor{keyword}{>}(base\ +\ d\_offset.first);}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ggml\_half\ *\ d\ \ \ \ \ \ =\ (\textcolor{keyword}{const}\ ggml\_half\ *)\ (base\ +\ d\_offset.second);}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bq8\_offset\ \ \ =\ 2\ *\ QR6\_K\ *\ (iqs\ /\ (QI6\_K\ /\ 2))\ +\ (iqs\ \%\ (QI6\_K\ /\ 2))\ /\ (QI6\_K\ /\ 4);}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ scale\_offset\ =\ (QI6\_K\ /\ 4)\ *\ (iqs\ /\ (QI6\_K\ /\ 2))\ +\ (iqs\ \%\ (QI6\_K\ /\ 2))\ /\ (QI6\_K\ /\ 8);}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vh\_shift\ \ \ \ \ =\ 2\ *\ ((iqs\ \%\ (QI6\_K\ /\ 2))\ /\ (QI6\_K\ /\ 4));}
+\DoxyCodeLine{00471\ }
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vl\ =\ get\_int\_from\_uint8(ql,\ iqs);}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vh\ =\ get\_int\_from\_uint8(qh,\ (QI6\_K\ /\ 4)\ *\ (iqs\ /\ (QI6\_K\ /\ 2))\ +\ iqs\ \%\ (QI6\_K\ /\ 4))\ >>\ vh\_shift;}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ *\ scs\ =\ scales\ +\ scale\_offset;}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ u[QR6\_K];}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ d8[QR6\_K];}
+\DoxyCodeLine{00479\ }
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR6\_K;\ ++i)\ \{}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ u[i]\ =\ get\_int\_from\_int8\_aligned(q8\_1\_quant\_ptr\ +\ (bq8\_offset\ +\ 2\ *\ i)\ *\ QK8\_1,\ iqs\ \%\ QI8\_1);}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ ds\_values\ =\ *(q8\_1\_ds\ +\ bq8\_offset\ +\ 2\ *\ i);}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ d8[i]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ ds\_values[0];}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q6\_K\_q8\_1\_impl\_mmvq(vl,\ vh,\ u,\ scs,\ *d,\ d8);}
+\DoxyCodeLine{00487\ \ \ \ \ \}}
+\DoxyCodeLine{00488\ \};}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#define\ VDR\_Q4\_0\_Q8\_1\_MMVQ\ 2}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\#define\ VDR\_Q4\_0\_Q8\_1\_MMQ\ \ 4}}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ vdr>}
+\DoxyCodeLine{00493\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q4\_0\_q8\_1\_impl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ v,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ u,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \&\ d4,}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ \&\ ds8)\ \{}
+\DoxyCodeLine{00495\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ vdr;\ ++i)\ \{}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi0\ =\ (v[i]\ >>\ 0)\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi1\ =\ (v[i]\ >>\ 4)\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi0,\ u[2\ *\ i\ +\ 0],\ sumi);}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi1,\ u[2\ *\ i\ +\ 1],\ sumi);}
+\DoxyCodeLine{00504\ \ \ \ \ \}}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ ds8f\ =\ ds8.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{comment}{//\ second\ part\ effectively\ subtracts\ 8\ from\ each\ quant\ value}}
+\DoxyCodeLine{00509\ \ \ \ \ \textcolor{keywordflow}{return}\ d4\ *\ (sumi\ *\ ds8f.x()\ -\/\ (8\ *\ vdr\ /\ QI4\_0)\ *\ ds8f.y());}
+\DoxyCodeLine{00510\ \}}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#define\ VDR\_Q4\_1\_Q8\_1\_MMVQ\ 2}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\#define\ VDR\_Q4\_1\_Q8\_1\_MMQ\ \ 4}}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ vdr>}
+\DoxyCodeLine{00516\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q4\_1\_q8\_1\_impl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *v,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *u,}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ \&dm4,}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ \&ds8)\ \{}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ vdr;\ ++i)\ \{}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi0\ =\ (v[i]\ >>\ 0)\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vi1\ =\ (v[i]\ >>\ 4)\ \&\ 0x0F0F0F0F;}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi0,\ u[2\ *\ i\ +\ 0],\ sumi);}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi1,\ u[2\ *\ i\ +\ 1],\ sumi);}
+\DoxyCodeLine{00530\ \ \ \ \ \}}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00533\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ tmp\ =}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ (dm4\ *\ ds8).convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00535\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d4d8\ =\ tmp.x();}
+\DoxyCodeLine{00536\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m4s8\ =\ tmp.y();}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00538\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ dm4f\ =}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ dm4.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ ds8f\ =}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ ds8.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00542\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d4d8\ =\ dm4f.x()\ *\ ds8f.x();}
+\DoxyCodeLine{00543\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m4s8\ =\ dm4f.y()\ *\ ds8f.y();}
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \ \ \ \ \textcolor{comment}{//\ scale\ second\ part\ of\ sum\ by\ QI8\_1/(vdr\ *\ QR4\_1)\ to\ compensate\ for\ multiple\ threads\ adding\ it}}
+\DoxyCodeLine{00547\ \ \ \ \ \textcolor{keywordflow}{return}\ sumi\ *\ d4d8\ +\ m4s8\ /\ (QI8\_1\ /\ (vdr\ *\ QR4\_1));}
+\DoxyCodeLine{00548\ \}}
+\DoxyCodeLine{00549\ }
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\#define\ VDR\_Q5\_0\_Q8\_1\_MMVQ\ 2}}
+\DoxyCodeLine{00551\ \textcolor{preprocessor}{\#define\ VDR\_Q5\_0\_Q8\_1\_MMQ\ \ 4}}
+\DoxyCodeLine{00552\ }
+\DoxyCodeLine{00553\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ vdr>}
+\DoxyCodeLine{00554\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00555\ vec\_dot\_q5\_0\_q8\_1\_impl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *vl,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *vh,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *u,}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \&d5,\ \textcolor{keyword}{const}\ sycl::half2\ \&ds8)\ \{}
+\DoxyCodeLine{00557\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ vdr;\ ++i)\ \{}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vi0\ =\ (vl[i]\ >>\ \ 0)\ \&\ 0x0F0F0F0F;\ \textcolor{comment}{//\ lower\ 4\ qs\ bits,\ still\ need\ qh\ as\ 5th\ bits}}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ vi0\ \ \ \ |=\ (vh[i]\ <<\ \ 4)\ \&\ 0x00000010;\ \textcolor{comment}{//\ 0\ -\/>\ \ 4}}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ vi0\ \ \ \ |=\ (vh[i]\ <<\ 11)\ \&\ 0x00001000;\ \textcolor{comment}{//\ 1\ -\/>\ 12}}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ vi0\ \ \ \ |=\ (vh[i]\ <<\ 18)\ \&\ 0x00100000;\ \textcolor{comment}{//\ 2\ -\/>\ 20}}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ vi0\ \ \ \ |=\ (vh[i]\ <<\ 25)\ \&\ 0x10000000;\ \textcolor{comment}{//\ 3\ -\/>\ 28}}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi0,\ u[2\ *\ i\ +\ 0],}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sumi);\ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vi1\ =\ (vl[i]\ >>\ \ 4)\ \&\ 0x0F0F0F0F;\ \textcolor{comment}{//\ upper\ 4\ qs\ bits,\ still\ need\ qh\ as\ 5th\ bits}}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ vi1\ \ \ \ |=\ (vh[i]\ >>\ 12)\ \&\ 0x00000010;\ \textcolor{comment}{//\ 16\ -\/>\ \ 4}}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ vi1\ \ \ \ |=\ (vh[i]\ >>\ \ 5)\ \&\ 0x00001000;\ \textcolor{comment}{//\ 17\ -\/>\ 12}}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ vi1\ \ \ \ |=\ (vh[i]\ <<\ \ 2)\ \&\ 0x00100000;\ \textcolor{comment}{//\ 18\ -\/>\ 20}}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ vi1\ \ \ \ |=\ (vh[i]\ <<\ \ 9)\ \&\ 0x10000000;\ \textcolor{comment}{//\ 19\ -\/>\ 28}}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi1,\ u[2\ *\ i\ +\ 1],}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sumi);\ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00576\ \ \ \ \ \}}
+\DoxyCodeLine{00577\ }
+\DoxyCodeLine{00578\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ ds8f\ =}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ ds8.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ \ \ \textcolor{comment}{//\ second\ part\ effectively\ subtracts\ 16\ from\ each\ quant\ value}}
+\DoxyCodeLine{00582\ \ \ \ \ \textcolor{keywordflow}{return}\ d5\ *\ (sumi\ *\ ds8f.x()\ -\/\ (16\ *\ vdr\ /\ QI5\_0)\ *\ ds8f.y());}
+\DoxyCodeLine{00583\ \}}
+\DoxyCodeLine{00584\ }
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\#define\ VDR\_Q5\_1\_Q8\_1\_MMVQ\ 2}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#define\ VDR\_Q5\_1\_Q8\_1\_MMQ\ \ 4}}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00588\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ vdr>}
+\DoxyCodeLine{00589\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00590\ vec\_dot\_q5\_1\_q8\_1\_impl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *vl,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *vh,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *u,}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ \&dm5,\ \textcolor{keyword}{const}\ sycl::half2\ \&ds8)\ \{}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ vdr;\ ++i)\ \{}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vi0\ =\ (vl[i]\ >>\ \ 0)\ \&\ 0x0F0F0F0F;\ \textcolor{comment}{//\ lower\ 4\ qs\ bits,\ still\ need\ qh\ as\ 5th\ bits}}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ vi0\ \ \ \ |=\ (vh[i]\ <<\ \ 4)\ \&\ 0x00000010;\ \textcolor{comment}{//\ 0\ -\/>\ \ 4}}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ vi0\ \ \ \ |=\ (vh[i]\ <<\ 11)\ \&\ 0x00001000;\ \textcolor{comment}{//\ 1\ -\/>\ 12}}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ vi0\ \ \ \ |=\ (vh[i]\ <<\ 18)\ \&\ 0x00100000;\ \textcolor{comment}{//\ 2\ -\/>\ 20}}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ vi0\ \ \ \ |=\ (vh[i]\ <<\ 25)\ \&\ 0x10000000;\ \textcolor{comment}{//\ 3\ -\/>\ 28}}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi0,\ u[2\ *\ i\ +\ 0],}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sumi);\ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00604\ }
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vi1\ =\ (vl[i]\ >>\ \ 4)\ \&\ 0x0F0F0F0F;\ \textcolor{comment}{//\ upper\ 4\ qs\ bits,\ still\ need\ qh\ as\ 5th\ bits}}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ vi1\ \ \ \ |=\ (vh[i]\ >>\ 12)\ \&\ 0x00000010;\ \textcolor{comment}{//\ 16\ -\/>\ \ 4}}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ vi1\ \ \ \ |=\ (vh[i]\ >>\ \ 5)\ \&\ 0x00001000;\ \textcolor{comment}{//\ 17\ -\/>\ 12}}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ vi1\ \ \ \ |=\ (vh[i]\ <<\ \ 2)\ \&\ 0x00100000;\ \textcolor{comment}{//\ 18\ -\/>\ 20}}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ vi1\ \ \ \ |=\ (vh[i]\ <<\ \ 9)\ \&\ 0x10000000;\ \textcolor{comment}{//\ 19\ -\/>\ 28}}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(vi1,\ u[2\ *\ i\ +\ 1],}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sumi);\ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00612\ \ \ \ \ \}}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00615\ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ tmp\ =}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ (dm5\ *\ ds8).convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00617\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d5d8\ =\ tmp.x();}
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m5s8\ =\ tmp.y();}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00622\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ dm5f\ =}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ dm5.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00624\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ ds8f\ =}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ ds8.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00626\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d5d8\ =\ dm5f.x()\ *\ ds8f.x();}
+\DoxyCodeLine{00627\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m5s8\ =\ dm5f.y()\ *\ ds8f.y();}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00629\ }
+\DoxyCodeLine{00630\ \ \ \ \ \textcolor{comment}{//\ scale\ second\ part\ of\ sum\ by\ QI5\_1\ /\ vdr\ to\ compensate\ for\ multiple\ threads\ adding\ it}}
+\DoxyCodeLine{00631\ \ \ \ \ \textcolor{keywordflow}{return}\ sumi*d5d8\ +\ m5s8\ /\ (QI5\_1\ /\ vdr);}
+\DoxyCodeLine{00632\ \}}
+\DoxyCodeLine{00633\ }
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\#define\ VDR\_Q8\_0\_Q8\_1\_MMVQ\ 2}}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#define\ VDR\_Q8\_0\_Q8\_1\_MMQ\ 8}}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ vdr>}
+\DoxyCodeLine{00638\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q8\_0\_q8\_1\_impl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *v,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *u,}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \&d8\_0,}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \&d8\_1)\ \{}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ vdr;\ ++i)\ \{}
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(v[i],\ u[i],\ sumi);}
+\DoxyCodeLine{00648\ \ \ \ \ \}}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{keywordflow}{return}\ d8\_0*d8\_1\ *\ sumi;}
+\DoxyCodeLine{00651\ \}}
+\DoxyCodeLine{00652\ }
+\DoxyCodeLine{00653\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{int}\ vdr>}
+\DoxyCodeLine{00654\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ T\ vec\_dot\_q8\_0\_q8\_1\_impl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ v,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ u,\ \textcolor{keyword}{const}\ T\ \&\ d8\_0,\ \textcolor{keyword}{const}\ T\ \&\ d8\_1)\ \{}
+\DoxyCodeLine{00655\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{00656\ }
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00658\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ vdr;\ ++i)\ \{}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ sumi\ =\ ggml\_sycl\_dp4a(v[i],\ u[i],\ sumi);}
+\DoxyCodeLine{00661\ \ \ \ \ \}}
+\DoxyCodeLine{00662\ }
+\DoxyCodeLine{00663\ \ \ \ \ \textcolor{keywordflow}{return}\ d8\_0*d8\_1\ *\ ((T)\ sumi);}
+\DoxyCodeLine{00664\ \}}
+\DoxyCodeLine{00665\ }
+\DoxyCodeLine{00666\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ vdr>}
+\DoxyCodeLine{00667\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q8\_1\_q8\_1\_impl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *v,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *u,}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ \&dm8,}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ \&ds8)\ \{}
+\DoxyCodeLine{00670\ }
+\DoxyCodeLine{00671\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{00672\ }
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00674\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ vdr;\ ++i)\ \{}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SIMD\ dot\ product\ of\ quantized\ values}}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(v[i],\ u[i],\ sumi);}
+\DoxyCodeLine{00677\ \ \ \ \ \}}
+\DoxyCodeLine{00678\ }
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00680\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ tmp\ =}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ (dm8\ *\ ds8).convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00682\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d8d8\ =\ tmp.x();}
+\DoxyCodeLine{00683\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m8s8\ =\ tmp.y();}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00685\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ dm8f\ =}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ dm8.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00687\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ ds8f\ =}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ ds8.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00689\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d8d8\ =\ dm8f.x()\ *\ ds8f.x();}
+\DoxyCodeLine{00690\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m8s8\ =\ dm8f.y()\ *\ ds8f.y();}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00692\ }
+\DoxyCodeLine{00693\ \ \ \ \ \textcolor{comment}{//\ scale\ second\ part\ of\ sum\ by\ QI8\_1/\ vdr\ to\ compensate\ for\ multiple\ threads\ adding\ it}}
+\DoxyCodeLine{00694\ \ \ \ \ \textcolor{keywordflow}{return}\ sumi*d8d8\ +\ m8s8\ /\ (QI8\_1\ /\ vdr);}
+\DoxyCodeLine{00695\ \}}
+\DoxyCodeLine{00696\ }
+\DoxyCodeLine{00697\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00698\ vec\_dot\_q4\_0\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{00700\ }
+\DoxyCodeLine{00701\ \ \ \ \ \textcolor{keyword}{const}\ block\_q4\_0\ *\ bq4\_0\ =\ (\textcolor{keyword}{const}\ block\_q4\_0\ *)\ vbq;}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \ \ \ \ \textcolor{keywordtype}{int}\ v[VDR\_Q4\_0\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00704\ \ \ \ \ \textcolor{keywordtype}{int}\ u[2\ *\ VDR\_Q4\_0\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00705\ }
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00707\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ VDR\_Q4\_0\_Q8\_1\_MMVQ;\ ++i)\ \{}
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ v[i]\ \ \ \ \ \ \ \ \ =\ get\_int\_from\_uint8(bq4\_0-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ u[2\ *\ i\ +\ 0]\ =\ get\_int\_from\_int8\_aligned(bq8\_1-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ u[2\ *\ i\ +\ 1]\ =\ get\_int\_from\_int8\_aligned(bq8\_1-\/>qs,\ iqs\ +\ i\ +\ QI4\_0);}
+\DoxyCodeLine{00711\ \ \ \ \ \}}
+\DoxyCodeLine{00712\ }
+\DoxyCodeLine{00713\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q4\_0\_q8\_1\_impl<VDR\_Q4\_0\_Q8\_1\_MMVQ>(v,\ u,\ bq4\_0-\/>d,\ bq8\_1-\/>ds);}
+\DoxyCodeLine{00714\ \}}
+\DoxyCodeLine{00715\ }
+\DoxyCodeLine{00716\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00717\ vec\_dot\_q4\_1\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{00718\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{00719\ }
+\DoxyCodeLine{00720\ \ \ \ \ \textcolor{keyword}{const}\ block\_q4\_1\ *\ bq4\_1\ =\ (\textcolor{keyword}{const}\ block\_q4\_1\ *)\ vbq;}
+\DoxyCodeLine{00721\ }
+\DoxyCodeLine{00722\ \ \ \ \ \textcolor{keywordtype}{int}\ v[VDR\_Q4\_1\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00723\ \ \ \ \ \textcolor{keywordtype}{int}\ u[2*VDR\_Q4\_1\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00724\ }
+\DoxyCodeLine{00725\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00726\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ VDR\_Q4\_1\_Q8\_1\_MMVQ;\ ++i)\ \{}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ v[i]\ \ \ \ =\ get\_int\_from\_uint8\_aligned(bq4\_1-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ u[2*i+0]\ =\ get\_int\_from\_int8\_aligned(bq8\_1-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ u[2*i+1]\ =\ get\_int\_from\_int8\_aligned(bq8\_1-\/>qs,\ iqs\ +\ i\ +\ QI4\_1);}
+\DoxyCodeLine{00730\ \ \ \ \ \}}
+\DoxyCodeLine{00731\ }
+\DoxyCodeLine{00732\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q4\_1\_q8\_1\_impl<VDR\_Q4\_1\_Q8\_1\_MMVQ>(v,\ u,\ bq4\_1-\/>dm,\ bq8\_1-\/>ds);}
+\DoxyCodeLine{00733\ \}}
+\DoxyCodeLine{00734\ }
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#define\ VDR\_MXFP4\_Q8\_1\_MMVQ\ 2}}
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{\#define\ VDR\_MXFP4\_Q8\_1\_MMQ\ \ 4}}
+\DoxyCodeLine{00737\ }
+\DoxyCodeLine{00738\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_mxfp4\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\ \_\_restrict\_\_\ bq8\_1,}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&\ iqs)\ \{}
+\DoxyCodeLine{00741\ \ \ \ \ \textcolor{keyword}{const}\ block\_mxfp4\ *\ bq4\ =\ (\textcolor{keyword}{const}\ block\_mxfp4\ *)\ vbq;}
+\DoxyCodeLine{00742\ }
+\DoxyCodeLine{00743\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ q8\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)\ bq8\_1-\/>qs\ +\ iqs;}
+\DoxyCodeLine{00744\ }
+\DoxyCodeLine{00745\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00747\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ VDR\_MXFP4\_Q8\_1\_MMVQ;\ ++l)\ \{}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ aux\_q4\ =\ get\_int\_b1(bq4-\/>qs,\ iqs\ +\ l);}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::int2\ v\ \ \ \ \ \ =\ get\_int\_from\_table\_16(aux\_q4,\ kvalues\_mxfp4);}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ sumi\ =\ ggml\_sycl\_dp4a(v.x(),\ q8[l\ +\ 0],\ sumi);}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ sumi\ =\ ggml\_sycl\_dp4a(v.y(),\ q8[l\ +\ 4],\ sumi);}
+\DoxyCodeLine{00752\ \ \ \ \ \}}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ ggml\_sycl\_e8m0\_to\_fp32(bq4-\/>e)\ *\ 0.5f\ *\ (bq8\_1-\/>ds)[0];}
+\DoxyCodeLine{00755\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ sumi;}
+\DoxyCodeLine{00756\ \}}
+\DoxyCodeLine{00757\ }
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00760\ vec\_dot\_q5\_0\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{00762\ }
+\DoxyCodeLine{00763\ \ \ \ \ \textcolor{keyword}{const}\ block\_q5\_0\ *\ bq5\_0\ =\ (\textcolor{keyword}{const}\ block\_q5\_0\ *)\ vbq;}
+\DoxyCodeLine{00764\ }
+\DoxyCodeLine{00765\ \ \ \ \ \textcolor{keywordtype}{int}\ vl[VDR\_Q5\_0\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00766\ \ \ \ \ \textcolor{keywordtype}{int}\ vh[VDR\_Q5\_0\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00767\ \ \ \ \ \textcolor{keywordtype}{int}\ \ u[2*VDR\_Q5\_0\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00768\ }
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00770\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ VDR\_Q5\_0\_Q8\_1\_MMVQ;\ ++i)\ \{}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ vl[i]\ \ \ \ =\ get\_int\_from\_uint8(bq5\_0-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ vh[i]\ \ \ \ =\ get\_int\_from\_uint8(bq5\_0-\/>qh,\ 0)\ >>\ (4\ *\ (iqs\ +\ i));}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ u[2*i+0]\ =\ get\_int\_from\_int8\_aligned(bq8\_1-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ u[2*i+1]\ =\ get\_int\_from\_int8\_aligned(bq8\_1-\/>qs,\ iqs\ +\ i\ +\ QI5\_0);}
+\DoxyCodeLine{00775\ \ \ \ \ \}}
+\DoxyCodeLine{00776\ }
+\DoxyCodeLine{00777\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q5\_0\_q8\_1\_impl<VDR\_Q5\_0\_Q8\_1\_MMVQ>(vl,\ vh,\ u,\ bq5\_0-\/>d,\ bq8\_1-\/>ds);}
+\DoxyCodeLine{00778\ \}}
+\DoxyCodeLine{00779\ }
+\DoxyCodeLine{00780\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00781\ vec\_dot\_q5\_1\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ \ \ \ \ \textcolor{keyword}{const}\ block\_q5\_1\ *\ bq5\_1\ =\ (\textcolor{keyword}{const}\ block\_q5\_1\ *)\ vbq;}
+\DoxyCodeLine{00785\ }
+\DoxyCodeLine{00786\ \ \ \ \ \textcolor{keywordtype}{int}\ vl[VDR\_Q5\_1\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00787\ \ \ \ \ \textcolor{keywordtype}{int}\ vh[VDR\_Q5\_1\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00788\ \ \ \ \ \textcolor{keywordtype}{int}\ \ u[2*VDR\_Q5\_1\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00789\ }
+\DoxyCodeLine{00790\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00791\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ VDR\_Q5\_1\_Q8\_1\_MMVQ;\ ++i)\ \{}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ vl[i]\ \ \ =\ get\_int\_from\_uint8\_aligned(bq5\_1-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ vh[i]\ \ \ =\ get\_int\_from\_uint8\_aligned(bq5\_1-\/>qh,\ 0)\ >>\ (4\ *\ (iqs\ +\ i));}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ u[2*i+0]\ =\ get\_int\_from\_int8\_aligned(bq8\_1-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ u[2*i+1]\ =\ get\_int\_from\_int8\_aligned(bq8\_1-\/>qs,\ iqs\ +\ i\ +\ QI5\_1);}
+\DoxyCodeLine{00796\ \ \ \ \ \}}
+\DoxyCodeLine{00797\ }
+\DoxyCodeLine{00798\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q5\_1\_q8\_1\_impl<VDR\_Q5\_1\_Q8\_1\_MMVQ>(vl,\ vh,\ u,\ bq5\_1-\/>dm,\ bq8\_1-\/>ds);}
+\DoxyCodeLine{00799\ \}}
+\DoxyCodeLine{00800\ }
+\DoxyCodeLine{00801\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00802\ vec\_dot\_q8\_0\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{00804\ }
+\DoxyCodeLine{00805\ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_0\ *\ bq8\_0\ =\ (\textcolor{keyword}{const}\ block\_q8\_0\ *)\ vbq;}
+\DoxyCodeLine{00806\ }
+\DoxyCodeLine{00807\ \ \ \ \ \textcolor{keywordtype}{int}\ v[VDR\_Q8\_0\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00808\ \ \ \ \ \textcolor{keywordtype}{int}\ u[VDR\_Q8\_0\_Q8\_1\_MMVQ];}
+\DoxyCodeLine{00809\ }
+\DoxyCodeLine{00810\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00811\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ VDR\_Q8\_0\_Q8\_1\_MMVQ;\ ++i)\ \{}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ v[i]\ =\ get\_int\_from\_int8(bq8\_0-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00813\ \ \ \ \ \ \ \ \ u[i]\ =\ get\_int\_from\_int8\_aligned(bq8\_1-\/>qs,\ iqs\ +\ i);}
+\DoxyCodeLine{00814\ \ \ \ \ \}}
+\DoxyCodeLine{00815\ }
+\DoxyCodeLine{00816\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q8\_0\_q8\_1\_impl<VDR\_Q8\_0\_Q8\_1\_MMVQ>(v,\ u,\ bq8\_0-\/>d,}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bq8\_1-\/>ds[0]);}
+\DoxyCodeLine{00818\ \}}
+\DoxyCodeLine{00819\ }
+\DoxyCodeLine{00820\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00821\ vec\_dot\_q2\_K\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{00823\ }
+\DoxyCodeLine{00824\ \ \ \ \ \textcolor{keyword}{const}\ block\_q2\_K\ *\ bq2\_K\ =\ (\textcolor{keyword}{const}\ block\_q2\_K\ *)\ vbq;}
+\DoxyCodeLine{00825\ }
+\DoxyCodeLine{00826\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bq8\_offset\ =\ QR2\_K\ *\ (iqs\ /\ QI8\_1);}
+\DoxyCodeLine{00827\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ scale\_offset\ =\ iqs\ -\/\ iqs\ \%\ QI8\_1\ +\ (iqs\ \%\ QI8\_1)\ /\ (QI8\_1/2);}
+\DoxyCodeLine{00828\ }
+\DoxyCodeLine{00829\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ scales\ =\ bq2\_K-\/>scales\ +\ scale\_offset;}
+\DoxyCodeLine{00830\ }
+\DoxyCodeLine{00831\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v\ =\ get\_int\_from\_uint8\_aligned(bq2\_K-\/>qs,\ iqs);}
+\DoxyCodeLine{00832\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ u[QR2\_K];}
+\DoxyCodeLine{00833\ \ \ \ \ \textcolor{keywordtype}{float}\ d8[QR2\_K];}
+\DoxyCodeLine{00834\ }
+\DoxyCodeLine{00835\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00836\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR2\_K;\ ++\ i)\ \{}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ u[i]\ \ =\ get\_int\_from\_int8\_aligned(bq8\_1[bq8\_offset\ +\ i].qs,\ iqs\ \%\ QI8\_1);}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ d8[i]\ =\ bq8\_1[bq8\_offset\ +\ i].ds[0];}
+\DoxyCodeLine{00839\ \ \ \ \ \}}
+\DoxyCodeLine{00840\ }
+\DoxyCodeLine{00841\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q2\_K\_q8\_1\_impl\_mmvq(v,\ u,\ scales,\ bq2\_K-\/>dm,\ d8);}
+\DoxyCodeLine{00842\ \}}
+\DoxyCodeLine{00843\ }
+\DoxyCodeLine{00844\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00845\ vec\_dot\_q3\_K\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{00847\ }
+\DoxyCodeLine{00848\ \ \ \ \ \textcolor{keyword}{const}\ block\_q3\_K\ *\ bq3\_K\ =\ (\textcolor{keyword}{const}\ block\_q3\_K\ *)\ vbq;}
+\DoxyCodeLine{00849\ }
+\DoxyCodeLine{00850\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bq8\_offset\ =\ QR3\_K\ *\ (iqs\ /\ (QI3\_K/2));}
+\DoxyCodeLine{00851\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ scale\_offset\ =\ iqs\ -\/\ iqs\ \%\ QI8\_1\ +\ (iqs\ \%\ QI8\_1)\ /\ (QI8\_1/2);}
+\DoxyCodeLine{00852\ }
+\DoxyCodeLine{00853\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ bq3\_K-\/>d;}
+\DoxyCodeLine{00854\ }
+\DoxyCodeLine{00855\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vl\ =\ get\_int\_from\_uint8(bq3\_K-\/>qs,\ iqs);}
+\DoxyCodeLine{00856\ }
+\DoxyCodeLine{00857\ \ \ \ \ \textcolor{comment}{//\ invert\ the\ mask\ with\ \string~\ so\ that\ a\ 0/1\ results\ in\ 4/0\ being\ subtracted}}
+\DoxyCodeLine{00858\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vh\ =\ \string~get\_int\_from\_uint8(bq3\_K-\/>hmask,\ iqs\ \%\ (QI3\_K/2))\ >>\ bq8\_offset;}
+\DoxyCodeLine{00859\ }
+\DoxyCodeLine{00860\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ u[QR3\_K];}
+\DoxyCodeLine{00861\ \ \ \ \ \textcolor{keywordtype}{float}\ d8[QR3\_K];}
+\DoxyCodeLine{00862\ }
+\DoxyCodeLine{00863\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00864\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR3\_K;\ ++i)\ \{}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ u[i]\ \ =\ get\_int\_from\_int8\_aligned(bq8\_1[bq8\_offset\ +\ i].qs,\ iqs\ \%\ QI8\_1);}
+\DoxyCodeLine{00866\ \ \ \ \ \ \ \ \ d8[i]\ =\ bq8\_1[bq8\_offset\ +\ i].ds[0];}
+\DoxyCodeLine{00867\ \ \ \ \ \}}
+\DoxyCodeLine{00868\ }
+\DoxyCodeLine{00869\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q3\_K\_q8\_1\_impl\_mmvq(vl,\ vh,\ u,\ bq3\_K-\/>scales,\ scale\_offset,\ d,\ d8);}
+\DoxyCodeLine{00870\ \}}
+\DoxyCodeLine{00871\ }
+\DoxyCodeLine{00872\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ vec\_dot\_q4\_K\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vbq,\ \textcolor{keyword}{const}\ block\_q8\_1\ *\ \_\_restrict\_\_\ bq8\_1,}
+\DoxyCodeLine{00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&\ iqs)\ \{}
+\DoxyCodeLine{00874\ \textcolor{preprocessor}{\#ifndef\ GGML\_QKK\_64}}
+\DoxyCodeLine{00875\ }
+\DoxyCodeLine{00876\ \ \ \ \ \textcolor{keyword}{const}\ block\_q4\_K\ *\ bq4\_K\ =\ (\textcolor{keyword}{const}\ block\_q4\_K\ *)\ vbq;}
+\DoxyCodeLine{00877\ }
+\DoxyCodeLine{00878\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ bq8\_offset\ =\ QR4\_K\ *\ ((iqs\ /\ 2)\ /\ (QI8\_1\ /\ 2));}
+\DoxyCodeLine{00879\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ \ \ \ \ \ q4\ \ \ \ \ \ \ \ \ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)\ (bq4\_K-\/>qs\ +\ 16\ *\ bq8\_offset\ +\ 4\ *\ ((iqs\ /\ 2)\ \%\ 4));}
+\DoxyCodeLine{00880\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ scales\ \ \ \ \ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)\ bq4\_K-\/>scales;}
+\DoxyCodeLine{00881\ }
+\DoxyCodeLine{00882\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q4\_K\_q8\_1\_common(q4,\ scales,\ bq4\_K-\/>dm,\ bq8\_1,\ iqs);}
+\DoxyCodeLine{00883\ }
+\DoxyCodeLine{00884\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00885\ }
+\DoxyCodeLine{00886\ \textcolor{preprocessor}{\#if\ \_\_SYCL\_ARCH\_\_\ >=\ VER\_4VEC\ }\textcolor{comment}{//\ lowest\ compute\ capability\ for\ integer\ intrinsics}}
+\DoxyCodeLine{00887\ \ \ \ \ \textcolor{keyword}{const}\ block\_q4\_K\ *\ bq4\_K\ =\ (\textcolor{keyword}{const}\ block\_q4\_K\ *)\ vbq;}
+\DoxyCodeLine{00888\ }
+\DoxyCodeLine{00889\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\_d\ =\ 0.0f;}
+\DoxyCodeLine{00890\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf\_m\ =\ 0.0f;}
+\DoxyCodeLine{00891\ }
+\DoxyCodeLine{00892\ \ \ \ \ uint16\_t\ aux16[2];}
+\DoxyCodeLine{00893\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ s\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)aux16;}
+\DoxyCodeLine{00894\ }
+\DoxyCodeLine{00895\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ a\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)bq4\_K-\/>scales;}
+\DoxyCodeLine{00896\ \ \ \ \ aux16[0]\ =\ a[0]\ \&\ 0x0f0f;}
+\DoxyCodeLine{00897\ \ \ \ \ aux16[1]\ =\ (a[0]\ >>\ 4)\ \&\ 0x0f0f;}
+\DoxyCodeLine{00898\ }
+\DoxyCodeLine{00899\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dall\ =\ bq4\_K-\/>dm[0];}
+\DoxyCodeLine{00900\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dmin\ =\ bq4\_K-\/>dm[1];}
+\DoxyCodeLine{00901\ }
+\DoxyCodeLine{00902\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d8\_1\ =\ bq8\_1[0].ds[0];}
+\DoxyCodeLine{00903\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d8\_2\ =\ bq8\_1[1].ds[1];}
+\DoxyCodeLine{00904\ }
+\DoxyCodeLine{00905\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ui1\ =\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[0].qs\ +\ (iqs/2));}
+\DoxyCodeLine{00906\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ui2\ =\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[0].qs\ +\ (iqs/2)\ +\ 4);}
+\DoxyCodeLine{00907\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ui3\ =\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[1].qs\ +\ (iqs/2));}
+\DoxyCodeLine{00908\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ui4\ =\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[1].qs\ +\ (iqs/2)\ +\ 4);}
+\DoxyCodeLine{00909\ }
+\DoxyCodeLine{00910\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ q4\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq4\_K-\/>qs\ +\ (iqs/2);}
+\DoxyCodeLine{00911\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v1\ =\ q4[0];}
+\DoxyCodeLine{00912\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v2\ =\ q4[4];}
+\DoxyCodeLine{00913\ }
+\DoxyCodeLine{00914\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ dot1\ =\ dpct::dp4a(ui2,\ v2\ \&\ 0x0f0f0f0f,\ dpct::dp4a(ui1,\ v1\ \&\ 0x0f0f0f0f,\ 0));}
+\DoxyCodeLine{00915\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ dot2\ =\ dpct::dp4a(ui4,\ (v2\ >>\ 4)\ \&\ 0x0f0f0f0f,\ dpct::dp4a(ui3,\ (v1\ >>\ 4)\ \&\ 0x0f0f0f0f,\ 0));}
+\DoxyCodeLine{00916\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ dot3\ =\ dpct::dp4a(0x01010101,\ ui2,\ dpct::dp4a(0x01010101,\ ui1,\ 0));}
+\DoxyCodeLine{00917\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ dot4\ =\ dpct::dp4a(0x01010101,\ ui4,\ dpct::dp4a(0x01010101,\ ui3,\ 0));}
+\DoxyCodeLine{00918\ }
+\DoxyCodeLine{00919\ \ \ \ \ sumf\_d\ +=\ d8\_1\ *\ (dot1\ *\ s[0])\ +\ d8\_2\ *\ (dot2\ *\ s[1]);}
+\DoxyCodeLine{00920\ \ \ \ \ sumf\_m\ +=\ d8\_1\ *\ (dot3\ *\ s[2])\ +\ d8\_2\ *\ (dot4\ *\ s[3]);}
+\DoxyCodeLine{00921\ }
+\DoxyCodeLine{00922\ \ \ \ \ \textcolor{keywordflow}{return}\ dall\ *\ sumf\_d\ -\/\ dmin\ *\ sumf\_m;}
+\DoxyCodeLine{00923\ }
+\DoxyCodeLine{00924\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00925\ \ \ \ \ bad\_arch();}
+\DoxyCodeLine{00926\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_SYCL\_ARCH\_\_\ >=\ VER\_4VEC}}
+\DoxyCodeLine{00927\ }
+\DoxyCodeLine{00928\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00929\ \}}
+\DoxyCodeLine{00930\ }
+\DoxyCodeLine{00931\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{00932\ vec\_dot\_q5\_K\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{00934\ }
+\DoxyCodeLine{00935\ \textcolor{preprocessor}{\#ifndef\ GGML\_QKK\_64}}
+\DoxyCodeLine{00936\ \ \ \ \ \textcolor{keyword}{const}\ block\_q5\_K\ *\ bq5\_K\ =\ (\textcolor{keyword}{const}\ block\_q5\_K\ *)\ vbq;}
+\DoxyCodeLine{00937\ }
+\DoxyCodeLine{00938\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ vl[2];}
+\DoxyCodeLine{00939\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ vh[2];}
+\DoxyCodeLine{00940\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ u[2*QR5\_K];}
+\DoxyCodeLine{00941\ \ \ \ \ \textcolor{keywordtype}{float}\ d8[QR5\_K];}
+\DoxyCodeLine{00942\ }
+\DoxyCodeLine{00943\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bq8\_offset\ =\ QR5\_K\ *\ ((iqs/2)\ /\ (QI8\_1/2));}
+\DoxyCodeLine{00944\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ ql\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)(bq5\_K-\/>qs\ +\ 16\ *\ bq8\_offset\ +\ 4\ *\ ((iqs/2)\%4));}
+\DoxyCodeLine{00945\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ qh\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)(bq5\_K-\/>qh\ +\ 4\ *\ ((iqs/2)\%4));}
+\DoxyCodeLine{00946\ }
+\DoxyCodeLine{00947\ \ \ \ \ vl[0]\ =\ ql[0];}
+\DoxyCodeLine{00948\ \ \ \ \ vl[1]\ =\ ql[4];}
+\DoxyCodeLine{00949\ }
+\DoxyCodeLine{00950\ \ \ \ \ vh[0]\ =\ qh[0]\ >>\ bq8\_offset;}
+\DoxyCodeLine{00951\ \ \ \ \ vh[1]\ =\ qh[4]\ >>\ bq8\_offset;}
+\DoxyCodeLine{00952\ }
+\DoxyCodeLine{00953\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ scales\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)bq5\_K-\/>scales;}
+\DoxyCodeLine{00954\ \ \ \ \ uint16\_t\ aux[2];}
+\DoxyCodeLine{00955\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j\ =\ bq8\_offset/2;}
+\DoxyCodeLine{00956\ \ \ \ \ \textcolor{keywordflow}{if}\ (j\ <\ 2)\ \{}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ aux[0]\ =\ scales[j+0]\ \&\ 0x3f3f;}
+\DoxyCodeLine{00958\ \ \ \ \ \ \ \ \ aux[1]\ =\ scales[j+2]\ \&\ 0x3f3f;}
+\DoxyCodeLine{00959\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ aux[0]\ =\ ((scales[j+2]\ >>\ 0)\ \&\ 0x0f0f)\ |\ ((scales[j-\/2]\ \&\ 0xc0c0)\ >>\ 2);}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ aux[1]\ =\ ((scales[j+2]\ >>\ 4)\ \&\ 0x0f0f)\ |\ ((scales[j-\/0]\ \&\ 0xc0c0)\ >>\ 2);}
+\DoxyCodeLine{00962\ \ \ \ \ \}}
+\DoxyCodeLine{00963\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ sc\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)aux;}
+\DoxyCodeLine{00964\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ m\ \ =\ sc\ +\ 2;}
+\DoxyCodeLine{00965\ }
+\DoxyCodeLine{00966\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00967\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR5\_K;\ ++i)\ \{}
+\DoxyCodeLine{00968\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\ bq8i\ =\ bq8\_1\ +\ bq8\_offset\ +\ i;}
+\DoxyCodeLine{00969\ \ \ \ \ \ \ \ \ d8[i]\ =\ bq8i-\/>ds[0];}
+\DoxyCodeLine{00970\ }
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ q8\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8i-\/>qs\ +\ ((iqs/2)\%4);}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ u[2*i+0]\ =\ q8[0];}
+\DoxyCodeLine{00973\ \ \ \ \ \ \ \ \ u[2*i+1]\ =\ q8[4];}
+\DoxyCodeLine{00974\ \ \ \ \ \}}
+\DoxyCodeLine{00975\ }
+\DoxyCodeLine{00976\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q5\_K\_q8\_1\_impl\_vmmq(vl,\ vh,\ u,\ sc,\ m,\ bq5\_K-\/>dm,\ d8);}
+\DoxyCodeLine{00977\ }
+\DoxyCodeLine{00978\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00979\ }
+\DoxyCodeLine{00980\ \textcolor{preprocessor}{\#if\ \_\_SYCL\_ARCH\_\_\ >=\ VER\_4VEC\ }\textcolor{comment}{//\ lowest\ compute\ capability\ for\ integer\ intrinsics}}
+\DoxyCodeLine{00981\ \ \ \ \ \textcolor{keyword}{const}\ block\_q5\_K\ *\ bq5\_K\ =\ (\textcolor{keyword}{const}\ block\_q5\_K\ *)\ vbq;}
+\DoxyCodeLine{00982\ }
+\DoxyCodeLine{00983\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ *\ s\ =\ bq5\_K-\/>scales;}
+\DoxyCodeLine{00984\ }
+\DoxyCodeLine{00985\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ bq5\_K-\/>d;}
+\DoxyCodeLine{00986\ }
+\DoxyCodeLine{00987\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d8\_1\ =\ bq8\_1[0].ds[0];}
+\DoxyCodeLine{00988\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d8\_2\ =\ bq8\_1[1].ds[1];}
+\DoxyCodeLine{00989\ }
+\DoxyCodeLine{00990\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ui1\ =\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[0].qs\ +\ (iqs/2));}
+\DoxyCodeLine{00991\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ui2\ =\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[0].qs\ +\ (iqs/2)\ +\ 4);}
+\DoxyCodeLine{00992\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ui3\ =\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[1].qs\ +\ (iqs/2));}
+\DoxyCodeLine{00993\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ui4\ =\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[1].qs\ +\ (iqs/2)\ +\ 4);}
+\DoxyCodeLine{00994\ }
+\DoxyCodeLine{00995\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ ql\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq5\_K-\/>qs\ +\ (iqs/2);}
+\DoxyCodeLine{00996\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vl1\ =\ ql[0];}
+\DoxyCodeLine{00997\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vl2\ =\ ql[4];}
+\DoxyCodeLine{00998\ }
+\DoxyCodeLine{00999\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ step\ =\ 4\ *\ (iqs/2);\ \textcolor{comment}{//\ 0,\ 4,\ 8,\ 12}}
+\DoxyCodeLine{01000\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ im\ =\ step/8;\ \textcolor{comment}{//\ =\ 0\ for\ iqs\ =\ 0,\ 2,\ =\ 1\ for\ iqs\ =\ 4,\ 6}}
+\DoxyCodeLine{01001\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ in\ =\ step\%8;\ \textcolor{comment}{//\ 0,\ 4,\ 0,\ 4}}
+\DoxyCodeLine{01002\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vh\ =\ (*((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)(bq5\_K-\/>qh\ +\ in)))\ >>\ im;}
+\DoxyCodeLine{01003\ }
+\DoxyCodeLine{01004\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v1\ =\ (((vh\ <<\ 4)\ \&\ 0x10101010)\ \string^\ 0x10101010)\ |\ ((vl1\ >>\ 0)\ \&\ 0x0f0f0f0f);}
+\DoxyCodeLine{01005\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v2\ =\ (((vh\ <<\ 2)\ \&\ 0x10101010)\ \string^\ 0x10101010)\ |\ ((vl2\ >>\ 0)\ \&\ 0x0f0f0f0f);}
+\DoxyCodeLine{01006\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v3\ =\ (((vh\ >>\ 0)\ \&\ 0x10101010)\ \string^\ 0x10101010)\ |\ ((vl1\ >>\ 4)\ \&\ 0x0f0f0f0f);}
+\DoxyCodeLine{01007\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ v4\ =\ (((vh\ >>\ 2)\ \&\ 0x10101010)\ \string^\ 0x10101010)\ |\ ((vl2\ >>\ 4)\ \&\ 0x0f0f0f0f);}
+\DoxyCodeLine{01008\ }
+\DoxyCodeLine{01009\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ sumf\_d\ =\ d8\_1\ *\ (dpct::dp4a(ui1,\ v1,\ 0)\ *\ s[0]\ +\ dpct::dp4a(ui2,\ v2,\ 0)\ *\ s[1])}
+\DoxyCodeLine{01010\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ d8\_2\ *\ (dpct::dp4a(ui3,\ v3,\ 0)\ *\ s[2]\ +\ dpct::dp4a(ui4,\ v4,\ 0)\ *\ s[3]);}
+\DoxyCodeLine{01011\ }
+\DoxyCodeLine{01012\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ sumf\_d;}
+\DoxyCodeLine{01013\ }
+\DoxyCodeLine{01014\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01015\ \ \ \ \ bad\_arch();}
+\DoxyCodeLine{01016\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_SYCL\_ARCH\_\_\ >=\ VER\_4VEC}}
+\DoxyCodeLine{01017\ }
+\DoxyCodeLine{01018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01019\ \}}
+\DoxyCodeLine{01020\ }
+\DoxyCodeLine{01021\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01022\ vec\_dot\_q6\_K\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{01024\ }
+\DoxyCodeLine{01025\ \ \ \ \ \textcolor{keyword}{const}\ block\_q6\_K\ *\ bq6\_K\ =\ (\textcolor{keyword}{const}\ block\_q6\_K\ *)\ vbq;}
+\DoxyCodeLine{01026\ }
+\DoxyCodeLine{01027\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bq8\_offset\ =\ 2\ *\ QR6\_K\ *\ (iqs\ /\ (QI6\_K/2))\ +\ (iqs\ \%\ (QI6\_K/2))\ /\ (QI6\_K/4);}
+\DoxyCodeLine{01028\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ scale\_offset\ =\ (QI6\_K/4)\ *\ (iqs\ /\ (QI6\_K/2))\ +\ (iqs\ \%\ (QI6\_K/2))\ /\ (QI6\_K/8);}
+\DoxyCodeLine{01029\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vh\_shift\ =\ 2\ *\ ((iqs\ \%\ (QI6\_K/2))\ /\ (QI6\_K/4));}
+\DoxyCodeLine{01030\ }
+\DoxyCodeLine{01031\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vl\ =\ get\_int\_from\_uint8(bq6\_K-\/>ql,\ iqs);}
+\DoxyCodeLine{01032\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vh\ =\ get\_int\_from\_uint8(bq6\_K-\/>qh,\ (QI6\_K/4)\ *\ (iqs\ /\ (QI6\_K/2))\ +\ iqs\ \%\ (QI6\_K/4))\ >>\ vh\_shift;}
+\DoxyCodeLine{01033\ }
+\DoxyCodeLine{01034\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ *\ scales\ =\ bq6\_K-\/>scales\ +\ scale\_offset;}
+\DoxyCodeLine{01035\ }
+\DoxyCodeLine{01036\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ u[QR6\_K];}
+\DoxyCodeLine{01037\ \ \ \ \ \textcolor{keywordtype}{float}\ d8[QR6\_K];}
+\DoxyCodeLine{01038\ }
+\DoxyCodeLine{01039\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01040\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ QR6\_K;\ ++i)\ \{}
+\DoxyCodeLine{01041\ \ \ \ \ \ \ \ \ u[i]\ \ =\ get\_int\_from\_int8\_aligned(bq8\_1[bq8\_offset\ +\ 2*i].qs,\ iqs\ \%\ QI8\_1);}
+\DoxyCodeLine{01042\ \ \ \ \ \ \ \ \ d8[i]\ =\ bq8\_1[bq8\_offset\ +\ 2\ *\ i].ds[0];}
+\DoxyCodeLine{01043\ \ \ \ \ \}}
+\DoxyCodeLine{01044\ }
+\DoxyCodeLine{01045\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_dot\_q6\_K\_q8\_1\_impl\_mmvq(vl,\ vh,\ u,\ scales,\ bq6\_K-\/>d,\ d8);}
+\DoxyCodeLine{01046\ \}}
+\DoxyCodeLine{01047\ }
+\DoxyCodeLine{01048\ }
+\DoxyCodeLine{01049\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01050\ vec\_dot\_iq2\_xxs\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs,}
+\DoxyCodeLine{01052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ *iq2xxs\_grid,\ \textcolor{keyword}{const}\ uint8\_t\ *ksigns\_iq2xs,}
+\DoxyCodeLine{01053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *kmask\_iq2xs)\ \{}
+\DoxyCodeLine{01054\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{01055\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq2\_xxs\ *\ bq2\ =\ (\textcolor{keyword}{const}\ block\_iq2\_xxs\ *)\ vbq;}
+\DoxyCodeLine{01056\ }
+\DoxyCodeLine{01057\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ib32\ =\ iqs;}
+\DoxyCodeLine{01058\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ q2\ =\ bq2-\/>qs\ +\ 4*ib32;}
+\DoxyCodeLine{01059\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ aux8\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)q2;}
+\DoxyCodeLine{01060\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ \ \ *\ q8\ =\ bq8\_1[ib32].qs;}
+\DoxyCodeLine{01061\ \ \ \ \ uint32\_t\ aux32\ =\ q2[2]\ |\ (q2[3]\ <<\ 16);}
+\DoxyCodeLine{01062\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{01063\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ 4;\ ++l)\ \{}
+\DoxyCodeLine{01064\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ grid\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)(iq2xxs\_grid\ +\ aux8[l]);}
+\DoxyCodeLine{01065\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ signs\ =\ ksigns\_iq2xs[aux32\ \&\ 127];}
+\DoxyCodeLine{01066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 8;\ ++j)\ \{}
+\DoxyCodeLine{01067\ \ \ \ \ \ \ \ \ \ \ \ \ sumi\ +=\ q8[j]\ *\ grid[j]\ *\ (signs\ \&\ kmask\_iq2xs[j]\ ?\ -\/1\ :\ 1);}
+\DoxyCodeLine{01068\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01069\ \ \ \ \ \ \ \ \ q8\ +=\ 8;}
+\DoxyCodeLine{01070\ \ \ \ \ \ \ \ \ aux32\ >>=\ 7;}
+\DoxyCodeLine{01071\ \ \ \ \ \}}
+\DoxyCodeLine{01072\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)bq2-\/>d\ *\ (0.5f\ +\ aux32)\ *\ bq8\_1[ib32].ds[0]\ *\ 0.25f;}
+\DoxyCodeLine{01073\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ sumi;}
+\DoxyCodeLine{01074\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01075\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01076\ \ \ \ \ \textcolor{keywordflow}{return}\ 0.f;}
+\DoxyCodeLine{01077\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01078\ \}}
+\DoxyCodeLine{01079\ }
+\DoxyCodeLine{01080\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01081\ vec\_dot\_iq2\_xs\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs,}
+\DoxyCodeLine{01083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ *iq2xs\_grid,\ \textcolor{keyword}{const}\ uint64\_t\ *ksigns64)\ \{}
+\DoxyCodeLine{01084\ \textcolor{preprocessor}{\#if\ DPCT\_COMPATIBILITY\_TEMP\ >=\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01085\ \textcolor{preprocessor}{\ \ \ \ MIN\_CC\_DP4A\ }\textcolor{comment}{//\ lowest\ compute\ capability\ for\ integer\ intrinsics}}
+\DoxyCodeLine{01086\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{01087\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq2\_xs\ *\ bq2\ =\ (\textcolor{keyword}{const}\ block\_iq2\_xs\ *)\ vbq;}
+\DoxyCodeLine{01088\ }
+\DoxyCodeLine{01089\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ib32\ =\ iqs;}
+\DoxyCodeLine{01090\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ q2\ =\ bq2-\/>qs\ +\ 4*ib32;}
+\DoxyCodeLine{01091\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ \ \ *\ q8\ =\ bq8\_1[ib32].qs;}
+\DoxyCodeLine{01092\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ ls1\ =\ bq2-\/>scales[ib32]\ \&\ 0xf;}
+\DoxyCodeLine{01093\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ ls2\ =\ bq2-\/>scales[ib32]\ >>\ \ 4;}
+\DoxyCodeLine{01094\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi1\ =\ 0;}
+\DoxyCodeLine{01095\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ 2;\ ++l)\ \{}
+\DoxyCodeLine{01096\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ grid\ =\ (\textcolor{keyword}{const}\ uint32\_t\ *)(iq2xs\_grid\ +\ (q2[l]\ \&\ 511));}
+\DoxyCodeLine{01097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ signs\ =\ (\textcolor{keyword}{const}\ uint32\_t\ *)(ksigns64\ +\ (q2[l]\ >>\ 9));}
+\DoxyCodeLine{01098\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_l\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01099\ \ \ \ \ \ \ \ \ \ \ \ \ grid[0]\ \string^\ signs[0],\ signs[0],\ std::minus<>());}
+\DoxyCodeLine{01100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_h\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01101\ \ \ \ \ \ \ \ \ \ \ \ \ grid[1]\ \string^\ signs[1],\ signs[1],\ std::minus<>());}
+\DoxyCodeLine{01102\ \ \ \ \ \ \ \ \ sumi1\ =\ dpct::dp4a(grid\_l,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 0),\ sumi1);}
+\DoxyCodeLine{01103\ \ \ \ \ \ \ \ \ sumi1\ =\ dpct::dp4a(grid\_h,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 1),\ sumi1);}
+\DoxyCodeLine{01104\ \ \ \ \ \ \ \ \ q8\ +=\ 8;}
+\DoxyCodeLine{01105\ \ \ \ \ \}}
+\DoxyCodeLine{01106\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi2\ =\ 0;}
+\DoxyCodeLine{01107\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 2;\ l\ <\ 4;\ ++l)\ \{}
+\DoxyCodeLine{01108\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ grid\ =\ (\textcolor{keyword}{const}\ uint32\_t\ *)(iq2xs\_grid\ +\ (q2[l]\ \&\ 511));}
+\DoxyCodeLine{01109\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ signs\ =\ (\textcolor{keyword}{const}\ uint32\_t\ *)(ksigns64\ +\ (q2[l]\ >>\ 9));}
+\DoxyCodeLine{01110\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_l\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01111\ \ \ \ \ \ \ \ \ \ \ \ \ grid[0]\ \string^\ signs[0],\ signs[0],\ std::minus<>());}
+\DoxyCodeLine{01112\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_h\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01113\ \ \ \ \ \ \ \ \ \ \ \ \ grid[1]\ \string^\ signs[1],\ signs[1],\ std::minus<>());}
+\DoxyCodeLine{01114\ \ \ \ \ \ \ \ \ sumi2\ =\ dpct::dp4a(grid\_l,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 0),\ sumi2);}
+\DoxyCodeLine{01115\ \ \ \ \ \ \ \ \ sumi2\ =\ dpct::dp4a(grid\_h,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 1),\ sumi2);}
+\DoxyCodeLine{01116\ \ \ \ \ \ \ \ \ q8\ +=\ 8;}
+\DoxyCodeLine{01117\ \ \ \ \ \}}
+\DoxyCodeLine{01118\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)bq2-\/>d\ *\ bq8\_1[ib32].ds[0]\ *\ 0.25f;}
+\DoxyCodeLine{01119\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ ((0.5f\ +\ ls1)\ *\ sumi1\ +\ (0.5f\ +\ ls2)\ *\ sumi2);}
+\DoxyCodeLine{01120\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01121\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01122\ \ \ \ \ \textcolor{keywordflow}{return}\ 0.f;}
+\DoxyCodeLine{01123\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01124\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01125\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01126\ \ \ \ \ \textcolor{keywordflow}{return}\ 0.f;}
+\DoxyCodeLine{01127\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01128\ \}}
+\DoxyCodeLine{01129\ }
+\DoxyCodeLine{01130\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01131\ vec\_dot\_iq2\_s\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{01133\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{01134\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq2\_s\ *\ bq2\ =\ (\textcolor{keyword}{const}\ block\_iq2\_s\ *)\ vbq;}
+\DoxyCodeLine{01135\ }
+\DoxyCodeLine{01136\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ib32\ =\ iqs;}
+\DoxyCodeLine{01137\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ \ *\ q8\ =\ bq8\_1[ib32].qs;}
+\DoxyCodeLine{01138\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ signs\ =\ bq2-\/>qs\ +\ QK\_K/8\ +\ 4*ib32;}
+\DoxyCodeLine{01139\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ ls1\ =\ bq2-\/>scales[ib32]\ \&\ 0xf;}
+\DoxyCodeLine{01140\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ ls2\ =\ bq2-\/>scales[ib32]\ >>\ \ 4;}
+\DoxyCodeLine{01141\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi1\ =\ 0;}
+\DoxyCodeLine{01142\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ 2;\ ++l)\ \{}
+\DoxyCodeLine{01143\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ grid\ =\ (\textcolor{keyword}{const}\ uint32\_t\ *)(iq2s\_grid\ +\ (bq2-\/>qs[4*ib32+l]\ |\ ((bq2-\/>qh[ib32]\ <<\ (8-\/2*l))\ \&\ 0x300)));}
+\DoxyCodeLine{01144\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ signs0\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01145\ \ \ \ \ \ \ \ \ \ \ \ \ ((signs[l]\ \&\ 0xf)\ *\ 0x01010101)\ \&\ 0x08040201,\ 0x08040201,}
+\DoxyCodeLine{01146\ \ \ \ \ \ \ \ \ \ \ \ \ std::equal\_to<>());}
+\DoxyCodeLine{01147\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ signs1\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01148\ \ \ \ \ \ \ \ \ \ \ \ \ ((signs[l]\ >>\ 4)\ *\ 0x01010101)\ \&\ 0x08040201,\ 0x08040201,}
+\DoxyCodeLine{01149\ \ \ \ \ \ \ \ \ \ \ \ \ std::equal\_to<>());}
+\DoxyCodeLine{01150\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_l\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01151\ \ \ \ \ \ \ \ \ \ \ \ \ grid[0]\ \string^\ signs0,\ signs0,\ std::minus<>());}
+\DoxyCodeLine{01152\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_h\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01153\ \ \ \ \ \ \ \ \ \ \ \ \ grid[1]\ \string^\ signs1,\ signs1,\ std::minus<>());}
+\DoxyCodeLine{01154\ \ \ \ \ \ \ \ \ sumi1\ =\ dpct::dp4a(grid\_l,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 0),\ sumi1);}
+\DoxyCodeLine{01155\ \ \ \ \ \ \ \ \ sumi1\ =\ dpct::dp4a(grid\_h,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 1),\ sumi1);}
+\DoxyCodeLine{01156\ \ \ \ \ \ \ \ \ q8\ +=\ 8;}
+\DoxyCodeLine{01157\ \ \ \ \ \}}
+\DoxyCodeLine{01158\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi2\ =\ 0;}
+\DoxyCodeLine{01159\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 2;\ l\ <\ 4;\ ++l)\ \{}
+\DoxyCodeLine{01160\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ grid\ =\ (\textcolor{keyword}{const}\ uint32\_t\ *)(iq2s\_grid\ +\ (bq2-\/>qs[4*ib32+l]\ |\ ((bq2-\/>qh[ib32]\ <<\ (8-\/2*l))\ \&\ 0x300)));}
+\DoxyCodeLine{01161\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ signs0\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01162\ \ \ \ \ \ \ \ \ \ \ \ \ ((signs[l]\ \&\ 0xf)\ *\ 0x01010101)\ \&\ 0x08040201,\ 0x08040201,}
+\DoxyCodeLine{01163\ \ \ \ \ \ \ \ \ \ \ \ \ std::equal\_to<>());}
+\DoxyCodeLine{01164\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ signs1\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01165\ \ \ \ \ \ \ \ \ \ \ \ \ ((signs[l]\ >>\ 4)\ *\ 0x01010101)\ \&\ 0x08040201,\ 0x08040201,}
+\DoxyCodeLine{01166\ \ \ \ \ \ \ \ \ \ \ \ \ std::equal\_to<>());}
+\DoxyCodeLine{01167\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_l\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01168\ \ \ \ \ \ \ \ \ \ \ \ \ grid[0]\ \string^\ signs0,\ signs0,\ std::minus<>());}
+\DoxyCodeLine{01169\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_h\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01170\ \ \ \ \ \ \ \ \ \ \ \ \ grid[1]\ \string^\ signs1,\ signs1,\ std::minus<>());}
+\DoxyCodeLine{01171\ \ \ \ \ \ \ \ \ sumi2\ =\ dpct::dp4a(grid\_l,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 0),\ sumi2);}
+\DoxyCodeLine{01172\ \ \ \ \ \ \ \ \ sumi2\ =\ dpct::dp4a(grid\_h,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 1),\ sumi2);}
+\DoxyCodeLine{01173\ \ \ \ \ \ \ \ \ q8\ +=\ 8;}
+\DoxyCodeLine{01174\ \ \ \ \ \}}
+\DoxyCodeLine{01175\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)bq2-\/>d\ *\ bq8\_1[ib32].ds[0]\ *\ 0.25f;}
+\DoxyCodeLine{01176\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ ((0.5f\ +\ ls1)\ *\ sumi1\ +\ (0.5f\ +\ ls2)\ *\ sumi2);}
+\DoxyCodeLine{01177\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01178\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01179\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01180\ \}}
+\DoxyCodeLine{01181\ }
+\DoxyCodeLine{01182\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01183\ vec\_dot\_iq3\_xxs\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs,}
+\DoxyCodeLine{01185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *iq3xxs\_grid,\ \textcolor{keyword}{const}\ uint64\_t\ *ksigns64)\ \{}
+\DoxyCodeLine{01186\ \textcolor{preprocessor}{\#if\ DPCT\_COMPATIBILITY\_TEMP\ >=\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01187\ \textcolor{preprocessor}{\ \ \ \ MIN\_CC\_DP4A\ }\textcolor{comment}{//\ lowest\ compute\ capability\ for\ integer\ intrinsics}}
+\DoxyCodeLine{01188\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{01189\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq3\_xxs\ *\ bq2\ =\ (\textcolor{keyword}{const}\ block\_iq3\_xxs\ *)\ vbq;}
+\DoxyCodeLine{01190\ }
+\DoxyCodeLine{01191\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ib32\ =\ iqs;}
+\DoxyCodeLine{01192\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ q3\ =\ bq2-\/>qs\ +\ 8*ib32;}
+\DoxyCodeLine{01193\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ gas\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)(bq2-\/>qs\ +\ QK\_K/4)\ +\ 2*ib32;}
+\DoxyCodeLine{01194\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ \ \ *\ q8\ =\ bq8\_1[ib32].qs;}
+\DoxyCodeLine{01195\ \ \ \ \ uint32\_t\ aux32\ =\ gas[0]\ |\ (gas[1]\ <<\ 16);}
+\DoxyCodeLine{01196\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{01197\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ 4;\ ++l)\ \{}
+\DoxyCodeLine{01198\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ grid1\ =\ iq3xxs\_grid\ +\ q3[2*l+0];}
+\DoxyCodeLine{01199\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ grid2\ =\ iq3xxs\_grid\ +\ q3[2*l+1];}
+\DoxyCodeLine{01200\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ signs\ =\ (\textcolor{keyword}{const}\ uint32\_t\ *)(ksigns64\ +\ (aux32\ \&\ 127));}
+\DoxyCodeLine{01201\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_l\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01202\ \ \ \ \ \ \ \ \ \ \ \ \ grid1[0]\ \string^\ signs[0],\ signs[0],\ std::minus<>());}
+\DoxyCodeLine{01203\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_h\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01204\ \ \ \ \ \ \ \ \ \ \ \ \ grid2[0]\ \string^\ signs[1],\ signs[1],\ std::minus<>());}
+\DoxyCodeLine{01205\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(grid\_l,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 0),\ sumi);}
+\DoxyCodeLine{01206\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(grid\_h,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 1),\ sumi);}
+\DoxyCodeLine{01207\ \ \ \ \ \ \ \ \ q8\ +=\ 8;}
+\DoxyCodeLine{01208\ \ \ \ \ \ \ \ \ aux32\ >>=\ 7;}
+\DoxyCodeLine{01209\ \ \ \ \ \}}
+\DoxyCodeLine{01210\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)bq2-\/>d\ *\ (0.5f\ +\ aux32)\ *\ bq8\_1[ib32].ds[0]\ *\ 0.5f;}
+\DoxyCodeLine{01211\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ sumi;}
+\DoxyCodeLine{01212\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01213\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01214\ \ \ \ \ \textcolor{keywordflow}{return}\ 0.f;}
+\DoxyCodeLine{01215\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01216\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01217\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01218\ \ \ \ \ \textcolor{keywordflow}{return}\ 0.f;}
+\DoxyCodeLine{01219\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01220\ \}}
+\DoxyCodeLine{01221\ }
+\DoxyCodeLine{01222\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01223\ vec\_dot\_iq3\_s\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs,}
+\DoxyCodeLine{01225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *iq3s\_grid)\ \{}
+\DoxyCodeLine{01226\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{01227\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq3\_s\ *\ bq2\ =\ (\textcolor{keyword}{const}\ block\_iq3\_s\ *)\ vbq;}
+\DoxyCodeLine{01228\ }
+\DoxyCodeLine{01229\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ib32\ =\ iqs;}
+\DoxyCodeLine{01230\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ qs\ =\ bq2-\/>qs\ +\ 8*ib32;}
+\DoxyCodeLine{01231\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ \ \ *\ q8\ =\ bq8\_1[ib32].qs;}
+\DoxyCodeLine{01232\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{01233\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ 4;\ ++l)\ \{}
+\DoxyCodeLine{01234\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ grid1\ =\ iq3s\_grid\ +\ (qs[2*l+0]\ |\ ((bq2-\/>qh[ib32]\ <<\ (8\ -\/\ 2*l))\ \&\ 256));}
+\DoxyCodeLine{01235\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ grid2\ =\ iq3s\_grid\ +\ (qs[2*l+1]\ |\ ((bq2-\/>qh[ib32]\ <<\ (7\ -\/\ 2*l))\ \&\ 256));}
+\DoxyCodeLine{01236\ \ \ \ \ \ \ \ \ uint32\_t\ signs0\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01237\ \ \ \ \ \ \ \ \ \ \ \ \ ((bq2-\/>signs[4\ *\ ib32\ +\ l]\ \&\ 0xf)\ *\ 0x01010101)\ \&\ 0x08040201,}
+\DoxyCodeLine{01238\ \ \ \ \ \ \ \ \ \ \ \ \ 0x08040201,\ std::equal\_to<>());}
+\DoxyCodeLine{01239\ \ \ \ \ \ \ \ \ uint32\_t\ signs1\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01240\ \ \ \ \ \ \ \ \ \ \ \ \ ((bq2-\/>signs[4\ *\ ib32\ +\ l]\ >>\ 4)\ *\ 0x01010101)\ \&\ 0x08040201,}
+\DoxyCodeLine{01241\ \ \ \ \ \ \ \ \ \ \ \ \ 0x08040201,\ std::equal\_to<>());}
+\DoxyCodeLine{01242\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_l\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01243\ \ \ \ \ \ \ \ \ \ \ \ \ grid1[0]\ \string^\ signs0,\ signs0,\ std::minus<>());}
+\DoxyCodeLine{01244\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ grid\_h\ =\ dpct::vectorized\_binary<sycl::uchar4>(}
+\DoxyCodeLine{01245\ \ \ \ \ \ \ \ \ \ \ \ \ grid2[0]\ \string^\ signs1,\ signs1,\ std::minus<>());}
+\DoxyCodeLine{01246\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(grid\_l,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 0),\ sumi);}
+\DoxyCodeLine{01247\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(grid\_h,\ *((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)q8\ +\ 1),\ sumi);}
+\DoxyCodeLine{01248\ \ \ \ \ \ \ \ \ q8\ +=\ 8;}
+\DoxyCodeLine{01249\ \ \ \ \ \}}
+\DoxyCodeLine{01250\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =}
+\DoxyCodeLine{01251\ \ \ \ \ \ \ \ \ (float)bq2-\/>d\ *}
+\DoxyCodeLine{01252\ \ \ \ \ \ \ \ \ (1\ +\ 2\ *\ ((bq2-\/>scales[ib32\ /\ 2]\ >>\ 4\ *\ (ib32\ \%\ 2))\ \&\ 0xf))\ *}
+\DoxyCodeLine{01253\ \ \ \ \ \ \ \ \ bq8\_1[ib32].ds[0];}
+\DoxyCodeLine{01254\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ sumi;}
+\DoxyCodeLine{01255\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01256\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01257\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01258\ \}}
+\DoxyCodeLine{01259\ }
+\DoxyCodeLine{01260\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01261\ vec\_dot\_iq1\_s\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs,}
+\DoxyCodeLine{01263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *iq1s\_grid\_gpu)\ \{}
+\DoxyCodeLine{01264\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{01265\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq1\_s\ *\ bq1\ =\ (\textcolor{keyword}{const}\ block\_iq1\_s\ *)\ vbq;}
+\DoxyCodeLine{01266\ }
+\DoxyCodeLine{01267\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ib32\ =\ iqs;}
+\DoxyCodeLine{01268\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi\ =\ 0;}
+\DoxyCodeLine{01269\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ q8\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[ib32].qs;}
+\DoxyCodeLine{01270\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ 4;\ ++l)\ \{}
+\DoxyCodeLine{01271\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ grid\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)(iq1s\_grid\_gpu\ +\ (bq1-\/>qs[4*ib32+l]\ |\ (((bq1-\/>qh[ib32]\ >>\ 3*l)\ \&\ 7)\ <<\ 8)));}
+\DoxyCodeLine{01272\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ grid0\ =\ grid[0]\ \&\ 0x0f0f0f0f;}
+\DoxyCodeLine{01273\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ grid1\ =\ (grid[0]\ >>\ 4)\ \&\ 0x0f0f0f0f;}
+\DoxyCodeLine{01274\ \ \ \ \ \ \ \ \ sumi\ =\ dpct::dp4a(q8[2\ *\ l\ +\ 1],\ grid1,}
+\DoxyCodeLine{01275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(q8[2\ *\ l\ +\ 0],\ grid0,\ sumi));}
+\DoxyCodeLine{01276\ \ \ \ \ \}}
+\DoxyCodeLine{01277\ }
+\DoxyCodeLine{01278\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ delta\ =\ bq1-\/>qh[ib32]\ \&\ 0x8000\ ?\ -\/1-\/IQ1S\_DELTA\ :\ -\/1+IQ1S\_DELTA;}
+\DoxyCodeLine{01279\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d1q\ =\ (float)bq1-\/>d\ *\ (2*((bq1-\/>qh[ib32]\ >>\ 12)\ \&\ 7)\ +\ 1);}
+\DoxyCodeLine{01280\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ d1q\ *\ bq8\_1[ib32].ds[0];}
+\DoxyCodeLine{01281\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m\ =\ d1q\ *\ bq8\_1[ib32].ds[1];}
+\DoxyCodeLine{01282\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ sumi\ +\ m\ *\ delta;}
+\DoxyCodeLine{01283\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01284\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01285\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01286\ \}}
+\DoxyCodeLine{01287\ }
+\DoxyCodeLine{01288\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01289\ vec\_dot\_iq1\_m\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{01291\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{01292\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq1\_m\ *\ bq1\ =\ (\textcolor{keyword}{const}\ block\_iq1\_m\ *)\ vbq;}
+\DoxyCodeLine{01293\ }
+\DoxyCodeLine{01294\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ib32\ =\ iqs;}
+\DoxyCodeLine{01295\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ sumi[2]\ =\ \{0,\ 0\};}
+\DoxyCodeLine{01296\ \ \ \ \ \textcolor{keywordtype}{float}\ sumf[2]\ =\ \{0.f,\ 0.f\};}
+\DoxyCodeLine{01297\ }
+\DoxyCodeLine{01298\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ q8\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[ib32].qs;}
+\DoxyCodeLine{01299\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ 4;\ ++l)\ \{}
+\DoxyCodeLine{01300\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ grid\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)(iq1s\_grid\_gpu\ +\ (bq1-\/>qs[4*ib32+l]\ |\ (((bq1-\/>qh[2*ib32+l/2]\ >>\ 4*(l\%2))\ \&\ 7)\ <<\ 8)));}
+\DoxyCodeLine{01301\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ grid0\ =\ grid[0]\ \&\ 0x0f0f0f0f;}
+\DoxyCodeLine{01302\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ grid1\ =\ (grid[0]\ >>\ 4)\ \&\ 0x0f0f0f0f;}
+\DoxyCodeLine{01303\ \ \ \ \ \ \ \ \ sumi[l\ /\ 2]\ =\ dpct::dp4a(q8[2\ *\ l\ +\ 1],\ grid1,}
+\DoxyCodeLine{01304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(q8[2\ *\ l\ +\ 0],\ grid0,\ sumi[l\ /\ 2]));}
+\DoxyCodeLine{01305\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ delta\ =\ (bq1-\/>qh[2*ib32+l/2]\ >>\ 4*(l\%2))\ \&\ 0x08\ ?\ -\/1-\/IQ1M\_DELTA\ :\ -\/1+IQ1M\_DELTA;}
+\DoxyCodeLine{01306\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sumy\ =\ dpct::dp4a(q8[2\ *\ l\ +\ 1],\ 0x01010101,}
+\DoxyCodeLine{01307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpct::dp4a(q8[2\ *\ l\ +\ 0],\ 0x01010101,\ 0));}
+\DoxyCodeLine{01308\ \ \ \ \ \ \ \ \ sumf[l/2]\ +=\ delta*sumy;}
+\DoxyCodeLine{01309\ \ \ \ \ \}}
+\DoxyCodeLine{01310\ }
+\DoxyCodeLine{01311\ \ \ \ \ iq1m\_scale\_t\ scale;}
+\DoxyCodeLine{01312\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ sc\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)bq1-\/>scales;}
+\DoxyCodeLine{01313\ \ \ \ \ scale.u16\ =\ (sc[0]\ >>\ 12)\ |\ ((sc[1]\ >>\ 8)\ \&\ 0x00f0)\ |\ ((sc[2]\ >>\ 4)\ \&\ 0x0f00)\ |\ (sc[3]\ \&\ 0xf000);}
+\DoxyCodeLine{01314\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)scale.f16\ *\ bq8\_1[ib32].ds[0];}
+\DoxyCodeLine{01315\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ ((sumi[0]\ +\ sumf[0])\ *\ (2*((sc[ib32/2]\ >>\ 6*(ib32\%2))\ \&\ 0x7)\ +\ 1)\ +\ (sumi[1]\ +\ sumf[1])\ *\ (2*((sc[ib32/2]\ >>\ (6*(ib32\%2)+3))\ \&\ 0x7)\ +\ 1));}
+\DoxyCodeLine{01316\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01317\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01318\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01319\ \}}
+\DoxyCodeLine{01320\ }
+\DoxyCodeLine{01321\ }
+\DoxyCodeLine{01322\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01323\ vec\_dot\_iq4\_nl\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{01325\ }
+\DoxyCodeLine{01326\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq4\_nl\ *\ bq\ =\ (\textcolor{keyword}{const}\ block\_iq4\_nl\ *)\ vbq;}
+\DoxyCodeLine{01327\ }
+\DoxyCodeLine{01328\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ q4\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)bq-\/>qs\ +\ 2*iqs;}
+\DoxyCodeLine{01329\ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ *\ q8\ =\ (\textcolor{keyword}{const}\ int32\_t\ \ *)bq8\_1-\/>qs\ +\ iqs;}
+\DoxyCodeLine{01330\ }
+\DoxyCodeLine{01331\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ values\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)kvalues\_iq4nl;}
+\DoxyCodeLine{01332\ }
+\DoxyCodeLine{01333\ \ \ \ \ \textcolor{keywordtype}{int}\ v1,\ v2;}
+\DoxyCodeLine{01334\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi1\ =\ 0,\ sumi2\ =\ 0;}
+\DoxyCodeLine{01335\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ VDR\_Q4\_0\_Q8\_1\_MMVQ;\ ++l)\ \{}
+\DoxyCodeLine{01336\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ aux\ =\ q4[2*l]\ |\ (q4[2*l+1]\ <<\ 16);}
+\DoxyCodeLine{01337\ \ \ \ \ \ \ \ \ get\_int\_from\_table\_16(aux,\ values,\ v1,\ v2);}
+\DoxyCodeLine{01338\ \ \ \ \ \ \ \ \ sumi1\ =\ dpct::dp4a(v1,\ q8[l\ +\ 0],\ sumi1);}
+\DoxyCodeLine{01339\ \ \ \ \ \ \ \ \ sumi2\ =\ dpct::dp4a(v2,\ q8[l\ +\ 4],\ sumi2);}
+\DoxyCodeLine{01340\ \ \ \ \ \}}
+\DoxyCodeLine{01341\ }
+\DoxyCodeLine{01342\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)bq-\/>d\ *\ bq8\_1-\/>ds[0];}
+\DoxyCodeLine{01343\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ (sumi1\ +\ sumi2);}
+\DoxyCodeLine{01344\ \}}
+\DoxyCodeLine{01345\ }
+\DoxyCodeLine{01346\ }
+\DoxyCodeLine{01347\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}}
+\DoxyCodeLine{01348\ vec\_dot\_iq4\_xs\_q8\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vbq,}
+\DoxyCodeLine{01349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_1\ *\_\_restrict\_\_\ bq8\_1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&iqs)\ \{}
+\DoxyCodeLine{01350\ }
+\DoxyCodeLine{01351\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{01352\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq4\_xs\ *\ bq4\ =\ (\textcolor{keyword}{const}\ block\_iq4\_xs\ *)\ vbq;}
+\DoxyCodeLine{01353\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ values\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)kvalues\_iq4nl;}
+\DoxyCodeLine{01354\ }
+\DoxyCodeLine{01355\ \ \ \ \ \textcolor{comment}{//\ iqs\ is\ 0...7}}
+\DoxyCodeLine{01356\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ib32\ =\ iqs;}
+\DoxyCodeLine{01357\ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ *\ q8\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)bq8\_1[ib32].qs;}
+\DoxyCodeLine{01358\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *\ q4\ =\ (\textcolor{keyword}{const}\ uint32\_t\ *)bq4-\/>qs\ +\ 4*ib32;}
+\DoxyCodeLine{01359\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ ls\ =\ ((bq4-\/>scales\_l[ib32/2]\ >>\ 4*(ib32\%2))\ \&\ 0xf)\ |\ (((bq4-\/>scales\_h\ >>\ 2*ib32)\ \&\ 3)\ <<\ 4);}
+\DoxyCodeLine{01360\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)bq4-\/>d\ *\ (ls\ -\/\ 32)\ *\ bq8\_1[ib32].ds[0];}
+\DoxyCodeLine{01361\ \ \ \ \ \textcolor{keywordtype}{int}\ v1,\ v2;}
+\DoxyCodeLine{01362\ \ \ \ \ \textcolor{keywordtype}{int}\ sumi1\ =\ 0,\ sumi2\ =\ 0;}
+\DoxyCodeLine{01363\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 4;\ ++j)\ \{}
+\DoxyCodeLine{01364\ \ \ \ \ \ \ \ \ get\_int\_from\_table\_16(q4[j],\ values,\ v1,\ v2);}
+\DoxyCodeLine{01365\ \ \ \ \ \ \ \ \ sumi1\ =\ dpct::dp4a(v1,\ q8[j\ +\ 0],\ sumi1);}
+\DoxyCodeLine{01366\ \ \ \ \ \ \ \ \ sumi2\ =\ dpct::dp4a(v2,\ q8[j\ +\ 4],\ sumi2);}
+\DoxyCodeLine{01367\ \ \ \ \ \}}
+\DoxyCodeLine{01368\ \ \ \ \ \textcolor{keywordflow}{return}\ d\ *\ (sumi1\ +\ sumi2);}
+\DoxyCodeLine{01369\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01370\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{01371\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01372\ \}}
+\DoxyCodeLine{01373\ }
+\DoxyCodeLine{01374\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_VECDOTQ\_HPP}}
+
+\end{DoxyCode}

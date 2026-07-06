@@ -1,0 +1,263 @@
+\doxysection{llm\+\_\+graph\+\_\+context Struct Reference}
+\hypertarget{structllm__graph__context}{}\label{structllm__graph__context}\index{llm\_graph\_context@{llm\_graph\_context}}
+Inheritance diagram for llm\+\_\+graph\+\_\+context:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=12.000000cm]{structllm__graph__context}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__graph__context_acc9d007c33439d2405ca594fcb4bd243}\label{structllm__graph__context_acc9d007c33439d2405ca594fcb4bd243} 
+{\bfseries llm\+\_\+graph\+\_\+context} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params)
+\item 
+\Hypertarget{structllm__graph__context_a07a073cdef69c57b5c92c1486eb32c94}\label{structllm__graph__context_a07a073cdef69c57b5c92c1486eb32c94} 
+void {\bfseries cb} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur, const char \texorpdfstring{$\ast$}{*}name, int il) const
+\item 
+\Hypertarget{structllm__graph__context_a494667555506706cf2f2dc71add76810}\label{structllm__graph__context_a494667555506706cf2f2dc71add76810} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+cvec} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur, int il) const
+\item 
+\Hypertarget{structllm__graph__context_a7405e92b2eec5c993bd948ceb2971f31}\label{structllm__graph__context_a7405e92b2eec5c993bd948ceb2971f31} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+lora\+\_\+mm} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}w, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}w\+\_\+s=nullptr) const
+\item 
+\Hypertarget{structllm__graph__context_af878cd309e451fda9b42e4a815a48a3b}\label{structllm__graph__context_af878cd309e451fda9b42e4a815a48a3b} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+lora\+\_\+mm\+\_\+id} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}w, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}ids) const
+\item 
+\Hypertarget{structllm__graph__context_a7d34f864f69cb9257a39bb6a9c444fd1}\label{structllm__graph__context_a7d34f864f69cb9257a39bb6a9c444fd1} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+norm} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}mw, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}mb, llm\+\_\+norm\+\_\+type type, int il) const
+\item 
+\Hypertarget{structllm__graph__context_a07b50d115b2dbc71bc7fdea72a44721f}\label{structllm__graph__context_a07b50d115b2dbc71bc7fdea72a44721f} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+ffn} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}up, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}up\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}up\+\_\+s, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+s, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}down, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}down\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}down\+\_\+s, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}act\+\_\+scales, llm\+\_\+ffn\+\_\+op\+\_\+type type\+\_\+op, llm\+\_\+ffn\+\_\+gate\+\_\+type type\+\_\+gate, int il) const
+\item 
+\Hypertarget{structllm__graph__context_aa48045aa1f83ac84fdec764f467fd0af}\label{structllm__graph__context_aa48045aa1f83ac84fdec764f467fd0af} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+moe\+\_\+ffn} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+inp, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}up\+\_\+exps, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+exps, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}down\+\_\+exps, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}exp\+\_\+probs\+\_\+b, int64\+\_\+t n\+\_\+expert, int64\+\_\+t n\+\_\+expert\+\_\+used, llm\+\_\+ffn\+\_\+op\+\_\+type type\+\_\+op, bool norm\+\_\+w, float w\+\_\+scale, llama\+\_\+expert\+\_\+gating\+\_\+func\+\_\+type gating\+\_\+op, int il, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}probs\+\_\+in=nullptr, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+up\+\_\+exps=nullptr, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}up\+\_\+exps\+\_\+s=nullptr, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+exps\+\_\+s=nullptr, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}down\+\_\+exps\+\_\+s=nullptr) const
+\item 
+\Hypertarget{structllm__graph__context_acba0f074e48b2afcb00849d90dd88ac1}\label{structllm__graph__context_acba0f074e48b2afcb00849d90dd88ac1} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+moe\+\_\+ffn} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+inp, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+inp\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}up\+\_\+exps, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}up\+\_\+exps\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+exps, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+exps\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}down\+\_\+exps, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}down\+\_\+exps\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}exp\+\_\+probs\+\_\+b, int64\+\_\+t n\+\_\+expert, int64\+\_\+t n\+\_\+expert\+\_\+used, llm\+\_\+ffn\+\_\+op\+\_\+type type\+\_\+op, bool norm\+\_\+w, float w\+\_\+scale, llama\+\_\+expert\+\_\+gating\+\_\+func\+\_\+type gating\+\_\+op, int il, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}probs\+\_\+in=nullptr, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+up\+\_\+exps=nullptr, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+up\+\_\+exps\+\_\+b=nullptr, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}up\+\_\+exps\+\_\+s=nullptr, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}gate\+\_\+exps\+\_\+s=nullptr, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}down\+\_\+exps\+\_\+s=nullptr) const
+\item 
+\Hypertarget{structllm__graph__context_a05e4445ab418dfe4a9fdffe278c8eb19}\label{structllm__graph__context_a05e4445ab418dfe4a9fdffe278c8eb19} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+embd} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tok\+\_\+embd) const
+\item 
+\Hypertarget{structllm__graph__context_a225a394a236770f3ee8533de65b4357d}\label{structllm__graph__context_a225a394a236770f3ee8533de65b4357d} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+pos} () const
+\item 
+\Hypertarget{structllm__graph__context_af8d3011f387d7a6083402154e8fd6166}\label{structllm__graph__context_af8d3011f387d7a6083402154e8fd6166} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+attn\+\_\+scale} () const
+\item 
+\Hypertarget{structllm__graph__context_a2db61e7763a18b12fa19ac66c59e4363}\label{structllm__graph__context_a2db61e7763a18b12fa19ac66c59e4363} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+out\+\_\+ids} () const
+\item 
+\Hypertarget{structllm__graph__context_af2f405372ec672d7fc4b39e0d0004e6a}\label{structllm__graph__context_af2f405372ec672d7fc4b39e0d0004e6a} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+mean} () const
+\item 
+\Hypertarget{structllm__graph__context_ab7a2b33641c002cbd0070107f5aa0c5a}\label{structllm__graph__context_ab7a2b33641c002cbd0070107f5aa0c5a} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+cls} () const
+\item 
+\Hypertarget{structllm__graph__context_a159bedcf192b839109ebac56386b09e8}\label{structllm__graph__context_a159bedcf192b839109ebac56386b09e8} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+cross\+\_\+embd} () const
+\item 
+\Hypertarget{structllm__graph__context_a5dc2f57eb6e3b4f4fe4e35f050231d49}\label{structllm__graph__context_a5dc2f57eb6e3b4f4fe4e35f050231d49} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+pos\+\_\+bucket\+\_\+enc} () const
+\item 
+\Hypertarget{structllm__graph__context_aad29a5e7b36b8fcb5d9b47950e7e295f}\label{structllm__graph__context_aad29a5e7b36b8fcb5d9b47950e7e295f} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+pos\+\_\+bucket\+\_\+dec} () const
+\item 
+\Hypertarget{structllm__graph__context_aaa8100312ce08177a09054dc77363588}\label{structllm__graph__context_aaa8100312ce08177a09054dc77363588} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+pos\+\_\+bias} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}pos\+\_\+bucket, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}attn\+\_\+rel\+\_\+b) const
+\item 
+\Hypertarget{structllm__graph__context_a95209b143f2728b370e1433449c5d491}\label{structllm__graph__context_a95209b143f2728b370e1433449c5d491} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn\+\_\+mha} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}q, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}k, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}kq\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}kq\+\_\+mask, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}sinks, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+mla, float kq\+\_\+scale, int il) const
+\item 
+\Hypertarget{structllm__graph__context_a74b2cea90fe57c3792c65c2dd9008d26}\label{structllm__graph__context_a74b2cea90fe57c3792c65c2dd9008d26} 
+\doxymbox{\hyperlink{classllm__graph__input__attn__no__cache}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+no\+\_\+cache}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn\+\_\+inp\+\_\+no\+\_\+cache} () const
+\item 
+\Hypertarget{structllm__graph__context_a7eaad8bbe8ae6a33428385b8a11a3bfe}\label{structllm__graph__context_a7eaad8bbe8ae6a33428385b8a11a3bfe} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn} (\doxymbox{\hyperlink{classllm__graph__input__attn__no__cache}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+no\+\_\+cache}} \texorpdfstring{$\ast$}{*}inp, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}q\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}k\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}kq\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}sinks, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+mla, float kq\+\_\+scale, int il) const
+\item 
+\Hypertarget{structllm__graph__context_aa778ddc16cfe6be897bae8c98b78ac21}\label{structllm__graph__context_aa778ddc16cfe6be897bae8c98b78ac21} 
+\doxymbox{\hyperlink{classllm__graph__input__attn__kv}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+kv}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn\+\_\+inp\+\_\+kv} () const
+\item 
+\Hypertarget{structllm__graph__context_addc3e9e4e7b8d9007f6ed3a7c00a8e3c}\label{structllm__graph__context_addc3e9e4e7b8d9007f6ed3a7c00a8e3c} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn} (\doxymbox{\hyperlink{classllm__graph__input__attn__kv}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+kv}} \texorpdfstring{$\ast$}{*}inp, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}q\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}k\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}kq\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}sinks, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+mla, float kq\+\_\+scale, int il) const
+\item 
+\Hypertarget{structllm__graph__context_a4b0c5d0e07da51903e57e5f5a55c4770}\label{structllm__graph__context_a4b0c5d0e07da51903e57e5f5a55c4770} 
+\doxymbox{\hyperlink{classllm__graph__input__attn__k}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+k}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn\+\_\+inp\+\_\+k} () const
+\item 
+\Hypertarget{structllm__graph__context_a16f62f7147776dea6e55b2dc3a8f95d9}\label{structllm__graph__context_a16f62f7147776dea6e55b2dc3a8f95d9} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn} (\doxymbox{\hyperlink{classllm__graph__input__attn__k}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+k}} \texorpdfstring{$\ast$}{*}inp, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}q\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}k\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}kq\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}sinks, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+mla, float kq\+\_\+scale, int il) const
+\item 
+\Hypertarget{structllm__graph__context_ac633e2c696a6ec250d37416a9e69946d}\label{structllm__graph__context_ac633e2c696a6ec250d37416a9e69946d} 
+\doxymbox{\hyperlink{classllm__graph__input__attn__kv__iswa}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+kv\+\_\+iswa}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn\+\_\+inp\+\_\+kv\+\_\+iswa} () const
+\item 
+\Hypertarget{structllm__graph__context_a15dc320392947dc7d2c758acf88ad53e}\label{structllm__graph__context_a15dc320392947dc7d2c758acf88ad53e} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn} (\doxymbox{\hyperlink{classllm__graph__input__attn__kv__iswa}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+kv\+\_\+iswa}} \texorpdfstring{$\ast$}{*}inp, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}q\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}k\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}kq\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}sinks, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+mla, float kq\+\_\+scale, int il) const
+\item 
+\Hypertarget{structllm__graph__context_a0389aea17253a841c89acc5e1e99b1f3}\label{structllm__graph__context_a0389aea17253a841c89acc5e1e99b1f3} 
+\doxymbox{\hyperlink{classllm__graph__input__attn__cross}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+cross}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn\+\_\+inp\+\_\+cross} () const
+\item 
+\Hypertarget{structllm__graph__context_a1fb65424058dd5cf4be474fcdae75db9}\label{structllm__graph__context_a1fb65424058dd5cf4be474fcdae75db9} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+attn} (\doxymbox{\hyperlink{classllm__graph__input__attn__cross}{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+cross}} \texorpdfstring{$\ast$}{*}inp, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}wo\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}q\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}k\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}kq\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}sinks, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+mla, float kq\+\_\+scale, int il) const
+\item 
+\Hypertarget{structllm__graph__context_a7c422a6f6a4193db3c6ee6592415a2f1}\label{structllm__graph__context_a7c422a6f6a4193db3c6ee6592415a2f1} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+rs} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}s, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}state\+\_\+copy\+\_\+main, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}state\+\_\+copy\+\_\+extra, int32\+\_\+t state\+\_\+size, int32\+\_\+t n\+\_\+seqs, uint32\+\_\+t n\+\_\+rs, uint32\+\_\+t rs\+\_\+head, uint32\+\_\+t rs\+\_\+size, int32\+\_\+t rs\+\_\+zero, const llm\+\_\+graph\+\_\+get\+\_\+rows\+\_\+fn \&get\+\_\+state\+\_\+rows=ggml\+\_\+get\+\_\+rows) const
+\item 
+\Hypertarget{structllm__graph__context_a82e5feeddf643e84b8d6d840494f70ab}\label{structllm__graph__context_a82e5feeddf643e84b8d6d840494f70ab} 
+\doxymbox{\hyperlink{classllm__graph__input__rs}{llm\+\_\+graph\+\_\+input\+\_\+rs}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+rs\+\_\+inp} () const
+\item 
+\Hypertarget{structllm__graph__context_a39c949220079036df7c162bb8817db35}\label{structllm__graph__context_a39c949220079036df7c162bb8817db35} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+rs} (\doxymbox{\hyperlink{classllm__graph__input__rs}{llm\+\_\+graph\+\_\+input\+\_\+rs}} \texorpdfstring{$\ast$}{*}inp, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}s, int32\+\_\+t state\+\_\+size, int32\+\_\+t n\+\_\+seqs, const llm\+\_\+graph\+\_\+get\+\_\+rows\+\_\+fn \&get\+\_\+state\+\_\+rows=ggml\+\_\+get\+\_\+rows) const
+\item 
+\Hypertarget{structllm__graph__context_a6f1b81353edfe7868b3dd22b4868526b}\label{structllm__graph__context_a6f1b81353edfe7868b3dd22b4868526b} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+rwkv\+\_\+token\+\_\+shift\+\_\+load} (\doxymbox{\hyperlink{classllm__graph__input__rs}{llm\+\_\+graph\+\_\+input\+\_\+rs}} \texorpdfstring{$\ast$}{*}inp, const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \&ubatch, int il) const
+\item 
+\Hypertarget{structllm__graph__context_af29923df02c0e7177df4bce8fc75160b}\label{structllm__graph__context_af29923df02c0e7177df4bce8fc75160b} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+rwkv\+\_\+token\+\_\+shift\+\_\+store} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}token\+\_\+shift, const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \&ubatch, int il) const
+\item 
+\Hypertarget{structllm__graph__context_ac1037f4169fc87a4dd761f76407a05b8}\label{structllm__graph__context_ac1037f4169fc87a4dd761f76407a05b8} 
+\doxymbox{\hyperlink{classllm__graph__input__mem__hybrid}{llm\+\_\+graph\+\_\+input\+\_\+mem\+\_\+hybrid}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+mem\+\_\+hybrid} () const
+\item 
+\Hypertarget{structllm__graph__context_a09c24ec1d6af3cb38d087106bece742e}\label{structllm__graph__context_a09c24ec1d6af3cb38d087106bece742e} 
+\doxymbox{\hyperlink{classllm__graph__input__mem__hybrid__k}{llm\+\_\+graph\+\_\+input\+\_\+mem\+\_\+hybrid\+\_\+k}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+mem\+\_\+hybrid\+\_\+k} () const
+\item 
+\Hypertarget{structllm__graph__context_a6ec513224daf18c678b44523f3e007fd}\label{structllm__graph__context_a6ec513224daf18c678b44523f3e007fd} 
+\doxymbox{\hyperlink{classllm__graph__input__mem__hybrid__iswa}{llm\+\_\+graph\+\_\+input\+\_\+mem\+\_\+hybrid\+\_\+iswa}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+inp\+\_\+mem\+\_\+hybrid\+\_\+iswa} () const
+\item 
+\Hypertarget{structllm__graph__context_abd6adfcef85813e167bc4da9b2bc3b2a}\label{structllm__graph__context_abd6adfcef85813e167bc4da9b2bc3b2a} 
+void {\bfseries build\+\_\+pooling} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cls, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cls\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cls\+\_\+out, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cls\+\_\+out\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cls\+\_\+norm) const
+\item 
+\Hypertarget{structllm__graph__context_ade73a833eadb489303a818620cda8c05}\label{structllm__graph__context_ade73a833eadb489303a818620cda8c05} 
+void {\bfseries build\+\_\+sampling} () const
+\item 
+\Hypertarget{structllm__graph__context_a9b29c96dbcd2d27a721f11a27df00da5}\label{structllm__graph__context_a9b29c96dbcd2d27a721f11a27df00da5} 
+void {\bfseries build\+\_\+dense\+\_\+out} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}dense\+\_\+2, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}dense\+\_\+2\+\_\+b, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}dense\+\_\+3) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__graph__context_a7ea1194e54ba8b1017e9e0bb3c07d80f}\label{structllm__graph__context_a7ea1194e54ba8b1017e9e0bb3c07d80f} 
+const llm\+\_\+arch {\bfseries arch}
+\item 
+\Hypertarget{structllm__graph__context_aa55241cff4a22189954b16e3a13490bf}\label{structllm__graph__context_aa55241cff4a22189954b16e3a13490bf} 
+const \doxymbox{\hyperlink{structllama__hparams}{llama\+\_\+hparams}} \& {\bfseries hparams}
+\item 
+\Hypertarget{structllm__graph__context_a7bd398f19a090883503b592827aacd5a}\label{structllm__graph__context_a7bd398f19a090883503b592827aacd5a} 
+const \doxymbox{\hyperlink{structllama__cparams}{llama\+\_\+cparams}} \& {\bfseries cparams}
+\item 
+\Hypertarget{structllm__graph__context_a53de66713e327929f860e6dc74b6500f}\label{structllm__graph__context_a53de66713e327929f860e6dc74b6500f} 
+const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \& {\bfseries ubatch}
+\item 
+\Hypertarget{structllm__graph__context_a70641e16dd993a85bfaf5b5e5cdd9461}\label{structllm__graph__context_a70641e16dd993a85bfaf5b5e5cdd9461} 
+const int64\+\_\+t {\bfseries n\+\_\+embd}
+\item 
+\Hypertarget{structllm__graph__context_aec53e0a21599b0a74c9fd5322eafccfc}\label{structllm__graph__context_aec53e0a21599b0a74c9fd5322eafccfc} 
+const int64\+\_\+t {\bfseries n\+\_\+layer}
+\item 
+\Hypertarget{structllm__graph__context_a1b46ee43c43a8a93b20236deccaf4955}\label{structllm__graph__context_a1b46ee43c43a8a93b20236deccaf4955} 
+const int64\+\_\+t {\bfseries n\+\_\+rot}
+\item 
+\Hypertarget{structllm__graph__context_a5cfd09b9aa12bb48a3b5432156733ef5}\label{structllm__graph__context_a5cfd09b9aa12bb48a3b5432156733ef5} 
+const int64\+\_\+t {\bfseries n\+\_\+ctx}
+\item 
+\Hypertarget{structllm__graph__context_a8e8973a866986e0a690b8ba48bf5b8bc}\label{structllm__graph__context_a8e8973a866986e0a690b8ba48bf5b8bc} 
+const int64\+\_\+t {\bfseries n\+\_\+head}
+\item 
+\Hypertarget{structllm__graph__context_ad0aff62a330bb57e3a569c6d0444f542}\label{structllm__graph__context_ad0aff62a330bb57e3a569c6d0444f542} 
+const int64\+\_\+t {\bfseries n\+\_\+head\+\_\+kv}
+\item 
+\Hypertarget{structllm__graph__context_ab0cc0929ab987a3e37cd4301b4ff9db2}\label{structllm__graph__context_ab0cc0929ab987a3e37cd4301b4ff9db2} 
+const int64\+\_\+t {\bfseries n\+\_\+embd\+\_\+head\+\_\+k}
+\item 
+\Hypertarget{structllm__graph__context_a02bd07c8a3a62806813f93ef423ec6e7}\label{structllm__graph__context_a02bd07c8a3a62806813f93ef423ec6e7} 
+const int64\+\_\+t {\bfseries n\+\_\+embd\+\_\+k\+\_\+gqa}
+\item 
+\Hypertarget{structllm__graph__context_abaa16cde5dd6cb07dc82feb3341967aa}\label{structllm__graph__context_abaa16cde5dd6cb07dc82feb3341967aa} 
+const int64\+\_\+t {\bfseries n\+\_\+embd\+\_\+head\+\_\+v}
+\item 
+\Hypertarget{structllm__graph__context_ad6e5c0b5568da7837b46680045c86051}\label{structllm__graph__context_ad6e5c0b5568da7837b46680045c86051} 
+const int64\+\_\+t {\bfseries n\+\_\+embd\+\_\+v\+\_\+gqa}
+\item 
+\Hypertarget{structllm__graph__context_add3461a579bd451329aaac1aeb29200d}\label{structllm__graph__context_add3461a579bd451329aaac1aeb29200d} 
+const int64\+\_\+t {\bfseries n\+\_\+expert}
+\item 
+\Hypertarget{structllm__graph__context_a573cad9c57af95e0049d04ab2b57e864}\label{structllm__graph__context_a573cad9c57af95e0049d04ab2b57e864} 
+const int64\+\_\+t {\bfseries n\+\_\+expert\+\_\+used}
+\item 
+\Hypertarget{structllm__graph__context_a8b56d6e8b2c33c30857e1d63c5112072}\label{structllm__graph__context_a8b56d6e8b2c33c30857e1d63c5112072} 
+const float {\bfseries freq\+\_\+base}
+\item 
+\Hypertarget{structllm__graph__context_a843f6140109bd6d7de4c21b164e564d9}\label{structllm__graph__context_a843f6140109bd6d7de4c21b164e564d9} 
+const float {\bfseries freq\+\_\+scale}
+\item 
+\Hypertarget{structllm__graph__context_af3accae08f5863b9c12088cc8159c10f}\label{structllm__graph__context_af3accae08f5863b9c12088cc8159c10f} 
+const float {\bfseries ext\+\_\+factor}
+\item 
+\Hypertarget{structllm__graph__context_a7774a37f2f9965a072bb439e60812f9f}\label{structllm__graph__context_a7774a37f2f9965a072bb439e60812f9f} 
+const float {\bfseries attn\+\_\+factor}
+\item 
+\Hypertarget{structllm__graph__context_a1fa8a9e23fea4992248243ae5e78b448}\label{structllm__graph__context_a1fa8a9e23fea4992248243ae5e78b448} 
+const float {\bfseries beta\+\_\+fast}
+\item 
+\Hypertarget{structllm__graph__context_a61eb0573421ca1a2adbbd047db415c63}\label{structllm__graph__context_a61eb0573421ca1a2adbbd047db415c63} 
+const float {\bfseries beta\+\_\+slow}
+\item 
+\Hypertarget{structllm__graph__context_a30335c4a14a9e5ea8e28c6e69d294ab6}\label{structllm__graph__context_a30335c4a14a9e5ea8e28c6e69d294ab6} 
+const float {\bfseries norm\+\_\+eps}
+\item 
+\Hypertarget{structllm__graph__context_ae53b7c314baeb005b0a1778a82cc4fdf}\label{structllm__graph__context_ae53b7c314baeb005b0a1778a82cc4fdf} 
+const float {\bfseries norm\+\_\+rms\+\_\+eps}
+\item 
+\Hypertarget{structllm__graph__context_a0b6d29f5978ec5d12ce6d235aaee6f42}\label{structllm__graph__context_a0b6d29f5978ec5d12ce6d235aaee6f42} 
+const int64\+\_\+t {\bfseries n\+\_\+tokens}
+\item 
+\Hypertarget{structllm__graph__context_a93398320459759dc8e9a5d9e0802f0aa}\label{structllm__graph__context_a93398320459759dc8e9a5d9e0802f0aa} 
+const int64\+\_\+t {\bfseries n\+\_\+outputs}
+\item 
+\Hypertarget{structllm__graph__context_a660e60b17872492e185078480d258ae6}\label{structllm__graph__context_a660e60b17872492e185078480d258ae6} 
+const int32\+\_\+t {\bfseries n\+\_\+ctx\+\_\+orig}
+\item 
+\Hypertarget{structllm__graph__context_a930ea05f7b6d175c4e799f9e4c5478f2}\label{structllm__graph__context_a930ea05f7b6d175c4e799f9e4c5478f2} 
+enum llama\+\_\+pooling\+\_\+type {\bfseries pooling\+\_\+type}
+\item 
+\Hypertarget{structllm__graph__context_a378dfc887036e0e947069f4ed3d0a626}\label{structllm__graph__context_a378dfc887036e0e947069f4ed3d0a626} 
+enum llama\+\_\+rope\+\_\+type {\bfseries rope\+\_\+type}
+\item 
+\Hypertarget{structllm__graph__context_a0faee6f2af6d54050d5d5347f814bc49}\label{structllm__graph__context_a0faee6f2af6d54050d5d5347f814bc49} 
+ggml\+\_\+backend\+\_\+sched\+\_\+t {\bfseries sched}
+\item 
+\Hypertarget{structllm__graph__context_ab572fd68fb4e631f019ca940c8082086}\label{structllm__graph__context_ab572fd68fb4e631f019ca940c8082086} 
+ggml\+\_\+backend\+\_\+t {\bfseries backend\+\_\+cpu}
+\item 
+\Hypertarget{structllm__graph__context_ac3bee0f5b2c09509d1e4bc098708b478}\label{structllm__graph__context_ac3bee0f5b2c09509d1e4bc098708b478} 
+const \doxymbox{\hyperlink{structllama__adapter__cvec}{llama\+\_\+adapter\+\_\+cvec}} \texorpdfstring{$\ast$}{*} {\bfseries cvec}
+\item 
+\Hypertarget{structllm__graph__context_aba483581cd4bf27711020110fc1fbeeb}\label{structllm__graph__context_aba483581cd4bf27711020110fc1fbeeb} 
+const llama\+\_\+adapter\+\_\+loras \texorpdfstring{$\ast$}{*} {\bfseries loras}
+\item 
+\Hypertarget{structllm__graph__context_a1c927afbded213a4103c0200bbc6aeb6}\label{structllm__graph__context_a1c927afbded213a4103c0200bbc6aeb6} 
+const \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}} \texorpdfstring{$\ast$}{*} {\bfseries mctx}
+\item 
+\Hypertarget{structllm__graph__context_ae1e001ebf0e6826d3eee5bd9de43265d}\label{structllm__graph__context_ae1e001ebf0e6826d3eee5bd9de43265d} 
+const \doxymbox{\hyperlink{structllama__cross}{llama\+\_\+cross}} \texorpdfstring{$\ast$}{*} {\bfseries cross}
+\item 
+\Hypertarget{structllm__graph__context_a8fa31d37f526b99c5b5f8214c5742f96}\label{structllm__graph__context_a8fa31d37f526b99c5b5f8214c5742f96} 
+std::\+map$<$ llama\+\_\+seq\+\_\+id, \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries samplers}
+\item 
+\Hypertarget{structllm__graph__context_ad5f4905e7271f0d1ea953f171b9ce0f8}\label{structllm__graph__context_ad5f4905e7271f0d1ea953f171b9ce0f8} 
+const llm\+\_\+graph\+\_\+cb \& {\bfseries cb\+\_\+func}
+\item 
+\Hypertarget{structllm__graph__context_ad66c51bc575154a74cff9c9559e328e3}\label{structllm__graph__context_ad66c51bc575154a74cff9c9559e328e3} 
+\doxymbox{\hyperlink{classllm__graph__result}{llm\+\_\+graph\+\_\+result}} \texorpdfstring{$\ast$}{*} {\bfseries res}
+\item 
+\Hypertarget{structllm__graph__context_a9389c05d5ee26c015aaa5a106fde669e}\label{structllm__graph__context_a9389c05d5ee26c015aaa5a106fde669e} 
+\doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries ctx0} = nullptr
+\item 
+\Hypertarget{structllm__graph__context_a570e97a829f895daed4cac908cd837d1}\label{structllm__graph__context_a570e97a829f895daed4cac908cd837d1} 
+\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*} {\bfseries gf} = nullptr
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,765 @@
+\doxysection{io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library Interface Reference}
+\hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library}{}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+Inheritance diagram for io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a3b2ca93935c0b011ea12958ef4ccf9f4}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a3b2ca93935c0b011ea12958ef4ccf9f4} 
+String {\bfseries whisper\+\_\+print\+\_\+system\+\_\+info} ()
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a75e73e6c9ca072f754ecb2f20ec68e11}{whisper\+\_\+init\+\_\+from\+\_\+file}} (String path\+\_\+model)
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_acc566782eca330f1d172948924750f17}{whisper\+\_\+context\+\_\+default\+\_\+params\+\_\+by\+\_\+ref}} ()
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a319201b6138e94f081111a0783fbf267}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a319201b6138e94f081111a0783fbf267} 
+void {\bfseries whisper\+\_\+free\+\_\+context\+\_\+params} (Pointer params)
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a808482c41b9da91572afc14db65755c1}{whisper\+\_\+init\+\_\+from\+\_\+file\+\_\+with\+\_\+params}} (String path\+\_\+model, \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_context_params_1_1_by_value}{Whisper\+Context\+Params.\+By\+Value}} params)
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2072a4cef9d3a8564f6a60f27281606f}{whisper\+\_\+init\+\_\+from\+\_\+buffer}} (Pointer buffer, int buffer\+\_\+size)
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad4922d69d83ae89caa74d65ef440e909}{whisper\+\_\+init}} (\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_model_loader}{Whisper\+Model\+Loader}} loader)
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aab1c040f51f16c031a939664465bef20}{whisper\+\_\+init\+\_\+from\+\_\+file\+\_\+no\+\_\+state}} (String path\+\_\+model)
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a8d7d7926970194cd724dc4ce26f4486e}{whisper\+\_\+init\+\_\+from\+\_\+buffer\+\_\+no\+\_\+state}} (Pointer buffer, int buffer\+\_\+size)
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_abec81349851db38ecb42080d5d8a00f7}{whisper\+\_\+init\+\_\+no\+\_\+state}} (\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_model_loader}{Whisper\+Model\+Loader}} loader)
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a76f49402ab3975269ea74f133a510ea4}{whisper\+\_\+init\+\_\+state}} (Pointer ctx)
+\item 
+void \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae1af85f42c740ad3903eabcff711a865}{whisper\+\_\+free}} (Pointer ctx)
+\item 
+void \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a65ac4820dc96663e84b0c2b9f48ff141}{whisper\+\_\+free\+\_\+state}} (Pointer state)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a10e984ae704841f3e6b87929bd1e9546}{whisper\+\_\+pcm\+\_\+to\+\_\+mel}} (Pointer ctx, final float\+[$\,$]\+ samples, int n\+\_\+samples, int n\+\_\+threads)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2fee412b67a809fb02c0ca8751488a82}{whisper\+\_\+pcm\+\_\+to\+\_\+mel\+\_\+with\+\_\+state}} (Pointer ctx, Pointer state, final float\+[$\,$]\+ samples, int n\+\_\+samples, int n\+\_\+threads)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2b0e7a8dcb740d9aa711846822092a11}{whisper\+\_\+set\+\_\+mel}} (Pointer ctx, final float\+[$\,$]\+ data, int n\+\_\+len, int n\+\_\+mel)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aaf9ac8db48a6b3383ec814987151e5ea}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aaf9ac8db48a6b3383ec814987151e5ea} 
+int {\bfseries whisper\+\_\+set\+\_\+mel\+\_\+with\+\_\+state} (Pointer ctx, Pointer state, final float\+[$\,$]\+ data, int n\+\_\+len, int n\+\_\+mel)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aeb9ccdef3950216b901d8a334613e636}{whisper\+\_\+encode}} (Pointer ctx, int offset, int n\+\_\+threads)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a09419783f28199ad02152e724cfbcb02}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a09419783f28199ad02152e724cfbcb02} 
+int {\bfseries whisper\+\_\+encode\+\_\+with\+\_\+state} (Pointer ctx, Pointer state, int offset, int n\+\_\+threads)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_af92b8fab343f1ab4e8d27f3a6d59515e}{whisper\+\_\+decode}} (Pointer ctx, Pointer tokens, int n\+\_\+tokens, int n\+\_\+past, int n\+\_\+threads)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad1feb2567b828f29fe8e963743cb1b04}{whisper\+\_\+decode\+\_\+with\+\_\+state}} (Pointer ctx, Pointer state, Pointer tokens, int n\+\_\+tokens, int n\+\_\+past, int n\+\_\+threads)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a4c3313a4d63d14a19eede93a3ed88b5d}{whisper\+\_\+tokenize}} (Pointer ctx, String text, Pointer tokens, int n\+\_\+max\+\_\+tokens)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a588fce94d08efafc9c599cb563b56c13}{whisper\+\_\+lang\+\_\+max\+\_\+id}} ()
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a5607b5b48a92edee8ef9d41d398c2838}{whisper\+\_\+lang\+\_\+id}} (String lang)
+\item 
+String \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a089d5cef1ade8d68c1feb3ac793321bb}{whisper\+\_\+lang\+\_\+str}} (int id)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a0ec51cd7e9ba7a8a0c01025e9d8e0d23}{whisper\+\_\+lang\+\_\+auto\+\_\+detect}} (Pointer ctx, int offset\+\_\+ms, int n\+\_\+threads, float\+[$\,$]\+ lang\+\_\+probs)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a86289e26805a2181e839c816024ff18e}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a86289e26805a2181e839c816024ff18e} 
+int {\bfseries whisper\+\_\+lang\+\_\+auto\+\_\+detect\+\_\+with\+\_\+state} (Pointer ctx, Pointer state, int offset\+\_\+ms, int n\+\_\+threads, float\+[$\,$]\+ lang\+\_\+probs)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a23924d06c99954b2a2dfcd8797f5a20b}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a23924d06c99954b2a2dfcd8797f5a20b} 
+int {\bfseries whisper\+\_\+n\+\_\+len} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a632d897e696fb48109c4ba64086eb550}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a632d897e696fb48109c4ba64086eb550} 
+int {\bfseries whisper\+\_\+n\+\_\+len\+\_\+from\+\_\+state} (Pointer state)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a8331472bcd49ef0be6302c929fe1cf2d}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a8331472bcd49ef0be6302c929fe1cf2d} 
+int {\bfseries whisper\+\_\+n\+\_\+vocab} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a968a49840fb9099877eeaa09f73af0d4}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a968a49840fb9099877eeaa09f73af0d4} 
+int {\bfseries whisper\+\_\+n\+\_\+text\+\_\+ctx} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac937711c8a7cc38c2524bebdda00d504}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac937711c8a7cc38c2524bebdda00d504} 
+int {\bfseries whisper\+\_\+n\+\_\+audio\+\_\+ctx} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a6c399315016fe3f0e2254a42f8c7d53e}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a6c399315016fe3f0e2254a42f8c7d53e} 
+int {\bfseries whisper\+\_\+is\+\_\+multilingual} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a04d9e6cf7d1e961c4e2eb9df81b64657}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a04d9e6cf7d1e961c4e2eb9df81b64657} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+vocab} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a8a4d9d9b16f03f55a48db59cc535071e}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a8a4d9d9b16f03f55a48db59cc535071e} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+audio\+\_\+ctx} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a1342a696aa23d0b79d693051cb3d914f}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a1342a696aa23d0b79d693051cb3d914f} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+audio\+\_\+state} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aa1005c7c35e1f03e4c5403d1f013602b}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aa1005c7c35e1f03e4c5403d1f013602b} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+audio\+\_\+head} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a30889258bedb0f070fbcde6a2a2a6e03}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a30889258bedb0f070fbcde6a2a2a6e03} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+audio\+\_\+layer} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a5acbf39b64a823f25f8a60e4967bf84c}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a5acbf39b64a823f25f8a60e4967bf84c} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+text\+\_\+ctx} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a25502e1d753cb0aeb895e91c474fbd19}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a25502e1d753cb0aeb895e91c474fbd19} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+text\+\_\+state} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae76f440bc81665ccd1f698e30f2dc770}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae76f440bc81665ccd1f698e30f2dc770} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+text\+\_\+head} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a209316e18a70d219544b3db0a89cea2a}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a209316e18a70d219544b3db0a89cea2a} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+text\+\_\+layer} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a072c8fd3ed2379d36dff822de85ccf7d}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a072c8fd3ed2379d36dff822de85ccf7d} 
+int {\bfseries whisper\+\_\+model\+\_\+n\+\_\+mels} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac4ac764263991acc9f8c86370b22c7a8}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac4ac764263991acc9f8c86370b22c7a8} 
+int {\bfseries whisper\+\_\+model\+\_\+ftype} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a9c0bdd2591e44eae2813cd4922666913}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a9c0bdd2591e44eae2813cd4922666913} 
+int {\bfseries whisper\+\_\+model\+\_\+type} (Pointer ctx)
+\item 
+float\+[$\,$]\+ \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a99631b02f212f97b58d52406309408ab}{whisper\+\_\+get\+\_\+logits}} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a494cb30e32f07d9819652a2de0a1a5d5}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a494cb30e32f07d9819652a2de0a1a5d5} 
+float\+[$\,$]\+ {\bfseries whisper\+\_\+get\+\_\+logits\+\_\+from\+\_\+state} (Pointer state)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae4ed299b982fc02d6146a20b66e54361}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae4ed299b982fc02d6146a20b66e54361} 
+String {\bfseries whisper\+\_\+token\+\_\+to\+\_\+str} (Pointer ctx, int token)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aef66a255bfb7d2b0afda532e1bf5d5ff}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aef66a255bfb7d2b0afda532e1bf5d5ff} 
+String {\bfseries whisper\+\_\+model\+\_\+type\+\_\+readable} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a9e18e10abecf56679451140cf2dae2dc}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a9e18e10abecf56679451140cf2dae2dc} 
+int {\bfseries whisper\+\_\+token\+\_\+eot} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a0b21612accc70febf48066afafc749a6}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a0b21612accc70febf48066afafc749a6} 
+int {\bfseries whisper\+\_\+token\+\_\+sot} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a99c4d365818827f334336e3f612bfe36}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a99c4d365818827f334336e3f612bfe36} 
+int {\bfseries whisper\+\_\+token\+\_\+prev} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a7d55a306753ca5e725e35a4874f803d8}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a7d55a306753ca5e725e35a4874f803d8} 
+int {\bfseries whisper\+\_\+token\+\_\+solm} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a0654cbf017252b5e03827b7771a0f2f2}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a0654cbf017252b5e03827b7771a0f2f2} 
+int {\bfseries whisper\+\_\+token\+\_\+not} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a8f26268c108f8811fb7f3bf942566465}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a8f26268c108f8811fb7f3bf942566465} 
+int {\bfseries whisper\+\_\+token\+\_\+beg} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ab4e15f193443f4115c5c5fbfc4d390c8}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ab4e15f193443f4115c5c5fbfc4d390c8} 
+int {\bfseries whisper\+\_\+token\+\_\+lang} (Pointer ctx, int lang\+\_\+id)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a90bbfdae8932fb09b0f86c3138769b42}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a90bbfdae8932fb09b0f86c3138769b42} 
+int {\bfseries whisper\+\_\+token\+\_\+translate} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aeed8677a1d393ba165cbccef604d1538}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aeed8677a1d393ba165cbccef604d1538} 
+int {\bfseries whisper\+\_\+token\+\_\+transcribe} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_abb91b0ae4927b8d69b5cbc56e776d70f}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_abb91b0ae4927b8d69b5cbc56e776d70f} 
+void {\bfseries whisper\+\_\+print\+\_\+timings} (Pointer ctx)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a20096a339d3ad3acd93da321b543ed2b}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a20096a339d3ad3acd93da321b543ed2b} 
+void {\bfseries whisper\+\_\+reset\+\_\+timings} (Pointer ctx)
+\item 
+Pointer \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a838a51b92138417e1dfb95be6c745050}{whisper\+\_\+full\+\_\+default\+\_\+params\+\_\+by\+\_\+ref}} (int strategy)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad6eaed8e9ec9cdff920d599d127728d9}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad6eaed8e9ec9cdff920d599d127728d9} 
+void {\bfseries whisper\+\_\+free\+\_\+params} (Pointer params)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aa6730dac3b7f09fb92f24551a40b557d}{whisper\+\_\+full}} (Pointer ctx, \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}} params, final float\+[$\,$]\+ samples, int n\+\_\+samples)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad03b3a194aa2d11e860d54535ea777e6}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad03b3a194aa2d11e860d54535ea777e6} 
+int {\bfseries whisper\+\_\+full\+\_\+with\+\_\+state} (Pointer ctx, Pointer state, \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}} params, float\+[$\,$]\+ samples, int n\+\_\+samples)
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a6adcf80eeef3dbf0d7204a779e373636}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a6adcf80eeef3dbf0d7204a779e373636} 
+int {\bfseries whisper\+\_\+full\+\_\+parallel} (Pointer ctx, \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}} params, final float\+[$\,$]\+ samples, int n\+\_\+samples, int n\+\_\+processors)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac34defde8822aba372d780b2472932c8}{whisper\+\_\+full\+\_\+n\+\_\+segments}} (Pointer ctx)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ab274a2ab616b8ef15ee0f2c2a64f6d9b}{whisper\+\_\+full\+\_\+n\+\_\+segments\+\_\+from\+\_\+state}} (Pointer state)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a3ffc6beac34e24bb5e541df08c12f9e9}{whisper\+\_\+full\+\_\+lang\+\_\+id}} (Pointer ctx)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_acb297fb2cb1596e23e29de37d38465e1}{whisper\+\_\+full\+\_\+lang\+\_\+id\+\_\+from\+\_\+state}} (Pointer state)
+\item 
+long \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac511c5def27b8c7b7f06173339919e34}{whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+t0}} (Pointer ctx, int i\+\_\+segment)
+\item 
+long \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a198c90b7ca741dbdd5c6b9fb3ef54042}{whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+t0\+\_\+from\+\_\+state}} (Pointer state, int i\+\_\+segment)
+\item 
+long \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a31ee87b4e22fc91ada35ea0e23987389}{whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+t1}} (Pointer ctx, int i\+\_\+segment)
+\item 
+long \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a6c168ae71a050cde64d31b3b5996a17b}{whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+t1\+\_\+from\+\_\+state}} (Pointer state, int i\+\_\+segment)
+\item 
+String \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a118d6d6e9e7f440755bd456b7ad15271}{whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+text}} (Pointer ctx, int i\+\_\+segment)
+\item 
+String \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aec6f85f36ad5282ff028496c075445cd}{whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+text\+\_\+from\+\_\+state}} (Pointer state, int i\+\_\+segment)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae85b5357864f6fda173924e0a1f61827}{whisper\+\_\+full\+\_\+n\+\_\+tokens}} (Pointer ctx, int i\+\_\+segment)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a3e2550b0484a777d87a9935ba615efa5}{whisper\+\_\+full\+\_\+n\+\_\+tokens\+\_\+from\+\_\+state}} (Pointer state, int i\+\_\+segment)
+\item 
+String \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac25fa9948cb57955ed591c45bae884be}{whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+text}} (Pointer ctx, int i\+\_\+segment, int i\+\_\+token)
+\item 
+String \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a7a57c3e7a2d432780a93ca97b47308c3}{whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+text\+\_\+from\+\_\+state}} (Pointer ctx, Pointer state, int i\+\_\+segment, int i\+\_\+token)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aaed05654b3505b0f74b0250da1c172c8}{whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+id}} (Pointer ctx, int i\+\_\+segment, int i\+\_\+token)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a444a046bdd30d2af9578eccc6d77b72a}{whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+id\+\_\+from\+\_\+state}} (Pointer state, int i\+\_\+segment, int i\+\_\+token)
+\item 
+\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_token_data}{Whisper\+Token\+Data}} \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a1f1dcfcc8c9ff24b8ee4fc90820e9e6c}{whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+data}} (Pointer ctx, int i\+\_\+segment, int i\+\_\+token)
+\item 
+\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_token_data}{Whisper\+Token\+Data}} \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_af78126f01a49af298e96274f9af9d9cc}{whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+data\+\_\+from\+\_\+state}} (Pointer state, int i\+\_\+segment, int i\+\_\+token)
+\item 
+float \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a7a3abecb6f3dc8911451c1c7e9804e8a}{whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+p}} (Pointer ctx, int i\+\_\+segment, int i\+\_\+token)
+\item 
+float \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_afdda52166e7b3910b6e2b9b1d9483d4f}{whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+p\+\_\+from\+\_\+state}} (Pointer state, int i\+\_\+segment, int i\+\_\+token)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2eda75063ea209865b24b8dda69b7d2c}{whisper\+\_\+bench\+\_\+memcpy}} (int n\+Threads)
+\item 
+String \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a59800aed3e06dd5c1925aa45d66b695f}{whisper\+\_\+bench\+\_\+memcpy\+\_\+str}} (int n\+Threads)
+\item 
+int \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a4cb6dccd70e4d39956386c50b71e2e61}{whisper\+\_\+bench\+\_\+ggml\+\_\+mul\+\_\+mat}} (int n\+Threads)
+\item 
+String \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a750eeb792cc9213ba8997c192a9edb4c}{whisper\+\_\+bench\+\_\+ggml\+\_\+mul\+\_\+mat\+\_\+str}} (int n\+Threads)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aea09bd6d00b213bb4545061daf7eb23d}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aea09bd6d00b213bb4545061daf7eb23d} 
+\doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library}{Whisper\+Cpp\+Jna\+Library}} {\bfseries instance} = Native.\+load("{}whisper"{}, Whisper\+Cpp\+Jna\+Library.\+class)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a4cb6dccd70e4d39956386c50b71e2e61}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_bench\_ggml\_mul\_mat@{whisper\_bench\_ggml\_mul\_mat}}
+\index{whisper\_bench\_ggml\_mul\_mat@{whisper\_bench\_ggml\_mul\_mat}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_bench\_ggml\_mul\_mat()}{whisper\_bench\_ggml\_mul\_mat()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a4cb6dccd70e4d39956386c50b71e2e61} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+bench\+\_\+ggml\+\_\+mul\+\_\+mat (\begin{DoxyParamCaption}\item[{int}]{n\+Threads}{}\end{DoxyParamCaption})}
+
+Benchmark function for ggml\+\_\+mul\+\_\+mat.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+Threads} & Number of threads to use for the benchmark. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} result of the benchmark. 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a750eeb792cc9213ba8997c192a9edb4c}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_bench\_ggml\_mul\_mat\_str@{whisper\_bench\_ggml\_mul\_mat\_str}}
+\index{whisper\_bench\_ggml\_mul\_mat\_str@{whisper\_bench\_ggml\_mul\_mat\_str}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_bench\_ggml\_mul\_mat\_str()}{whisper\_bench\_ggml\_mul\_mat\_str()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a750eeb792cc9213ba8997c192a9edb4c} 
+String io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+bench\+\_\+ggml\+\_\+mul\+\_\+mat\+\_\+str (\begin{DoxyParamCaption}\item[{int}]{n\+Threads}{}\end{DoxyParamCaption})}
+
+Benchmark function for ggml\+\_\+mul\+\_\+mat as a string.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+Threads} & Number of threads to use for the benchmark. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} result of the benchmark as a string. 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2eda75063ea209865b24b8dda69b7d2c}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_bench\_memcpy@{whisper\_bench\_memcpy}}
+\index{whisper\_bench\_memcpy@{whisper\_bench\_memcpy}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_bench\_memcpy()}{whisper\_bench\_memcpy()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2eda75063ea209865b24b8dda69b7d2c} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+bench\+\_\+memcpy (\begin{DoxyParamCaption}\item[{int}]{n\+Threads}{}\end{DoxyParamCaption})}
+
+Benchmark function for memcpy.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+Threads} & Number of threads to use for the benchmark. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} result of the benchmark. 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a59800aed3e06dd5c1925aa45d66b695f}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_bench\_memcpy\_str@{whisper\_bench\_memcpy\_str}}
+\index{whisper\_bench\_memcpy\_str@{whisper\_bench\_memcpy\_str}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_bench\_memcpy\_str()}{whisper\_bench\_memcpy\_str()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a59800aed3e06dd5c1925aa45d66b695f} 
+String io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+bench\+\_\+memcpy\+\_\+str (\begin{DoxyParamCaption}\item[{int}]{n\+Threads}{}\end{DoxyParamCaption})}
+
+Benchmark function for memcpy as a string.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+Threads} & Number of threads to use for the benchmark. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} result of the benchmark as a string. 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_acc566782eca330f1d172948924750f17}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_context\_default\_params\_by\_ref@{whisper\_context\_default\_params\_by\_ref}}
+\index{whisper\_context\_default\_params\_by\_ref@{whisper\_context\_default\_params\_by\_ref}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_context\_default\_params\_by\_ref()}{whisper\_context\_default\_params\_by\_ref()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_acc566782eca330f1d172948924750f17} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+context\+\_\+default\+\_\+params\+\_\+by\+\_\+ref (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Provides default params which can be used with {\ttfamily \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a808482c41b9da91572afc14db65755c1}{whisper\+\_\+init\+\_\+from\+\_\+file\+\_\+with\+\_\+params()}} etc. Because this function allocates memory for the params, the caller must call either:\+
+\begin{DoxyItemize}
+\item call {\ttfamily whisper\+\_\+free\+\_\+context\+\_\+params()}
+\item {\ttfamily Native.\+free(Pointer.\+native\+Value(pointer));} 
+\end{DoxyItemize}\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_af92b8fab343f1ab4e8d27f3a6d59515e}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_decode@{whisper\_decode}}
+\index{whisper\_decode@{whisper\_decode}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_decode()}{whisper\_decode()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_af92b8fab343f1ab4e8d27f3a6d59515e} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+decode (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{Pointer}]{tokens}{, }\item[{int}]{n\+\_\+tokens}{, }\item[{int}]{n\+\_\+past}{, }\item[{int}]{n\+\_\+threads}{}\end{DoxyParamCaption})}
+
+Run the Whisper decoder to obtain the logits and probabilities for the next token. Make sure to call \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aeb9ccdef3950216b901d8a334613e636}{whisper\+\_\+encode()} first. tokens + n\+\_\+tokens is the provided context for the decoder. n\+\_\+past is the number of tokens to use from previous decoder calls. Returns 0 on success TODO:\+ add support for multiple decoders \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad1feb2567b828f29fe8e963743cb1b04}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_decode\_with\_state@{whisper\_decode\_with\_state}}
+\index{whisper\_decode\_with\_state@{whisper\_decode\_with\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_decode\_with\_state()}{whisper\_decode\_with\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad1feb2567b828f29fe8e963743cb1b04} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+decode\+\_\+with\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{Pointer}]{state}{, }\item[{Pointer}]{tokens}{, }\item[{int}]{n\+\_\+tokens}{, }\item[{int}]{n\+\_\+past}{, }\item[{int}]{n\+\_\+threads}{}\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & \\
+\hline
+{\em state} & \\
+\hline
+{\em tokens} & Pointer to int tokens \\
+\hline
+{\em n\+\_\+tokens} & \\
+\hline
+{\em n\+\_\+past} & \\
+\hline
+{\em n\+\_\+threads} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aeb9ccdef3950216b901d8a334613e636}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_encode@{whisper\_encode}}
+\index{whisper\_encode@{whisper\_encode}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_encode()}{whisper\_encode()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aeb9ccdef3950216b901d8a334613e636} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+encode (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{offset}{, }\item[{int}]{n\+\_\+threads}{}\end{DoxyParamCaption})}
+
+Run the Whisper encoder on the log mel spectrogram stored inside the default state in the provided whisper context. Make sure to call \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a10e984ae704841f3e6b87929bd1e9546}{whisper\+\_\+pcm\+\_\+to\+\_\+mel()} or \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2b0e7a8dcb740d9aa711846822092a11}{whisper\+\_\+set\+\_\+mel()} first. Offset can be used to specify the offset of the first frame in the spectrogram. \begin{DoxyReturn}{Returns}
+0 on success 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae1af85f42c740ad3903eabcff711a865}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_free@{whisper\_free}}
+\index{whisper\_free@{whisper\_free}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_free()}{whisper\_free()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae1af85f42c740ad3903eabcff711a865} 
+void io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+free (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{}\end{DoxyParamCaption})}
+
+Free all allocated memory associated with the Whisper context.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & Whisper context \\
+\hline
+\end{DoxyParams}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a65ac4820dc96663e84b0c2b9f48ff141}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_free\_state@{whisper\_free\_state}}
+\index{whisper\_free\_state@{whisper\_free\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_free\_state()}{whisper\_free\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a65ac4820dc96663e84b0c2b9f48ff141} 
+void io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+free\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{}\end{DoxyParamCaption})}
+
+Free all allocated memory associated with the Whisper state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & Whisper state \\
+\hline
+\end{DoxyParams}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aa6730dac3b7f09fb92f24551a40b557d}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full@{whisper\_full}}
+\index{whisper\_full@{whisper\_full}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full()}{whisper\_full()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aa6730dac3b7f09fb92f24551a40b557d} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}}}]{params}{, }\item[{final float\+[$\,$]\+}]{samples}{, }\item[{int}]{n\+\_\+samples}{}\end{DoxyParamCaption})}
+
+Run the entire model:\+ PCM -\/\texorpdfstring{$>$}{>} log mel spectrogram -\/\texorpdfstring{$>$}{>} encoder -\/\texorpdfstring{$>$}{>} decoder -\/\texorpdfstring{$>$}{>} text Not thread safe for same context Uses the specified decoding strategy to obtain the text. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a838a51b92138417e1dfb95be6c745050}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_default\_params\_by\_ref@{whisper\_full\_default\_params\_by\_ref}}
+\index{whisper\_full\_default\_params\_by\_ref@{whisper\_full\_default\_params\_by\_ref}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_default\_params\_by\_ref()}{whisper\_full\_default\_params\_by\_ref()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a838a51b92138417e1dfb95be6c745050} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+default\+\_\+params\+\_\+by\+\_\+ref (\begin{DoxyParamCaption}\item[{int}]{strategy}{}\end{DoxyParamCaption})}
+
+Provides default params which can be used with {\ttfamily \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aa6730dac3b7f09fb92f24551a40b557d}{whisper\+\_\+full()}} etc. Because this function allocates memory for the params, the caller must call either:\+
+\begin{DoxyItemize}
+\item call {\ttfamily whisper\+\_\+free\+\_\+params()}
+\item {\ttfamily Native.\+free(Pointer.\+native\+Value(pointer));}
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em strategy} & -\/ Whisper\+Sampling\+Strategy.\+value \\
+\hline
+\end{DoxyParams}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac511c5def27b8c7b7f06173339919e34}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_segment\_t0@{whisper\_full\_get\_segment\_t0}}
+\index{whisper\_full\_get\_segment\_t0@{whisper\_full\_get\_segment\_t0}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_segment\_t0()}{whisper\_full\_get\_segment\_t0()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac511c5def27b8c7b7f06173339919e34} 
+long io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+t0 (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{i\+\_\+segment}{}\end{DoxyParamCaption})}
+
+Get the start time of the specified segment. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a198c90b7ca741dbdd5c6b9fb3ef54042}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_segment\_t0\_from\_state@{whisper\_full\_get\_segment\_t0\_from\_state}}
+\index{whisper\_full\_get\_segment\_t0\_from\_state@{whisper\_full\_get\_segment\_t0\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_segment\_t0\_from\_state()}{whisper\_full\_get\_segment\_t0\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a198c90b7ca741dbdd5c6b9fb3ef54042} 
+long io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+t0\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{, }\item[{int}]{i\+\_\+segment}{}\end{DoxyParamCaption})}
+
+Get the start time of the specified segment from the state. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a31ee87b4e22fc91ada35ea0e23987389}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_segment\_t1@{whisper\_full\_get\_segment\_t1}}
+\index{whisper\_full\_get\_segment\_t1@{whisper\_full\_get\_segment\_t1}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_segment\_t1()}{whisper\_full\_get\_segment\_t1()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a31ee87b4e22fc91ada35ea0e23987389} 
+long io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+t1 (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{i\+\_\+segment}{}\end{DoxyParamCaption})}
+
+Get the end time of the specified segment. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a6c168ae71a050cde64d31b3b5996a17b}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_segment\_t1\_from\_state@{whisper\_full\_get\_segment\_t1\_from\_state}}
+\index{whisper\_full\_get\_segment\_t1\_from\_state@{whisper\_full\_get\_segment\_t1\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_segment\_t1\_from\_state()}{whisper\_full\_get\_segment\_t1\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a6c168ae71a050cde64d31b3b5996a17b} 
+long io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+t1\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{, }\item[{int}]{i\+\_\+segment}{}\end{DoxyParamCaption})}
+
+Get the end time of the specified segment from the state. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a118d6d6e9e7f440755bd456b7ad15271}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_segment\_text@{whisper\_full\_get\_segment\_text}}
+\index{whisper\_full\_get\_segment\_text@{whisper\_full\_get\_segment\_text}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_segment\_text()}{whisper\_full\_get\_segment\_text()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a118d6d6e9e7f440755bd456b7ad15271} 
+String io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+text (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{i\+\_\+segment}{}\end{DoxyParamCaption})}
+
+Get the text of the specified segment. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aec6f85f36ad5282ff028496c075445cd}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_segment\_text\_from\_state@{whisper\_full\_get\_segment\_text\_from\_state}}
+\index{whisper\_full\_get\_segment\_text\_from\_state@{whisper\_full\_get\_segment\_text\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_segment\_text\_from\_state()}{whisper\_full\_get\_segment\_text\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aec6f85f36ad5282ff028496c075445cd} 
+String io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+segment\+\_\+text\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{, }\item[{int}]{i\+\_\+segment}{}\end{DoxyParamCaption})}
+
+Get the text of the specified segment from the state. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a1f1dcfcc8c9ff24b8ee4fc90820e9e6c}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_token\_data@{whisper\_full\_get\_token\_data}}
+\index{whisper\_full\_get\_token\_data@{whisper\_full\_get\_token\_data}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_token\_data()}{whisper\_full\_get\_token\_data()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a1f1dcfcc8c9ff24b8ee4fc90820e9e6c} 
+\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_token_data}{Whisper\+Token\+Data}} io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+data (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{i\+\_\+segment}{, }\item[{int}]{i\+\_\+token}{}\end{DoxyParamCaption})}
+
+Get token data for the specified token in the specified segment. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_af78126f01a49af298e96274f9af9d9cc}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_token\_data\_from\_state@{whisper\_full\_get\_token\_data\_from\_state}}
+\index{whisper\_full\_get\_token\_data\_from\_state@{whisper\_full\_get\_token\_data\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_token\_data\_from\_state()}{whisper\_full\_get\_token\_data\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_af78126f01a49af298e96274f9af9d9cc} 
+\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_token_data}{Whisper\+Token\+Data}} io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+data\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{, }\item[{int}]{i\+\_\+segment}{, }\item[{int}]{i\+\_\+token}{}\end{DoxyParamCaption})}
+
+Get token data for the specified token in the specified segment from the state. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aaed05654b3505b0f74b0250da1c172c8}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_token\_id@{whisper\_full\_get\_token\_id}}
+\index{whisper\_full\_get\_token\_id@{whisper\_full\_get\_token\_id}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_token\_id()}{whisper\_full\_get\_token\_id()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aaed05654b3505b0f74b0250da1c172c8} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+id (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{i\+\_\+segment}{, }\item[{int}]{i\+\_\+token}{}\end{DoxyParamCaption})}
+
+Get the token ID of the specified token in the specified segment. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a444a046bdd30d2af9578eccc6d77b72a}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_token\_id\_from\_state@{whisper\_full\_get\_token\_id\_from\_state}}
+\index{whisper\_full\_get\_token\_id\_from\_state@{whisper\_full\_get\_token\_id\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_token\_id\_from\_state()}{whisper\_full\_get\_token\_id\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a444a046bdd30d2af9578eccc6d77b72a} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+id\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{, }\item[{int}]{i\+\_\+segment}{, }\item[{int}]{i\+\_\+token}{}\end{DoxyParamCaption})}
+
+Get the token ID of the specified token in the specified segment from the state. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a7a3abecb6f3dc8911451c1c7e9804e8a}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_token\_p@{whisper\_full\_get\_token\_p}}
+\index{whisper\_full\_get\_token\_p@{whisper\_full\_get\_token\_p}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_token\_p()}{whisper\_full\_get\_token\_p()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a7a3abecb6f3dc8911451c1c7e9804e8a} 
+float io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+p (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{i\+\_\+segment}{, }\item[{int}]{i\+\_\+token}{}\end{DoxyParamCaption})}
+
+Get the probability of the specified token in the specified segment. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_afdda52166e7b3910b6e2b9b1d9483d4f}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_token\_p\_from\_state@{whisper\_full\_get\_token\_p\_from\_state}}
+\index{whisper\_full\_get\_token\_p\_from\_state@{whisper\_full\_get\_token\_p\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_token\_p\_from\_state()}{whisper\_full\_get\_token\_p\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_afdda52166e7b3910b6e2b9b1d9483d4f} 
+float io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+p\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{, }\item[{int}]{i\+\_\+segment}{, }\item[{int}]{i\+\_\+token}{}\end{DoxyParamCaption})}
+
+Get the probability of the specified token in the specified segment from the state. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac25fa9948cb57955ed591c45bae884be}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_token\_text@{whisper\_full\_get\_token\_text}}
+\index{whisper\_full\_get\_token\_text@{whisper\_full\_get\_token\_text}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_token\_text()}{whisper\_full\_get\_token\_text()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac25fa9948cb57955ed591c45bae884be} 
+String io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+text (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{i\+\_\+segment}{, }\item[{int}]{i\+\_\+token}{}\end{DoxyParamCaption})}
+
+Get the token text of the specified token in the specified segment. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a7a57c3e7a2d432780a93ca97b47308c3}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_get\_token\_text\_from\_state@{whisper\_full\_get\_token\_text\_from\_state}}
+\index{whisper\_full\_get\_token\_text\_from\_state@{whisper\_full\_get\_token\_text\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_get\_token\_text\_from\_state()}{whisper\_full\_get\_token\_text\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a7a57c3e7a2d432780a93ca97b47308c3} 
+String io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+get\+\_\+token\+\_\+text\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{Pointer}]{state}{, }\item[{int}]{i\+\_\+segment}{, }\item[{int}]{i\+\_\+token}{}\end{DoxyParamCaption})}
+
+Get the token text of the specified token in the specified segment from the state. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a3ffc6beac34e24bb5e541df08c12f9e9}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_lang\_id@{whisper\_full\_lang\_id}}
+\index{whisper\_full\_lang\_id@{whisper\_full\_lang\_id}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_lang\_id()}{whisper\_full\_lang\_id()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a3ffc6beac34e24bb5e541df08c12f9e9} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+lang\+\_\+id (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{}\end{DoxyParamCaption})}
+
+Language id associated with the context\textquotesingle{}s default state. 
+\begin{DoxyParams}{Parameters}
+{\em ctx} & Pointer to \doxylink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_context}{Whisper\+Context} \\
+\hline
+\end{DoxyParams}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_acb297fb2cb1596e23e29de37d38465e1}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_lang\_id\_from\_state@{whisper\_full\_lang\_id\_from\_state}}
+\index{whisper\_full\_lang\_id\_from\_state@{whisper\_full\_lang\_id\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_lang\_id\_from\_state()}{whisper\_full\_lang\_id\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_acb297fb2cb1596e23e29de37d38465e1} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+lang\+\_\+id\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{}\end{DoxyParamCaption})}
+
+Language id associated with the provided state \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac34defde8822aba372d780b2472932c8}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_n\_segments@{whisper\_full\_n\_segments}}
+\index{whisper\_full\_n\_segments@{whisper\_full\_n\_segments}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_n\_segments()}{whisper\_full\_n\_segments()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ac34defde8822aba372d780b2472932c8} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+n\+\_\+segments (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{}\end{DoxyParamCaption})}
+
+Number of generated text segments. A segment can be a few words, a sentence, or even a paragraph. 
+\begin{DoxyParams}{Parameters}
+{\em ctx} & Pointer to \doxylink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_context}{Whisper\+Context} \\
+\hline
+\end{DoxyParams}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ab274a2ab616b8ef15ee0f2c2a64f6d9b}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_n\_segments\_from\_state@{whisper\_full\_n\_segments\_from\_state}}
+\index{whisper\_full\_n\_segments\_from\_state@{whisper\_full\_n\_segments\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_n\_segments\_from\_state()}{whisper\_full\_n\_segments\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ab274a2ab616b8ef15ee0f2c2a64f6d9b} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+n\+\_\+segments\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{}\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & Pointer to Whisper\+State \\
+\hline
+\end{DoxyParams}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae85b5357864f6fda173924e0a1f61827}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_n\_tokens@{whisper\_full\_n\_tokens}}
+\index{whisper\_full\_n\_tokens@{whisper\_full\_n\_tokens}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_n\_tokens()}{whisper\_full\_n\_tokens()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ae85b5357864f6fda173924e0a1f61827} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+n\+\_\+tokens (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{i\+\_\+segment}{}\end{DoxyParamCaption})}
+
+Get the number of tokens in the specified segment. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a3e2550b0484a777d87a9935ba615efa5}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_full\_n\_tokens\_from\_state@{whisper\_full\_n\_tokens\_from\_state}}
+\index{whisper\_full\_n\_tokens\_from\_state@{whisper\_full\_n\_tokens\_from\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_full\_n\_tokens\_from\_state()}{whisper\_full\_n\_tokens\_from\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a3e2550b0484a777d87a9935ba615efa5} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+full\+\_\+n\+\_\+tokens\+\_\+from\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{state}{, }\item[{int}]{i\+\_\+segment}{}\end{DoxyParamCaption})}
+
+Get the number of tokens in the specified segment from the state. \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a99631b02f212f97b58d52406309408ab}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_get\_logits@{whisper\_get\_logits}}
+\index{whisper\_get\_logits@{whisper\_get\_logits}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_get\_logits()}{whisper\_get\_logits()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a99631b02f212f97b58d52406309408ab} 
+float\+[$\,$]\+ io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+get\+\_\+logits (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{}\end{DoxyParamCaption})}
+
+Token logits obtained from the last call to \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_af92b8fab343f1ab4e8d27f3a6d59515e}{whisper\+\_\+decode()}. \doxylink{requirements_The}{The} logits for the last token are stored in the last row Rows:\+ n\+\_\+tokens Cols:\+ n\+\_\+vocab \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad4922d69d83ae89caa74d65ef440e909}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_init@{whisper\_init}}
+\index{whisper\_init@{whisper\_init}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_init()}{whisper\_init()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_ad4922d69d83ae89caa74d65ef440e909} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+init (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_model_loader}{Whisper\+Model\+Loader}}}]{loader}{}\end{DoxyParamCaption})}
+
+Allocate (almost) all memory needed for the model using a model loader.
+
+
+\begin{DoxyParams}{Parameters}
+{\em loader} & Model loader \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Whisper context on success, null on failure 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2072a4cef9d3a8564f6a60f27281606f}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_init\_from\_buffer@{whisper\_init\_from\_buffer}}
+\index{whisper\_init\_from\_buffer@{whisper\_init\_from\_buffer}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_init\_from\_buffer()}{whisper\_init\_from\_buffer()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2072a4cef9d3a8564f6a60f27281606f} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+init\+\_\+from\+\_\+buffer (\begin{DoxyParamCaption}\item[{Pointer}]{buffer}{, }\item[{int}]{buffer\+\_\+size}{}\end{DoxyParamCaption})}
+
+Allocate (almost) all memory needed for the model by loading from a buffer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & Model buffer \\
+\hline
+{\em buffer\+\_\+size} & Size of the model buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Whisper context on success, null on failure 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a8d7d7926970194cd724dc4ce26f4486e}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_init\_from\_buffer\_no\_state@{whisper\_init\_from\_buffer\_no\_state}}
+\index{whisper\_init\_from\_buffer\_no\_state@{whisper\_init\_from\_buffer\_no\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_init\_from\_buffer\_no\_state()}{whisper\_init\_from\_buffer\_no\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a8d7d7926970194cd724dc4ce26f4486e} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+init\+\_\+from\+\_\+buffer\+\_\+no\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{buffer}{, }\item[{int}]{buffer\+\_\+size}{}\end{DoxyParamCaption})}
+
+Allocate (almost) all memory needed for the model by loading from a buffer without allocating the state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & Model buffer \\
+\hline
+{\em buffer\+\_\+size} & Size of the model buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Whisper context on success, null on failure 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a75e73e6c9ca072f754ecb2f20ec68e11}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_init\_from\_file@{whisper\_init\_from\_file}}
+\index{whisper\_init\_from\_file@{whisper\_init\_from\_file}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_init\_from\_file()}{whisper\_init\_from\_file()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a75e73e6c9ca072f754ecb2f20ec68e11} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+init\+\_\+from\+\_\+file (\begin{DoxyParamCaption}\item[{String}]{path\+\_\+model}{}\end{DoxyParamCaption})}
+
+DEPRECATED. Allocate (almost) all memory needed for the model by loading from a file.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path\+\_\+model} & Path to the model file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Whisper context on success, null on failure 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aab1c040f51f16c031a939664465bef20}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_init\_from\_file\_no\_state@{whisper\_init\_from\_file\_no\_state}}
+\index{whisper\_init\_from\_file\_no\_state@{whisper\_init\_from\_file\_no\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_init\_from\_file\_no\_state()}{whisper\_init\_from\_file\_no\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_aab1c040f51f16c031a939664465bef20} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+init\+\_\+from\+\_\+file\+\_\+no\+\_\+state (\begin{DoxyParamCaption}\item[{String}]{path\+\_\+model}{}\end{DoxyParamCaption})}
+
+Allocate (almost) all memory needed for the model by loading from a file without allocating the state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path\+\_\+model} & Path to the model file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Whisper context on success, null on failure 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a808482c41b9da91572afc14db65755c1}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_init\_from\_file\_with\_params@{whisper\_init\_from\_file\_with\_params}}
+\index{whisper\_init\_from\_file\_with\_params@{whisper\_init\_from\_file\_with\_params}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_init\_from\_file\_with\_params()}{whisper\_init\_from\_file\_with\_params()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a808482c41b9da91572afc14db65755c1} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+init\+\_\+from\+\_\+file\+\_\+with\+\_\+params (\begin{DoxyParamCaption}\item[{String}]{path\+\_\+model}{, }\item[{\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_context_params_1_1_by_value}{Whisper\+Context\+Params.\+By\+Value}}}]{params}{}\end{DoxyParamCaption})}
+
+Allocate (almost) all memory needed for the model by loading from a file.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path\+\_\+model} & Path to the model file \\
+\hline
+{\em params} & Pointer to \doxylink{structwhisper__context__params}{whisper\+\_\+context\+\_\+params} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Whisper context on success, null on failure 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_abec81349851db38ecb42080d5d8a00f7}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_init\_no\_state@{whisper\_init\_no\_state}}
+\index{whisper\_init\_no\_state@{whisper\_init\_no\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_init\_no\_state()}{whisper\_init\_no\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_abec81349851db38ecb42080d5d8a00f7} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+init\+\_\+no\+\_\+state (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1model_1_1_whisper_model_loader}{Whisper\+Model\+Loader}}}]{loader}{}\end{DoxyParamCaption})}
+
+Allocate (almost) all memory needed for the model using a model loader without allocating the state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em loader} & Model loader \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Whisper context on success, null on failure 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a76f49402ab3975269ea74f133a510ea4}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_init\_state@{whisper\_init\_state}}
+\index{whisper\_init\_state@{whisper\_init\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_init\_state()}{whisper\_init\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a76f49402ab3975269ea74f133a510ea4} 
+Pointer io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+init\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{}\end{DoxyParamCaption})}
+
+Allocate memory for the Whisper state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & Whisper context \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Whisper state on success, null on failure 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a0ec51cd7e9ba7a8a0c01025e9d8e0d23}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_lang\_auto\_detect@{whisper\_lang\_auto\_detect}}
+\index{whisper\_lang\_auto\_detect@{whisper\_lang\_auto\_detect}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_lang\_auto\_detect()}{whisper\_lang\_auto\_detect()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a0ec51cd7e9ba7a8a0c01025e9d8e0d23} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+lang\+\_\+auto\+\_\+detect (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{int}]{offset\+\_\+ms}{, }\item[{int}]{n\+\_\+threads}{, }\item[{float\+[$\,$]\+}]{lang\+\_\+probs}{}\end{DoxyParamCaption})}
+
+Use mel data at offset\+\_\+ms to try and auto-\/detect the spoken language. Make sure to call \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a10e984ae704841f3e6b87929bd1e9546}{whisper\+\_\+pcm\+\_\+to\+\_\+mel()} or \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2b0e7a8dcb740d9aa711846822092a11}{whisper\+\_\+set\+\_\+mel()} first Returns the top language id or negative on failure If not null, fills the lang\+\_\+probs array with the probabilities of all languages \doxylink{requirements_The}{The} array must be \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a588fce94d08efafc9c599cb563b56c13}{whisper\+\_\+lang\+\_\+max\+\_\+id()} + 1 in size
+
+ref:\+ \href{https://github.com/openai/whisper/blob/main/whisper/decoding.py\#L18-L69}{\texttt{https:\+/\+/\+github.\+com/\+openai/\+whisper/\+blob/\+main/\+whisper/\+decoding.\+py\+\#\+L18-\/\+L69}} \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a5607b5b48a92edee8ef9d41d398c2838}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_lang\_id@{whisper\_lang\_id}}
+\index{whisper\_lang\_id@{whisper\_lang\_id}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_lang\_id()}{whisper\_lang\_id()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a5607b5b48a92edee8ef9d41d398c2838} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+lang\+\_\+id (\begin{DoxyParamCaption}\item[{String}]{lang}{}\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the id of the specified language, returns -\/1 if not found. Examples:\+ "{}de"{} -\/\texorpdfstring{$>$}{>} 2 "{}german"{} -\/\texorpdfstring{$>$}{>} 2 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a588fce94d08efafc9c599cb563b56c13}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_lang\_max\_id@{whisper\_lang\_max\_id}}
+\index{whisper\_lang\_max\_id@{whisper\_lang\_max\_id}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_lang\_max\_id()}{whisper\_lang\_max\_id()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a588fce94d08efafc9c599cb563b56c13} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+lang\+\_\+max\+\_\+id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Largest language id (i.\+e. number of available languages -\/ 1) \Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a089d5cef1ade8d68c1feb3ac793321bb}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_lang\_str@{whisper\_lang\_str}}
+\index{whisper\_lang\_str@{whisper\_lang\_str}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_lang\_str()}{whisper\_lang\_str()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a089d5cef1ade8d68c1feb3ac793321bb} 
+String io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+lang\+\_\+str (\begin{DoxyParamCaption}\item[{int}]{id}{}\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+the short string of the specified language id (e.\+g. 2 -\/\texorpdfstring{$>$}{>} "{}de"{}), returns nullptr if not found 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a10e984ae704841f3e6b87929bd1e9546}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_pcm\_to\_mel@{whisper\_pcm\_to\_mel}}
+\index{whisper\_pcm\_to\_mel@{whisper\_pcm\_to\_mel}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_pcm\_to\_mel()}{whisper\_pcm\_to\_mel()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a10e984ae704841f3e6b87929bd1e9546} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+pcm\+\_\+to\+\_\+mel (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{final float\+[$\,$]\+}]{samples}{, }\item[{int}]{n\+\_\+samples}{, }\item[{int}]{n\+\_\+threads}{}\end{DoxyParamCaption})}
+
+Convert RAW PCM audio to log mel spectrogram. \doxylink{requirements_The}{The} resulting spectrogram is stored inside the default state of the provided whisper context.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & -\/ Pointer to a \doxylink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_context}{Whisper\+Context} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2fee412b67a809fb02c0ca8751488a82}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_pcm\_to\_mel\_with\_state@{whisper\_pcm\_to\_mel\_with\_state}}
+\index{whisper\_pcm\_to\_mel\_with\_state@{whisper\_pcm\_to\_mel\_with\_state}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_pcm\_to\_mel\_with\_state()}{whisper\_pcm\_to\_mel\_with\_state()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2fee412b67a809fb02c0ca8751488a82} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+pcm\+\_\+to\+\_\+mel\+\_\+with\+\_\+state (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{Pointer}]{state}{, }\item[{final float\+[$\,$]\+}]{samples}{, }\item[{int}]{n\+\_\+samples}{, }\item[{int}]{n\+\_\+threads}{}\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & Pointer to a \doxylink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_context}{Whisper\+Context} \\
+\hline
+{\em state} & Pointer to Whisper\+State \\
+\hline
+{\em n\+\_\+samples} & \\
+\hline
+{\em n\+\_\+threads} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2b0e7a8dcb740d9aa711846822092a11}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_set\_mel@{whisper\_set\_mel}}
+\index{whisper\_set\_mel@{whisper\_set\_mel}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_set\_mel()}{whisper\_set\_mel()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a2b0e7a8dcb740d9aa711846822092a11} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+set\+\_\+mel (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{final float\+[$\,$]\+}]{data}{, }\item[{int}]{n\+\_\+len}{, }\item[{int}]{n\+\_\+mel}{}\end{DoxyParamCaption})}
+
+This can be used to set a custom log mel spectrogram inside the default state of the provided whisper context. Use this instead of \doxylink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a10e984ae704841f3e6b87929bd1e9546}{whisper\+\_\+pcm\+\_\+to\+\_\+mel()} if you want to provide your own log mel spectrogram. n\+\_\+mel must be 80 \begin{DoxyReturn}{Returns}
+0 on success 
+\end{DoxyReturn}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a4c3313a4d63d14a19eede93a3ed88b5d}\index{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}!whisper\_tokenize@{whisper\_tokenize}}
+\index{whisper\_tokenize@{whisper\_tokenize}!io.github.ggerganov.whispercpp.WhisperCppJnaLibrary@{io.github.ggerganov.whispercpp.WhisperCppJnaLibrary}}
+\doxysubsubsection{\texorpdfstring{whisper\_tokenize()}{whisper\_tokenize()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library_a4c3313a4d63d14a19eede93a3ed88b5d} 
+int io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp\+Jna\+Library.\+whisper\+\_\+tokenize (\begin{DoxyParamCaption}\item[{Pointer}]{ctx}{, }\item[{String}]{text}{, }\item[{Pointer}]{tokens}{, }\item[{int}]{n\+\_\+max\+\_\+tokens}{}\end{DoxyParamCaption})}
+
+Convert the provided text into tokens. \doxylink{requirements_The}{The} tokens pointer must be large enough to hold the resulting tokens. Returns the number of tokens on success, no more than n\+\_\+max\+\_\+tokens Returns -\/1 on failure TODO:\+ not sure if correct 
+
+The documentation for this interface was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+bindings/\+java/\+src/\+main/\+java/\+io/\+github/\+ggerganov/\+whispercpp/\+Whisper\+Cpp\+Jna\+Library.\+java\end{DoxyCompactItemize}

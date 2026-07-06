@@ -1,0 +1,54 @@
+\doxysection{whisper.\+cpp/\+examples/\+whisper.objc Directory Reference}
+\hypertarget{dir_6b8fb5b879e7ece0d852c001574cd302}{}\label{dir_6b8fb5b879e7ece0d852c001574cd302}\index{whisper.cpp/examples/whisper.objc Directory Reference@{whisper.cpp/examples/whisper.objc Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \doxymbox{\hyperlink{dir_c6585c709950e5502712032301b4d1c8}{whisper.\+objc}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_6b8fb5b879e7ece0d852c001574cd302_autotoc_md120}{}\doxysubsection{\texorpdfstring{whisper.\+objc}{whisper.\+objc}}\label{dir_6b8fb5b879e7ece0d852c001574cd302_autotoc_md120}
+Minimal Obj-\/C application for automatic offline speech recognition. \doxylink{requirements_The}{The} inference runs locally, on-\/device.
+
+\href{https://user-images.githubusercontent.com/1991296/197385372-962a6dea-bca1-4d50-bf96-1d8c27b98c81.mp4}{\texttt{https:\+/\+/\+user-\/images.\+githubusercontent.\+com/\+1991296/\+197385372-\/962a6dea-\/bca1-\/4d50-\/bf96-\/1d8c27b98c81.\+mp4}}
+
+Real-\/time transcription demo:\+
+
+\href{https://user-images.githubusercontent.com/1991296/204126266-ce4177c6-6eca-4bd9-bca8-0e46d9da2364.mp4}{\texttt{https:\+/\+/\+user-\/images.\+githubusercontent.\+com/\+1991296/\+204126266-\/ce4177c6-\/6eca-\/4bd9-\/bca8-\/0e46d9da2364.\+mp4}}\hypertarget{dir_6b8fb5b879e7ece0d852c001574cd302_autotoc_md121}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{dir_6b8fb5b879e7ece0d852c001574cd302_autotoc_md121}
+This example uses the whisper.\+xcframework which needs to be built first using the following command:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build-\/xcframework.sh}
+
+\end{DoxyCode}
+
+
+A model is also required to be downloaded and can be done using the following command:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./models/download-\/ggml-\/model.sh\ base.en}
+
+\end{DoxyCode}
+
+
+If you don\textquotesingle{}t want to convert a Core ML model, you can skip this step by creating dummy model:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ models/ggml-\/base.en-\/encoder.mlmodelc}
+
+\end{DoxyCode}
+\hypertarget{dir_6b8fb5b879e7ece0d852c001574cd302_autotoc_md122}{}\doxysubsubsection{\texorpdfstring{Core ML support}{Core ML support}}\label{dir_6b8fb5b879e7ece0d852c001574cd302_autotoc_md122}
+
+\begin{DoxyEnumerate}
+\item Follow all the steps in the {\ttfamily Usage} section, including adding the ggml model file. ~\newline
+ \doxylink{requirements_The}{The} ggml model file is required as the Core ML model is only used for the encoder. \doxylink{requirements_The}{The} decoder which is in the ggml model is still required.
+\item Follow the \href{../../README.md\#core-ml-support}{\texttt{{\ttfamily Core ML support} section of readme}} to convert the model.
+\item \doxylink{struct_add}{Add} the Core ML model ({\ttfamily models/\+ggml-\/base.\+en-\/encoder.\+mlmodelc/\+}) to {\ttfamily whisper.\+swiftui.\+demo/\+\+Resources/\+models} {\bfseries{via Xcode}}.
+\end{DoxyEnumerate}
+
+When the example starts running you should now see that it is using the Core ML model:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{whisper\_init\_state:\ loading\ Core\ ML\ model\ from\ '/Library/Developer/CoreSimulator/Devices/25E8C27D-\/0253-\/4281-\/AF17-\/C3F2A4D1D8F4/data/Containers/Bundle/Application/3ADA7D59-\/7B9C-\/43B4-\/A7E1-\/A87183FC546A/whisper.swiftui.app/models/ggml-\/base.en-\/encoder.mlmodelc'}
+\DoxyCodeLine{whisper\_init\_state:\ first\ run\ on\ a\ device\ may\ take\ a\ while\ ...}
+\DoxyCodeLine{whisper\_init\_state:\ Core\ ML\ model\ loaded}
+
+\end{DoxyCode}
+ 

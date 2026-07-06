@@ -1,0 +1,86 @@
+\doxysection{App\+Settings Struct Reference}
+\hypertarget{struct_app_settings}{}\label{struct_app_settings}\index{AppSettings@{AppSettings}}
+
+
+Stores all user-\/configurable application settings.  
+
+
+
+
+{\ttfamily \+\#include $<$Settings.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{struct_app_settings_a6630a17b3b2b42cf1313f0967f7003b2}{load}} (const std::\+string \&path="{}settings.\+ini"{})
+\begin{DoxyCompactList}\small\item\em Loads settings from an .ini file. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_app_settings_a6d32932503717a2ed869f1e5cd9275c0}{save}} (const std::\+string \&path="{}settings.\+ini"{}) const
+\begin{DoxyCompactList}\small\item\em Saves current settings to an .ini file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_app_settings_a363ec8ad59108e8cb410f05040c4590b}\label{struct_app_settings_a363ec8ad59108e8cb410f05040c4590b} 
+int {\bfseries volume} = 75
+\begin{DoxyCompactList}\small\item\em System audio volume (0-\/100). \end{DoxyCompactList}\item 
+\Hypertarget{struct_app_settings_a767b14871c65af06146419b36f803c4a}\label{struct_app_settings_a767b14871c65af06146419b36f803c4a} 
+int {\bfseries accent\+Index} = 0
+\begin{DoxyCompactList}\small\item\em Index into ACCENT\+\_\+\+NAMES for TTS voice accent. \end{DoxyCompactList}\item 
+\Hypertarget{struct_app_settings_a8ec608cd90eb822f616e23267599bede}\label{struct_app_settings_a8ec608cd90eb822f616e23267599bede} 
+int {\bfseries color\+Index} = 0
+\begin{DoxyCompactList}\small\item\em Index into UI\+\_\+\+COLOUR\+\_\+\+PRESETS for UI accent color. \end{DoxyCompactList}\item 
+\Hypertarget{struct_app_settings_ad0657be54cb850b971610cb3d49bd319}\label{struct_app_settings_ad0657be54cb850b971610cb3d49bd319} 
+int {\bfseries camera\+Index} = 0
+\begin{DoxyCompactList}\small\item\em Camera device index for Open\+CV (-\/1 = auto-\/detect). \end{DoxyCompactList}\item 
+\Hypertarget{struct_app_settings_a137af6488ef17de035b3ceec7181fb2f}\label{struct_app_settings_a137af6488ef17de035b3ceec7181fb2f} 
+int {\bfseries mic\+Index} = -\/1
+\begin{DoxyCompactList}\small\item\em Microphone device index (-\/1 = system default). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stores all user-\/configurable application settings. 
+
+Settings are persisted to and loaded from a plain-\/text .ini file using simple key=value format. \doxylink{requirements_The}{The} global instance g\+\_\+settings is loaded once at startup and written back when the user saves changes in the settings UI. 
+
+\label{doc-func-members}
+\Hypertarget{struct_app_settings_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_app_settings_a6630a17b3b2b42cf1313f0967f7003b2}\index{AppSettings@{AppSettings}!load@{load}}
+\index{load@{load}!AppSettings@{AppSettings}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily \label{struct_app_settings_a6630a17b3b2b42cf1313f0967f7003b2} 
+void App\+Settings::\+load (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{path}{ = {\ttfamily "{}settings.ini"{}}}\end{DoxyParamCaption})}
+
+
+
+Loads settings from an .ini file. 
+
+Reads key=value pairs from the specified file. If the file doesn\textquotesingle{}t exist or a field is missing, default values are retained. Invalid values are silently ignored.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Path to the settings file (default:\+ "{}settings.\+ini"{}) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{struct_app_settings_a6d32932503717a2ed869f1e5cd9275c0}\index{AppSettings@{AppSettings}!save@{save}}
+\index{save@{save}!AppSettings@{AppSettings}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily \label{struct_app_settings_a6d32932503717a2ed869f1e5cd9275c0} 
+void App\+Settings::\+save (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{path}{ = {\ttfamily "{}settings.ini"{}}}\end{DoxyParamCaption}) const}
+
+
+
+Saves current settings to an .ini file. 
+
+Writes all settings as key=value pairs to the specified file, overwriting any existing content.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Path to the settings file (default:\+ "{}settings.\+ini"{}) \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_settings_8h}{Settings.\+h}}\item 
+\doxymbox{\hyperlink{_settings_8cpp}{Settings.\+cpp}}\end{DoxyCompactItemize}

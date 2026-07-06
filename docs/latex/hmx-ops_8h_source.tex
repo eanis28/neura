@@ -1,0 +1,78 @@
+\doxysection{hmx-\/ops.h}
+\hypertarget{hmx-ops_8h_source}{}\label{hmx-ops_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hmx-\/ops.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hmx-\/ops.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ HMX\ operation\ entry-\/point\ declarations.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Ported\ from\ htp-\/ops-\/lib/include/dsp/ops.h\ (renamed,\ benchmark\ kernels\ removed).\ (https://github.com/haozixu/htp-\/ops-\/lib)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ HMX\_OPS\_H}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ HMX\_OPS\_H}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifndef\ restrict}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ define\ restrict\ \_\_restrict}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhtp__context}{htp\_context}};\ \ \textcolor{comment}{//\ forward\ declaration}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ *dst;}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ *activation;}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{const}\ \_\_fp16\ *permuted\_weight;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ m;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ k;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ n;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ act\_stride;}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ weight\_stride;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ dst\_stride;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ ne02;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ ne03;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ ne12;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ ne13;}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ src0\_nb2;}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ src0\_nb3;}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ src1\_nb2;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ src1\_nb3;}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ dst\_nb2;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ dst\_nb3;}
+\DoxyCodeLine{00040\ \}\ \doxymbox{\hyperlink{structhmx__matmul__w16a32__batched__params__t}{hmx\_matmul\_w16a32\_batched\_params\_t}};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ HMX\ matrix\ multiplication\ —\ tile-\/permuted\ FP16\ weights,\ FP32\ activation/output}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ act\_stride:\ activation\ row\ stride\ in\ elements\ (=\ k\ for\ contiguous,\ or}}
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ nb[1]/sizeof(float)\ for\ permuted\ tensors\ like\ attention\ Q).}}
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ weight\_stride:\ weight\ row\ stride\ in\ elements\ (=\ k\ for\ compact\ weights,\ or}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb[1]/sizeof(\_\_fp16)\ for\ permuted\ KV-\/cache\ views\ used\ by\ QK).}}
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{int}\ hmx\_mat\_mul\_permuted\_w16a32(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__context}{htp\_context}}\ *ctx,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *restrict\ dst,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *activation,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \_\_fp16\ *permuted\_weight,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{int}\ k,\ \textcolor{keywordtype}{int}\ n,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ act\_stride,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ weight\_stride);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ Batched\ F16\ wrapper\ over\ hmx\_mat\_mul\_permuted\_w16a32.}}
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ Batch\ semantics\ match\ ggml\_mul\_mat():\ src0\ broadcasts\ to\ src1\ in\ dims\ 2/3.}}
+\DoxyCodeLine{00057\ \textcolor{keywordtype}{int}\ hmx\_mat\_mul\_permuted\_w16a32\_batched(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__context}{htp\_context}}\ *ctx,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structhmx__matmul__w16a32__batched__params__t}{hmx\_matmul\_w16a32\_batched\_params\_t}}\ *params);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//\ HMX\ matrix\ multiplication\ —\ tile-\/permuted\ quantised\ weights\ (Q4\_0/Q8\_0/IQ4\_NL)}}
+\DoxyCodeLine{00061\ \textcolor{keywordtype}{int}\ hmx\_mat\_mul\_permuted\_qk\_0\_d16a32(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhtp__context}{htp\_context}}\ *ctx,}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *restrict\ dst,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *activation,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *permuted\_weight,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{int}\ k,\ \textcolor{keywordtype}{int}\ n,}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ weight\_type);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00069\ \}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HMX\_OPS\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,100 @@
+\doxysection{ov::\+frontend::\+ggml::\+Ggml\+Decoder Class Reference}
+\hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}\index{ov::frontend::ggml::GgmlDecoder@{ov::frontend::ggml::GgmlDecoder}}
+Inheritance diagram for ov::\+frontend::\+ggml::\+Ggml\+Decoder:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_ab0b1c89bde0398e86215fde9099ba710}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_ab0b1c89bde0398e86215fde9099ba710} 
+virtual ov::\+\+Any {\bfseries get\+\_\+attribute} (const std::\+string \&name) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_ab4ac3ee2f224859a70ecb447c338ba24}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_ab4ac3ee2f224859a70ecb447c338ba24} 
+virtual Partial\+Shape {\bfseries get\+\_\+input\+\_\+shape} (int node\+\_\+idx, const std::\+string \&name) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_ad1c8e8aa317f6252288c08ee0dfbbbd8}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_ad1c8e8aa317f6252288c08ee0dfbbbd8} 
+virtual std::\+vector$<$ size\+\_\+t $>$ {\bfseries get\+\_\+input\+\_\+stride} (int node\+\_\+idx, const std::\+string \&name) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a5607c4f7a9486237d53a1b2df56f1841}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a5607c4f7a9486237d53a1b2df56f1841} 
+virtual element::\+\+Type {\bfseries get\+\_\+input\+\_\+type} (int node\+\_\+idx, const std::\+string \&name) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a7ec49dfab8d9d7c694af5961d08b3c2e}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a7ec49dfab8d9d7c694af5961d08b3c2e} 
+virtual size\+\_\+t {\bfseries get\+\_\+input\+\_\+size} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a99ec9021e0371c77944fe4feee8c4402}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a99ec9021e0371c77944fe4feee8c4402} 
+virtual size\+\_\+t {\bfseries get\+\_\+input\+\_\+size} (int node\+\_\+idx) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a224e7c84a085731f9e73ee6ea6ffe5be}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a224e7c84a085731f9e73ee6ea6ffe5be} 
+virtual void {\bfseries get\+\_\+input\+\_\+node} (size\+\_\+t input\+\_\+port\+\_\+idx, std::\+string \&producer\+\_\+name, std::\+string \&producer\+\_\+output\+\_\+port\+\_\+name, size\+\_\+t \&producer\+\_\+output\+\_\+port\+\_\+index) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_aeb54d10055858d4aac1788b303ba6110}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_aeb54d10055858d4aac1788b303ba6110} 
+virtual std::\+vector$<$ std::\+string $>$ {\bfseries get\+\_\+input\+\_\+names} (int node\+\_\+idx) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a750f9ade28ff1890cba39a717b802473}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a750f9ade28ff1890cba39a717b802473} 
+virtual Partial\+Shape {\bfseries get\+\_\+output\+\_\+shape} (int node\+\_\+idx) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_acf238dc9a371f20ad26b40df2dacf051}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_acf238dc9a371f20ad26b40df2dacf051} 
+virtual element::\+\+Type {\bfseries get\+\_\+output\+\_\+type} (const int node\+\_\+idx) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a3a1beaa79fcc9ce75446d31cb6b0bd28}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a3a1beaa79fcc9ce75446d31cb6b0bd28} 
+virtual int32\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+input\+\_\+op\+\_\+params} (int node\+\_\+idx, const std::\+string \&name) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a5c69de08b66e5126ef03737f0f444b5d}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a5c69de08b66e5126ef03737f0f444b5d} 
+virtual int32\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+output\+\_\+op\+\_\+params} (int node\+\_\+idx) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_ae8de152c69b4262843073f0d6cce2881}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_ae8de152c69b4262843073f0d6cce2881} 
+virtual std::\+vector$<$ std::\+string $>$ {\bfseries get\+\_\+output\+\_\+names} (int node\+\_\+idx) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_aa13df56362f6375726058899ed4ec2e7}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_aa13df56362f6375726058899ed4ec2e7} 
+virtual const std::\+string \& {\bfseries get\+\_\+op\+\_\+type} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a1df0706260e74ca8cb924c1aea1eea05}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a1df0706260e74ca8cb924c1aea1eea05} 
+virtual const std::\+string \& {\bfseries get\+\_\+op\+\_\+type} (int node\+\_\+idx) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a89226877192e5f81c56ad9853c12ae65}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a89226877192e5f81c56ad9853c12ae65} 
+virtual const std::\+string \& {\bfseries get\+\_\+op\+\_\+name} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a8b93433d9d90c4795f9e354b9b3aec8e}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a8b93433d9d90c4795f9e354b9b3aec8e} 
+virtual const std::\+string \& {\bfseries get\+\_\+op\+\_\+name} (int node\+\_\+idx) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a64d04ba2bfc87c83b95c187549d2424e}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a64d04ba2bfc87c83b95c187549d2424e} 
+virtual void {\bfseries visit\+\_\+subgraph} (std::\+function$<$ void(std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{Ggml\+Decoder}} $>$, int node\+\_\+idx)$>$ node\+\_\+visitor) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a70e8edf7797d756eca8b7167292b1641}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a70e8edf7797d756eca8b7167292b1641} 
+virtual int {\bfseries get\+\_\+op\+\_\+case} (int node\+\_\+idx) const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_af6525bd58f0ceec03f93e5f1694e3463}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_af6525bd58f0ceec03f93e5f1694e3463} 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \& {\bfseries get\+\_\+model\+\_\+inputs} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_add3ec7177f36aec69dda74b861270ca4}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_add3ec7177f36aec69dda74b861270ca4} 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \& {\bfseries get\+\_\+model\+\_\+extra\+\_\+inputs} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a5cb886d77fb6ecc1e4274fe2974e77f7}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a5cb886d77fb6ecc1e4274fe2974e77f7} 
+virtual const std::\+map$<$ std::\+string, std::\+shared\+\_\+ptr$<$ ov::\+\+Node $>$ $>$ \& {\bfseries get\+\_\+model\+\_\+weights} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_aa7cd2a3e3655441083510312769dc60a}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_aa7cd2a3e3655441083510312769dc60a} 
+virtual std::\+vector$<$ std::\+string $>$ {\bfseries get\+\_\+model\+\_\+output\+\_\+names} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a1add1901da3abf568d6c1067cb8b5129}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a1add1901da3abf568d6c1067cb8b5129} 
+virtual int32\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+rope\+\_\+params} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a920559d9202a9db54da9c5b5da60b874}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a920559d9202a9db54da9c5b5da60b874} 
+virtual std::\+map$<$ std::\+string, std::\+string $>$ {\bfseries get\+\_\+kv\+\_\+param\+\_\+res\+\_\+names} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a7e6123fdd0e1b4d78f866b11bee4e58e}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a7e6123fdd0e1b4d78f866b11bee4e58e} 
+virtual bool {\bfseries is\+\_\+static} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_aeacf781235c162ab1abb1d53317b36e1}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_aeacf781235c162ab1abb1d53317b36e1} 
+virtual bool {\bfseries is\+\_\+stateful} () const =0
+\item 
+\Hypertarget{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a1e2a4e174e8220df6854e42a087f0109}\label{classov_1_1frontend_1_1ggml_1_1_ggml_decoder_a1e2a4e174e8220df6854e42a087f0109} 
+virtual int {\bfseries is\+\_\+swa\+\_\+layer} (int layer) const =0
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/openvino/\+openvino/\+decoder.\+h\end{DoxyCompactItemize}

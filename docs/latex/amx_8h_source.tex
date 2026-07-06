@@ -1,0 +1,14 @@
+\doxysection{amx.\+h}
+\hypertarget{amx_8h_source}{}\label{amx_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/amx/amx.h@{whisper.cpp/ggml/src/ggml-\/cpu/amx/amx.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}ggml-\/cpu-\/impl.h"{}}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ GGML\ internal\ header}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#if\ defined(\_\_AMX\_INT8\_\_)\ \&\&\ defined(\_\_AVX512VNNI\_\_)}}
+\DoxyCodeLine{00007\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_amx\_buffer\_type(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

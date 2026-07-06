@@ -1,0 +1,59 @@
+\doxysection{audio\+\_\+async Class Reference}
+\hypertarget{classaudio__async}{}\label{classaudio__async}\index{audio\_async@{audio\_async}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classaudio__async_ae37e434e52d63049b8c6a3b87c67fc15}\label{classaudio__async_ae37e434e52d63049b8c6a3b87c67fc15} 
+{\bfseries audio\+\_\+async} (int len\+\_\+ms)
+\item 
+\Hypertarget{classaudio__async_af3b454a91dc222e26ce8bfefdb7b5533}\label{classaudio__async_af3b454a91dc222e26ce8bfefdb7b5533} 
+bool {\bfseries init} (int capture\+\_\+id, int sample\+\_\+rate)
+\item 
+\Hypertarget{classaudio__async_a4e269f1294d3d87047e029228145cc74}\label{classaudio__async_a4e269f1294d3d87047e029228145cc74} 
+bool {\bfseries resume} ()
+\item 
+\Hypertarget{classaudio__async_a6313b6a292e955e9c66e5a9a5ae24958}\label{classaudio__async_a6313b6a292e955e9c66e5a9a5ae24958} 
+bool {\bfseries pause} ()
+\item 
+\Hypertarget{classaudio__async_a14774c89412a1e266567b324e4f7f5dd}\label{classaudio__async_a14774c89412a1e266567b324e4f7f5dd} 
+bool {\bfseries clear} ()
+\item 
+\Hypertarget{classaudio__async_a2d6963cd7aa7ea663f449240b15389e9}\label{classaudio__async_a2d6963cd7aa7ea663f449240b15389e9} 
+void {\bfseries callback} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}stream, int len)
+\item 
+\Hypertarget{classaudio__async_a62913ae68b5179e2369631768caa5260}\label{classaudio__async_a62913ae68b5179e2369631768caa5260} 
+void {\bfseries get} (int ms, std::\+vector$<$ float $>$ \&audio)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classaudio__async_ac105346ee6bb8e121084f79ab0af1dce}\label{classaudio__async_ac105346ee6bb8e121084f79ab0af1dce} 
+SDL\+\_\+\+Audio\+Device\+ID {\bfseries m\+\_\+dev\+\_\+id\+\_\+in} = 0
+\item 
+\Hypertarget{classaudio__async_ad2c526e5cc4329651ce215221d288ec7}\label{classaudio__async_ad2c526e5cc4329651ce215221d288ec7} 
+int {\bfseries m\+\_\+len\+\_\+ms} = 0
+\item 
+\Hypertarget{classaudio__async_a9202118909b3f156a4b50aa53d7dad77}\label{classaudio__async_a9202118909b3f156a4b50aa53d7dad77} 
+int {\bfseries m\+\_\+sample\+\_\+rate} = 0
+\item 
+\Hypertarget{classaudio__async_a9c778a573097891aeddbe8ce6bd5e713}\label{classaudio__async_a9c778a573097891aeddbe8ce6bd5e713} 
+std::\+atomic\+\_\+bool {\bfseries m\+\_\+running}
+\item 
+\Hypertarget{classaudio__async_a307461d1b384c4e2526b7bfca7dc2732}\label{classaudio__async_a307461d1b384c4e2526b7bfca7dc2732} 
+std::\+mutex {\bfseries m\+\_\+mutex}
+\item 
+\Hypertarget{classaudio__async_ab7e98ffd0b94679178b43b569258f7e2}\label{classaudio__async_ab7e98ffd0b94679178b43b569258f7e2} 
+std::\+vector$<$ float $>$ {\bfseries m\+\_\+audio}
+\item 
+\Hypertarget{classaudio__async_ac1400d5d923805df3541fc29780a97cd}\label{classaudio__async_ac1400d5d923805df3541fc29780a97cd} 
+size\+\_\+t {\bfseries m\+\_\+audio\+\_\+pos} = 0
+\item 
+\Hypertarget{classaudio__async_a7bce55c34a71f4e9aa90c8e6463913aa}\label{classaudio__async_a7bce55c34a71f4e9aa90c8e6463913aa} 
+size\+\_\+t {\bfseries m\+\_\+audio\+\_\+len} = 0
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+common-\/sdl.\+h\item 
+whisper.\+cpp/\+examples/\+common-\/sdl.\+cpp\end{DoxyCompactItemize}

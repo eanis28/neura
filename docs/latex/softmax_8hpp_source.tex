@@ -1,0 +1,30 @@
+\doxysection{softmax.\+hpp}
+\hypertarget{softmax_8hpp_source}{}\label{softmax_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/softmax.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/softmax.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2024\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_SOFTMAX\_HPP}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_SOFTMAX\_HPP}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}common.hpp"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ SYCL\_SOFT\_MAX\_BLOCK\_SIZE\ 1024}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{void}\ ggml\_sycl\_op\_soft\_max(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *dst);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{void}\ ggml\_sycl\_op\_soft\_max\_back(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_SOFTMAX\_HPP}}
+
+\end{DoxyCode}

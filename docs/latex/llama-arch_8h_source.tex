@@ -1,0 +1,634 @@
+\doxysection{llama-\/arch.h}
+\hypertarget{llama-arch_8h_source}{}\label{llama-arch_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/arch.h@{whisper.cpp/examples/talk-\/llama/llama-\/arch.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}\ \textcolor{comment}{//\ ggml\_op}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{//}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ gguf\ constants\ (sync\ with\ gguf.py)}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{enum}\ llm\_arch\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ LLM\_ARCH\_CLIP,}
+\DoxyCodeLine{00015\ \ \ \ \ LLM\_ARCH\_LLAMA,}
+\DoxyCodeLine{00016\ \ \ \ \ LLM\_ARCH\_LLAMA4,}
+\DoxyCodeLine{00017\ \ \ \ \ LLM\_ARCH\_DECI,}
+\DoxyCodeLine{00018\ \ \ \ \ LLM\_ARCH\_FALCON,}
+\DoxyCodeLine{00019\ \ \ \ \ LLM\_ARCH\_BAICHUAN,}
+\DoxyCodeLine{00020\ \ \ \ \ LLM\_ARCH\_GROK,}
+\DoxyCodeLine{00021\ \ \ \ \ LLM\_ARCH\_GPT2,}
+\DoxyCodeLine{00022\ \ \ \ \ LLM\_ARCH\_GPTJ,}
+\DoxyCodeLine{00023\ \ \ \ \ LLM\_ARCH\_GPTNEOX,}
+\DoxyCodeLine{00024\ \ \ \ \ LLM\_ARCH\_MPT,}
+\DoxyCodeLine{00025\ \ \ \ \ LLM\_ARCH\_STARCODER,}
+\DoxyCodeLine{00026\ \ \ \ \ LLM\_ARCH\_REFACT,}
+\DoxyCodeLine{00027\ \ \ \ \ LLM\_ARCH\_BERT,}
+\DoxyCodeLine{00028\ \ \ \ \ LLM\_ARCH\_MODERN\_BERT,}
+\DoxyCodeLine{00029\ \ \ \ \ LLM\_ARCH\_NOMIC\_BERT,}
+\DoxyCodeLine{00030\ \ \ \ \ LLM\_ARCH\_NOMIC\_BERT\_MOE,}
+\DoxyCodeLine{00031\ \ \ \ \ LLM\_ARCH\_NEO\_BERT,}
+\DoxyCodeLine{00032\ \ \ \ \ LLM\_ARCH\_JINA\_BERT\_V2,}
+\DoxyCodeLine{00033\ \ \ \ \ LLM\_ARCH\_JINA\_BERT\_V3,}
+\DoxyCodeLine{00034\ \ \ \ \ LLM\_ARCH\_EUROBERT,}
+\DoxyCodeLine{00035\ \ \ \ \ LLM\_ARCH\_BLOOM,}
+\DoxyCodeLine{00036\ \ \ \ \ LLM\_ARCH\_STABLELM,}
+\DoxyCodeLine{00037\ \ \ \ \ LLM\_ARCH\_QWEN,}
+\DoxyCodeLine{00038\ \ \ \ \ LLM\_ARCH\_QWEN2,}
+\DoxyCodeLine{00039\ \ \ \ \ LLM\_ARCH\_QWEN2MOE,}
+\DoxyCodeLine{00040\ \ \ \ \ LLM\_ARCH\_QWEN2VL,}
+\DoxyCodeLine{00041\ \ \ \ \ LLM\_ARCH\_QWEN3,}
+\DoxyCodeLine{00042\ \ \ \ \ LLM\_ARCH\_QWEN3MOE,}
+\DoxyCodeLine{00043\ \ \ \ \ LLM\_ARCH\_QWEN3NEXT,}
+\DoxyCodeLine{00044\ \ \ \ \ LLM\_ARCH\_QWEN3VL,}
+\DoxyCodeLine{00045\ \ \ \ \ LLM\_ARCH\_QWEN3VLMOE,}
+\DoxyCodeLine{00046\ \ \ \ \ LLM\_ARCH\_QWEN35,}
+\DoxyCodeLine{00047\ \ \ \ \ LLM\_ARCH\_QWEN35MOE,}
+\DoxyCodeLine{00048\ \ \ \ \ LLM\_ARCH\_PHI2,}
+\DoxyCodeLine{00049\ \ \ \ \ LLM\_ARCH\_PHI3,}
+\DoxyCodeLine{00050\ \ \ \ \ LLM\_ARCH\_PHIMOE,}
+\DoxyCodeLine{00051\ \ \ \ \ LLM\_ARCH\_PLAMO,}
+\DoxyCodeLine{00052\ \ \ \ \ LLM\_ARCH\_PLAMO2,}
+\DoxyCodeLine{00053\ \ \ \ \ LLM\_ARCH\_PLAMO3,}
+\DoxyCodeLine{00054\ \ \ \ \ LLM\_ARCH\_CODESHELL,}
+\DoxyCodeLine{00055\ \ \ \ \ LLM\_ARCH\_ORION,}
+\DoxyCodeLine{00056\ \ \ \ \ LLM\_ARCH\_INTERNLM2,}
+\DoxyCodeLine{00057\ \ \ \ \ LLM\_ARCH\_MINICPM,}
+\DoxyCodeLine{00058\ \ \ \ \ LLM\_ARCH\_MINICPM3,}
+\DoxyCodeLine{00059\ \ \ \ \ LLM\_ARCH\_GEMMA,}
+\DoxyCodeLine{00060\ \ \ \ \ LLM\_ARCH\_GEMMA2,}
+\DoxyCodeLine{00061\ \ \ \ \ LLM\_ARCH\_GEMMA3,}
+\DoxyCodeLine{00062\ \ \ \ \ LLM\_ARCH\_GEMMA3N,}
+\DoxyCodeLine{00063\ \ \ \ \ LLM\_ARCH\_GEMMA\_EMBEDDING,}
+\DoxyCodeLine{00064\ \ \ \ \ LLM\_ARCH\_STARCODER2,}
+\DoxyCodeLine{00065\ \ \ \ \ LLM\_ARCH\_MAMBA,}
+\DoxyCodeLine{00066\ \ \ \ \ LLM\_ARCH\_MAMBA2,}
+\DoxyCodeLine{00067\ \ \ \ \ LLM\_ARCH\_JAMBA,}
+\DoxyCodeLine{00068\ \ \ \ \ LLM\_ARCH\_FALCON\_H1,}
+\DoxyCodeLine{00069\ \ \ \ \ LLM\_ARCH\_XVERSE,}
+\DoxyCodeLine{00070\ \ \ \ \ LLM\_ARCH\_COMMAND\_R,}
+\DoxyCodeLine{00071\ \ \ \ \ LLM\_ARCH\_COHERE2,}
+\DoxyCodeLine{00072\ \ \ \ \ LLM\_ARCH\_DBRX,}
+\DoxyCodeLine{00073\ \ \ \ \ LLM\_ARCH\_OLMO,}
+\DoxyCodeLine{00074\ \ \ \ \ LLM\_ARCH\_OLMO2,}
+\DoxyCodeLine{00075\ \ \ \ \ LLM\_ARCH\_OLMOE,}
+\DoxyCodeLine{00076\ \ \ \ \ LLM\_ARCH\_OPENELM,}
+\DoxyCodeLine{00077\ \ \ \ \ LLM\_ARCH\_ARCTIC,}
+\DoxyCodeLine{00078\ \ \ \ \ LLM\_ARCH\_DEEPSEEK,}
+\DoxyCodeLine{00079\ \ \ \ \ LLM\_ARCH\_DEEPSEEK2,}
+\DoxyCodeLine{00080\ \ \ \ \ LLM\_ARCH\_CHATGLM,}
+\DoxyCodeLine{00081\ \ \ \ \ LLM\_ARCH\_GLM4,}
+\DoxyCodeLine{00082\ \ \ \ \ LLM\_ARCH\_GLM4\_MOE,}
+\DoxyCodeLine{00083\ \ \ \ \ LLM\_ARCH\_GLM\_DSA,}
+\DoxyCodeLine{00084\ \ \ \ \ LLM\_ARCH\_BITNET,}
+\DoxyCodeLine{00085\ \ \ \ \ LLM\_ARCH\_T5,}
+\DoxyCodeLine{00086\ \ \ \ \ LLM\_ARCH\_T5ENCODER,}
+\DoxyCodeLine{00087\ \ \ \ \ LLM\_ARCH\_JAIS,}
+\DoxyCodeLine{00088\ \ \ \ \ LLM\_ARCH\_JAIS2,}
+\DoxyCodeLine{00089\ \ \ \ \ LLM\_ARCH\_NEMOTRON,}
+\DoxyCodeLine{00090\ \ \ \ \ LLM\_ARCH\_NEMOTRON\_H,}
+\DoxyCodeLine{00091\ \ \ \ \ LLM\_ARCH\_NEMOTRON\_H\_MOE,}
+\DoxyCodeLine{00092\ \ \ \ \ LLM\_ARCH\_EXAONE,}
+\DoxyCodeLine{00093\ \ \ \ \ LLM\_ARCH\_EXAONE4,}
+\DoxyCodeLine{00094\ \ \ \ \ LLM\_ARCH\_EXAONE\_MOE,}
+\DoxyCodeLine{00095\ \ \ \ \ LLM\_ARCH\_RWKV6,}
+\DoxyCodeLine{00096\ \ \ \ \ LLM\_ARCH\_RWKV6QWEN2,}
+\DoxyCodeLine{00097\ \ \ \ \ LLM\_ARCH\_RWKV7,}
+\DoxyCodeLine{00098\ \ \ \ \ LLM\_ARCH\_ARWKV7,}
+\DoxyCodeLine{00099\ \ \ \ \ LLM\_ARCH\_GRANITE,}
+\DoxyCodeLine{00100\ \ \ \ \ LLM\_ARCH\_GRANITE\_MOE,}
+\DoxyCodeLine{00101\ \ \ \ \ LLM\_ARCH\_GRANITE\_HYBRID,}
+\DoxyCodeLine{00102\ \ \ \ \ LLM\_ARCH\_CHAMELEON,}
+\DoxyCodeLine{00103\ \ \ \ \ LLM\_ARCH\_WAVTOKENIZER\_DEC,}
+\DoxyCodeLine{00104\ \ \ \ \ LLM\_ARCH\_PLM,}
+\DoxyCodeLine{00105\ \ \ \ \ LLM\_ARCH\_BAILINGMOE,}
+\DoxyCodeLine{00106\ \ \ \ \ LLM\_ARCH\_BAILINGMOE2,}
+\DoxyCodeLine{00107\ \ \ \ \ LLM\_ARCH\_DOTS1,}
+\DoxyCodeLine{00108\ \ \ \ \ LLM\_ARCH\_ARCEE,}
+\DoxyCodeLine{00109\ \ \ \ \ LLM\_ARCH\_AFMOE,}
+\DoxyCodeLine{00110\ \ \ \ \ LLM\_ARCH\_ERNIE4\_5,}
+\DoxyCodeLine{00111\ \ \ \ \ LLM\_ARCH\_ERNIE4\_5\_MOE,}
+\DoxyCodeLine{00112\ \ \ \ \ LLM\_ARCH\_HUNYUAN\_MOE,}
+\DoxyCodeLine{00113\ \ \ \ \ LLM\_ARCH\_HUNYUAN\_DENSE,}
+\DoxyCodeLine{00114\ \ \ \ \ LLM\_ARCH\_SMOLLM3,}
+\DoxyCodeLine{00115\ \ \ \ \ LLM\_ARCH\_OPENAI\_MOE,}
+\DoxyCodeLine{00116\ \ \ \ \ LLM\_ARCH\_LFM2,}
+\DoxyCodeLine{00117\ \ \ \ \ LLM\_ARCH\_LFM2MOE,}
+\DoxyCodeLine{00118\ \ \ \ \ LLM\_ARCH\_DREAM,}
+\DoxyCodeLine{00119\ \ \ \ \ LLM\_ARCH\_SMALLTHINKER,}
+\DoxyCodeLine{00120\ \ \ \ \ LLM\_ARCH\_LLADA,}
+\DoxyCodeLine{00121\ \ \ \ \ LLM\_ARCH\_LLADA\_MOE,}
+\DoxyCodeLine{00122\ \ \ \ \ LLM\_ARCH\_SEED\_OSS,}
+\DoxyCodeLine{00123\ \ \ \ \ LLM\_ARCH\_GROVEMOE,}
+\DoxyCodeLine{00124\ \ \ \ \ LLM\_ARCH\_APERTUS,}
+\DoxyCodeLine{00125\ \ \ \ \ LLM\_ARCH\_MINIMAX\_M2,}
+\DoxyCodeLine{00126\ \ \ \ \ LLM\_ARCH\_COGVLM,}
+\DoxyCodeLine{00127\ \ \ \ \ LLM\_ARCH\_RND1,}
+\DoxyCodeLine{00128\ \ \ \ \ LLM\_ARCH\_PANGU\_EMBED,}
+\DoxyCodeLine{00129\ \ \ \ \ LLM\_ARCH\_MISTRAL3,}
+\DoxyCodeLine{00130\ \ \ \ \ LLM\_ARCH\_PADDLEOCR,}
+\DoxyCodeLine{00131\ \ \ \ \ LLM\_ARCH\_MIMO2,}
+\DoxyCodeLine{00132\ \ \ \ \ LLM\_ARCH\_STEP35,}
+\DoxyCodeLine{00133\ \ \ \ \ LLM\_ARCH\_LLAMA\_EMBED,}
+\DoxyCodeLine{00134\ \ \ \ \ LLM\_ARCH\_MAINCODER,}
+\DoxyCodeLine{00135\ \ \ \ \ LLM\_ARCH\_KIMI\_LINEAR,}
+\DoxyCodeLine{00136\ \ \ \ \ LLM\_ARCH\_UNKNOWN,}
+\DoxyCodeLine{00137\ \};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{enum}\ llm\_kv\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ LLM\_KV\_GENERAL\_TYPE,}
+\DoxyCodeLine{00141\ \ \ \ \ LLM\_KV\_GENERAL\_ARCHITECTURE,}
+\DoxyCodeLine{00142\ \ \ \ \ LLM\_KV\_GENERAL\_QUANTIZATION\_VERSION,}
+\DoxyCodeLine{00143\ \ \ \ \ LLM\_KV\_GENERAL\_ALIGNMENT,}
+\DoxyCodeLine{00144\ \ \ \ \ LLM\_KV\_GENERAL\_FILE\_TYPE,}
+\DoxyCodeLine{00145\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_SEQUENCE,}
+\DoxyCodeLine{00146\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_TOP\_K,}
+\DoxyCodeLine{00147\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_TOP\_P,}
+\DoxyCodeLine{00148\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_MIN\_P,}
+\DoxyCodeLine{00149\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_XTC\_PROBABILITY,}
+\DoxyCodeLine{00150\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_XTC\_THRESHOLD,}
+\DoxyCodeLine{00151\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_TEMP,}
+\DoxyCodeLine{00152\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_PENALTY\_LAST\_N,}
+\DoxyCodeLine{00153\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_PENALTY\_REPEAT,}
+\DoxyCodeLine{00154\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_MIROSTAT,}
+\DoxyCodeLine{00155\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_MIROSTAT\_TAU,}
+\DoxyCodeLine{00156\ \ \ \ \ LLM\_KV\_GENERAL\_SAMPLING\_MIROSTAT\_ETA,}
+\DoxyCodeLine{00157\ \ \ \ \ LLM\_KV\_GENERAL\_NAME,}
+\DoxyCodeLine{00158\ \ \ \ \ LLM\_KV\_GENERAL\_AUTHOR,}
+\DoxyCodeLine{00159\ \ \ \ \ LLM\_KV\_GENERAL\_VERSION,}
+\DoxyCodeLine{00160\ \ \ \ \ LLM\_KV\_GENERAL\_URL,}
+\DoxyCodeLine{00161\ \ \ \ \ LLM\_KV\_GENERAL\_DESCRIPTION,}
+\DoxyCodeLine{00162\ \ \ \ \ LLM\_KV\_GENERAL\_LICENSE,}
+\DoxyCodeLine{00163\ \ \ \ \ LLM\_KV\_GENERAL\_SOURCE\_URL,}
+\DoxyCodeLine{00164\ \ \ \ \ LLM\_KV\_GENERAL\_SOURCE\_HF\_REPO,}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ LLM\_KV\_VOCAB\_SIZE,}
+\DoxyCodeLine{00167\ \ \ \ \ LLM\_KV\_CONTEXT\_LENGTH,}
+\DoxyCodeLine{00168\ \ \ \ \ LLM\_KV\_EMBEDDING\_LENGTH,}
+\DoxyCodeLine{00169\ \ \ \ \ LLM\_KV\_EMBEDDING\_LENGTH\_OUT,}
+\DoxyCodeLine{00170\ \ \ \ \ LLM\_KV\_FEATURES\_LENGTH,}
+\DoxyCodeLine{00171\ \ \ \ \ LLM\_KV\_BLOCK\_COUNT,}
+\DoxyCodeLine{00172\ \ \ \ \ LLM\_KV\_LEADING\_DENSE\_BLOCK\_COUNT,}
+\DoxyCodeLine{00173\ \ \ \ \ LLM\_KV\_FEED\_FORWARD\_LENGTH,}
+\DoxyCodeLine{00174\ \ \ \ \ LLM\_KV\_EXPERT\_FEED\_FORWARD\_LENGTH,}
+\DoxyCodeLine{00175\ \ \ \ \ LLM\_KV\_EXPERT\_SHARED\_FEED\_FORWARD\_LENGTH,}
+\DoxyCodeLine{00176\ \ \ \ \ LLM\_KV\_EXPERT\_CHUNK\_FEED\_FORWARD\_LENGTH,}
+\DoxyCodeLine{00177\ \ \ \ \ LLM\_KV\_SWIGLU\_CLAMP\_EXP,}
+\DoxyCodeLine{00178\ \ \ \ \ LLM\_KV\_SWIGLU\_CLAMP\_SHEXP,}
+\DoxyCodeLine{00179\ \ \ \ \ LLM\_KV\_USE\_PARALLEL\_RESIDUAL,}
+\DoxyCodeLine{00180\ \ \ \ \ LLM\_KV\_TENSOR\_DATA\_LAYOUT,}
+\DoxyCodeLine{00181\ \ \ \ \ LLM\_KV\_EXPERT\_COUNT,}
+\DoxyCodeLine{00182\ \ \ \ \ LLM\_KV\_EXPERT\_USED\_COUNT,}
+\DoxyCodeLine{00183\ \ \ \ \ LLM\_KV\_EXPERT\_SHARED\_COUNT,}
+\DoxyCodeLine{00184\ \ \ \ \ LLM\_KV\_EXPERT\_GROUP\_COUNT,}
+\DoxyCodeLine{00185\ \ \ \ \ LLM\_KV\_EXPERT\_GROUP\_USED\_COUNT,}
+\DoxyCodeLine{00186\ \ \ \ \ LLM\_KV\_EXPERT\_WEIGHTS\_SCALE,}
+\DoxyCodeLine{00187\ \ \ \ \ LLM\_KV\_EXPERT\_WEIGHTS\_NORM,}
+\DoxyCodeLine{00188\ \ \ \ \ LLM\_KV\_EXPERT\_GATING\_FUNC,}
+\DoxyCodeLine{00189\ \ \ \ \ LLM\_KV\_EXPERT\_GROUP\_SCALE,}
+\DoxyCodeLine{00190\ \ \ \ \ LLM\_KV\_EXPERTS\_PER\_GROUP,}
+\DoxyCodeLine{00191\ \ \ \ \ LLM\_KV\_MOE\_EVERY\_N\_LAYERS,}
+\DoxyCodeLine{00192\ \ \ \ \ LLM\_KV\_MOE\_LATENT\_SIZE,}
+\DoxyCodeLine{00193\ \ \ \ \ LLM\_KV\_NEXTN\_PREDICT\_LAYERS,}
+\DoxyCodeLine{00194\ \ \ \ \ LLM\_KV\_NUM\_DEEPSTACK\_LAYERS,}
+\DoxyCodeLine{00195\ \ \ \ \ LLM\_KV\_POOLING\_TYPE,}
+\DoxyCodeLine{00196\ \ \ \ \ LLM\_KV\_LOGIT\_SCALE,}
+\DoxyCodeLine{00197\ \ \ \ \ LLM\_KV\_DECODER\_START\_TOKEN\_ID,}
+\DoxyCodeLine{00198\ \ \ \ \ LLM\_KV\_DECODER\_BLOCK\_COUNT,}
+\DoxyCodeLine{00199\ \ \ \ \ LLM\_KV\_ATTN\_LOGIT\_SOFTCAPPING,}
+\DoxyCodeLine{00200\ \ \ \ \ LLM\_KV\_ROUTER\_LOGIT\_SOFTCAPPING,}
+\DoxyCodeLine{00201\ \ \ \ \ LLM\_KV\_FINAL\_LOGIT\_SOFTCAPPING,}
+\DoxyCodeLine{00202\ \ \ \ \ LLM\_KV\_SWIN\_NORM,}
+\DoxyCodeLine{00203\ \ \ \ \ LLM\_KV\_RESCALE\_EVERY\_N\_LAYERS,}
+\DoxyCodeLine{00204\ \ \ \ \ LLM\_KV\_TIME\_MIX\_EXTRA\_DIM,}
+\DoxyCodeLine{00205\ \ \ \ \ LLM\_KV\_TIME\_DECAY\_EXTRA\_DIM,}
+\DoxyCodeLine{00206\ \ \ \ \ LLM\_KV\_RESIDUAL\_SCALE,}
+\DoxyCodeLine{00207\ \ \ \ \ LLM\_KV\_EMBEDDING\_SCALE,}
+\DoxyCodeLine{00208\ \ \ \ \ LLM\_KV\_TOKEN\_SHIFT\_COUNT,}
+\DoxyCodeLine{00209\ \ \ \ \ LLM\_KV\_INTERLEAVE\_MOE\_LAYER\_STEP,}
+\DoxyCodeLine{00210\ \ \ \ \ LLM\_KV\_FULL\_ATTENTION\_INTERVAL,}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ LLM\_KV\_ATTENTION\_HEAD\_COUNT,}
+\DoxyCodeLine{00213\ \ \ \ \ LLM\_KV\_ATTENTION\_HEAD\_COUNT\_KV,}
+\DoxyCodeLine{00214\ \ \ \ \ LLM\_KV\_ATTENTION\_MAX\_ALIBI\_BIAS,}
+\DoxyCodeLine{00215\ \ \ \ \ LLM\_KV\_ATTENTION\_CLAMP\_KQV,}
+\DoxyCodeLine{00216\ \ \ \ \ LLM\_KV\_ATTENTION\_KEY\_LENGTH,}
+\DoxyCodeLine{00217\ \ \ \ \ LLM\_KV\_ATTENTION\_VALUE\_LENGTH,}
+\DoxyCodeLine{00218\ \ \ \ \ LLM\_KV\_ATTENTION\_LAYERNORM\_EPS,}
+\DoxyCodeLine{00219\ \ \ \ \ LLM\_KV\_ATTENTION\_LAYERNORM\_RMS\_EPS,}
+\DoxyCodeLine{00220\ \ \ \ \ LLM\_KV\_ATTENTION\_GROUPNORM\_EPS,}
+\DoxyCodeLine{00221\ \ \ \ \ LLM\_KV\_ATTENTION\_GROUPNORM\_GROUPS,}
+\DoxyCodeLine{00222\ \ \ \ \ LLM\_KV\_ATTENTION\_CAUSAL,}
+\DoxyCodeLine{00223\ \ \ \ \ LLM\_KV\_ATTENTION\_Q\_LORA\_RANK,}
+\DoxyCodeLine{00224\ \ \ \ \ LLM\_KV\_ATTENTION\_KV\_LORA\_RANK,}
+\DoxyCodeLine{00225\ \ \ \ \ LLM\_KV\_ATTENTION\_DECAY\_LORA\_RANK,}
+\DoxyCodeLine{00226\ \ \ \ \ LLM\_KV\_ATTENTION\_ICLR\_LORA\_RANK,}
+\DoxyCodeLine{00227\ \ \ \ \ LLM\_KV\_ATTENTION\_VALUE\_RESIDUAL\_MIX\_LORA\_RANK,}
+\DoxyCodeLine{00228\ \ \ \ \ LLM\_KV\_ATTENTION\_GATE\_LORA\_RANK,}
+\DoxyCodeLine{00229\ \ \ \ \ LLM\_KV\_ATTENTION\_RELATIVE\_BUCKETS\_COUNT,}
+\DoxyCodeLine{00230\ \ \ \ \ LLM\_KV\_ATTENTION\_SLIDING\_WINDOW,}
+\DoxyCodeLine{00231\ \ \ \ \ LLM\_KV\_ATTENTION\_SLIDING\_WINDOW\_PATTERN,}
+\DoxyCodeLine{00232\ \ \ \ \ LLM\_KV\_ATTENTION\_SCALE,}
+\DoxyCodeLine{00233\ \ \ \ \ LLM\_KV\_ATTENTION\_OUTPUT\_SCALE,}
+\DoxyCodeLine{00234\ \ \ \ \ LLM\_KV\_ATTENTION\_TEMPERATURE\_LENGTH,}
+\DoxyCodeLine{00235\ \ \ \ \ LLM\_KV\_ATTENTION\_TEMPERATURE\_SCALE,}
+\DoxyCodeLine{00236\ \ \ \ \ LLM\_KV\_ATTENTION\_KEY\_LENGTH\_MLA,}
+\DoxyCodeLine{00237\ \ \ \ \ LLM\_KV\_ATTENTION\_VALUE\_LENGTH\_MLA,}
+\DoxyCodeLine{00238\ \ \ \ \ LLM\_KV\_ATTENTION\_KEY\_LENGTH\_SWA,}
+\DoxyCodeLine{00239\ \ \ \ \ LLM\_KV\_ATTENTION\_VALUE\_LENGTH\_SWA,}
+\DoxyCodeLine{00240\ \ \ \ \ LLM\_KV\_ATTENTION\_INDEXER\_HEAD\_COUNT,}
+\DoxyCodeLine{00241\ \ \ \ \ LLM\_KV\_ATTENTION\_INDEXER\_KEY\_LENGTH,}
+\DoxyCodeLine{00242\ \ \ \ \ LLM\_KV\_ATTENTION\_INDEXER\_TOP\_K,}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ LLM\_KV\_ROPE\_DIMENSION\_COUNT,}
+\DoxyCodeLine{00245\ \ \ \ \ LLM\_KV\_ROPE\_DIMENSION\_COUNT\_SWA,}
+\DoxyCodeLine{00246\ \ \ \ \ LLM\_KV\_ROPE\_DIMENSION\_SECTIONS,}
+\DoxyCodeLine{00247\ \ \ \ \ LLM\_KV\_ROPE\_FREQ\_BASE,}
+\DoxyCodeLine{00248\ \ \ \ \ LLM\_KV\_ROPE\_FREQ\_BASE\_SWA,}
+\DoxyCodeLine{00249\ \ \ \ \ LLM\_KV\_ROPE\_SCALE\_LINEAR,}
+\DoxyCodeLine{00250\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_TYPE,}
+\DoxyCodeLine{00251\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_FACTOR,}
+\DoxyCodeLine{00252\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_ATTN\_FACTOR,}
+\DoxyCodeLine{00253\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_ORIG\_CTX\_LEN,}
+\DoxyCodeLine{00254\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_FINETUNED,}
+\DoxyCodeLine{00255\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_YARN\_LOG\_MUL,}
+\DoxyCodeLine{00256\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_YARN\_EXT\_FACTOR,}
+\DoxyCodeLine{00257\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_YARN\_ATTN\_FACTOR,}
+\DoxyCodeLine{00258\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_YARN\_BETA\_FAST,}
+\DoxyCodeLine{00259\ \ \ \ \ LLM\_KV\_ROPE\_SCALING\_YARN\_BETA\_SLOW,}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ LLM\_KV\_SPLIT\_NO,}
+\DoxyCodeLine{00262\ \ \ \ \ LLM\_KV\_SPLIT\_COUNT,}
+\DoxyCodeLine{00263\ \ \ \ \ LLM\_KV\_SPLIT\_TENSORS\_COUNT,}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \ \ \ \ LLM\_KV\_SSM\_INNER\_SIZE,}
+\DoxyCodeLine{00266\ \ \ \ \ LLM\_KV\_SSM\_CONV\_KERNEL,}
+\DoxyCodeLine{00267\ \ \ \ \ LLM\_KV\_SSM\_STATE\_SIZE,}
+\DoxyCodeLine{00268\ \ \ \ \ LLM\_KV\_SSM\_TIME\_STEP\_RANK,}
+\DoxyCodeLine{00269\ \ \ \ \ LLM\_KV\_SSM\_GROUP\_COUNT,}
+\DoxyCodeLine{00270\ \ \ \ \ LLM\_KV\_SSM\_DT\_B\_C\_RMS,}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \ \ \ \ LLM\_KV\_KDA\_HEAD\_DIM,}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \ \ \ \ LLM\_KV\_WKV\_HEAD\_SIZE,}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \ \ LLM\_KV\_TOKENIZER\_MODEL,}
+\DoxyCodeLine{00277\ \ \ \ \ LLM\_KV\_TOKENIZER\_PRE,}
+\DoxyCodeLine{00278\ \ \ \ \ LLM\_KV\_TOKENIZER\_LIST,}
+\DoxyCodeLine{00279\ \ \ \ \ LLM\_KV\_TOKENIZER\_TOKEN\_TYPE,}
+\DoxyCodeLine{00280\ \ \ \ \ LLM\_KV\_TOKENIZER\_TOKEN\_TYPE\_COUNT,}
+\DoxyCodeLine{00281\ \ \ \ \ LLM\_KV\_TOKENIZER\_SCORES,}
+\DoxyCodeLine{00282\ \ \ \ \ LLM\_KV\_TOKENIZER\_MERGES,}
+\DoxyCodeLine{00283\ \ \ \ \ LLM\_KV\_TOKENIZER\_BOS\_ID,}
+\DoxyCodeLine{00284\ \ \ \ \ LLM\_KV\_TOKENIZER\_EOS\_ID,}
+\DoxyCodeLine{00285\ \ \ \ \ LLM\_KV\_TOKENIZER\_EOT\_ID,}
+\DoxyCodeLine{00286\ \ \ \ \ LLM\_KV\_TOKENIZER\_EOM\_ID,}
+\DoxyCodeLine{00287\ \ \ \ \ LLM\_KV\_TOKENIZER\_UNK\_ID,}
+\DoxyCodeLine{00288\ \ \ \ \ LLM\_KV\_TOKENIZER\_SEP\_ID,}
+\DoxyCodeLine{00289\ \ \ \ \ LLM\_KV\_TOKENIZER\_PAD\_ID,}
+\DoxyCodeLine{00290\ \ \ \ \ LLM\_KV\_TOKENIZER\_CLS\_ID,}
+\DoxyCodeLine{00291\ \ \ \ \ LLM\_KV\_TOKENIZER\_MASK\_ID,}
+\DoxyCodeLine{00292\ \ \ \ \ LLM\_KV\_TOKENIZER\_ADD\_BOS,}
+\DoxyCodeLine{00293\ \ \ \ \ LLM\_KV\_TOKENIZER\_ADD\_EOS,}
+\DoxyCodeLine{00294\ \ \ \ \ LLM\_KV\_TOKENIZER\_ADD\_SEP,}
+\DoxyCodeLine{00295\ \ \ \ \ LLM\_KV\_TOKENIZER\_ADD\_PREFIX,}
+\DoxyCodeLine{00296\ \ \ \ \ LLM\_KV\_TOKENIZER\_REMOVE\_EXTRA\_WS,}
+\DoxyCodeLine{00297\ \ \ \ \ LLM\_KV\_TOKENIZER\_PRECOMPILED\_CHARSMAP,}
+\DoxyCodeLine{00298\ \ \ \ \ LLM\_KV\_TOKENIZER\_HF\_JSON,}
+\DoxyCodeLine{00299\ \ \ \ \ LLM\_KV\_TOKENIZER\_RWKV,}
+\DoxyCodeLine{00300\ \ \ \ \ LLM\_KV\_TOKENIZER\_CHAT\_TEMPLATE,}
+\DoxyCodeLine{00301\ \ \ \ \ LLM\_KV\_TOKENIZER\_FIM\_PRE\_ID,}
+\DoxyCodeLine{00302\ \ \ \ \ LLM\_KV\_TOKENIZER\_FIM\_SUF\_ID,}
+\DoxyCodeLine{00303\ \ \ \ \ LLM\_KV\_TOKENIZER\_FIM\_MID\_ID,}
+\DoxyCodeLine{00304\ \ \ \ \ LLM\_KV\_TOKENIZER\_FIM\_PAD\_ID,}
+\DoxyCodeLine{00305\ \ \ \ \ LLM\_KV\_TOKENIZER\_FIM\_REP\_ID,}
+\DoxyCodeLine{00306\ \ \ \ \ LLM\_KV\_TOKENIZER\_FIM\_SEP\_ID,}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \ \ LLM\_KV\_ADAPTER\_TYPE,}
+\DoxyCodeLine{00309\ \ \ \ \ LLM\_KV\_ADAPTER\_LORA\_ALPHA,}
+\DoxyCodeLine{00310\ \ \ \ \ LLM\_KV\_ADAPTER\_LORA\_TASK\_NAME,}
+\DoxyCodeLine{00311\ \ \ \ \ LLM\_KV\_ADAPTER\_LORA\_PROMPT\_PREFIX,}
+\DoxyCodeLine{00312\ \ \ \ \ LLM\_KV\_ADAPTER\_ALORA\_INVOCATION\_TOKENS,}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ LLM\_KV\_POSNET\_EMBEDDING\_LENGTH,}
+\DoxyCodeLine{00315\ \ \ \ \ LLM\_KV\_POSNET\_BLOCK\_COUNT,}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \ \ LLM\_KV\_CONVNEXT\_EMBEDDING\_LENGTH,}
+\DoxyCodeLine{00318\ \ \ \ \ LLM\_KV\_CONVNEXT\_BLOCK\_COUNT,}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ LLM\_KV\_CLASSIFIER\_OUTPUT\_LABELS,}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ LLM\_KV\_SHORTCONV\_L\_CACHE,}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \ \ \ \ LLM\_KV\_XIELU\_ALPHA\_N,}
+\DoxyCodeLine{00325\ \ \ \ \ LLM\_KV\_XIELU\_ALPHA\_P,}
+\DoxyCodeLine{00326\ \ \ \ \ LLM\_KV\_XIELU\_BETA,}
+\DoxyCodeLine{00327\ \ \ \ \ LLM\_KV\_XIELU\_EPS,}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{comment}{//\ deprecated:}}
+\DoxyCodeLine{00330\ \ \ \ \ LLM\_KV\_TOKENIZER\_PREFIX\_ID,}
+\DoxyCodeLine{00331\ \ \ \ \ LLM\_KV\_TOKENIZER\_SUFFIX\_ID,}
+\DoxyCodeLine{00332\ \ \ \ \ LLM\_KV\_TOKENIZER\_MIDDLE\_ID,}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{comment}{//\ sentence-\/transformers\ dense\ layers\ in\ and\ out\ features}}
+\DoxyCodeLine{00335\ \ \ \ \ LLM\_KV\_DENSE\_2\_FEAT\_IN,}
+\DoxyCodeLine{00336\ \ \ \ \ LLM\_KV\_DENSE\_2\_FEAT\_OUT,}
+\DoxyCodeLine{00337\ \ \ \ \ LLM\_KV\_DENSE\_3\_FEAT\_IN,}
+\DoxyCodeLine{00338\ \ \ \ \ LLM\_KV\_DENSE\_3\_FEAT\_OUT,}
+\DoxyCodeLine{00339\ \};}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \textcolor{keyword}{enum}\ llm\_tensor\ \{}
+\DoxyCodeLine{00342\ \ \ \ \ LLM\_TENSOR\_TOKEN\_EMBD,}
+\DoxyCodeLine{00343\ \ \ \ \ LLM\_TENSOR\_TOKEN\_EMBD\_NORM,}
+\DoxyCodeLine{00344\ \ \ \ \ LLM\_TENSOR\_TOKEN\_TYPES,}
+\DoxyCodeLine{00345\ \ \ \ \ LLM\_TENSOR\_POS\_EMBD,}
+\DoxyCodeLine{00346\ \ \ \ \ LLM\_TENSOR\_DENSE\_2\_OUT,}
+\DoxyCodeLine{00347\ \ \ \ \ LLM\_TENSOR\_DENSE\_3\_OUT,}
+\DoxyCodeLine{00348\ \ \ \ \ LLM\_TENSOR\_OUTPUT,}
+\DoxyCodeLine{00349\ \ \ \ \ LLM\_TENSOR\_OUTPUT\_NORM,}
+\DoxyCodeLine{00350\ \ \ \ \ LLM\_TENSOR\_OUTPUT\_NORM\_LFM2,\ \textcolor{comment}{//\ fix\ for\ wrong\ tensor\ name}}
+\DoxyCodeLine{00351\ \ \ \ \ LLM\_TENSOR\_ROPE\_FREQS,}
+\DoxyCodeLine{00352\ \ \ \ \ LLM\_TENSOR\_ROPE\_FACTORS\_LONG,}
+\DoxyCodeLine{00353\ \ \ \ \ LLM\_TENSOR\_ROPE\_FACTORS\_SHORT,}
+\DoxyCodeLine{00354\ \ \ \ \ LLM\_TENSOR\_ATTN\_Q,}
+\DoxyCodeLine{00355\ \ \ \ \ LLM\_TENSOR\_ATTN\_K,}
+\DoxyCodeLine{00356\ \ \ \ \ LLM\_TENSOR\_ATTN\_V,}
+\DoxyCodeLine{00357\ \ \ \ \ LLM\_TENSOR\_ATTN\_QKV,}
+\DoxyCodeLine{00358\ \ \ \ \ LLM\_TENSOR\_ATTN\_OUT,}
+\DoxyCodeLine{00359\ \ \ \ \ LLM\_TENSOR\_ATTN\_NORM,}
+\DoxyCodeLine{00360\ \ \ \ \ LLM\_TENSOR\_ATTN\_NORM\_2,}
+\DoxyCodeLine{00361\ \ \ \ \ LLM\_TENSOR\_ATTN\_OUT\_NORM,}
+\DoxyCodeLine{00362\ \ \ \ \ LLM\_TENSOR\_ATTN\_POST\_NORM,}
+\DoxyCodeLine{00363\ \ \ \ \ LLM\_TENSOR\_ATTN\_ROT\_EMBD,}
+\DoxyCodeLine{00364\ \ \ \ \ LLM\_TENSOR\_ATTN\_SINKS,}
+\DoxyCodeLine{00365\ \ \ \ \ LLM\_TENSOR\_ATTN\_GATE,}
+\DoxyCodeLine{00366\ \ \ \ \ LLM\_TENSOR\_FFN\_GATE\_INP,}
+\DoxyCodeLine{00367\ \ \ \ \ LLM\_TENSOR\_FFN\_GATE\_INP\_SHEXP,}
+\DoxyCodeLine{00368\ \ \ \ \ LLM\_TENSOR\_FFN\_NORM,}
+\DoxyCodeLine{00369\ \ \ \ \ LLM\_TENSOR\_FFN\_POST\_NORM,}
+\DoxyCodeLine{00370\ \ \ \ \ LLM\_TENSOR\_FFN\_GATE,}
+\DoxyCodeLine{00371\ \ \ \ \ LLM\_TENSOR\_FFN\_DOWN,}
+\DoxyCodeLine{00372\ \ \ \ \ LLM\_TENSOR\_FFN\_UP,}
+\DoxyCodeLine{00373\ \ \ \ \ LLM\_TENSOR\_FFN\_ACT,}
+\DoxyCodeLine{00374\ \ \ \ \ LLM\_TENSOR\_FFN\_DOWN\_EXP,\ \ \textcolor{comment}{//\ split\ experts\ for\ backward\ compatibility}}
+\DoxyCodeLine{00375\ \ \ \ \ LLM\_TENSOR\_FFN\_GATE\_EXP,}
+\DoxyCodeLine{00376\ \ \ \ \ LLM\_TENSOR\_FFN\_UP\_EXP,}
+\DoxyCodeLine{00377\ \ \ \ \ LLM\_TENSOR\_FFN\_NORM\_EXPS,}
+\DoxyCodeLine{00378\ \ \ \ \ LLM\_TENSOR\_FFN\_DOWN\_EXPS,\ \textcolor{comment}{//\ merged\ experts}}
+\DoxyCodeLine{00379\ \ \ \ \ LLM\_TENSOR\_FFN\_GATE\_EXPS,}
+\DoxyCodeLine{00380\ \ \ \ \ LLM\_TENSOR\_FFN\_UP\_EXPS,}
+\DoxyCodeLine{00381\ \ \ \ \ LLM\_TENSOR\_FFN\_GATE\_UP\_EXPS,}
+\DoxyCodeLine{00382\ \ \ \ \ LLM\_TENSOR\_FFN\_DOWN\_SHEXP,}
+\DoxyCodeLine{00383\ \ \ \ \ LLM\_TENSOR\_FFN\_GATE\_SHEXP,}
+\DoxyCodeLine{00384\ \ \ \ \ LLM\_TENSOR\_FFN\_UP\_SHEXP,}
+\DoxyCodeLine{00385\ \ \ \ \ LLM\_TENSOR\_FFN\_DOWN\_CHEXPS,}
+\DoxyCodeLine{00386\ \ \ \ \ LLM\_TENSOR\_FFN\_GATE\_CHEXPS,}
+\DoxyCodeLine{00387\ \ \ \ \ LLM\_TENSOR\_FFN\_UP\_CHEXPS,}
+\DoxyCodeLine{00388\ \ \ \ \ LLM\_TENSOR\_FFN\_EXP\_PROBS\_B,}
+\DoxyCodeLine{00389\ \ \ \ \ LLM\_TENSOR\_FFN\_LATENT\_DOWN,}
+\DoxyCodeLine{00390\ \ \ \ \ LLM\_TENSOR\_FFN\_LATENT\_UP,}
+\DoxyCodeLine{00391\ \ \ \ \ LLM\_TENSOR\_ATTN\_Q\_NORM,}
+\DoxyCodeLine{00392\ \ \ \ \ LLM\_TENSOR\_ATTN\_K\_NORM,}
+\DoxyCodeLine{00393\ \ \ \ \ LLM\_TENSOR\_LAYER\_OUT\_NORM,}
+\DoxyCodeLine{00394\ \ \ \ \ LLM\_TENSOR\_POST\_ATTN\_NORM,}
+\DoxyCodeLine{00395\ \ \ \ \ LLM\_TENSOR\_POST\_MLP\_NORM,}
+\DoxyCodeLine{00396\ \ \ \ \ LLM\_TENSOR\_PER\_LAYER\_TOKEN\_EMBD,\ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00397\ \ \ \ \ LLM\_TENSOR\_PER\_LAYER\_MODEL\_PROJ,\ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00398\ \ \ \ \ LLM\_TENSOR\_PER\_LAYER\_INP\_GATE,\ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00399\ \ \ \ \ LLM\_TENSOR\_PER\_LAYER\_PROJ,\ \ \ \ \ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00400\ \ \ \ \ LLM\_TENSOR\_PER\_LAYER\_PROJ\_NORM,\ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00401\ \ \ \ \ LLM\_TENSOR\_PER\_LAYER\_POST\_NORM,\ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00402\ \ \ \ \ LLM\_TENSOR\_ALTUP\_PROJ,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00403\ \ \ \ \ LLM\_TENSOR\_ALTUP\_UNEMBD\_PROJ,\ \ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00404\ \ \ \ \ LLM\_TENSOR\_ALTUP\_CORRECT\_COEF,\ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00405\ \ \ \ \ LLM\_TENSOR\_ALTUP\_CORRECT\_SCALE,\ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00406\ \ \ \ \ LLM\_TENSOR\_ALTUP\_PREDICT\_COEF,\ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00407\ \ \ \ \ LLM\_TENSOR\_ALTUP\_ROUTER,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00408\ \ \ \ \ LLM\_TENSOR\_ALTUP\_ROUTER\_NORM,\ \ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00409\ \ \ \ \ LLM\_TENSOR\_LAUREL\_L,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00410\ \ \ \ \ LLM\_TENSOR\_LAUREL\_R,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00411\ \ \ \ \ LLM\_TENSOR\_LAUREL\_POST\_NORM,\ \ \ \ \ \textcolor{comment}{//\ gemma3n}}
+\DoxyCodeLine{00412\ \ \ \ \ LLM\_TENSOR\_SSM\_IN,}
+\DoxyCodeLine{00413\ \ \ \ \ LLM\_TENSOR\_SSM\_CONV1D,}
+\DoxyCodeLine{00414\ \ \ \ \ LLM\_TENSOR\_SSM\_X,}
+\DoxyCodeLine{00415\ \ \ \ \ LLM\_TENSOR\_SSM\_DT,}
+\DoxyCodeLine{00416\ \ \ \ \ LLM\_TENSOR\_SSM\_DT\_NORM,}
+\DoxyCodeLine{00417\ \ \ \ \ LLM\_TENSOR\_SSM\_A,}
+\DoxyCodeLine{00418\ \ \ \ \ LLM\_TENSOR\_SSM\_A\_NOSCAN,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ qwen3next\ special\ case\ with\ MUL\ instead\ of\ SSM\_SCAN}}
+\DoxyCodeLine{00419\ \ \ \ \ LLM\_TENSOR\_SSM\_B\_NORM,}
+\DoxyCodeLine{00420\ \ \ \ \ LLM\_TENSOR\_SSM\_C\_NORM,}
+\DoxyCodeLine{00421\ \ \ \ \ LLM\_TENSOR\_SSM\_D,}
+\DoxyCodeLine{00422\ \ \ \ \ LLM\_TENSOR\_SSM\_NORM,}
+\DoxyCodeLine{00423\ \ \ \ \ LLM\_TENSOR\_SSM\_OUT,}
+\DoxyCodeLine{00424\ \ \ \ \ LLM\_TENSOR\_SSM\_BETA\_ALPHA,\ \ \ \ \ \ \textcolor{comment}{//\ qwen3next}}
+\DoxyCodeLine{00425\ \ \ \ \ LLM\_TENSOR\_SSM\_ALPHA,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ qwen3.5}}
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{comment}{//\ Kimi\ Linear\ KDA\ (using\ SSM\_\ prefix\ for\ consistency)}}
+\DoxyCodeLine{00427\ \ \ \ \ LLM\_TENSOR\_SSM\_CONV1D\_Q,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ kimi:\ Q\ conv1d\ weight}}
+\DoxyCodeLine{00428\ \ \ \ \ LLM\_TENSOR\_SSM\_CONV1D\_K,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ kimi:\ K\ conv1d\ weight}}
+\DoxyCodeLine{00429\ \ \ \ \ LLM\_TENSOR\_SSM\_CONV1D\_V,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ kimi:\ V\ conv1d\ weight}}
+\DoxyCodeLine{00430\ \ \ \ \ LLM\_TENSOR\_SSM\_F\_A,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ kimi:\ forget\ gate\ projection\ A}}
+\DoxyCodeLine{00431\ \ \ \ \ LLM\_TENSOR\_SSM\_F\_B,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ kimi:\ forget\ gate\ projection\ B}}
+\DoxyCodeLine{00432\ \ \ \ \ LLM\_TENSOR\_SSM\_BETA,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ kimi:\ beta\ mixing\ coefficient\ and\ qwen3.5}}
+\DoxyCodeLine{00433\ \ \ \ \ LLM\_TENSOR\_SSM\_G\_A,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ kimi:\ output\ gate\ projection\ A}}
+\DoxyCodeLine{00434\ \ \ \ \ LLM\_TENSOR\_SSM\_G\_B,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ kimi:\ output\ gate\ projection\ B}}
+\DoxyCodeLine{00435\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_W0,}
+\DoxyCodeLine{00436\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_W1,}
+\DoxyCodeLine{00437\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_W2,}
+\DoxyCodeLine{00438\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_A0,}
+\DoxyCodeLine{00439\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_A1,}
+\DoxyCodeLine{00440\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_A2,}
+\DoxyCodeLine{00441\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_V0,}
+\DoxyCodeLine{00442\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_V1,}
+\DoxyCodeLine{00443\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_V2,}
+\DoxyCodeLine{00444\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_G1,}
+\DoxyCodeLine{00445\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_G2,}
+\DoxyCodeLine{00446\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_K\_K,}
+\DoxyCodeLine{00447\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_K\_A,}
+\DoxyCodeLine{00448\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_R\_K,}
+\DoxyCodeLine{00449\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_LERP\_X,}
+\DoxyCodeLine{00450\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_LERP\_W,}
+\DoxyCodeLine{00451\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_LERP\_K,}
+\DoxyCodeLine{00452\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_LERP\_V,}
+\DoxyCodeLine{00453\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_LERP\_R,}
+\DoxyCodeLine{00454\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_LERP\_G,}
+\DoxyCodeLine{00455\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_LERP\_FUSED,}
+\DoxyCodeLine{00456\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_FIRST,}
+\DoxyCodeLine{00457\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_DECAY,}
+\DoxyCodeLine{00458\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_DECAY\_W1,}
+\DoxyCodeLine{00459\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_DECAY\_W2,}
+\DoxyCodeLine{00460\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_KEY,}
+\DoxyCodeLine{00461\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_VALUE,}
+\DoxyCodeLine{00462\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_RECEPTANCE,}
+\DoxyCodeLine{00463\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_GATE,}
+\DoxyCodeLine{00464\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_LN,}
+\DoxyCodeLine{00465\ \ \ \ \ LLM\_TENSOR\_TIME\_MIX\_OUTPUT,}
+\DoxyCodeLine{00466\ \ \ \ \ LLM\_TENSOR\_CHANNEL\_MIX\_LERP\_K,}
+\DoxyCodeLine{00467\ \ \ \ \ LLM\_TENSOR\_CHANNEL\_MIX\_LERP\_R,}
+\DoxyCodeLine{00468\ \ \ \ \ LLM\_TENSOR\_CHANNEL\_MIX\_KEY,}
+\DoxyCodeLine{00469\ \ \ \ \ LLM\_TENSOR\_CHANNEL\_MIX\_RECEPTANCE,}
+\DoxyCodeLine{00470\ \ \ \ \ LLM\_TENSOR\_CHANNEL\_MIX\_VALUE,}
+\DoxyCodeLine{00471\ \ \ \ \ LLM\_TENSOR\_ATTN\_Q\_A,}
+\DoxyCodeLine{00472\ \ \ \ \ LLM\_TENSOR\_ATTN\_Q\_B,}
+\DoxyCodeLine{00473\ \ \ \ \ LLM\_TENSOR\_ATTN\_KV\_A\_MQA,}
+\DoxyCodeLine{00474\ \ \ \ \ LLM\_TENSOR\_ATTN\_KV\_B,}
+\DoxyCodeLine{00475\ \ \ \ \ LLM\_TENSOR\_ATTN\_K\_B,}
+\DoxyCodeLine{00476\ \ \ \ \ LLM\_TENSOR\_ATTN\_V\_B,}
+\DoxyCodeLine{00477\ \ \ \ \ LLM\_TENSOR\_ATTN\_Q\_A\_NORM,}
+\DoxyCodeLine{00478\ \ \ \ \ LLM\_TENSOR\_ATTN\_KV\_A\_NORM,}
+\DoxyCodeLine{00479\ \ \ \ \ LLM\_TENSOR\_ATTN\_SUB\_NORM,}
+\DoxyCodeLine{00480\ \ \ \ \ LLM\_TENSOR\_FFN\_SUB\_NORM,}
+\DoxyCodeLine{00481\ \ \ \ \ LLM\_TENSOR\_DEC\_ATTN\_NORM,}
+\DoxyCodeLine{00482\ \ \ \ \ LLM\_TENSOR\_DEC\_ATTN\_Q,}
+\DoxyCodeLine{00483\ \ \ \ \ LLM\_TENSOR\_DEC\_ATTN\_K,}
+\DoxyCodeLine{00484\ \ \ \ \ LLM\_TENSOR\_DEC\_ATTN\_V,}
+\DoxyCodeLine{00485\ \ \ \ \ LLM\_TENSOR\_DEC\_ATTN\_OUT,}
+\DoxyCodeLine{00486\ \ \ \ \ LLM\_TENSOR\_DEC\_ATTN\_REL\_B,}
+\DoxyCodeLine{00487\ \ \ \ \ LLM\_TENSOR\_DEC\_CROSS\_ATTN\_NORM,}
+\DoxyCodeLine{00488\ \ \ \ \ LLM\_TENSOR\_DEC\_CROSS\_ATTN\_Q,}
+\DoxyCodeLine{00489\ \ \ \ \ LLM\_TENSOR\_DEC\_CROSS\_ATTN\_K,}
+\DoxyCodeLine{00490\ \ \ \ \ LLM\_TENSOR\_DEC\_CROSS\_ATTN\_V,}
+\DoxyCodeLine{00491\ \ \ \ \ LLM\_TENSOR\_DEC\_CROSS\_ATTN\_OUT,}
+\DoxyCodeLine{00492\ \ \ \ \ LLM\_TENSOR\_DEC\_CROSS\_ATTN\_REL\_B,}
+\DoxyCodeLine{00493\ \ \ \ \ LLM\_TENSOR\_DEC\_FFN\_NORM,}
+\DoxyCodeLine{00494\ \ \ \ \ LLM\_TENSOR\_DEC\_FFN\_GATE,}
+\DoxyCodeLine{00495\ \ \ \ \ LLM\_TENSOR\_DEC\_FFN\_DOWN,}
+\DoxyCodeLine{00496\ \ \ \ \ LLM\_TENSOR\_DEC\_FFN\_UP,}
+\DoxyCodeLine{00497\ \ \ \ \ LLM\_TENSOR\_DEC\_OUTPUT\_NORM,}
+\DoxyCodeLine{00498\ \ \ \ \ LLM\_TENSOR\_ENC\_ATTN\_NORM,}
+\DoxyCodeLine{00499\ \ \ \ \ LLM\_TENSOR\_ENC\_ATTN\_Q,}
+\DoxyCodeLine{00500\ \ \ \ \ LLM\_TENSOR\_ENC\_ATTN\_K,}
+\DoxyCodeLine{00501\ \ \ \ \ LLM\_TENSOR\_ENC\_ATTN\_V,}
+\DoxyCodeLine{00502\ \ \ \ \ LLM\_TENSOR\_ENC\_ATTN\_OUT,}
+\DoxyCodeLine{00503\ \ \ \ \ LLM\_TENSOR\_ENC\_ATTN\_REL\_B,}
+\DoxyCodeLine{00504\ \ \ \ \ LLM\_TENSOR\_ENC\_FFN\_NORM,}
+\DoxyCodeLine{00505\ \ \ \ \ LLM\_TENSOR\_ENC\_FFN\_GATE,}
+\DoxyCodeLine{00506\ \ \ \ \ LLM\_TENSOR\_ENC\_FFN\_DOWN,}
+\DoxyCodeLine{00507\ \ \ \ \ LLM\_TENSOR\_ENC\_FFN\_UP,}
+\DoxyCodeLine{00508\ \ \ \ \ LLM\_TENSOR\_ENC\_OUTPUT\_NORM,}
+\DoxyCodeLine{00509\ \ \ \ \ LLM\_TENSOR\_CLS,}
+\DoxyCodeLine{00510\ \ \ \ \ LLM\_TENSOR\_CLS\_OUT,}
+\DoxyCodeLine{00511\ \ \ \ \ LLM\_TENSOR\_CLS\_NORM,}
+\DoxyCodeLine{00512\ \ \ \ \ LLM\_TENSOR\_CONV1D,}
+\DoxyCodeLine{00513\ \ \ \ \ LLM\_TENSOR\_CONVNEXT\_DW,}
+\DoxyCodeLine{00514\ \ \ \ \ LLM\_TENSOR\_CONVNEXT\_NORM,}
+\DoxyCodeLine{00515\ \ \ \ \ LLM\_TENSOR\_CONVNEXT\_PW1,}
+\DoxyCodeLine{00516\ \ \ \ \ LLM\_TENSOR\_CONVNEXT\_PW2,}
+\DoxyCodeLine{00517\ \ \ \ \ LLM\_TENSOR\_CONVNEXT\_GAMMA,}
+\DoxyCodeLine{00518\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_CONV1,}
+\DoxyCodeLine{00519\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_CONV2,}
+\DoxyCodeLine{00520\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_NORM,}
+\DoxyCodeLine{00521\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_NORM1,}
+\DoxyCodeLine{00522\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_NORM2,}
+\DoxyCodeLine{00523\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_ATTN\_NORM,}
+\DoxyCodeLine{00524\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_ATTN\_Q,}
+\DoxyCodeLine{00525\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_ATTN\_K,}
+\DoxyCodeLine{00526\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_ATTN\_V,}
+\DoxyCodeLine{00527\ \ \ \ \ LLM\_TENSOR\_POS\_NET\_ATTN\_OUT,}
+\DoxyCodeLine{00528\ \ \ \ \ LLM\_TENSOR\_SHORTCONV\_CONV,}
+\DoxyCodeLine{00529\ \ \ \ \ LLM\_TENSOR\_SHORTCONV\_INPROJ,}
+\DoxyCodeLine{00530\ \ \ \ \ LLM\_TENSOR\_SHORTCONV\_OUTPROJ,}
+\DoxyCodeLine{00531\ \ \ \ \ LLM\_TENSOR\_VISEXP\_ATTN\_QKV,}
+\DoxyCodeLine{00532\ \ \ \ \ LLM\_TENSOR\_VISEXP\_ATTN\_OUT,}
+\DoxyCodeLine{00533\ \ \ \ \ LLM\_TENSOR\_VISEXP\_FFN\_GATE,}
+\DoxyCodeLine{00534\ \ \ \ \ LLM\_TENSOR\_VISEXP\_FFN\_DOWN,}
+\DoxyCodeLine{00535\ \ \ \ \ LLM\_TENSOR\_VISEXP\_FFN\_UP,}
+\DoxyCodeLine{00536\ \ \ \ \ LLM\_TENSOR\_INDEXER\_K\_NORM,}
+\DoxyCodeLine{00537\ \ \ \ \ LLM\_TENSOR\_INDEXER\_PROJ,}
+\DoxyCodeLine{00538\ \ \ \ \ LLM\_TENSOR\_INDEXER\_ATTN\_K,}
+\DoxyCodeLine{00539\ \ \ \ \ LLM\_TENSOR\_INDEXER\_ATTN\_Q\_B,}
+\DoxyCodeLine{00540\ \ \ \ \ LLM\_TENSOR\_NEXTN\_EH\_PROJ,}
+\DoxyCodeLine{00541\ \ \ \ \ LLM\_TENSOR\_NEXTN\_EMBED\_TOKENS,}
+\DoxyCodeLine{00542\ \ \ \ \ LLM\_TENSOR\_NEXTN\_ENORM,}
+\DoxyCodeLine{00543\ \ \ \ \ LLM\_TENSOR\_NEXTN\_HNORM,}
+\DoxyCodeLine{00544\ \ \ \ \ LLM\_TENSOR\_NEXTN\_SHARED\_HEAD\_HEAD,}
+\DoxyCodeLine{00545\ \ \ \ \ LLM\_TENSOR\_NEXTN\_SHARED\_HEAD\_NORM,}
+\DoxyCodeLine{00546\ \};}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00548\ \textcolor{keyword}{enum}\ llm\_tensor\_layer\ \{}
+\DoxyCodeLine{00549\ \ \ \ \ LLM\_TENSOR\_LAYER\_INPUT,}
+\DoxyCodeLine{00550\ \ \ \ \ LLM\_TENSOR\_LAYER\_REPEATING,}
+\DoxyCodeLine{00551\ \ \ \ \ LLM\_TENSOR\_LAYER\_OUTPUT,}
+\DoxyCodeLine{00552\ \};}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \textcolor{keyword}{struct\ }LLM\_KV\ \{}
+\DoxyCodeLine{00555\ \ \ \ \ LLM\_KV(llm\_arch\ arch,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ suffix\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00556\ }
+\DoxyCodeLine{00557\ \ \ \ \ llm\_arch\ arch;}
+\DoxyCodeLine{00558\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ suffix;}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \ \ \ \ std::string\ operator()(llm\_kv\ kv)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00561\ \};}
+\DoxyCodeLine{00562\ }
+\DoxyCodeLine{00563\ \textcolor{comment}{//\ helper\ to\ handle\ gguf\ constants}}
+\DoxyCodeLine{00564\ \textcolor{comment}{//\ usage:}}
+\DoxyCodeLine{00565\ \textcolor{comment}{//}}
+\DoxyCodeLine{00566\ \textcolor{comment}{//\ \ \ const\ auto\ tn\ =\ LLM\_TN(LLM\_ARCH\_LLAMA);}}
+\DoxyCodeLine{00567\ \textcolor{comment}{//}}
+\DoxyCodeLine{00568\ \textcolor{comment}{//\ \ \ std::string\ name\ =\ tn(LLM\_TENSOR\_OUTPUT);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>\ "{}output"{}}}
+\DoxyCodeLine{00569\ \textcolor{comment}{//\ \ \ std::string\ name\ =\ tn(LLM\_TENSOR\_TOKEN\_EMBD,\ "{}bias"{});\ \ \ \ \ \ \ \ \ -\/>\ "{}token\_embd.bias"{}}}
+\DoxyCodeLine{00570\ \textcolor{comment}{//\ \ \ std::string\ name\ =\ tn(LLM\_TENSOR\_ATTN\_NORM,\ "{}weight"{},\ 3);\ \ \ \ \ -\/>\ "{}blk.3.attn\_norm.weight"{}}}
+\DoxyCodeLine{00571\ \textcolor{comment}{//}}
+\DoxyCodeLine{00572\ \textcolor{keyword}{struct\ }LLM\_TN\_IMPL\ \{}
+\DoxyCodeLine{00573\ \ \ \ \ \textcolor{keyword}{const}\ llm\_arch\ arch;}
+\DoxyCodeLine{00574\ \ \ \ \ \textcolor{keyword}{const}\ llm\_tensor\ tensor;}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \textcolor{keyword}{const}\ suffix;}
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bid;}
+\DoxyCodeLine{00577\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ xid;}
+\DoxyCodeLine{00578\ }
+\DoxyCodeLine{00579\ \ \ \ \ \textcolor{keyword}{const}\ std::set<llm\_tensor>\ model\_tensors;}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ \ \ LLM\_TN\_IMPL(llm\_arch\ arch,\ llm\_tensor\ tensor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ suffix,\ \textcolor{keywordtype}{int}\ bid,\ \textcolor{keywordtype}{int}\ xid);}
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00583\ \ \ \ \ std::string\ str()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00584\ }
+\DoxyCodeLine{00585\ \ \ \ \ \textcolor{keyword}{operator}\ std::string()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str();}
+\DoxyCodeLine{00587\ \ \ \ \ \}}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ std::string\ \&\ str,\ \textcolor{keyword}{const}\ LLM\_TN\_IMPL\ \&\ tn)\ \{}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ ==\ tn.str();}
+\DoxyCodeLine{00591\ \ \ \ \ \}}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{bool}\ operator!=(\textcolor{keyword}{const}\ std::string\ \&\ str,\ \textcolor{keyword}{const}\ LLM\_TN\_IMPL\ \&\ tn)\ \{}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ !=\ tn.str();}
+\DoxyCodeLine{00595\ \ \ \ \ \}}
+\DoxyCodeLine{00596\ \};}
+\DoxyCodeLine{00597\ }
+\DoxyCodeLine{00598\ \textcolor{keyword}{struct\ }LLM\_TN\ \{}
+\DoxyCodeLine{00599\ \ \ \ \ LLM\_TN(llm\_arch\ arch)\ :\ arch(arch)\ \{\}}
+\DoxyCodeLine{00600\ }
+\DoxyCodeLine{00601\ \ \ \ \ llm\_arch\ arch;}
+\DoxyCodeLine{00602\ }
+\DoxyCodeLine{00603\ \ \ \ \ \doxymbox{\hyperlink{struct_l_l_m___t_n___i_m_p_l}{LLM\_TN\_IMPL}}\ operator()(llm\_tensor\ tensor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ suffix,\ \textcolor{keywordtype}{int}\ bid\ =\ -\/1,\ \textcolor{keywordtype}{int}\ xid\ =\ -\/1)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{struct_l_l_m___t_n___i_m_p_l}{LLM\_TN\_IMPL}}(arch,\ tensor,\ suffix,\ bid,\ xid);}
+\DoxyCodeLine{00605\ \ \ \ \ \}}
+\DoxyCodeLine{00606\ }
+\DoxyCodeLine{00607\ \ \ \ \ \doxymbox{\hyperlink{struct_l_l_m___t_n___i_m_p_l}{LLM\_TN\_IMPL}}\ operator()(llm\_tensor\ tensor,\ \textcolor{keywordtype}{int}\ bid\ =\ -\/1,\ \textcolor{keywordtype}{int}\ xid\ =\ -\/1)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{struct_l_l_m___t_n___i_m_p_l}{LLM\_TN\_IMPL}}(arch,\ tensor,\ \textcolor{keyword}{nullptr},\ bid,\ xid);}
+\DoxyCodeLine{00609\ \ \ \ \ \}}
+\DoxyCodeLine{00610\ \};}
+\DoxyCodeLine{00611\ }
+\DoxyCodeLine{00612\ }
+\DoxyCodeLine{00613\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllm__tensor__info}{llm\_tensor\_info}}\ \{}
+\DoxyCodeLine{00614\ \ \ \ \ llm\_tensor\_layer\ layer;}
+\DoxyCodeLine{00615\ \ \ \ \ ggml\_op\ op;}
+\DoxyCodeLine{00616\ \};}
+\DoxyCodeLine{00617\ }
+\DoxyCodeLine{00618\ std::vector<llm\_arch>\ llm\_arch\_all();}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00620\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ llm\_arch\_name(llm\_arch\ arch);}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ llm\_arch\ llm\_arch\_from\_string(\textcolor{keyword}{const}\ std::string\ \&\ name);}
+\DoxyCodeLine{00623\ }
+\DoxyCodeLine{00624\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__tensor__info}{llm\_tensor\_info}}\ \&\ llm\_tensor\_info\_for(llm\_tensor\ tensor);}
+\DoxyCodeLine{00625\ }
+\DoxyCodeLine{00626\ \textcolor{keywordtype}{bool}\ llm\_arch\_is\_recurrent(\textcolor{keyword}{const}\ llm\_arch\ \&\ arch);}
+\DoxyCodeLine{00627\ \textcolor{keywordtype}{bool}\ llm\_arch\_is\_hybrid\ \ \ (\textcolor{keyword}{const}\ llm\_arch\ \&\ arch);}
+\DoxyCodeLine{00628\ \textcolor{keywordtype}{bool}\ llm\_arch\_is\_diffusion(\textcolor{keyword}{const}\ llm\_arch\ \&\ arch);}
+
+\end{DoxyCode}

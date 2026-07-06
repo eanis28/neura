@@ -1,0 +1,126 @@
+\doxysection{whisper.\+cpp/\+examples/\+talk-\/llama Directory Reference}
+\hypertarget{dir_fc6f45d6dee8b87c4658d42325d2b558}{}\label{dir_fc6f45d6dee8b87c4658d42325d2b558}\index{whisper.cpp/examples/talk-\/llama Directory Reference@{whisper.cpp/examples/talk-\/llama Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \doxymbox{\hyperlink{dir_90d3b6b0fb435b6c8999d339d77bb5a9}{models}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file {\bfseries llama-\/adapter.\+h}
+\item 
+file {\bfseries llama-\/arch.\+h}
+\item 
+file {\bfseries llama-\/batch.\+h}
+\item 
+file {\bfseries llama-\/chat.\+h}
+\item 
+file {\bfseries llama-\/context.\+h}
+\item 
+file {\bfseries llama-\/cparams.\+h}
+\item 
+file {\bfseries llama-\/ext.\+h}
+\item 
+file {\bfseries llama-\/grammar.\+h}
+\item 
+file {\bfseries llama-\/graph.\+h}
+\item 
+file {\bfseries llama-\/hparams.\+h}
+\item 
+file {\bfseries llama-\/impl.\+h}
+\item 
+file {\bfseries llama-\/io.\+h}
+\item 
+file {\bfseries llama-\/kv-\/cache-\/iswa.\+h}
+\item 
+file {\bfseries llama-\/kv-\/cache.\+h}
+\item 
+file {\bfseries llama-\/kv-\/cells.\+h}
+\item 
+file {\bfseries llama-\/memory-\/hybrid-\/iswa.\+h}
+\item 
+file {\bfseries llama-\/memory-\/hybrid.\+h}
+\item 
+file {\bfseries llama-\/memory-\/recurrent.\+h}
+\item 
+file {\bfseries llama-\/memory.\+h}
+\item 
+file {\bfseries llama-\/mmap.\+h}
+\item 
+file {\bfseries llama-\/model-\/loader.\+h}
+\item 
+file {\bfseries llama-\/model-\/saver.\+h}
+\item 
+file {\bfseries llama-\/model.\+h}
+\item 
+file {\bfseries llama-\/quant.\+h}
+\item 
+file {\bfseries llama-\/sampler.\+h}
+\item 
+file {\bfseries llama-\/vocab.\+h}
+\item 
+file {\bfseries llama.\+h}
+\item 
+file {\bfseries unicode-\/data.\+h}
+\item 
+file {\bfseries unicode.\+h}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md91}{}\doxysubsection{\texorpdfstring{whisper.\+cpp/\+examples/\+talk-\/llama}{whisper.\+cpp/\+examples/\+talk-\/llama}}\label{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md91}
+Talk with an LLa\+MA AI in your terminal
+
+{\itshape Latest perf as of 2 Nov 2023 using Whisper Medium + LLa\+MA v2 13B Q8\+\_\+0 on M2 Ultra:\+}
+
+\href{https://github.com/ggerganov/whisper.cpp/assets/1991296/d97a3788-bf2a-4756-9a43-60c6b391649e}{\texttt{https:\+/\+/\+github.\+com/\+ggerganov/\+whisper.\+cpp/\+assets/\+1991296/\+d97a3788-\/bf2a-\/4756-\/9a43-\/60c6b391649e}}
+
+{\itshape Previous demo running on CPUs}
+
+\href{https://user-images.githubusercontent.com/1991296/228024237-848f998c-c334-46a6-bef8-3271590da83b.mp4}{\texttt{Demo Talk}}\hypertarget{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md92}{}\doxysubsection{\texorpdfstring{Building}{Building}}\label{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md92}
+\doxylink{requirements_The}{The} {\ttfamily whisper-\/talk-\/llama} tool depends on SDL2 library to capture audio from the microphone. You can build it like this:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Install\ SDL2}
+\DoxyCodeLine{\#\ On\ Debian\ based\ linux\ distributions:}
+\DoxyCodeLine{sudo\ apt-\/get\ install\ libsdl2-\/dev}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ On\ Fedora\ Linux:}
+\DoxyCodeLine{sudo\ dnf\ install\ SDL2\ SDL2-\/devel}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Install\ SDL2\ on\ Mac\ OS}
+\DoxyCodeLine{brew\ install\ sdl2}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Build\ the\ "{}whisper-\/talk-\/llama"{}\ executable}
+\DoxyCodeLine{cmake\ -\/B\ build\ -\/S\ .\ -\/DWHISPER\_SDL2=ON}
+\DoxyCodeLine{cmake\ -\/-\/build\ build\ -\/-\/config\ Release}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Run\ it}
+\DoxyCodeLine{./build/bin/whisper-\/talk-\/llama\ -\/mw\ ./models/ggml-\/small.en.bin\ -\/ml\ ../llama.cpp/models/llama-\/13b/ggml-\/model-\/q4\_0.gguf\ -\/p\ "{}Georgi"{}\ -\/t\ 8}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item \doxylink{requirements_The}{The} {\ttfamily -\/mw} argument specifies the Whisper model that you would like to use. Recommended {\ttfamily base} or {\ttfamily small} for real-\/time experience
+\item \doxylink{requirements_The}{The} {\ttfamily -\/ml} argument specifies the LLa\+MA model that you would like to use. Read the instructions in \href{https://github.com/ggerganov/llama.cpp}{\texttt{https:\+/\+/\+github.\+com/\+ggerganov/\+llama.\+cpp}} for information about how to obtain a {\ttfamily ggml} compatible LLa\+MA model
+\end{DoxyItemize}\hypertarget{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md93}{}\doxysubsection{\texorpdfstring{Session}{Session}}\label{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md93}
+\doxylink{requirements_The}{The} {\ttfamily whisper-\/talk-\/llama} tool supports session management to enable more coherent and continuous conversations. By maintaining context from previous interactions, it can better understand and respond to user requests in a more natural way.
+
+To enable session support, use the {\ttfamily -\/-\/session FILE} command line option when running the program. \doxylink{requirements_The}{The} {\ttfamily whisper-\/talk-\/llama} model state will be saved to the specified file after each interaction. If the file does not exist, it will be created. If the file exists, the model state will be loaded from it, allowing you to resume a previous session.
+
+This feature is especially helpful for maintaining context in long conversations or when interacting with the AI assistant across multiple sessions. It ensures that the assistant remembers the previous interactions and can provide more relevant and contextual responses.
+
+Example usage:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/bin/whisper-\/talk-\/llama\ -\/-\/session\ ./my-\/session-\/file\ -\/mw\ ./models/ggml-\/small.en.bin\ -\/ml\ ../llama.cpp/models/llama-\/13b/ggml-\/model-\/q4\_0.gguf\ -\/p\ "{}Georgi"{}\ -\/t\ 8}
+
+\end{DoxyCode}
+\hypertarget{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md94}{}\doxysubsection{\texorpdfstring{TTS}{TTS}}\label{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md94}
+For best experience, this example needs a TTS tool to convert the generated text responses to voice. You can use any TTS engine that you would like -\/ simply edit the \+[speak]\+(speak) script to your needs. By default, it is configured to use Mac\+OS\textquotesingle{}s {\ttfamily say} or Windows Speech\+Synthesizer, but you can use whatever you wish.\hypertarget{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md95}{}\doxysubsection{\texorpdfstring{Discussion}{Discussion}}\label{dir_fc6f45d6dee8b87c4658d42325d2b558_autotoc_md95}
+If you have any feedback, please let "{}us"{} know in the following discussion:\+ \href{https://github.com/ggerganov/whisper.cpp/discussions/672?converting=1}{\texttt{https:\+/\+/\+github.\+com/\+ggerganov/\+whisper.\+cpp/\+discussions/\+672?converting=1}} 

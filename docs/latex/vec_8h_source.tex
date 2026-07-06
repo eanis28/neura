@@ -1,0 +1,1591 @@
+\doxysection{vec.\+h}
+\hypertarget{vec_8h_source}{}\label{vec_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/vec.h@{whisper.cpp/ggml/src/ggml-\/cpu/vec.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Vectorized\ functions\ for\ fundamental\ operations}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}simd-\/mappings.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}ggml-\/cpu.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#if\ defined(GGML\_USE\_ACCELERATE)}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <Accelerate/Accelerate.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ floating\ point\ type\ used\ to\ accumulate\ sums}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ ggml\_float;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ GGML\_GELU\_FP16}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ GGML\_GELU\_QUICK\_FP16}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ GGML\_SOFT\_MAX\_UNROLL\ 4}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ GGML\_VEC\_DOT\_UNROLL\ \ 2}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ GGML\_VEC\_MAD\_UNROLL\ \ 32}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00025\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ global\ data}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ precomputed\ gelu\ table\ for\ f16\ (128\ KB)}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{extern}\ ggml\_fp16\_t\ ggml\_table\_gelu\_f16[1\ <<\ 16];}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ precomputed\ quick\ gelu\ table\ for\ f16\ (128\ KB)}}
+\DoxyCodeLine{00036\ \textcolor{keyword}{extern}\ ggml\_fp16\_t\ ggml\_table\_gelu\_quick\_f16[1\ <<\ 16];}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ fundamental\ operations}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{void}\ ggml\_vec\_dot\_f32(\textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ s,\ \textcolor{keywordtype}{size\_t}\ bs,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{size\_t}\ bx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ \textcolor{keywordtype}{size\_t}\ by,\ \textcolor{keywordtype}{int}\ nrc);}
+\DoxyCodeLine{00043\ \textcolor{keywordtype}{void}\ ggml\_vec\_dot\_bf16(\textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ s,\ \textcolor{keywordtype}{size\_t}\ bs,\ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{size\_t}\ bx,\ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ *\ GGML\_RESTRICT\ y,\ \textcolor{keywordtype}{size\_t}\ by,\ \textcolor{keywordtype}{int}\ nrc);}
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{void}\ ggml\_vec\_dot\_f16(\textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ s,\ \textcolor{keywordtype}{size\_t}\ bs,\ ggml\_fp16\_t\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{size\_t}\ bx,\ ggml\_fp16\_t\ *\ GGML\_RESTRICT\ y,\ \textcolor{keywordtype}{size\_t}\ by,\ \textcolor{keywordtype}{int}\ nrc);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keywordtype}{void}\ ggml\_vec\_silu\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x);}
+\DoxyCodeLine{00047\ ggml\_float\ ggml\_vec\_cvar\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ mean);\ \textcolor{comment}{//it\ will\ also\ center\ y\ (\ y\ =\ y\ -\/\ mean\ )}}
+\DoxyCodeLine{00048\ ggml\_float\ ggml\_vec\_soft\_max\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keywordtype}{float}\ max);}
+\DoxyCodeLine{00049\ ggml\_float\ ggml\_vec\_log\_soft\_max\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keywordtype}{float}\ max);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_set\_i8(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ int8\_t\ *\ x,\ \textcolor{keyword}{const}\ int8\_t\ v)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ x[i]\ =\ v;\ \}}
+\DoxyCodeLine{00052\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_set\_i16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ int16\_t\ *\ x,\ \textcolor{keyword}{const}\ int16\_t\ v)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ x[i]\ =\ v;\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_set\_i32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ int32\_t\ *\ x,\ \textcolor{keyword}{const}\ int32\_t\ \ \ v)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ x[i]\ =\ v;\ \ \ \ \}}
+\DoxyCodeLine{00055\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_cpy\_i32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ int32\_t\ *\ y,\ \textcolor{keyword}{const}\ int32\_t\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ x[i];\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_set\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ v)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ x[i]\ =\ v;\ \}}
+\DoxyCodeLine{00058\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_set\_bf16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ *\ x,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ v)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ x[i]\ =\ v;\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_add\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ z,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ y)\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#if\ defined(\_\_AVX2\_\_)}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ i\ +\ 7\ <\ n;\ i\ +=\ 8)\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \_\_m256\ vx\ =\ \_mm256\_loadu\_ps(x\ +\ i);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \_\_m256\ vy\ =\ \_mm256\_loadu\_ps(y\ +\ i);}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \_\_m256\ vz\ =\ \_mm256\_add\_ps(vx,\ vy);}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \_mm256\_storeu\_ps(z\ +\ i,\ vz);}
+\DoxyCodeLine{00068\ \ \ \ \ \}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ z[i]\ =\ x[i]\ +\ y[i];}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_add\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ z,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ y)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ z[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(x[i])\ +\ GGML\_CPU\_FP16\_TO\_FP32(y[i]));}
+\DoxyCodeLine{00078\ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \}}
+\DoxyCodeLine{00080\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_add1\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ z,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ v)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ z[i]\ \ =\ x[i]\ +\ v;\ \ \ \ \}}
+\DoxyCodeLine{00081\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_acc\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ +=\ x[i];\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_acc1\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ v)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ +=\ v;\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sub\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ z,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ y)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ z[i]\ \ =\ x[i]\ -\/\ y[i];\ \}}
+\DoxyCodeLine{00084\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sub\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ z,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ y)\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ z[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(x[i])\ -\/\ GGML\_CPU\_FP16\_TO\_FP32(y[i]));}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ \}}
+\DoxyCodeLine{00089\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_set\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ v)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ x[i]\ \ =\ v;\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00090\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_cpy\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ \ =\ x[i];\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_neg\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ \ =\ -\/x[i];\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_neg\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(-\/GGML\_CPU\_FP16\_TO\_FP32(x[i]));}
+\DoxyCodeLine{00095\ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_mul\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ z,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ y)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ z[i]\ \ =\ x[i]*y[i];\ \ \ \}}
+\DoxyCodeLine{00099\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_mul\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ z,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ y)\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ z[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(x[i])\ *\ GGML\_CPU\_FP16\_TO\_FP32(y[i]));}
+\DoxyCodeLine{00102\ \ \ \ \ \}}
+\DoxyCodeLine{00103\ \}}
+\DoxyCodeLine{00104\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_div\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ z,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ y)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ z[i]\ \ =\ x[i]/y[i];\ \ \ \}}
+\DoxyCodeLine{00105\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_div\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ z,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ y)\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ z[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(x[i])\ /\ GGML\_CPU\_FP16\_TO\_FP32(y[i]));}
+\DoxyCodeLine{00108\ \ \ \ \ \}}
+\DoxyCodeLine{00109\ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{comment}{//\ compute\ GGML\_VEC\_DOT\_UNROLL\ dot\ products\ at\ once}}
+\DoxyCodeLine{00112\ \textcolor{comment}{//\ xs\ -\/\ x\ row\ stride\ in\ bytes}}
+\DoxyCodeLine{00113\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_dot\_f16\_unroll(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ xs,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ s,\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ xv,\ ggml\_fp16\_t\ *\ GGML\_RESTRICT\ y)\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ ggml\_float\ sumf[GGML\_VEC\_DOT\_UNROLL]\ =\ \{\ 0.0\ \};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ ggml\_fp16\_t\ *\ GGML\_RESTRICT\ x[GGML\_VEC\_DOT\_UNROLL];}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ GGML\_VEC\_DOT\_UNROLL;\ ++i)\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ x[i]\ =\ (ggml\_fp16\_t\ *)\ ((\textcolor{keywordtype}{char}\ *)\ xv\ +\ i*xs);}
+\DoxyCodeLine{00120\ \ \ \ \ \}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#if\ defined(GGML\_SIMD)}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\ \ \ \ \#if\ defined(\_\_ARM\_FEATURE\_SVE)}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sve\_register\_length\ =\ svcntb()\ *\ 8;}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f16\_epr\ =\ sve\_register\_length\ /\ 16;\ \textcolor{comment}{//\ running\ when\ 16}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f16\_step\ =\ 8\ *\ ggml\_f16\_epr;\ \textcolor{comment}{//\ choose\ 8\ SVE\ registers}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(ggml\_f16\_step\ -\/\ 1));}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ svfloat16\_t\ sum\_00\ =\ svdup\_n\_f16(0.0f);}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ svfloat16\_t\ sum\_01\ =\ svdup\_n\_f16(0.0f);}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ svfloat16\_t\ sum\_02\ =\ svdup\_n\_f16(0.0f);}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ svfloat16\_t\ sum\_03\ =\ svdup\_n\_f16(0.0f);}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ svfloat16\_t\ sum\_10\ =\ svdup\_n\_f16(0.0f);}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ svfloat16\_t\ sum\_11\ =\ svdup\_n\_f16(0.0f);}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ svfloat16\_t\ sum\_12\ =\ svdup\_n\_f16(0.0f);}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ svfloat16\_t\ sum\_13\ =\ svdup\_n\_f16(0.0f);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ svfloat16\_t\ ax1,\ ax2,\ ax3,\ ax4,\ ax5,\ ax6,\ ax7,\ ax8;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ svfloat16\_t\ ay1,\ ay2,\ ay3,\ ay4,\ ay5,\ ay6,\ ay7,\ ay8;}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ ggml\_f16\_step)\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 0\ *\ ggml\_f16\_epr,\ 0);\ \textcolor{comment}{//\ 8\ elements}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ ax1\ =\ GGML\_F16x\_VEC\_LOAD(x[0]\ +\ i\ +\ 0*ggml\_f16\_epr,\ 0);\ \textcolor{comment}{//\ 8\ elements}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_00\ =\ GGML\_F16x\_VEC\_FMA(sum\_00,\ ax1,\ ay1);\ \ \ \ \ \textcolor{comment}{//\ sum\_00\ =\ sum\_00+ax1*ay1}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ ax1\ =\ GGML\_F16x\_VEC\_LOAD(x[1]\ +\ i\ +\ 0*ggml\_f16\_epr,\ 0);\ \textcolor{comment}{//\ 8\ elements}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_10\ =\ GGML\_F16x\_VEC\_FMA(sum\_10,\ ax1,\ ay1);}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ ay2\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 1\ *\ ggml\_f16\_epr,\ 1);\ \textcolor{comment}{//\ next\ 8\ elements}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ ax2\ =\ GGML\_F16x\_VEC\_LOAD(x[0]\ +\ i\ +\ 1*ggml\_f16\_epr,\ 1);\ \textcolor{comment}{//\ next\ 8\ elements}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_01\ =\ GGML\_F16x\_VEC\_FMA(sum\_01,\ ax2,\ ay2);}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ ax2\ =\ GGML\_F16x\_VEC\_LOAD(x[1]\ +\ i\ +\ 1*ggml\_f16\_epr,\ 1);}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_11\ =\ GGML\_F16x\_VEC\_FMA(sum\_11,\ ax2,\ ay2);}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ ay3\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 2\ *\ ggml\_f16\_epr,\ 2);}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ ax3\ =\ GGML\_F16x\_VEC\_LOAD(x[0]\ +\ i\ +\ 2*ggml\_f16\_epr,\ 2);}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_02\ =\ GGML\_F16x\_VEC\_FMA(sum\_02,\ ax3,\ ay3);}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ ax3\ =\ GGML\_F16x\_VEC\_LOAD(x[1]\ +\ i\ +\ 2*ggml\_f16\_epr,\ 2);}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_12\ =\ GGML\_F16x\_VEC\_FMA(sum\_12,\ ax3,\ ay3);}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ ay4\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 3\ *\ ggml\_f16\_epr,\ 3);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ ax4\ =\ GGML\_F16x\_VEC\_LOAD(x[0]\ +\ i\ +\ 3*ggml\_f16\_epr,\ 3);}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_03\ =\ GGML\_F16x\_VEC\_FMA(sum\_03,\ ax4,\ ay4);}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ ax4\ =\ GGML\_F16x\_VEC\_LOAD(x[1]\ +\ i\ +\ 3*ggml\_f16\_epr,\ 3);}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_13\ =\ GGML\_F16x\_VEC\_FMA(sum\_13,\ ax4,\ ay4);}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ ay5\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 4\ *\ ggml\_f16\_epr,\ 4);}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ ax5\ =\ GGML\_F16x\_VEC\_LOAD(x[0]\ +\ i\ +\ 4*ggml\_f16\_epr,\ 4);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_00\ =\ GGML\_F16x\_VEC\_FMA(sum\_00,\ ax5,\ ay5);}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ ax5\ =\ GGML\_F16x\_VEC\_LOAD(x[1]\ +\ i\ +\ 4*ggml\_f16\_epr,\ 4);}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_10\ =\ GGML\_F16x\_VEC\_FMA(sum\_10,\ ax5,\ ay5);}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ ay6\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 5\ *\ ggml\_f16\_epr,\ 5);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ ax6\ =\ GGML\_F16x\_VEC\_LOAD(x[0]\ +\ i\ +\ 5*ggml\_f16\_epr,\ 5);}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_01\ =\ GGML\_F16x\_VEC\_FMA(sum\_01,\ ax6,\ ay6);}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ ax6\ =\ GGML\_F16x\_VEC\_LOAD(x[1]\ +\ i\ +\ 5*ggml\_f16\_epr,\ 5);}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_11\ =\ GGML\_F16x\_VEC\_FMA(sum\_11,\ ax6,\ ay6);}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ ay7\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 6\ *\ ggml\_f16\_epr,\ 6);}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ ax7\ =\ GGML\_F16x\_VEC\_LOAD(x[0]\ +\ i\ +\ 6*ggml\_f16\_epr,\ 6);}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_02\ =\ GGML\_F16x\_VEC\_FMA(sum\_02,\ ax7,\ ay7);}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ ax7\ =\ GGML\_F16x\_VEC\_LOAD(x[1]\ +\ i\ +\ 6*ggml\_f16\_epr,\ 6);}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_12\ =\ GGML\_F16x\_VEC\_FMA(sum\_12,\ ax7,\ ay7);}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ ay8\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 7\ *\ ggml\_f16\_epr,\ 7);}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ ax8\ =\ GGML\_F16x\_VEC\_LOAD(x[0]\ +\ i\ +\ 7*ggml\_f16\_epr,\ 7);}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_03\ =\ GGML\_F16x\_VEC\_FMA(sum\_03,\ ax8,\ ay8);}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ ax8\ =\ GGML\_F16x\_VEC\_LOAD(x[1]\ +\ i\ +\ 7*ggml\_f16\_epr,\ 7);}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_13\ =\ GGML\_F16x\_VEC\_FMA(sum\_13,\ ax8,\ ay8);}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np2\ =\ (n\ \&\ \string~(ggml\_f16\_epr\ -\/\ 1));}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ np;\ k\ <\ np2;\ k\ +=\ ggml\_f16\_epr)\ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ svfloat16\_t\ ry\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ k,\ 0);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ svfloat16\_t\ rx\ =\ GGML\_F16x\_VEC\_LOAD(x[0]\ +\ k,\ 0);}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_00\ =\ GGML\_F16x\_VEC\_FMA(sum\_00,\ rx,\ ry);}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ rx\ =\ GGML\_F16x\_VEC\_LOAD(x[1]\ +\ k,\ 0);}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_10\ =\ GGML\_F16x\_VEC\_FMA(sum\_10,\ rx,\ ry);}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (np2\ <\ n)\ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ svbool\_t\ pg\ =\ svwhilelt\_b16(np2,\ n);}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ svfloat16\_t\ hx\_0\ =\ svld1\_f16(pg,\ (\textcolor{keyword}{const}\ \_\_fp16\ *)(x[0]\ +\ np2));}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ svfloat16\_t\ hx\_1\ =\ svld1\_f16(pg,\ (\textcolor{keyword}{const}\ \_\_fp16\ *)(x[1]\ +\ np2));}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ svfloat16\_t\ hy\ =\ svld1\_f16(pg,\ (\textcolor{keyword}{const}\ \_\_fp16\ *)(y\ +\ np2));}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_00\ =\ svmad\_f16\_x(pg,\ hx\_0,\ hy,\ sum\_00);}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ sum\_10\ =\ svmad\_f16\_x(pg,\ hx\_1,\ hy,\ sum\_10);}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_REDUCE(sumf[0],\ sum\_00,\ sum\_01,\ sum\_02,\ sum\_03);}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_REDUCE(sumf[1],\ sum\_10,\ sum\_11,\ sum\_12,\ sum\_13);}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(\_\_riscv\_v\_intrinsic)\ \&\&\ defined(\_\_riscv\_zvfh)}}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ vl\ =\ \_\_riscv\_vsetvlmax\_e32m4();}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ initialize\ accumulators\ to\ all\ zeroes}}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ vfloat32m4\_t\ vsum0\_0\ =\ \_\_riscv\_vfmv\_v\_f\_f32m4(0.0f,\ vl);}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ vfloat32m4\_t\ vsum0\_1\ =\ \_\_riscv\_vfmv\_v\_f\_f32m4(0.0f,\ vl);}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ vfloat32m4\_t\ vsum1\_0\ =\ \_\_riscv\_vfmv\_v\_f\_f32m4(0.0f,\ vl);}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ vfloat32m4\_t\ vsum1\_1\ =\ \_\_riscv\_vfmv\_v\_f\_f32m4(0.0f,\ vl);}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ calculate\ step\ size}}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ epr\ =\ \_\_riscv\_vsetvlmax\_e16m2();}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ step\ =\ epr\ *\ 2;}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(step\ -\/\ 1));}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ unroll\ by\ 2\ along\ the\ row\ dimension}}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ step)\ \{}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat16m2\_t\ ay0\ =\ \_\_riscv\_vle16\_v\_f16m2((\textcolor{keyword}{const}\ \_Float16\ *)(y\ +\ i),\ epr);}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat16m2\_t\ ax0\_0\ =\ \_\_riscv\_vle16\_v\_f16m2((\textcolor{keyword}{const}\ \_Float16\ *)(x[0]\ +\ i),\ epr);}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat16m2\_t\ ax1\_0\ =\ \_\_riscv\_vle16\_v\_f16m2((\textcolor{keyword}{const}\ \_Float16\ *)(x[1]\ +\ i),\ epr);}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ vsum0\_0\ =\ \_\_riscv\_vfwmacc\_vv\_f32m4(vsum0\_0,\ ax0\_0,\ ay0,\ epr);}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ vsum1\_0\ =\ \_\_riscv\_vfwmacc\_vv\_f32m4(vsum1\_0,\ ax1\_0,\ ay0,\ epr);}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat16m2\_t\ ay1\ =\ \_\_riscv\_vle16\_v\_f16m2((\textcolor{keyword}{const}\ \_Float16\ *)(y\ +\ i\ +\ epr),\ epr);}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat16m2\_t\ ax0\_1\ =\ \_\_riscv\_vle16\_v\_f16m2((\textcolor{keyword}{const}\ \_Float16\ *)(x[0]\ +\ i\ +\ epr),\ epr);}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat16m2\_t\ ax1\_1\ =\ \_\_riscv\_vle16\_v\_f16m2((\textcolor{keyword}{const}\ \_Float16\ *)(x[1]\ +\ i\ +\ epr),\ epr);}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ vsum0\_1\ =\ \_\_riscv\_vfwmacc\_vv\_f32m4(vsum0\_1,\ ax0\_1,\ ay1,\ epr);}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ vsum1\_1\ =\ \_\_riscv\_vfwmacc\_vv\_f32m4(vsum1\_1,\ ax1\_1,\ ay1,\ epr);}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ vfloat32m4\_t\ vsum0\ =\ \_\_riscv\_vfadd\_vv\_f32m4(vsum0\_0,\ vsum0\_1,\ vl);}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ vfloat32m4\_t\ vsum1\ =\ \_\_riscv\_vfadd\_vv\_f32m4(vsum1\_0,\ vsum1\_1,\ vl);}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ i\ +=\ vl)\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ vl\ =\ \_\_riscv\_vsetvl\_e16m2(n\ -\/\ i);}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat16m2\_t\ ay\ =\ \_\_riscv\_vle16\_v\_f16m2((\textcolor{keyword}{const}\ \_Float16\ *)(y\ +\ i),\ vl);}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat16m2\_t\ ax0\ =\ \_\_riscv\_vle16\_v\_f16m2((\textcolor{keyword}{const}\ \_Float16\ *)(x[0]\ +\ i),\ vl);}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat16m2\_t\ ax1\ =\ \_\_riscv\_vle16\_v\_f16m2((\textcolor{keyword}{const}\ \_Float16\ *)(x[1]\ +\ i),\ vl);}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ vsum0\ =\ \_\_riscv\_vfwmacc\_vv\_f32m4(vsum0,\ ax0,\ ay,\ vl);}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ vsum1\ =\ \_\_riscv\_vfwmacc\_vv\_f32m4(vsum1,\ ax1,\ ay,\ vl);}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ reduce}}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ vl\ =\ \_\_riscv\_vsetvlmax\_e32m2();}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ vfloat32m2\_t\ acc0\_0\ =\ \_\_riscv\_vfadd\_vv\_f32m2(\_\_riscv\_vget\_v\_f32m4\_f32m2(vsum0,\ 0),}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_riscv\_vget\_v\_f32m4\_f32m2(vsum0,\ 1),\ vl);}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ vl\ =\ \_\_riscv\_vsetvlmax\_e32m1();}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ vfloat32m1\_t\ acc0\_1\ =\ \_\_riscv\_vfadd\_vv\_f32m1(\_\_riscv\_vget\_v\_f32m2\_f32m1(acc0\_0,\ 0),}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \_\_riscv\_vget\_v\_f32m2\_f32m1(acc0\_0,\ 1),\ vl);}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ vfloat32m1\_t\ redsum0\ =\ \_\_riscv\_vfredusum\_vs\_f32m1\_f32m1(}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acc0\_1,\ \_\_riscv\_vfmv\_v\_f\_f32m1(0.0f,\ 1),\ vl);}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ vl\ =\ \_\_riscv\_vsetvlmax\_e32m2();}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ vfloat32m2\_t\ acc1\_0\ =\ \_\_riscv\_vfadd\_vv\_f32m2(\_\_riscv\_vget\_v\_f32m4\_f32m2(vsum1,\ 0),}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_riscv\_vget\_v\_f32m4\_f32m2(vsum1,\ 1),\ vl);}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ vl\ =\ \_\_riscv\_vsetvlmax\_e32m1();}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ vfloat32m1\_t\ acc1\_1\ =\ \_\_riscv\_vfadd\_vv\_f32m1(\_\_riscv\_vget\_v\_f32m2\_f32m1(acc1\_0,\ 0),}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_riscv\_vget\_v\_f32m2\_f32m1(acc1\_0,\ 1),\ vl);}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ vfloat32m1\_t\ redsum1\ =\ \_\_riscv\_vfredusum\_vs\_f32m1\_f32m1(}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acc1\_1,\ \_\_riscv\_vfmv\_v\_f\_f32m1(0.0f,\ 1),\ vl);}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ sumf[0]\ =\ \_\_riscv\_vfmv\_f\_s\_f32m1\_f32(redsum0);}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ sumf[1]\ =\ \_\_riscv\_vfmv\_f\_s\_f32m1\_f32(redsum1);}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(GGML\_F16\_STEP\ -\/\ 1));}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ GGML\_F16\_VEC\ sum[GGML\_VEC\_DOT\_UNROLL][GGML\_F16\_ARR]\ =\ \{\ \{\ GGML\_F16\_VEC\_ZERO\ \}\ \};}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ GGML\_F16\_VEC\ ax[GGML\_F16\_ARR];}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ GGML\_F16\_VEC\ ay[GGML\_F16\_ARR];}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ GGML\_F16\_STEP)\ \{}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ GGML\_F16\_ARR;\ j++)\ \{}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F16\_VEC\_LOAD(y\ +\ i\ +\ j*GGML\_F16\_EPR,\ j);}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ GGML\_VEC\_DOT\_UNROLL;\ ++k)\ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ax[j]\ =\ GGML\_F16\_VEC\_LOAD(x[k]\ +\ i\ +\ j*GGML\_F16\_EPR,\ j);}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sum[k][j]\ =\ GGML\_F16\_VEC\_FMA(sum[k][j],\ ax[j],\ ay[j]);}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ reduce\ sum0..sum3\ to\ sum0}}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ GGML\_VEC\_DOT\_UNROLL;\ ++k)\ \{}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16\_VEC\_REDUCE(sumf[k],\ sum[k]);}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ GGML\_VEC\_DOT\_UNROLL;\ ++j)\ \{}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sumf[j]\ +=\ (ggml\_float)(GGML\_CPU\_FP16\_TO\_FP32(x[j][i])*GGML\_CPU\_FP16\_TO\_FP32(y[i]));}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ GGML\_VEC\_DOT\_UNROLL;\ ++j)\ \{}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ sumf[j]\ +=\ (ggml\_float)(GGML\_CPU\_FP16\_TO\_FP32(x[j][i])*GGML\_CPU\_FP16\_TO\_FP32(y[i]));}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00329\ \ \ \ \ \}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ GGML\_VEC\_DOT\_UNROLL;\ ++i)\ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ s[i]\ =\ (float)sumf[i];}
+\DoxyCodeLine{00334\ \ \ \ \ \}}
+\DoxyCodeLine{00335\ \}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_mad\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v)\ \{}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#if\ defined(GGML\_SIMD)}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\ \ \ \ \#if\ defined(\_\_ARM\_FEATURE\_SVE)}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sve\_register\_length\ =\ ggml\_cpu\_get\_sve\_cnt()\ *\ 8;}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f32\_epr\ =\ sve\_register\_length\ /\ 32;\textcolor{comment}{//8;//svcntw();\ //\ SVE128:4,\ SVE256:8,\ SVE512:16}}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f32\_step\ =\ 8\ *\ ggml\_f32\_epr;\ \textcolor{comment}{//\ choose\ 8\ SVE\ registers}}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ vx\ =\ GGML\_F32\_VEC\_SET1(v);}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(ggml\_f32\_step\ -\/\ 1));}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ svfloat32\_t\ ax1,\ ax2,\ ax3,\ ax4,\ ax5,\ ax6,\ ax7,\ ax8;}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ svfloat32\_t\ ay1,\ ay2,\ ay3,\ ay4,\ ay5,\ ay6,\ ay7,\ ay8;}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ ggml\_f32\_step)\ \{}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ ax1\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i);}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i);}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F32\_VEC\_FMA(ay1,\ ax1,\ vx);}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i,\ ay1);}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ ax2\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i\ +\ 1*ggml\_f32\_epr);}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ ay2\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ 1*ggml\_f32\_epr);}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ ay2\ =\ GGML\_F32\_VEC\_FMA(ay2,\ ax2,\ vx);}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ 1*ggml\_f32\_epr,\ ay2);}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ ax3\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i\ +\ 2*ggml\_f32\_epr);}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ ay3\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ 2*ggml\_f32\_epr);}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ ay3\ =\ GGML\_F32\_VEC\_FMA(ay3,\ ax3,\ vx);}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ 2*ggml\_f32\_epr,\ ay3);}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ ax4\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i\ +\ 3*ggml\_f32\_epr);}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ ay4\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ 3*ggml\_f32\_epr);}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ ay4\ =\ GGML\_F32\_VEC\_FMA(ay4,\ ax4,\ vx);}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ 3*ggml\_f32\_epr,\ ay4);}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ ax5\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i\ +\ 4*ggml\_f32\_epr);}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ \ \ ay5\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ 4*ggml\_f32\_epr);}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ ay5\ =\ GGML\_F32\_VEC\_FMA(ay5,\ ax5,\ vx);}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ 4*ggml\_f32\_epr,\ ay5);}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ ax6\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i\ +\ 5*ggml\_f32\_epr);}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ ay6\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ 5*ggml\_f32\_epr);}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ ay6\ =\ GGML\_F32\_VEC\_FMA(ay6,\ ax6,\ vx);}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ 5*ggml\_f32\_epr,\ ay6);}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ ax7\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i\ +\ 6*ggml\_f32\_epr);}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ ay7\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ 6*ggml\_f32\_epr);}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ ay7\ =\ GGML\_F32\_VEC\_FMA(ay7,\ ax7,\ vx);}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ 6*ggml\_f32\_epr,\ ay7);}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ ax8\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i\ +\ 7*ggml\_f32\_epr);}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ ay8\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ 7*ggml\_f32\_epr);}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ ay8\ =\ GGML\_F32\_VEC\_FMA(ay8,\ ax8,\ vx);}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ 7*ggml\_f32\_epr,\ ay8);}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Since\ 8\ unrolls\ are\ done\ in\ above\ loop,\ leftovers\ lie\ in\ range\ [0,\ ggml\_f32\_step]\ which\ is\ handled\ in\ below\ loop}}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np2\ =\ (n\ \&\ \string~(ggml\_f32\_epr\ -\/\ 1));}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ np2;\ i\ +=\ ggml\_f32\_epr)\ \{}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ ax1\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i);}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i);}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F32\_VEC\_FMA(ay1,\ ax1,\ vx);}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i,\ ay1);}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ maximum\ number\ of\ leftover\ elements\ will\ be\ less\ that\ ggml\_f32\_epr.\ Apply\ predicated\ svmad\ on\ available\ elements\ only}}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (np2\ <\ n)\ \{}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ svbool\_t\ pg\ =svwhilelt\_b32(np2,\ n);}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ ax1\ =\ svld1\_f32(pg,\ x\ +\ np2);}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ svld1\_f32(pg,\ y\ +\ np2);}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ svmad\_f32\_m(pg,\ ax1,\ vx,\ ay1);}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ svst1\_f32(pg,\ y\ +\ np2,\ ay1);}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(\_\_riscv\_v\_intrinsic)}}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0,\ avl;\ i\ <\ n;\ i\ +=\ avl)\ \{}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ avl\ =\ \_\_riscv\_vsetvl\_e32m8(n\ -\/\ i);}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ ax\ =\ \_\_riscv\_vle32\_v\_f32m8(\&x[i],\ avl);}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ ay\ =\ \_\_riscv\_vle32\_v\_f32m8(\&y[i],\ avl);}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ ny\ =\ \_\_riscv\_vfmadd\_vf\_f32m8(ax,\ v,\ ay,\ avl);}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_riscv\_vse32\_v\_f32m8(\&y[i],\ ny,\ avl);}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(GGML\_F32\_STEP\ -\/\ 1));}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ vx\ =\ GGML\_F32\_VEC\_SET1(v);}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ ax[GGML\_F32\_ARR];}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ ay[GGML\_F32\_ARR];}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ GGML\_F32\_STEP)\ \{}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ GGML\_F32\_ARR;\ j++)\ \{}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ax[j]\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i\ +\ j*GGML\_F32\_EPR);}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ j*GGML\_F32\_EPR);}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F32\_VEC\_FMA(ay[j],\ ax[j],\ vx);}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ j*GGML\_F32\_EPR,\ ay[j]);}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00443\ }
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ +=\ x[i]*v;}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00449\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{comment}{//\ scalar}}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ y[i]\ +=\ x[i]*v;}
+\DoxyCodeLine{00453\ \ \ \ \ \}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00455\ \}}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_mad\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ GGML\_RESTRICT\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ GGML\_RESTRICT\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v)\ \{}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\#if\ defined(GGML\_SIMD)\ \&\&\ defined(\_\_ARM\_FEATURE\_SVE)}}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sve\_register\_length\ =\ svcntb()\ *\ 8;}
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f16\_epr\ =\ sve\_register\_length\ /\ 16;}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f16\_step\ =\ 8\ *\ ggml\_f16\_epr;}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00463\ \ \ \ \ GGML\_F16x\_VEC\ vx\ =\ GGML\_F16x\_VEC\_SET1(v);}
+\DoxyCodeLine{00464\ }
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(ggml\_f16\_step\ -\/\ 1));}
+\DoxyCodeLine{00466\ }
+\DoxyCodeLine{00467\ \ \ \ \ svfloat16\_t\ ax1,\ ax2,\ ax3,\ ax4,\ ax5,\ ax6,\ ax7,\ ax8;}
+\DoxyCodeLine{00468\ \ \ \ \ svfloat16\_t\ ay1,\ ay2,\ ay3,\ ay4,\ ay5,\ ay6,\ ay7,\ ay8;}
+\DoxyCodeLine{00469\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ ggml\_f16\_step)\ \{}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ ax1\ =\ GGML\_F16x\_VEC\_LOAD(x\ +\ i\ +\ 0\ *\ ggml\_f16\_epr,\ 0);}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 0\ *\ ggml\_f16\_epr,\ 0);}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F16x\_VEC\_FMA(ay1,\ ax1,\ vx);}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 0\ *\ ggml\_f16\_epr,\ ay1,\ 0);}
+\DoxyCodeLine{00475\ }
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ ax2\ =\ GGML\_F16x\_VEC\_LOAD(x\ +\ i\ +\ 1\ *\ ggml\_f16\_epr,\ 1);}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ ay2\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 1\ *\ ggml\_f16\_epr,\ 1);}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ ay2\ =\ GGML\_F16x\_VEC\_FMA(ay2,\ ax2,\ vx);}
+\DoxyCodeLine{00479\ }
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 1\ *\ ggml\_f16\_epr,\ ay2,\ 1);}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ ax3\ =\ GGML\_F16x\_VEC\_LOAD(x\ +\ i\ +\ 2\ *\ ggml\_f16\_epr,\ 2);}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ ay3\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 2\ *\ ggml\_f16\_epr,\ 2);}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ ay3\ =\ GGML\_F16x\_VEC\_FMA(ay3,\ ax3,\ vx);}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 2\ *\ ggml\_f16\_epr,\ ay3,\ 2);}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ ax4\ =\ GGML\_F16x\_VEC\_LOAD(x\ +\ i\ +\ 3\ *\ ggml\_f16\_epr,\ 3);}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ ay4\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 3\ *\ ggml\_f16\_epr,\ 3);}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ ay4\ =\ GGML\_F16x\_VEC\_FMA(ay4,\ ax4,\ vx);}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 3\ *\ ggml\_f16\_epr,\ ay4,\ 3);}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ ax5\ =\ GGML\_F16x\_VEC\_LOAD(x\ +\ i\ +\ 4\ *\ ggml\_f16\_epr,\ 4);}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ ay5\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 4\ *\ ggml\_f16\_epr,\ 4);}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ ay5\ =\ GGML\_F16x\_VEC\_FMA(ay5,\ ax5,\ vx);}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 4\ *\ ggml\_f16\_epr,\ ay5,\ 4);}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ ax6\ =\ GGML\_F16x\_VEC\_LOAD(x\ +\ i\ +\ 5\ *\ ggml\_f16\_epr,\ 5);}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ ay6\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 5\ *\ ggml\_f16\_epr,\ 5);}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ ay6\ =\ GGML\_F16x\_VEC\_FMA(ay6,\ ax6,\ vx);}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 5\ *\ ggml\_f16\_epr,\ ay6,\ 5);}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ ax7\ =\ GGML\_F16x\_VEC\_LOAD(x\ +\ i\ +\ 6\ *\ ggml\_f16\_epr,\ 6);}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ ay7\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 6\ *\ ggml\_f16\_epr,\ 6);}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ ay7\ =\ GGML\_F16x\_VEC\_FMA(ay7,\ ax7,\ vx);}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 6\ *\ ggml\_f16\_epr,\ ay7,\ 6);}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ ax8\ =\ GGML\_F16x\_VEC\_LOAD(x\ +\ i\ +\ 7\ *\ ggml\_f16\_epr,\ 7);}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ ay8\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 7\ *\ ggml\_f16\_epr,\ 7);}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ ay8\ =\ GGML\_F16x\_VEC\_FMA(ay8,\ ax8,\ vx);}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 7\ *\ ggml\_f16\_epr,\ ay8,\ 7);}
+\DoxyCodeLine{00517\ \ \ \ \ \}}
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np2\ =\ (n\ \&\ \string~(ggml\_f16\_epr\ -\/\ 1));}
+\DoxyCodeLine{00519\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ np;\ k\ <\ np2;\ k\ +=\ ggml\_f16\_epr)\ \{}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ svfloat16\_t\ rx\ =\ GGML\_F16x\_VEC\_LOAD(x\ +\ k,\ 0);}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ svfloat16\_t\ ry\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ k,\ 0);}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ ry\ =\ GGML\_F16x\_VEC\_FMA(ry,\ rx,\ vx);}
+\DoxyCodeLine{00523\ }
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ k,\ ry,\ 0);}
+\DoxyCodeLine{00525\ \ \ \ \ \}}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \ \ \ \ \textcolor{keywordflow}{if}\ (np2\ <\ n)\ \{}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ svbool\_t\ pg\ =\ svwhilelt\_b16(np2,\ n);}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ svfloat16\_t\ hx\ =\ svld1\_f16(pg,\ (\textcolor{keyword}{const}\ \_\_fp16\ *)(x\ +\ np2));}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ svfloat16\_t\ hy\ =\ svld1\_f16(pg,\ (\textcolor{keyword}{const}\ \_\_fp16\ *)(y\ +\ np2));}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ hy\ =\ svmad\_f16\_x(pg,\ hx,\ vx,\ hy);}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ svst1\_f16(pg,\ (\_\_fp16\ *)(y\ +\ np2),\ hy);}
+\DoxyCodeLine{00533\ \ \ \ \ \}}
+\DoxyCodeLine{00534\ \ \ \ \ np\ =\ n;}
+\DoxyCodeLine{00535\ \textcolor{preprocessor}{\#elif\ defined(\_\_riscv\_zvfh)\ }\textcolor{comment}{//\ implies\ \_\_riscv\_v\_intrinsic}}
+\DoxyCodeLine{00536\ \ \ \ \ \textcolor{keyword}{const}\ ggml\_fp16\_t\ s\ =\ GGML\_CPU\_FP32\_TO\_FP16(v);}
+\DoxyCodeLine{00537\ \ \ \ \ \textcolor{keyword}{const}\ \_Float16\ scale\ =\ *(\textcolor{keyword}{const}\ \_Float16*)(\&s);}
+\DoxyCodeLine{00538\ }
+\DoxyCodeLine{00539\ \ \ \ \ \textcolor{comment}{//\ calculate\ step\ size}}
+\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ epr\ =\ \_\_riscv\_vsetvlmax\_e16m4();}
+\DoxyCodeLine{00541\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ step\ =\ epr\ *\ 2;}
+\DoxyCodeLine{00542\ \ \ \ \ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(step\ -\/\ 1));}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \ \ \ \ \textcolor{comment}{//\ unroll\ by\ 2}}
+\DoxyCodeLine{00545\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ step)\ \{}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ vfloat16m4\_t\ ax0\ =\ \_\_riscv\_vle16\_v\_f16m4((\textcolor{keyword}{const}\ \_Float16*)x\ +\ i,\ epr);}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ vfloat16m4\_t\ ay0\ =\ \_\_riscv\_vle16\_v\_f16m4((\textcolor{keyword}{const}\ \_Float16*)y\ +\ i,\ epr);}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ ay0\ =\ \_\_riscv\_vfmacc\_vf\_f16m4(ay0,\ scale,\ ax0,\ epr);}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \_\_riscv\_vse16\_v\_f16m4((\_Float16*)y\ +\ i,\ ay0,\ epr);}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \_\_asm\_\_\ \_\_volatile\_\_\ (\textcolor{stringliteral}{"{}"{}}\ :::\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ vfloat16m4\_t\ ax1\ =\ \_\_riscv\_vle16\_v\_f16m4((\textcolor{keyword}{const}\ \_Float16*)x\ +\ i\ +\ epr,\ epr);}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ vfloat16m4\_t\ ay1\ =\ \_\_riscv\_vle16\_v\_f16m4((\textcolor{keyword}{const}\ \_Float16*)y\ +\ i\ +\ epr,\ epr);}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ ay1\ =\ \_\_riscv\_vfmacc\_vf\_f16m4(ay1,\ scale,\ ax1,\ epr);}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \_\_riscv\_vse16\_v\_f16m4((\_Float16*)y\ +\ i\ +\ epr,\ ay1,\ epr);}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \_\_asm\_\_\ \_\_volatile\_\_\ (\textcolor{stringliteral}{"{}"{}}\ :::\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00557\ \ \ \ \ \}}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{keywordtype}{int}\ vl;}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ i\ +=\ vl)\ \{}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ vl\ =\ \_\_riscv\_vsetvl\_e16m4(n\ -\/\ i);}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ vfloat16m4\_t\ ax0\ =\ \_\_riscv\_vle16\_v\_f16m4((\textcolor{keyword}{const}\ \_Float16*)x\ +\ i,\ vl);}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ vfloat16m4\_t\ ay0\ =\ \_\_riscv\_vle16\_v\_f16m4((\textcolor{keyword}{const}\ \_Float16*)y\ +\ i,\ vl);}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ ay0\ =\ \_\_riscv\_vfmacc\_vf\_f16m4(ay0,\ scale,\ ax0,\ vl);}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \_\_riscv\_vse16\_v\_f16m4((\_Float16*)y\ +\ i,\ ay0,\ vl);}
+\DoxyCodeLine{00567\ \ \ \ \ \}}
+\DoxyCodeLine{00568\ \ \ \ \ np\ =\ n;}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\#elif\ defined(GGML\_SIMD)}}
+\DoxyCodeLine{00570\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(GGML\_F16\_STEP\ -\/\ 1));}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \ \ \ \ GGML\_F16\_VEC\ vx\ =\ GGML\_F16\_VEC\_SET1(v);}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \ \ \ \ GGML\_F16\_VEC\ ax[GGML\_F16\_ARR];}
+\DoxyCodeLine{00575\ \ \ \ \ GGML\_F16\_VEC\ ay[GGML\_F16\_ARR];}
+\DoxyCodeLine{00576\ }
+\DoxyCodeLine{00577\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ GGML\_F16\_STEP)\ \{}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ GGML\_F16\_ARR;\ j++)\ \{}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ ax[j]\ =\ GGML\_F16\_VEC\_LOAD(x\ +\ i\ +\ j*GGML\_F16\_EPR,\ j);}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F16\_VEC\_LOAD(y\ +\ i\ +\ j*GGML\_F16\_EPR,\ j);}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F16\_VEC\_FMA(ay[j],\ ax[j],\ vx);}
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16\_VEC\_STORE(y\ +\ i\ +\ j*GGML\_F16\_EPR,\ ay,\ j);}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00585\ \ \ \ \ \}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00587\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ 0;}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00590\ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(y[i])\ +\ GGML\_CPU\_FP16\_TO\_FP32(x[i])*v);}
+\DoxyCodeLine{00593\ \ \ \ \ \}}
+\DoxyCodeLine{00594\ \}}
+\DoxyCodeLine{00595\ }
+\DoxyCodeLine{00596\ \textcolor{comment}{//\ xs\ and\ vs\ are\ byte\ strides\ of\ x\ and\ v}}
+\DoxyCodeLine{00597\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_mad\_f32\_unroll(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ xs,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vs,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ xv,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ vv)\ \{}
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00599\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ x[GGML\_VEC\_MAD\_UNROLL];}
+\DoxyCodeLine{00600\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ v[GGML\_VEC\_MAD\_UNROLL];}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ GGML\_VEC\_MAD\_UNROLL;\ ++i)\ \{}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ x[i]\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ ((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)\ xv\ +\ i*xs);}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ v[i]\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ ((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)\ vv\ +\ i*vs);}
+\DoxyCodeLine{00605\ \ \ \ \ \}}
+\DoxyCodeLine{00606\ }
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\#if\ defined(GGML\_SIMD)}}
+\DoxyCodeLine{00608\ \textcolor{preprocessor}{\ \ \ \ \#if\ defined(\_\_ARM\_FEATURE\_SVE)}}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ scalar\ Route\ to\ scalar\ implementation\ \ \ \ \ \ \ //TODO:\ Write\ SVE\ code}}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ GGML\_VEC\_MAD\_UNROLL;\ ++k)\ \{}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ +=\ x[k][i]*v[k][0];}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(\_\_riscv\_v\_intrinsic)}}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0,\ avl;\ i\ <\ n;\ i\ +=\ avl)\ \{}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \ \ \ \ avl\ =\ \_\_riscv\_vsetvl\_e32m8(n\ -\/\ i);}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ ay\ =\ \_\_riscv\_vle32\_v\_f32m8(\&y[i],\ avl);}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ GGML\_VEC\_MAD\_UNROLL;\ k++)\ \{}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ ax\ =\ \_\_riscv\_vle32\_v\_f32m8(\&x[k][i],\ avl);}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay\ =\ \_\_riscv\_vfmadd\_vf\_f32m8(ax,\ v[k][0],\ ay,\ avl);}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_riscv\_vse32\_v\_f32m8(\&y[i],\ ay,\ avl);}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(GGML\_F32\_STEP\ -\/\ 1));}
+\DoxyCodeLine{00627\ }
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ vx[GGML\_VEC\_MAD\_UNROLL];}
+\DoxyCodeLine{00629\ }
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ GGML\_VEC\_MAD\_UNROLL;\ ++k)\ \{}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \ \ \ \ vx[k]\ =\ GGML\_F32\_VEC\_SET1(v[k][0]);}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00633\ }
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ ax[GGML\_VEC\_MAD\_UNROLL][GGML\_F32\_ARR];}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ ay[GGML\_F32\_ARR];}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ GGML\_F32\_STEP)\ \{}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ GGML\_F32\_ARR;\ j++)\ \{}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ j*GGML\_F32\_EPR);}
+\DoxyCodeLine{00640\ }
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ GGML\_VEC\_MAD\_UNROLL;\ ++k)\ \{}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ax[k][j]\ =\ GGML\_F32\_VEC\_LOAD(x[k]\ +\ i\ +\ j*GGML\_F32\_EPR);}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F32\_VEC\_FMA(ay[j],\ ax[k][j],\ vx[k]);}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ j*GGML\_F32\_EPR,\ ay[j]);}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ GGML\_VEC\_MAD\_UNROLL;\ ++k)\ \{}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ +=\ x[k][i]*v[k][0];}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00658\ \ \ \ \ \textcolor{comment}{//\ scalar}}
+\DoxyCodeLine{00659\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ GGML\_VEC\_MAD\_UNROLL;\ ++k)\ \{}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ +=\ x[k][i]*v[k][0];}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00663\ \ \ \ \ \}}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00665\ \}}
+\DoxyCodeLine{00666\ }
+\DoxyCodeLine{00667\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_mad1\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ s,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ b)\ \{}
+\DoxyCodeLine{00668\ \textcolor{preprocessor}{\#if\ defined(GGML\_USE\_ACCELERATE)}}
+\DoxyCodeLine{00669\ \ \ \ \ vDSP\_vsmsa(x,\ 1,\ \&s,\ \&b,\ y,\ 1,\ n);}
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\#elif\ defined(GGML\_SIMD)}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\ \ \ \ \#if\ defined(\_\_ARM\_FEATURE\_SVE)}}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ scalar\ ;\ TODO:\ Write\ SVE\ code}}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ x[i]*s\ +\ b;}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(\_\_riscv\_v\_intrinsic)}}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0,\ avl;\ i\ <\ n;\ i\ +=\ avl)\ \{}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ avl\ =\ \_\_riscv\_vsetvl\_e32m8(n\ -\/\ i);}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ ax\ =\ \_\_riscv\_vle32\_v\_f32m8(\&x[i],\ avl);}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ vb\ =\ \_\_riscv\_vfmv\_v\_f\_f32m8(b,\ avl);}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ ny\ =\ \_\_riscv\_vfmadd\_vf\_f32m8(ax,\ s,\ vb,\ avl);}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_riscv\_vse32\_v\_f32m8(\&y[i],\ ny,\ avl);}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(GGML\_F32\_STEP\ -\/\ 1));}
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ vs\ =\ GGML\_F32\_VEC\_SET1(s);}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ vb\ =\ GGML\_F32\_VEC\_SET1(b);}
+\DoxyCodeLine{00689\ }
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ ay[GGML\_F32\_ARR];}
+\DoxyCodeLine{00691\ }
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ GGML\_F32\_STEP)\ \{}
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ GGML\_F32\_ARR;\ j++)\ \{}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F32\_VEC\_LOAD(x\ +\ i\ +\ j*GGML\_F32\_EPR);}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F32\_VEC\_FMA(vb,\ ay[j],\ vs);}
+\DoxyCodeLine{00696\ }
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ j*GGML\_F32\_EPR,\ ay[j]);}
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00700\ }
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ x[i]*s\ +\ b;}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00707\ \ \ \ \ \textcolor{comment}{//\ scalar}}
+\DoxyCodeLine{00708\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ y[i]\ =\ x[i]*s\ +\ b;}
+\DoxyCodeLine{00710\ \ \ \ \ \}}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00712\ \}}
+\DoxyCodeLine{00713\ }
+\DoxyCodeLine{00714\ \textcolor{comment}{//inline\ static\ void\ ggml\_vec\_scale\_f32(const\ int\ n,\ float\ *\ y,\ const\ float\ \ \ v)\ \{\ for\ (int\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ *=\ v;\ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00715\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_scale\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ v)\ \{}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{\#if\ defined(GGML\_USE\_ACCELERATE)}}
+\DoxyCodeLine{00717\ \ \ \ \ vDSP\_vsmul(y,\ 1,\ \&v,\ y,\ 1,\ n);}
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\#elif\ defined(GGML\_SIMD)}}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\ \ \ \ \#if\ defined(\_\_ARM\_FEATURE\_SVE)}}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sve\_register\_length\ =\ ggml\_cpu\_get\_sve\_cnt()\ *\ 8;}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f32\_epr\ =\ sve\_register\_length\ /\ 32;\textcolor{comment}{//8;//svcntw();\ //\ SVE128:4,\ SVE256:8,\ SVE512:16}}
+\DoxyCodeLine{00722\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f32\_step\ =\ 2\ *\ ggml\_f32\_epr;}
+\DoxyCodeLine{00723\ }
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ vx\ =\ GGML\_F32\_VEC\_SET1(v);}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(ggml\_f32\_step\ -\/\ 1));}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ svfloat32\_t\ ay1;}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ svfloat32\_t\ ay2;}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ ggml\_f32\_step)\ \{}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i);}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F32\_VEC\_MUL(ay1,\ vx);}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i,\ ay1);}
+\DoxyCodeLine{00732\ }
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ ay2\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ 1*ggml\_f32\_epr);}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ ay2\ =\ GGML\_F32\_VEC\_MUL(ay2,\ vx);}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ 1*ggml\_f32\_epr,\ ay2);}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ maximum\ number\ of\ leftover\ elements\ will\ be\ less\ that\ ggml\_f32\_epr.\ Apply\ predicated\ svmad\ on\ available\ elements\ only}}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ i\ +=\ ggml\_f32\_epr)\ \{}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ svbool\_t\ pg\ =\ svwhilelt\_b32(i,\ n);}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ svld1\_f32(pg,\ y\ +\ i);}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \ \ \ \ ay1\ =\ svmul\_f32\_m(pg,\ ay1,\ vx);}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \ \ \ \ svst1\_f32(pg,\ y\ +\ i,\ ay1);}
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(\_\_riscv\_v\_intrinsic)}}
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0,\ avl;\ i\ <\ n;\ i\ +=\ avl)\ \{}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ \ \ \ \ avl\ =\ \_\_riscv\_vsetvl\_e32m8(n\ -\/\ i);}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ ay\ =\ \_\_riscv\_vle32\_v\_f32m8(\&y[i],\ avl);}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m8\_t\ ny\ =\ \_\_riscv\_vfmul\_vf\_f32m8(ay,\ v,\ avl);}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_riscv\_vse32\_v\_f32m8(\&y[i],\ ny,\ avl);}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00752\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{00753\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(GGML\_F32\_STEP\ -\/\ 1));}
+\DoxyCodeLine{00754\ }
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ vx\ =\ GGML\_F32\_VEC\_SET1(v);}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ ay[GGML\_F32\_ARR];}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ GGML\_F32\_STEP)\ \{}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ GGML\_F32\_ARR;\ j++)\ \{}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F32\_VEC\_LOAD(y\ +\ i\ +\ j*GGML\_F32\_EPR);}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F32\_VEC\_MUL(ay[j],\ vx);}
+\DoxyCodeLine{00763\ }
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(y\ +\ i\ +\ j*GGML\_F32\_EPR,\ ay[j]);}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00767\ }
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ *=\ v;}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00772\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00774\ \ \ \ \ \textcolor{comment}{//\ scalar}}
+\DoxyCodeLine{00775\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ y[i]\ *=\ v;}
+\DoxyCodeLine{00777\ \ \ \ \ \}}
+\DoxyCodeLine{00778\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00779\ \}}
+\DoxyCodeLine{00780\ }
+\DoxyCodeLine{00781\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_scale\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v)\ \{}
+\DoxyCodeLine{00782\ \textcolor{preprocessor}{\#if\ defined(GGML\_SIMD)\ \&\&\ defined(\_\_ARM\_FEATURE\_SVE)}}
+\DoxyCodeLine{00783\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sve\_register\_length\ =\ svcntb()\ *\ 8;}
+\DoxyCodeLine{00784\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f16\_epr\ =\ sve\_register\_length\ /\ 16;}
+\DoxyCodeLine{00785\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ggml\_f16\_step\ =\ 2\ *\ ggml\_f16\_epr;}
+\DoxyCodeLine{00786\ }
+\DoxyCodeLine{00787\ \ \ \ \ GGML\_F16x\_VEC\ vx\ =\ \ GGML\_F16x\_VEC\_SET1(v);}
+\DoxyCodeLine{00788\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(ggml\_f16\_step\ -\/\ 1));}
+\DoxyCodeLine{00789\ \ \ \ \ svfloat16\_t\ ay1,\ ay2;}
+\DoxyCodeLine{00790\ }
+\DoxyCodeLine{00791\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ ggml\_f16\_step)\ \{}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 0*ggml\_f16\_epr,\ 0);}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ ay1\ =\ GGML\_F16x\_VEC\_MUL(ay1,\ vx);}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 0*ggml\_f16\_epr,\ ay1,\ 0);}
+\DoxyCodeLine{00795\ }
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ ay2\ =\ GGML\_F16x\_VEC\_LOAD(y\ +\ i\ +\ 1*ggml\_f16\_epr,\ 1);}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ ay2\ =\ GGML\_F16x\_VEC\_MUL(ay2,\ vx);}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ GGML\_F16x\_VEC\_STORE(y\ +\ i\ +\ 1*ggml\_f16\_epr,\ ay2,\ 1);}
+\DoxyCodeLine{00799\ \ \ \ \ \}}
+\DoxyCodeLine{00800\ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00801\ \ \ \ \ \textcolor{comment}{//\ maximum\ number\ of\ leftover\ elements\ will\ be\ less\ that\ ggmlF\_16x\_epr.\ Apply\ predicated\ svmad\ on\ available\ elements\ only}}
+\DoxyCodeLine{00802\ \ \ \ \ \textcolor{keywordflow}{if}\ (np\ <\ n)\ \{}
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ svbool\_t\ pg\ =\ svwhilelt\_b16(np,\ n);}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ svfloat16\_t\ hy\ =\ svld1\_f16(pg,\ (\_\_fp16\ *)(y\ +\ np));}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ svfloat16\_t\ out\ =\ svmul\_f16\_m(pg,\ hy,\ vx);}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ svst1\_f16(pg,\ (\_\_fp16\ *)(y\ +\ np),\ out);}
+\DoxyCodeLine{00807\ \ \ \ \ \}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\#elif\ defined(\_\_riscv\_v\_intrinsic)\ \&\&\ defined(\_\_riscv\_zvfh)}}
+\DoxyCodeLine{00809\ \ \ \ \ \textcolor{keyword}{const}\ ggml\_fp16\_t\ s\ =\ GGML\_CPU\_FP32\_TO\_FP16(v);}
+\DoxyCodeLine{00810\ \ \ \ \ \textcolor{keyword}{const}\ \_Float16\ scale\ =\ *(\textcolor{keyword}{const}\ \_Float16*)(\&s);}
+\DoxyCodeLine{00811\ }
+\DoxyCodeLine{00812\ \ \ \ \ \textcolor{comment}{//\ calculate\ step\ size}}
+\DoxyCodeLine{00813\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ epr\ =\ \_\_riscv\_vsetvlmax\_e16m4();}
+\DoxyCodeLine{00814\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ step\ =\ epr\ *\ 2;}
+\DoxyCodeLine{00815\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(step\ -\/\ 1));}
+\DoxyCodeLine{00816\ }
+\DoxyCodeLine{00817\ \ \ \ \ \textcolor{comment}{//\ unroll\ by\ 2}}
+\DoxyCodeLine{00818\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ step)\ \{}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ vfloat16m4\_t\ ay0\ =\ \_\_riscv\_vle16\_v\_f16m4((\textcolor{keyword}{const}\ \_Float16*)y\ +\ i,\ epr);}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ ay0\ =\ \_\_riscv\_vfmul\_vf\_f16m4(ay0,\ scale,\ epr);}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \_\_riscv\_vse16\_v\_f16m4((\_Float16*)y\ +\ i,\ ay0,\ epr);}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \_\_asm\_\_\ \_\_volatile\_\_\ (\textcolor{stringliteral}{"{}"{}}\ :::\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00823\ }
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ vfloat16m4\_t\ ay1\ =\ \_\_riscv\_vle16\_v\_f16m4((\textcolor{keyword}{const}\ \_Float16*)y\ +\ i\ +\ epr,\ epr);}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ ay1\ =\ \_\_riscv\_vfmul\_vf\_f16m4(ay1,\ scale,\ epr);}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \_\_riscv\_vse16\_v\_f16m4((\_Float16*)y\ +\ i\ +\ epr,\ ay1,\ epr);}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \_\_asm\_\_\ \_\_volatile\_\_\ (\textcolor{stringliteral}{"{}"{}}\ :::\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00828\ \ \ \ \ \}}
+\DoxyCodeLine{00829\ }
+\DoxyCodeLine{00830\ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00831\ \ \ \ \ \textcolor{keywordtype}{int}\ vl;}
+\DoxyCodeLine{00832\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ i\ +=\ vl)\ \{}
+\DoxyCodeLine{00833\ \ \ \ \ \ \ \ \ vl\ =\ \_\_riscv\_vsetvl\_e16m4(n\ -\/\ i);}
+\DoxyCodeLine{00834\ \ \ \ \ \ \ \ \ vfloat16m4\_t\ ay0\ =\ \_\_riscv\_vle16\_v\_f16m4((\textcolor{keyword}{const}\ \_Float16*)y\ +\ i,\ vl);}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ ay0\ =\ \_\_riscv\_vfmul\_vf\_f16m4(ay0,\ scale,\ vl);}
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ \_\_riscv\_vse16\_v\_f16m4((\_Float16*)y\ +\ i,\ ay0,\ vl);}
+\DoxyCodeLine{00837\ \ \ \ \ \}}
+\DoxyCodeLine{00838\ \textcolor{preprocessor}{\#elif\ defined(GGML\_SIMD)}}
+\DoxyCodeLine{00839\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ np\ =\ (n\ \&\ \string~(GGML\_F16\_STEP\ -\/\ 1));}
+\DoxyCodeLine{00840\ }
+\DoxyCodeLine{00841\ \ \ \ \ GGML\_F16\_VEC\ vx\ =\ GGML\_F16\_VEC\_SET1(v);}
+\DoxyCodeLine{00842\ }
+\DoxyCodeLine{00843\ \ \ \ \ GGML\_F16\_VEC\ ay[GGML\_F16\_ARR];}
+\DoxyCodeLine{00844\ }
+\DoxyCodeLine{00845\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ np;\ i\ +=\ GGML\_F16\_STEP)\ \{}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ GGML\_F16\_ARR;\ j++)\ \{}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F16\_VEC\_LOAD(y\ +\ i\ +\ j*GGML\_F16\_EPR,\ j);}
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ \ \ \ \ ay[j]\ =\ GGML\_F16\_VEC\_MUL(ay[j],\ vx);}
+\DoxyCodeLine{00849\ }
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16\_VEC\_STORE(y\ +\ i\ +\ j*GGML\_F16\_EPR,\ ay,\ j);}
+\DoxyCodeLine{00851\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00852\ \ \ \ \ \}}
+\DoxyCodeLine{00853\ }
+\DoxyCodeLine{00854\ \ \ \ \ \textcolor{comment}{//\ leftovers}}
+\DoxyCodeLine{00855\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ np;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(y[i])*v);}
+\DoxyCodeLine{00857\ \ \ \ \ \}}
+\DoxyCodeLine{00858\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00859\ \ \ \ \ \textcolor{comment}{//\ scalar}}
+\DoxyCodeLine{00860\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00861\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(y[i])*v);}
+\DoxyCodeLine{00862\ \ \ \ \ \}}
+\DoxyCodeLine{00863\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00864\ \}}
+\DoxyCodeLine{00865\ }
+\DoxyCodeLine{00866\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_norm\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ s,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ ggml\_vec\_dot\_f32(n,\ s,\ 0,\ x,\ 0,\ x,\ 0,\ 1);\ *s\ =\ sqrtf(*s);\ \ \ \}}
+\DoxyCodeLine{00867\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sqr\_f32\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ x[i]*x[i];\ \ \ \}}
+\DoxyCodeLine{00868\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sqr\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00869\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00870\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(v*v);}
+\DoxyCodeLine{00872\ \ \ \ \ \}}
+\DoxyCodeLine{00873\ \}}
+\DoxyCodeLine{00874\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sqrt\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ sqrtf(x[i]);\ \}}
+\DoxyCodeLine{00875\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sqrt\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00876\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(sqrtf(GGML\_CPU\_FP16\_TO\_FP32(x[i])));}
+\DoxyCodeLine{00878\ \ \ \ \ \}}
+\DoxyCodeLine{00879\ \}}
+\DoxyCodeLine{00880\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_log\_f32\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ logf(x[i]);\ \ \}}
+\DoxyCodeLine{00881\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_log\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00882\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(logf(GGML\_CPU\_FP16\_TO\_FP32(x[i])));}
+\DoxyCodeLine{00884\ \ \ \ \ \}}
+\DoxyCodeLine{00885\ \}}
+\DoxyCodeLine{00886\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sin\_f32\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ sinf(x[i]);\ \ \}}
+\DoxyCodeLine{00887\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sin\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00888\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(sinf(GGML\_CPU\_FP16\_TO\_FP32(x[i])));}
+\DoxyCodeLine{00890\ \ \ \ \ \}}
+\DoxyCodeLine{00891\ \}}
+\DoxyCodeLine{00892\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_cos\_f32\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ cosf(x[i]);\ \ \}}
+\DoxyCodeLine{00893\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_cos\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00894\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(cosf(GGML\_CPU\_FP16\_TO\_FP32(x[i])));}
+\DoxyCodeLine{00896\ \ \ \ \ \}}
+\DoxyCodeLine{00897\ \}}
+\DoxyCodeLine{00898\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_abs\_f32\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ fabsf(x[i]);\ \}}
+\DoxyCodeLine{00899\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_abs\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00900\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(fabsf(GGML\_CPU\_FP16\_TO\_FP32(x[i])));}
+\DoxyCodeLine{00902\ \ \ \ \ \}}
+\DoxyCodeLine{00903\ \}}
+\DoxyCodeLine{00904\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sgn\_f32\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ (x[i]\ >\ 0.f)\ ?\ 1.f\ :\ ((x[i]\ <\ 0.f)\ ?\ -\/1.f\ :\ 0.f);\ \}}
+\DoxyCodeLine{00905\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sgn\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00906\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00907\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{00908\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16((v\ >\ 0.f)\ ?\ 1.f\ :\ ((v\ <\ 0.f)\ ?\ -\/1.f\ :\ 0.f));}
+\DoxyCodeLine{00909\ \ \ \ \ \}}
+\DoxyCodeLine{00910\ \}}
+\DoxyCodeLine{00911\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_step\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ (x[i]\ >\ 0.f)\ ?\ 1.f\ :\ 0.f;\ \}}
+\DoxyCodeLine{00912\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_step\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00913\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16((GGML\_CPU\_FP16\_TO\_FP32(x[i])\ >\ 0.f)\ ?\ 1.f\ :\ 0.f);}
+\DoxyCodeLine{00915\ \ \ \ \ \}}
+\DoxyCodeLine{00916\ \}}
+\DoxyCodeLine{00917\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_tanh\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ tanhf(x[i]);\ \ \}}
+\DoxyCodeLine{00918\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_tanh\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00919\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(tanhf(GGML\_CPU\_FP16\_TO\_FP32(x[i])));}
+\DoxyCodeLine{00921\ \ \ \ \ \}}
+\DoxyCodeLine{00922\ \}}
+\DoxyCodeLine{00923\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_elu\_f32\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ (x[i]\ >\ 0.f)\ ?\ x[i]\ :\ expm1f(x[i]);\ \}}
+\DoxyCodeLine{00924\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_elu\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00925\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00926\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{00927\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16((v\ >\ 0.f)\ ?\ v\ :\ expm1f(v));}
+\DoxyCodeLine{00928\ \ \ \ \ \}}
+\DoxyCodeLine{00929\ \}}
+\DoxyCodeLine{00930\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_relu\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ (x[i]\ >\ 0.f)\ ?\ x[i]\ :\ 0.f;\ \}}
+\DoxyCodeLine{00931\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_relu\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00932\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{00934\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16((v\ >\ 0.f)\ ?\ v\ :\ 0.f);}
+\DoxyCodeLine{00935\ \ \ \ \ \}}
+\DoxyCodeLine{00936\ \}}
+\DoxyCodeLine{00937\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_leaky\_relu\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ ns)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ ((x[i]\ >\ 0.f)\ ?\ x[i]\ :\ 0.f)\ +\ ns\ *\ ((x[i]\ <\ 0.0f)\ ?\ x[i]\ :\ 0.f);\ \}}
+\DoxyCodeLine{00938\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_leaky\_relu\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ ns)\ \{}
+\DoxyCodeLine{00939\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{00941\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(((v\ >\ 0.f)\ ?\ v\ :\ 0.f)\ +\ ns\ *\ ((v\ <\ 0.0f)\ ?\ v\ :\ 0.f));}
+\DoxyCodeLine{00942\ \ \ \ \ \}}
+\DoxyCodeLine{00943\ \}}
+\DoxyCodeLine{00944\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sigmoid\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ 1.f\ /\ (1.f\ +\ expf(-\/x[i]));\ \}}
+\DoxyCodeLine{00945\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sigmoid\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00946\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(1.f\ /\ (1.f\ +\ expf(-\/GGML\_CPU\_FP16\_TO\_FP32(x[i]))));}
+\DoxyCodeLine{00948\ \ \ \ \ \}}
+\DoxyCodeLine{00949\ \}}
+\DoxyCodeLine{00950\ \textcolor{comment}{//\ TODO:\ optimize\ performance}}
+\DoxyCodeLine{00951\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_hardswish\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ x[i]\ *\ fminf(1.0f,\ fmaxf(0.0f,\ (x[i]\ +\ 3.0f)\ /\ 6.0f));\ \}}
+\DoxyCodeLine{00952\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_hardswish\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00953\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(v\ *\ fminf(1.0f,\ fmaxf(0.0f,\ (v\ +\ 3.0f)\ /\ 6.0f)));}
+\DoxyCodeLine{00956\ \ \ \ \ \}}
+\DoxyCodeLine{00957\ \}}
+\DoxyCodeLine{00958\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_hardsigmoid\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ fminf(1.0f,\ fmaxf(0.0f,\ (x[i]\ +\ 3.0f)\ /\ 6.0f));\ \}}
+\DoxyCodeLine{00959\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_hardsigmoid\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00960\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(fminf(1.0f,\ fmaxf(0.0f,\ (GGML\_CPU\_FP16\_TO\_FP32(x[i])\ +\ 3.0f)\ /\ 6.0f)));}
+\DoxyCodeLine{00962\ \ \ \ \ \}}
+\DoxyCodeLine{00963\ \}}
+\DoxyCodeLine{00964\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_exp\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{\ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ y[i]\ =\ expf(x[i]);\ \}}
+\DoxyCodeLine{00965\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_exp\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00966\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00967\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(expf(GGML\_CPU\_FP16\_TO\_FP32(x[i])));}
+\DoxyCodeLine{00968\ \ \ \ \ \}}
+\DoxyCodeLine{00969\ \}}
+\DoxyCodeLine{00970\ }
+\DoxyCodeLine{00971\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ GELU\_COEF\_A\ \ \ \ \ =\ 0.044715f;}
+\DoxyCodeLine{00972\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ GELU\_QUICK\_COEF\ =\ -\/1.702f;}
+\DoxyCodeLine{00973\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ SQRT\_2\_OVER\_PI\ \ =\ 0.79788456080286535587989211986876f;}
+\DoxyCodeLine{00974\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ SQRT\_2\_INV\ \ \ \ \ \ =\ 0.70710678118654752440084436210484f;}
+\DoxyCodeLine{00975\ }
+\DoxyCodeLine{00976\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ ggml\_gelu\_f32(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00977\ \ \ \ \ \textcolor{keywordflow}{return}\ 0.5f*x*(1.0f\ +\ tanhf(SQRT\_2\_OVER\_PI*x*(1.0f\ +\ GELU\_COEF\_A*x*x)));}
+\DoxyCodeLine{00978\ \}}
+\DoxyCodeLine{00979\ }
+\DoxyCodeLine{00980\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_gelu\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00981\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ i16\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)\ x;}
+\DoxyCodeLine{00982\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00983\ \ \ \ \ \ \ \ \ y[i]\ =\ ggml\_table\_gelu\_f16[i16[i]];}
+\DoxyCodeLine{00984\ \ \ \ \ \}}
+\DoxyCodeLine{00985\ \}}
+\DoxyCodeLine{00986\ }
+\DoxyCodeLine{00987\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_gelu\_erf\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00988\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00989\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xi\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{00990\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ res\ =\ 0.5f*xi*(1.0f\ +\ erff(xi*SQRT\_2\_INV));}
+\DoxyCodeLine{00991\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(res);}
+\DoxyCodeLine{00992\ \ \ \ \ \}}
+\DoxyCodeLine{00993\ \}}
+\DoxyCodeLine{00994\ }
+\DoxyCodeLine{00995\ \textcolor{preprocessor}{\#ifdef\ GGML\_GELU\_FP16}}
+\DoxyCodeLine{00996\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_gelu\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{00997\ \ \ \ \ uint16\_t\ t;}
+\DoxyCodeLine{00998\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00999\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (x[i]\ <=\ -\/10.0f)\ \{}
+\DoxyCodeLine{01000\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ 0.0f;}
+\DoxyCodeLine{01001\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (x[i]\ >=\ 10.0f)\ \{}
+\DoxyCodeLine{01002\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ x[i];}
+\DoxyCodeLine{01003\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01004\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_fp16\_t\ fp16\ =\ GGML\_CPU\_FP32\_TO\_FP16(x[i]);}
+\DoxyCodeLine{01005\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\&t,\ \&fp16,\ \textcolor{keyword}{sizeof}(uint16\_t));}
+\DoxyCodeLine{01006\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP16\_TO\_FP32(ggml\_table\_gelu\_f16[t]);}
+\DoxyCodeLine{01007\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01008\ \ \ \ \ \}}
+\DoxyCodeLine{01009\ \}}
+\DoxyCodeLine{01010\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01011\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_gelu\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01012\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01013\ \ \ \ \ \ \ \ \ y[i]\ =\ ggml\_gelu\_f32(x[i]);}
+\DoxyCodeLine{01014\ \ \ \ \ \}}
+\DoxyCodeLine{01015\ \}}
+\DoxyCodeLine{01016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01017\ }
+\DoxyCodeLine{01018\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_gelu\_erf\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01019\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01020\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xi\ =\ x[i];}
+\DoxyCodeLine{01021\ \ \ \ \ \ \ \ \ y[i]\ =\ 0.5f*xi*(1.0f\ +\ erff(xi*SQRT\_2\_INV));}
+\DoxyCodeLine{01022\ \ \ \ \ \}}
+\DoxyCodeLine{01023\ \}}
+\DoxyCodeLine{01024\ }
+\DoxyCodeLine{01025\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ ggml\_gelu\_quick\_f32(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{01026\ \ \ \ \ \textcolor{keywordflow}{return}\ x*(1.0f/(1.0f+expf(GELU\_QUICK\_COEF*x)));}
+\DoxyCodeLine{01027\ \}}
+\DoxyCodeLine{01028\ }
+\DoxyCodeLine{01029\ \textcolor{comment}{//inline\ static\ void\ ggml\_vec\_gelu\_quick\_f16(const\ int\ n,\ ggml\_fp16\_t\ *\ y,\ const\ ggml\_fp16\_t\ *\ x)\ \{}}
+\DoxyCodeLine{01030\ \textcolor{comment}{//\ \ \ \ const\ uint16\_t\ *\ i16\ =\ (const\ uint16\_t\ *)\ x;}}
+\DoxyCodeLine{01031\ \textcolor{comment}{//\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}}
+\DoxyCodeLine{01032\ \textcolor{comment}{//\ \ \ \ \ \ \ \ y[i]\ =\ ggml\_table\_gelu\_quick\_f16[i16[i]];}}
+\DoxyCodeLine{01033\ \textcolor{comment}{//\ \ \ \ \}}}
+\DoxyCodeLine{01034\ \textcolor{comment}{//\}}}
+\DoxyCodeLine{01035\ }
+\DoxyCodeLine{01036\ \textcolor{preprocessor}{\#ifdef\ GGML\_GELU\_QUICK\_FP16}}
+\DoxyCodeLine{01037\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_gelu\_quick\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01038\ \ \ \ \ uint16\_t\ t;}
+\DoxyCodeLine{01039\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01040\ \ \ \ \ \ \ \ \ ggml\_fp16\_t\ fp16\ =\ GGML\_CPU\_FP32\_TO\_FP16(x[i]);}
+\DoxyCodeLine{01041\ \ \ \ \ \ \ \ \ memcpy(\&t,\ \&fp16,\ \textcolor{keyword}{sizeof}(uint16\_t));}
+\DoxyCodeLine{01042\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP16\_TO\_FP32(ggml\_table\_gelu\_quick\_f16[t]);}
+\DoxyCodeLine{01043\ \ \ \ \ \}}
+\DoxyCodeLine{01044\ \}}
+\DoxyCodeLine{01045\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01046\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_gelu\_quick\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01047\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01048\ \ \ \ \ \ \ \ \ y[i]\ =\ ggml\_gelu\_quick\_f32(x[i]);}
+\DoxyCodeLine{01049\ \ \ \ \ \}}
+\DoxyCodeLine{01050\ \}}
+\DoxyCodeLine{01051\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01052\ }
+\DoxyCodeLine{01053\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_gelu\_quick\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{01054\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01055\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{01056\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(v*(1.0f/(1.0f+expf(GELU\_QUICK\_COEF*v))));}
+\DoxyCodeLine{01057\ \ \ \ \ \}}
+\DoxyCodeLine{01058\ \}}
+\DoxyCodeLine{01059\ }
+\DoxyCodeLine{01060\ \textcolor{comment}{//\ Sigmoid\ Linear\ Unit\ (SiLU)\ function}}
+\DoxyCodeLine{01061\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ ggml\_silu\_f32(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{01062\ \ \ \ \ \textcolor{keywordflow}{return}\ x/(1.0f\ +\ expf(-\/x));}
+\DoxyCodeLine{01063\ \}}
+\DoxyCodeLine{01064\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_fp16\_t\ ggml\_silu\_f16(ggml\_fp16\_t\ x)\ \{}
+\DoxyCodeLine{01065\ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x);}
+\DoxyCodeLine{01066\ \ \ \ \ \textcolor{keywordflow}{return}\ GGML\_CPU\_FP32\_TO\_FP16(v/(1.0f\ +\ expf(-\/v)));}
+\DoxyCodeLine{01067\ \}}
+\DoxyCodeLine{01068\ }
+\DoxyCodeLine{01069\ \textcolor{preprocessor}{\#if\ \_\_FINITE\_MATH\_ONLY\_\_}}
+\DoxyCodeLine{01070\ \textcolor{preprocessor}{\#error\ "{}some\ routines\ in\ ggml.c\ require\ non-\/finite\ math\ arithmetics\ -\/-\/\ pass\ -\/fno-\/finite-\/math-\/only\ to\ the\ compiler\ to\ fix"{}}}
+\DoxyCodeLine{01071\ \textcolor{preprocessor}{\#error\ "{}ref:\ https://github.com/ggml-\/org/llama.cpp/pull/7154\#issuecomment-\/2143844461"{}}}
+\DoxyCodeLine{01072\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01073\ }
+\DoxyCodeLine{01074\ \textcolor{comment}{/*\ Below\ function\ was\ borrowed\ from\ the\ GitHub\ repository:}}
+\DoxyCodeLine{01075\ \textcolor{comment}{https://github.com/openvinotoolkit/openvino/blob/master/src/plugins/intel\_cpu/src/nodes/kernels/scaled\_attn/common.hpp\ */}}
+\DoxyCodeLine{01076\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_FEATURE\_SVE)\ \&\&\ defined(\_\_aarch64\_\_)}}
+\DoxyCodeLine{01077\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ svfloat32\_t\ exp\_ps\_sve(svbool\_t\ pg,\ svfloat32\_t\ src)\ \{}
+\DoxyCodeLine{01078\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Constants}}
+\DoxyCodeLine{01079\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ log2\_e\ =\ svdup\_n\_f32(1.4426950409f);}
+\DoxyCodeLine{01080\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ ln2\ =\ svdup\_n\_f32(0.6931473921f);}
+\DoxyCodeLine{01081\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ half\_ln2\_sq\ =\ svdup\_n\_f32(0.2413862043f);}
+\DoxyCodeLine{01082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ svuint32\_t\ not\_mask17\ =\ svdup\_n\_u32(\string~((1u\ <<\ 17)\ -\/\ 1));}
+\DoxyCodeLine{01083\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ one\ =\ svdup\_n\_f32(1.0f);}
+\DoxyCodeLine{01084\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ inactive1\ =\ svdup\_n\_f32(0.0f);}
+\DoxyCodeLine{01085\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ svint32\_t\ inactive2\ =\ svdup\_n\_s32(0);}
+\DoxyCodeLine{01086\ }
+\DoxyCodeLine{01087\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Algorithm\ starts\ here}}
+\DoxyCodeLine{01088\ \ \ \ \ \ \ \ \ svfloat32\_t\ t0\ =\ svmul\_f32\_m(pg,\ src,\ log2\_e);\ \ \textcolor{comment}{//\ y\ =\ x\ *\ log2(e)}}
+\DoxyCodeLine{01089\ \ \ \ \ \ \ \ \ svfloat32\_t\ t1\ =\ svrintm\_f32\_m(inactive1,\ pg,\ t0);\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rount\ to\ int\ (float)}}
+\DoxyCodeLine{01090\ \ \ \ \ \ \ \ \ svint32\_t\ t2\ =\ svcvt\_s32\_f32\_m(inactive2,\ pg,\ t1);\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ n}}
+\DoxyCodeLine{01091\ }
+\DoxyCodeLine{01092\ \ \ \ \ \ \ \ \ t1\ =\ svsub\_f32\_m(pg,\ t0,\ t1);\ \ \ \textcolor{comment}{//\ a\ =\ y\ -\/\ floor(y)}}
+\DoxyCodeLine{01093\ \ \ \ \ \ \ \ \ t1\ =\ svadd\_f32\_m(pg,\ t1,\ one);\ \ \textcolor{comment}{//\ b\ =\ a\ +\ 1}}
+\DoxyCodeLine{01094\ }
+\DoxyCodeLine{01095\ \ \ \ \ \ \ \ \ svuint32\_t\ t3\ =\ svlsr\_n\_u32\_m(pg,\ svreinterpret\_u32\_f32(t1),\ 17);\ \ \textcolor{comment}{//\ v\ =\ b\ >>\ 17\ (u32)}}
+\DoxyCodeLine{01096\ \ \ \ \ \ \ \ \ svfloat32\_t\ t4\ =\ svexpa\_f32(t3);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ c\ =\ fexpa(v)}}
+\DoxyCodeLine{01097\ \ \ \ \ \ \ \ \ t4\ =\ svscale\_f32\_m(pg,\ t4,\ t2);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fexpa(v)\ *\ 2\string^(n)}}
+\DoxyCodeLine{01098\ }
+\DoxyCodeLine{01099\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\_(t2.d,\ t1.d,\ not\_mask17.d)}}
+\DoxyCodeLine{01100\ \ \ \ \ \ \ \ \ svfloat32\_t\ t5\ =\ svreinterpret\_f32\_u32(svand\_u32\_m(pg,\ svreinterpret\_u32\_f32(t1),\ not\_mask17));}
+\DoxyCodeLine{01101\ \ \ \ \ \ \ \ \ t5\ =\ svsub\_f32\_m(pg,\ t1,\ t5);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ z}}
+\DoxyCodeLine{01102\ \ \ \ \ \ \ \ \ t0\ =\ svmla\_f32\_m(pg,\ ln2,\ t5,\ half\_ln2\_sq);\ \ \textcolor{comment}{//\ ln2\ +\ half\_ln2\_sq\ *\ z}}
+\DoxyCodeLine{01103\ \ \ \ \ \ \ \ \ t0\ =\ svmla\_f32\_m(pg,\ one,\ t5,\ t0);\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 1\ +\ (ln2\ *\ z)\ +\ (half\_ln2\_sq\ *\ z\ *\ z)}}
+\DoxyCodeLine{01104\ \ \ \ \ \ \ \ \ t0\ =\ svmul\_f32\_m(pg,\ t0,\ t4);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Final\ result}}
+\DoxyCodeLine{01105\ }
+\DoxyCodeLine{01106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ t0;}
+\DoxyCodeLine{01107\ \ \ \ \ \}}
+\DoxyCodeLine{01108\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01109\ }
+\DoxyCodeLine{01110\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_FEATURE\_SVE)\ \&\&\ defined(\_\_aarch64\_\_)}}
+\DoxyCodeLine{01111\ }
+\DoxyCodeLine{01112\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ svfloat32\_t\ ggml\_v\_expf(svbool\_t\ pg,\ svfloat32\_t\ x)\ \{}
+\DoxyCodeLine{01113\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ r\ =\ svdup\_n\_f32\_x(pg,\ 0x1.8p23f);}
+\DoxyCodeLine{01114\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ z\ =\ svmla\_n\_f32\_x(pg,\ r,\ x,\ 0x1.715476p+0f);}
+\DoxyCodeLine{01115\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ n\ =\ svsub\_f32\_x(pg,\ z,\ r);}
+\DoxyCodeLine{01116\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ b\ =\ svmls\_n\_f32\_x(pg,\ svmls\_n\_f32\_x(pg,\ x,\ n,\ 0x1.62e4p-\/1f),\ n,\ 0x1.7f7d1cp-\/20f);}
+\DoxyCodeLine{01117\ \ \ \ \ \textcolor{keyword}{const}\ svuint32\_t\ e\ =\ svlsl\_n\_u32\_x(pg,\ svreinterpret\_u32\_f32(z),\ 23);}
+\DoxyCodeLine{01118\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ k\ =\ svreinterpret\_f32\_u32(svadd\_u32\_x(pg,\ e,\ svreinterpret\_u32\_f32(svdup\_n\_f32\_x(pg,\ 1))));}
+\DoxyCodeLine{01119\ \ \ \ \ \textcolor{keyword}{const}\ svbool\_t\ c\ =\ svacgt\_n\_f32(pg,\ n,\ 126);}
+\DoxyCodeLine{01120\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ u\ =\ svmul\_f32\_x(pg,\ b,\ b);}
+\DoxyCodeLine{01121\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ j\ =\ svmla\_f32\_x(pg,}
+\DoxyCodeLine{01122\ \ \ \ \ \ \ \ \ svmul\_n\_f32\_x(pg,\ b,\ 0x1.ffffecp-\/1f),}
+\DoxyCodeLine{01123\ \ \ \ \ \ \ \ \ svmla\_f32\_x(pg,\ svmla\_f32\_x(pg,\ svdup\_n\_f32\_x(pg,\ 0x1.fffdb6p-\/2f),\ svdup\_n\_f32\_x(pg,\ 0x1.555e66p-\/3f),\ b),}
+\DoxyCodeLine{01124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ svmla\_f32\_x(pg,\ svdup\_n\_f32\_x(pg,\ 0x1.573e2ep-\/5f),\ svdup\_n\_f32\_x(pg,\ 0x1.0e4020p-\/7f),\ b),\ u),\ u);}
+\DoxyCodeLine{01125\ \ \ \ \ \textcolor{keyword}{const}\ svuint32\_t\ d\ =\ svdup\_n\_u32\_z(svcmple\_n\_f32(pg,\ n,\ 0.0),\ 0x82000000);}
+\DoxyCodeLine{01126\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ s1\ =\ svreinterpret\_f32\_u32(svadd\_n\_u32\_x(pg,\ d,\ 0x7f000000));}
+\DoxyCodeLine{01127\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ s2\ =\ svreinterpret\_f32\_u32(svsub\_u32\_x(pg,\ e,\ d));}
+\DoxyCodeLine{01128\ \ \ \ \ \textcolor{keywordflow}{return}\ svsel\_f32(svacgt\_f32(pg,\ n,\ svdup\_n\_f32\_x(pg,\ 192)),\ svmul\_f32\_x(pg,\ s1,\ s1),}
+\DoxyCodeLine{01129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ svsel\_f32(c,\ svmul\_f32\_x(pg,\ svmla\_f32\_x(pg,\ s2,\ s2,\ j),\ s1),\ svmla\_f32\_x(pg,\ k,\ k,\ j)));}
+\DoxyCodeLine{01130\ \}}
+\DoxyCodeLine{01131\ }
+\DoxyCodeLine{01132\ \textcolor{comment}{//\ computes\ silu\ x/(1+exp(-\/x))\ in\ single\ precision\ vector}}
+\DoxyCodeLine{01133\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ svfloat32\_t\ ggml\_v\_silu(svbool\_t\ pg,\ svfloat32\_t\ x)\ \{}
+\DoxyCodeLine{01134\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ one\ =\ svdup\_n\_f32\_x(pg,\ 1.0f);}
+\DoxyCodeLine{01135\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ zero\ =\ svdup\_n\_f32\_x(pg,\ 0.0f);}
+\DoxyCodeLine{01136\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ neg\_x\ =\ svsub\_f32\_x(pg,\ zero,\ x);}
+\DoxyCodeLine{01137\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ exp\_neg\_x\ =\ ggml\_v\_expf(pg,\ neg\_x);}
+\DoxyCodeLine{01138\ \ \ \ \ \textcolor{keyword}{const}\ svfloat32\_t\ one\_plus\_exp\_neg\_x\ =\ svadd\_f32\_x(pg,\ one,\ exp\_neg\_x);}
+\DoxyCodeLine{01139\ \ \ \ \ \textcolor{keywordflow}{return}\ svdiv\_f32\_x(pg,\ x,\ one\_plus\_exp\_neg\_x);}
+\DoxyCodeLine{01140\ \}}
+\DoxyCodeLine{01141\ }
+\DoxyCodeLine{01142\ \textcolor{preprocessor}{\#elif\ defined(\_\_ARM\_NEON)\ \&\&\ defined(\_\_aarch64\_\_)}}
+\DoxyCodeLine{01143\ }
+\DoxyCodeLine{01144\ \textcolor{comment}{//\ adapted\ from\ arm\ limited\ optimized\ routine}}
+\DoxyCodeLine{01145\ \textcolor{comment}{//\ the\ maximum\ error\ is\ 1.45358\ plus\ 0.5\ ulps}}
+\DoxyCodeLine{01146\ \textcolor{comment}{//\ numbers\ above\ 88.38\ will\ flush\ to\ infinity}}
+\DoxyCodeLine{01147\ \textcolor{comment}{//\ numbers\ beneath\ -\/103.97\ will\ flush\ to\ zero}}
+\DoxyCodeLine{01148\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ float32x4\_t\ ggml\_v\_expf(float32x4\_t\ x)\ \{}
+\DoxyCodeLine{01149\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ r\ =\ vdupq\_n\_f32(0x1.8p23f);}
+\DoxyCodeLine{01150\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ z\ =\ vfmaq\_f32(r,\ x,\ vdupq\_n\_f32(0x1.715476p+0f));}
+\DoxyCodeLine{01151\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ n\ =\ vsubq\_f32(z,\ r);}
+\DoxyCodeLine{01152\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ b\ =\ vfmsq\_f32(vfmsq\_f32(x,\ n,\ vdupq\_n\_f32(0x1.62e4p-\/1f)),\ n,}
+\DoxyCodeLine{01153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vdupq\_n\_f32(0x1.7f7d1cp-\/20f));}
+\DoxyCodeLine{01154\ \ \ \ \ \textcolor{keyword}{const}\ uint32x4\_t\ e\ =\ vshlq\_n\_u32(vreinterpretq\_u32\_f32(z),\ 23);}
+\DoxyCodeLine{01155\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ k\ =\ vreinterpretq\_f32\_u32(vaddq\_u32(e,\ vreinterpretq\_u32\_f32(vdupq\_n\_f32(1))));}
+\DoxyCodeLine{01156\ \ \ \ \ \textcolor{keyword}{const}\ uint32x4\_t\ c\ =\ vcagtq\_f32(n,\ vdupq\_n\_f32(126));}
+\DoxyCodeLine{01157\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ u\ =\ vmulq\_f32(b,\ b);}
+\DoxyCodeLine{01158\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ j\ =\ vfmaq\_f32(}
+\DoxyCodeLine{01159\ \ \ \ \ \ \ \ \ vmulq\_f32(vdupq\_n\_f32(0x1.ffffecp-\/1f),\ b),}
+\DoxyCodeLine{01160\ \ \ \ \ \ \ \ \ vfmaq\_f32(vfmaq\_f32(vdupq\_n\_f32(0x1.fffdb6p-\/2f),\ vdupq\_n\_f32(0x1.555e66p-\/3f),\ b),}
+\DoxyCodeLine{01161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vfmaq\_f32(vdupq\_n\_f32(0x1.573e2ep-\/5f),\ vdupq\_n\_f32(0x1.0e4020p-\/7f),\ b),\ u),\ u);}
+\DoxyCodeLine{01162\ \ \ \ \ \textcolor{keywordflow}{if}\ (!vpaddd\_u64(vreinterpretq\_u64\_u32(c)))}
+\DoxyCodeLine{01163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vfmaq\_f32(k,\ j,\ k);}
+\DoxyCodeLine{01164\ \ \ \ \ \textcolor{keyword}{const}\ uint32x4\_t\ d\ =\ vandq\_u32(vclezq\_f32(n),\ vdupq\_n\_u32(0x82000000));}
+\DoxyCodeLine{01165\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ s1\ =\ vreinterpretq\_f32\_u32(vaddq\_u32(d,\ vdupq\_n\_u32(0x7f000000)));}
+\DoxyCodeLine{01166\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ s2\ =\ vreinterpretq\_f32\_u32(vsubq\_u32(e,\ d));}
+\DoxyCodeLine{01167\ \ \ \ \ \textcolor{keywordflow}{return}\ vbslq\_f32(vcagtq\_f32(n,\ vdupq\_n\_f32(192)),\ vmulq\_f32(s1,\ s1),}
+\DoxyCodeLine{01168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vbslq\_f32(c,\ vmulq\_f32(vfmaq\_f32(s2,\ s2,\ j),\ s1),\ vfmaq\_f32(k,\ k,\ j)));}
+\DoxyCodeLine{01169\ \}}
+\DoxyCodeLine{01170\ }
+\DoxyCodeLine{01171\ \textcolor{comment}{//\ computes\ silu\ x/(1+exp(-\/x))\ in\ single\ precision\ vector}}
+\DoxyCodeLine{01172\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ float32x4\_t\ ggml\_v\_silu(float32x4\_t\ x)\ \{}
+\DoxyCodeLine{01173\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ one\ =\ vdupq\_n\_f32(1.0f);}
+\DoxyCodeLine{01174\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ zero\ =\ vdupq\_n\_f32(0.0f);}
+\DoxyCodeLine{01175\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ neg\_x\ =\ vsubq\_f32(zero,\ x);}
+\DoxyCodeLine{01176\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ exp\_neg\_x\ =\ ggml\_v\_expf(neg\_x);}
+\DoxyCodeLine{01177\ \ \ \ \ \textcolor{keyword}{const}\ float32x4\_t\ one\_plus\_exp\_neg\_x\ =\ vaddq\_f32(one,\ exp\_neg\_x);}
+\DoxyCodeLine{01178\ \ \ \ \ \textcolor{keywordflow}{return}\ vdivq\_f32(x,\ one\_plus\_exp\_neg\_x);}
+\DoxyCodeLine{01179\ \}}
+\DoxyCodeLine{01180\ }
+\DoxyCodeLine{01181\ \textcolor{preprocessor}{\#elif\ defined(\_\_AVX512F\_\_)\ \&\&\ defined(\_\_AVX512DQ\_\_)}}
+\DoxyCodeLine{01182\ }
+\DoxyCodeLine{01183\ \textcolor{comment}{//\ adapted\ from\ arm\ limited\ optimized\ routine}}
+\DoxyCodeLine{01184\ \textcolor{comment}{//\ the\ maximum\ error\ is\ 1.45358\ plus\ 0.5\ ulps}}
+\DoxyCodeLine{01185\ \textcolor{comment}{//\ numbers\ above\ 88.38\ will\ flush\ to\ infinity}}
+\DoxyCodeLine{01186\ \textcolor{comment}{//\ numbers\ beneath\ -\/103.97\ will\ flush\ to\ zero}}
+\DoxyCodeLine{01187\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \_\_m512\ ggml\_v\_expf(\_\_m512\ x)\ \{}
+\DoxyCodeLine{01188\ \ \ \textcolor{keyword}{const}\ \_\_m512\ r\ =\ \_mm512\_set1\_ps(0x1.8p23f);}
+\DoxyCodeLine{01189\ \ \ \textcolor{keyword}{const}\ \_\_m512\ z\ =\ \_mm512\_fmadd\_ps(x,\ \_mm512\_set1\_ps(0x1.715476p+0f),\ r);}
+\DoxyCodeLine{01190\ \ \ \textcolor{keyword}{const}\ \_\_m512\ n\ =\ \_mm512\_sub\_ps(z,\ r);}
+\DoxyCodeLine{01191\ \ \ \textcolor{keyword}{const}\ \_\_m512\ b\ =}
+\DoxyCodeLine{01192\ \ \ \ \ \ \ \_mm512\_fnmadd\_ps(n,\ \_mm512\_set1\_ps(0x1.7f7d1cp-\/20f),}
+\DoxyCodeLine{01193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm512\_fnmadd\_ps(n,\ \_mm512\_set1\_ps(0x1.62e4p-\/1f),\ x));}
+\DoxyCodeLine{01194\ \ \ \textcolor{keyword}{const}\ \_\_mmask16\ d\ =}
+\DoxyCodeLine{01195\ \ \ \ \ \ \ \_mm512\_cmp\_ps\_mask(\_mm512\_abs\_ps(n),\ \_mm512\_set1\_ps(192),\ \_CMP\_GT\_OQ);}
+\DoxyCodeLine{01196\ \ \ \textcolor{keyword}{const}\ \_\_m512\ u\ =\ \_mm512\_mul\_ps(b,\ b);}
+\DoxyCodeLine{01197\ \ \ \textcolor{keyword}{const}\ \_\_m512\ j\ =\ \_mm512\_fmadd\_ps(}
+\DoxyCodeLine{01198\ \ \ \ \ \ \ \_mm512\_fmadd\_ps(\_mm512\_fmadd\_ps(\_mm512\_set1\_ps(0x1.0e4020p-\/7f),\ b,}
+\DoxyCodeLine{01199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm512\_set1\_ps(0x1.573e2ep-\/5f)),}
+\DoxyCodeLine{01200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ u,}
+\DoxyCodeLine{01201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm512\_fmadd\_ps(\_mm512\_set1\_ps(0x1.555e66p-\/3f),\ b,}
+\DoxyCodeLine{01202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm512\_set1\_ps(0x1.fffdb6p-\/2f))),}
+\DoxyCodeLine{01203\ \ \ \ \ \ \ u,}
+\DoxyCodeLine{01204\ \ \ \ \ \ \ \_mm512\_fmadd\_ps(\_mm512\_set1\_ps(0x1.ffffecp-\/1f),\ b,\ \_mm512\_set1\_ps(1.0F)));}
+\DoxyCodeLine{01205\ \ \ \textcolor{keyword}{const}\ \_\_m512\ res\ =\ \_mm512\_scalef\_ps(j,\ n);}
+\DoxyCodeLine{01206\ \ \ \textcolor{keywordflow}{if}\ (\_mm512\_kortestz(d,\ d))}
+\DoxyCodeLine{01207\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01208\ \ \ \textcolor{keyword}{const}\ \_\_m512\ zero\ =\ \_mm512\_setzero\_ps();}
+\DoxyCodeLine{01209\ \ \ \textcolor{keyword}{const}\ \_\_m512\ alt\ =\ \_mm512\_mask\_blend\_ps(}
+\DoxyCodeLine{01210\ \ \ \ \ \ \ \_mm512\_cmp\_ps\_mask(n,\ zero,\ \_CMP\_LE\_OQ),\ \_mm512\_set1\_ps(INFINITY),\ zero);}
+\DoxyCodeLine{01211\ \ \ \textcolor{keywordflow}{return}\ \_mm512\_mask\_blend\_ps(d,\ res,\ alt);}
+\DoxyCodeLine{01212\ \}}
+\DoxyCodeLine{01213\ }
+\DoxyCodeLine{01214\ \textcolor{comment}{//\ computes\ silu\ x/(1+exp(-\/x))\ in\ single\ precision\ vector}}
+\DoxyCodeLine{01215\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \_\_m512\ ggml\_v\_silu(\_\_m512\ x)\ \{}
+\DoxyCodeLine{01216\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m512\ one\ =\ \_mm512\_set1\_ps(1);}
+\DoxyCodeLine{01217\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m512\ zero\ =\ \_mm512\_setzero\_ps();}
+\DoxyCodeLine{01218\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m512\ neg\_x\ =\ \_mm512\_sub\_ps(zero,\ x);}
+\DoxyCodeLine{01219\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m512\ exp\_neg\_x\ =\ ggml\_v\_expf(neg\_x);}
+\DoxyCodeLine{01220\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m512\ one\_plus\_exp\_neg\_x\ =\ \_mm512\_add\_ps(one,\ exp\_neg\_x);}
+\DoxyCodeLine{01221\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm512\_div\_ps(x,\ one\_plus\_exp\_neg\_x);}
+\DoxyCodeLine{01222\ \}}
+\DoxyCodeLine{01223\ }
+\DoxyCodeLine{01224\ \textcolor{preprocessor}{\#elif\ defined(\_\_AVX2\_\_)\ \&\&\ defined(\_\_FMA\_\_)}}
+\DoxyCodeLine{01225\ }
+\DoxyCodeLine{01226\ \textcolor{comment}{//\ adapted\ from\ arm\ limited\ optimized\ routine}}
+\DoxyCodeLine{01227\ \textcolor{comment}{//\ the\ maximum\ error\ is\ 1.45358\ plus\ 0.5\ ulps}}
+\DoxyCodeLine{01228\ \textcolor{comment}{//\ numbers\ above\ 88.38\ will\ flush\ to\ infinity}}
+\DoxyCodeLine{01229\ \textcolor{comment}{//\ numbers\ beneath\ -\/103.97\ will\ flush\ to\ zero}}
+\DoxyCodeLine{01230\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \_\_m256\ ggml\_v\_expf(\_\_m256\ x)\ \{}
+\DoxyCodeLine{01231\ \ \ \textcolor{keyword}{const}\ \_\_m256\ r\ =\ \_mm256\_set1\_ps(0x1.8p23f);}
+\DoxyCodeLine{01232\ \ \ \textcolor{keyword}{const}\ \_\_m256\ z\ =\ \_mm256\_fmadd\_ps(x,\ \_mm256\_set1\_ps(0x1.715476p+0f),\ r);}
+\DoxyCodeLine{01233\ \ \ \textcolor{keyword}{const}\ \_\_m256\ n\ =\ \_mm256\_sub\_ps(z,\ r);}
+\DoxyCodeLine{01234\ \ \ \textcolor{keyword}{const}\ \_\_m256\ b\ =\ \_mm256\_fnmadd\_ps(n,\ \_mm256\_set1\_ps(0x1.7f7d1cp-\/20f),}
+\DoxyCodeLine{01235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_fnmadd\_ps(n,\ \_mm256\_set1\_ps(0x1.62e4p-\/1f),\ x));}
+\DoxyCodeLine{01236\ \ \ \textcolor{keyword}{const}\ \_\_m256i\ e\ =\ \_mm256\_slli\_epi32(\_mm256\_castps\_si256(z),\ 23);}
+\DoxyCodeLine{01237\ \ \ \textcolor{keyword}{const}\ \_\_m256\ k\ =\ \_mm256\_castsi256\_ps(}
+\DoxyCodeLine{01238\ \ \ \ \ \ \ \_mm256\_add\_epi32(e,\ \_mm256\_castps\_si256(\_mm256\_set1\_ps(1))));}
+\DoxyCodeLine{01239\ \ \ \textcolor{keyword}{const}\ \_\_m256i\ c\ =\ \_mm256\_castps\_si256(}
+\DoxyCodeLine{01240\ \ \ \ \ \ \ \_mm256\_cmp\_ps(\_mm256\_andnot\_ps(\_mm256\_set1\_ps(-\/0.f),\ n),}
+\DoxyCodeLine{01241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_set1\_ps(126),\ \_CMP\_GT\_OQ));}
+\DoxyCodeLine{01242\ \ \ \textcolor{keyword}{const}\ \_\_m256\ u\ =\ \_mm256\_mul\_ps(b,\ b);}
+\DoxyCodeLine{01243\ \ \ \textcolor{keyword}{const}\ \_\_m256\ j\ =\ \_mm256\_fmadd\_ps(\_mm256\_fmadd\_ps(\_mm256\_fmadd\_ps(\_mm256\_set1\_ps(0x1.0e4020p-\/7f),\ b,}
+\DoxyCodeLine{01244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_set1\_ps(0x1.573e2ep-\/5f)),\ u,}
+\DoxyCodeLine{01245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_fmadd\_ps(\_mm256\_set1\_ps(0x1.555e66p-\/3f),\ b,}
+\DoxyCodeLine{01246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_set1\_ps(0x1.fffdb6p-\/2f))),}
+\DoxyCodeLine{01247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ u,\ \_mm256\_mul\_ps(\_mm256\_set1\_ps(0x1.ffffecp-\/1f),\ b));}
+\DoxyCodeLine{01248\ \ \ \textcolor{keywordflow}{if}\ (!\_mm256\_movemask\_ps(\_mm256\_castsi256\_ps(c)))}
+\DoxyCodeLine{01249\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm256\_fmadd\_ps(j,\ k,\ k);}
+\DoxyCodeLine{01250\ \ \ \textcolor{keyword}{const}\ \_\_m256i\ g\ =\ \_mm256\_and\_si256(}
+\DoxyCodeLine{01251\ \ \ \ \ \ \ \_mm256\_castps\_si256(\_mm256\_cmp\_ps(n,\ \_mm256\_setzero\_ps(),\ \_CMP\_LE\_OQ)),}
+\DoxyCodeLine{01252\ \ \ \ \ \ \ \_mm256\_set1\_epi32(0x82000000u));}
+\DoxyCodeLine{01253\ \ \ \textcolor{keyword}{const}\ \_\_m256\ s1\ =}
+\DoxyCodeLine{01254\ \ \ \ \ \ \ \_mm256\_castsi256\_ps(\_mm256\_add\_epi32(g,\ \_mm256\_set1\_epi32(0x7f000000u)));}
+\DoxyCodeLine{01255\ \ \ \textcolor{keyword}{const}\ \_\_m256\ s2\ =\ \_mm256\_castsi256\_ps(\_mm256\_sub\_epi32(e,\ g));}
+\DoxyCodeLine{01256\ \ \ \textcolor{keyword}{const}\ \_\_m256i\ d\ =\ \_mm256\_castps\_si256(}
+\DoxyCodeLine{01257\ \ \ \ \ \ \ \_mm256\_cmp\_ps(\_mm256\_andnot\_ps(\_mm256\_set1\_ps(-\/0.f),\ n),}
+\DoxyCodeLine{01258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_set1\_ps(192),\ \_CMP\_GT\_OQ));}
+\DoxyCodeLine{01259\ \ \ \textcolor{keywordflow}{return}\ \_mm256\_or\_ps(}
+\DoxyCodeLine{01260\ \ \ \ \ \ \ \_mm256\_and\_ps(\_mm256\_castsi256\_ps(d),\ \_mm256\_mul\_ps(s1,\ s1)),}
+\DoxyCodeLine{01261\ \ \ \ \ \ \ \_mm256\_andnot\_ps(}
+\DoxyCodeLine{01262\ \ \ \ \ \ \ \ \ \ \ \_mm256\_castsi256\_ps(d),}
+\DoxyCodeLine{01263\ \ \ \ \ \ \ \ \ \ \ \_mm256\_or\_ps(}
+\DoxyCodeLine{01264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_and\_ps(\_mm256\_castsi256\_ps(c),}
+\DoxyCodeLine{01265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_mul\_ps(\_mm256\_fmadd\_ps(s2,\ j,\ s2),\ s1)),}
+\DoxyCodeLine{01266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_andnot\_ps(\_mm256\_castsi256\_ps(c),\ \_mm256\_fmadd\_ps(k,\ j,\ k)))));}
+\DoxyCodeLine{01267\ \}}
+\DoxyCodeLine{01268\ }
+\DoxyCodeLine{01269\ \textcolor{comment}{//\ computes\ silu\ x/(1+exp(-\/x))\ in\ single\ precision\ vector}}
+\DoxyCodeLine{01270\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \_\_m256\ ggml\_v\_silu(\_\_m256\ x)\ \{}
+\DoxyCodeLine{01271\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m256\ one\ =\ \_mm256\_set1\_ps(1);}
+\DoxyCodeLine{01272\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m256\ zero\ =\ \_mm256\_setzero\_ps();}
+\DoxyCodeLine{01273\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m256\ neg\_x\ =\ \_mm256\_sub\_ps(zero,\ x);}
+\DoxyCodeLine{01274\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m256\ exp\_neg\_x\ =\ ggml\_v\_expf(neg\_x);}
+\DoxyCodeLine{01275\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m256\ one\_plus\_exp\_neg\_x\ =\ \_mm256\_add\_ps(one,\ exp\_neg\_x);}
+\DoxyCodeLine{01276\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm256\_div\_ps(x,\ one\_plus\_exp\_neg\_x);}
+\DoxyCodeLine{01277\ \}}
+\DoxyCodeLine{01278\ }
+\DoxyCodeLine{01279\ \textcolor{preprocessor}{\#elif\ defined(\_\_SSE2\_\_)\ }\textcolor{comment}{//\ \_\_AVX2\_\_\ /\ \_\_ARM\_NEON}}
+\DoxyCodeLine{01280\ }
+\DoxyCodeLine{01281\ \textcolor{preprocessor}{\#if\ defined(\_\_FMA\_\_)}}
+\DoxyCodeLine{01282\ \textcolor{preprocessor}{\#define\ MADD128(x,\ y,\ z)\ \_mm\_fmadd\_ps(x,\ y,\ z)}}
+\DoxyCodeLine{01283\ \textcolor{preprocessor}{\#define\ NMADD128(x,\ y,\ z)\ \_mm\_fnmadd\_ps(x,\ y,\ z)}}
+\DoxyCodeLine{01284\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01285\ \textcolor{preprocessor}{\#define\ MADD128(x,\ y,\ z)\ \_mm\_add\_ps(\_mm\_mul\_ps(x,\ y),\ z)}}
+\DoxyCodeLine{01286\ \textcolor{preprocessor}{\#define\ NMADD128(x,\ y,\ z)\ \_mm\_sub\_ps(z,\ \_mm\_mul\_ps(x,\ y))}}
+\DoxyCodeLine{01287\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01288\ }
+\DoxyCodeLine{01289\ \textcolor{comment}{//\ adapted\ from\ arm\ limited\ optimized\ routine}}
+\DoxyCodeLine{01290\ \textcolor{comment}{//\ the\ maximum\ error\ is\ 1.45358\ plus\ 0.5\ ulps}}
+\DoxyCodeLine{01291\ \textcolor{comment}{//\ numbers\ above\ 88.38\ will\ flush\ to\ infinity}}
+\DoxyCodeLine{01292\ \textcolor{comment}{//\ numbers\ beneath\ -\/103.97\ will\ flush\ to\ zero}}
+\DoxyCodeLine{01293\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \_\_m128\ ggml\_v\_expf(\_\_m128\ x)\ \{}
+\DoxyCodeLine{01294\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ r\ =\ \_mm\_set1\_ps(0x1.8p23f);}
+\DoxyCodeLine{01295\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ z\ =\ MADD128(x,\ \_mm\_set1\_ps(0x1.715476p+0f),\ r);}
+\DoxyCodeLine{01296\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ n\ =\ \_mm\_sub\_ps(z,\ r);}
+\DoxyCodeLine{01297\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ b\ =}
+\DoxyCodeLine{01298\ \ \ \ \ \ \ \ \ NMADD128(n,\ \_mm\_set1\_ps(0x1.7f7d1cp-\/20f),\ NMADD128(n,\ \_mm\_set1\_ps(0x1.62e4p-\/1f),\ x));}
+\DoxyCodeLine{01299\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128i\ e\ =\ \_mm\_slli\_epi32(\_mm\_castps\_si128(z),\ 23);}
+\DoxyCodeLine{01300\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ k\ =\ \_mm\_castsi128\_ps(\_mm\_add\_epi32(e,\ \_mm\_castps\_si128(\_mm\_set1\_ps(1))));}
+\DoxyCodeLine{01301\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128i\ c\ =}
+\DoxyCodeLine{01302\ \ \ \ \ \ \ \ \ \_mm\_castps\_si128(\_mm\_cmpgt\_ps(\_mm\_andnot\_ps(\_mm\_set1\_ps(-\/0.f),\ n),\ \_mm\_set1\_ps(126)));}
+\DoxyCodeLine{01303\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ u\ =\ \_mm\_mul\_ps(b,\ b);}
+\DoxyCodeLine{01304\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ j\ =}
+\DoxyCodeLine{01305\ \ \ \ \ \ \ \ \ MADD128(MADD128(MADD128(\_mm\_set1\_ps(0x1.0e4020p-\/7f),\ b,\ \_mm\_set1\_ps(0x1.573e2ep-\/5f)),\ u,}
+\DoxyCodeLine{01306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MADD128(\_mm\_set1\_ps(0x1.555e66p-\/3f),\ b,\ \_mm\_set1\_ps(0x1.fffdb6p-\/2f))),}
+\DoxyCodeLine{01307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ u,\ \_mm\_mul\_ps(\_mm\_set1\_ps(0x1.ffffecp-\/1f),\ b));}
+\DoxyCodeLine{01308\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\_mm\_movemask\_epi8(c))}
+\DoxyCodeLine{01309\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MADD128(j,\ k,\ k);}
+\DoxyCodeLine{01310\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128i\ g\ =\ \_mm\_and\_si128(\_mm\_castps\_si128(\_mm\_cmple\_ps(n,\ \_mm\_setzero\_ps())),}
+\DoxyCodeLine{01311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm\_set1\_epi32(0x82000000u));}
+\DoxyCodeLine{01312\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ s1\ =\ \_mm\_castsi128\_ps(\_mm\_add\_epi32(g,\ \_mm\_set1\_epi32(0x7f000000u)));}
+\DoxyCodeLine{01313\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ s2\ =\ \_mm\_castsi128\_ps(\_mm\_sub\_epi32(e,\ g));}
+\DoxyCodeLine{01314\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128i\ d\ =}
+\DoxyCodeLine{01315\ \ \ \ \ \ \ \ \ \_mm\_castps\_si128(\_mm\_cmpgt\_ps(\_mm\_andnot\_ps(\_mm\_set1\_ps(-\/0.f),\ n),\ \_mm\_set1\_ps(192)));}
+\DoxyCodeLine{01316\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_or\_ps(}
+\DoxyCodeLine{01317\ \ \ \ \ \ \ \ \ \_mm\_and\_ps(\_mm\_castsi128\_ps(d),\ \_mm\_mul\_ps(s1,\ s1)),}
+\DoxyCodeLine{01318\ \ \ \ \ \ \ \ \ \_mm\_andnot\_ps(\_mm\_castsi128\_ps(d),}
+\DoxyCodeLine{01319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm\_or\_ps(\_mm\_and\_ps(\_mm\_castsi128\_ps(c),\ \_mm\_mul\_ps(MADD128(s2,\ j,\ s2),\ s1)),}
+\DoxyCodeLine{01320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm\_andnot\_ps(\_mm\_castsi128\_ps(c),\ MADD128(k,\ j,\ k)))));}
+\DoxyCodeLine{01321\ \}}
+\DoxyCodeLine{01322\ }
+\DoxyCodeLine{01323\ \textcolor{comment}{//\ computes\ silu\ x/(1+exp(-\/x))\ in\ single\ precision\ vector}}
+\DoxyCodeLine{01324\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \_\_m128\ ggml\_v\_silu(\_\_m128\ x)\ \{}
+\DoxyCodeLine{01325\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ one\ =\ \_mm\_set1\_ps(1);}
+\DoxyCodeLine{01326\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ zero\ =\ \_mm\_setzero\_ps();}
+\DoxyCodeLine{01327\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ neg\_x\ =\ \_mm\_sub\_ps(zero,\ x);}
+\DoxyCodeLine{01328\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ exp\_neg\_x\ =\ ggml\_v\_expf(neg\_x);}
+\DoxyCodeLine{01329\ \ \ \ \ \textcolor{keyword}{const}\ \_\_m128\ one\_plus\_exp\_neg\_x\ =\ \_mm\_add\_ps(one,\ exp\_neg\_x);}
+\DoxyCodeLine{01330\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_div\_ps(x,\ one\_plus\_exp\_neg\_x);}
+\DoxyCodeLine{01331\ \}}
+\DoxyCodeLine{01332\ }
+\DoxyCodeLine{01333\ \textcolor{preprocessor}{\#elif\ defined(\_\_riscv\_v\_intrinsic)}}
+\DoxyCodeLine{01334\ }
+\DoxyCodeLine{01335\ \textcolor{comment}{//\ adapted\ from\ arm\ limited\ optimized\ routine}}
+\DoxyCodeLine{01336\ \textcolor{comment}{//\ the\ maximum\ error\ is\ 1.45358\ plus\ 0.5\ ulps}}
+\DoxyCodeLine{01337\ \textcolor{comment}{//\ numbers\ above\ 88.38\ will\ flush\ to\ infinity}}
+\DoxyCodeLine{01338\ \textcolor{comment}{//\ numbers\ beneath\ -\/103.97\ will\ flush\ to\ zero}}
+\DoxyCodeLine{01339\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ vfloat32m2\_t\ ggml\_v\_expf\_m2(vfloat32m2\_t\ x,\ \textcolor{keywordtype}{int}\ vl)\ \{}
+\DoxyCodeLine{01340\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ r\ =\ \_\_riscv\_vfmv\_v\_f\_f32m2(0x1.8p23f,\ vl);}
+\DoxyCodeLine{01341\ \textcolor{preprocessor}{\#ifdef\ \_\_riscv\_xtheadvector}}
+\DoxyCodeLine{01342\ \ \ \ \ \textcolor{comment}{//\ workaround\ for\ compiler\ bug\ (gcc\ 14.3.0:\ Error:\ unrecognized\ opcode\ \`{}th.vmv1r.v\ v2,v4')}}
+\DoxyCodeLine{01343\ \ \ \ \ vfloat32m2\_t\ z\ =\ \_\_riscv\_vfadd\_vf\_f32m2(r,\ 0.0f,\ vl);}
+\DoxyCodeLine{01344\ \ \ \ \ z\ =\ \_\_riscv\_vfmacc\_vf\_f32m2(z,\ 0x1.715476p+0f,\ x,\ vl);}
+\DoxyCodeLine{01345\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01346\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ z\ =\ \_\_riscv\_vfmacc\_vf\_f32m2(r,\ 0x1.715476p+0f,\ x,\ vl);}
+\DoxyCodeLine{01347\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01348\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ n\ =\ \_\_riscv\_vfsub\_vv\_f32m2(z,\ r,\ vl);}
+\DoxyCodeLine{01349\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ b\ =\ \_\_riscv\_vfnmsac\_vf\_f32m2(\_\_riscv\_vfnmsac\_vf\_f32m2(x,\ 0x1.62e4p-\/1f,\ n,\ vl),}
+\DoxyCodeLine{01350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x1.7f7d1cp-\/20f,\ n,\ vl);}
+\DoxyCodeLine{01351\ \ \ \ \ \textcolor{keyword}{const}\ vuint32m2\_t\ e\ =\ \_\_riscv\_vsll\_vx\_u32m2(\_\_riscv\_vreinterpret\_v\_f32m2\_u32m2(z),\ 23,\ vl);}
+\DoxyCodeLine{01352\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ k\ =\ \_\_riscv\_vreinterpret\_v\_u32m2\_f32m2(\_\_riscv\_vadd\_vx\_u32m2(e,\ 0x3f800000,\ vl));\ \textcolor{comment}{//\ 1.0f}}
+\DoxyCodeLine{01353\ \ \ \ \ \textcolor{keyword}{const}\ vbool16\_t\ c\ =\ \_\_riscv\_vmfgt\_vf\_f32m2\_b16(\_\_riscv\_vfabs\_v\_f32m2(n,\ vl),\ 126.0f,\ vl);}
+\DoxyCodeLine{01354\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ u\ =\ \_\_riscv\_vfmul\_vv\_f32m2(b,\ b,\ vl);}
+\DoxyCodeLine{01355\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ j\ =\ \_\_riscv\_vfmacc\_vv\_f32m2(}
+\DoxyCodeLine{01356\ \ \ \ \ \ \ \ \ \_\_riscv\_vfmul\_vf\_f32m2(b,\ 0x1.ffffecp-\/1f,\ vl),}
+\DoxyCodeLine{01357\ \ \ \ \ \ \ \ \ \_\_riscv\_vfmacc\_vv\_f32m2(}
+\DoxyCodeLine{01358\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_riscv\_vfmacc\_vf\_f32m2(\_\_riscv\_vfmv\_v\_f\_f32m2(0x1.fffdb6p-\/2f,\ vl),\ 0x1.555e66p-\/3f,\ b,\ vl),}
+\DoxyCodeLine{01359\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_riscv\_vfmacc\_vf\_f32m2(\_\_riscv\_vfmv\_v\_f\_f32m2(0x1.573e2ep-\/5f,\ vl),\ 0x1.0e4020p-\/7f,\ b,\ vl),}
+\DoxyCodeLine{01360\ \ \ \ \ \ \ \ \ \ \ \ \ u,\ vl),\ u,\ vl);}
+\DoxyCodeLine{01361\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\_\_riscv\_vcpop\_m\_b16(c,\ vl))}
+\DoxyCodeLine{01362\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_riscv\_vfmacc\_vv\_f32m2(k,\ j,\ k,\ vl);}
+\DoxyCodeLine{01363\ \ \ \ \ \textcolor{keyword}{const}\ vbool16\_t\ \ dm\ =\ \_\_riscv\_vmfle\_vf\_f32m2\_b16(n,\ 0.0f,\ vl);}
+\DoxyCodeLine{01364\ \ \ \ \ \textcolor{keyword}{const}\ vuint32m2\_t\ d\ =\ \_\_riscv\_vmerge\_vxm\_u32m2(\_\_riscv\_vmv\_v\_x\_u32m2(0,\ vl),\ 0x82000000,\ dm,\ vl);}
+\DoxyCodeLine{01365\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ s1\ =\ \_\_riscv\_vreinterpret\_v\_u32m2\_f32m2(\_\_riscv\_vadd\_vx\_u32m2(d,\ 0x7f000000,\ vl));}
+\DoxyCodeLine{01366\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ s2\ =\ \_\_riscv\_vreinterpret\_v\_u32m2\_f32m2(\_\_riscv\_vsub\_vv\_u32m2(e,\ d,\ vl));}
+\DoxyCodeLine{01367\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ r1\ =\ \_\_riscv\_vmerge\_vvm\_f32m2(}
+\DoxyCodeLine{01368\ \ \ \ \ \ \ \ \ \_\_riscv\_vfmacc\_vv\_f32m2(k,\ k,\ j,\ vl),}
+\DoxyCodeLine{01369\ \ \ \ \ \ \ \ \ \_\_riscv\_vfmul\_vv\_f32m2(\_\_riscv\_vfmacc\_vv\_f32m2(s2,\ s2,\ j,\ vl),\ s1,\ vl),}
+\DoxyCodeLine{01370\ \ \ \ \ \ \ \ \ c,\ vl);}
+\DoxyCodeLine{01371\ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_riscv\_vmerge\_vvm\_f32m2(}
+\DoxyCodeLine{01372\ \ \ \ \ \ \ \ \ r1,\ \_\_riscv\_vfmul\_vv\_f32m2(s1,\ s1,\ vl),}
+\DoxyCodeLine{01373\ \ \ \ \ \ \ \ \ \_\_riscv\_vmfgt\_vf\_f32m2\_b16(\_\_riscv\_vfabs\_v\_f32m2(n,\ vl),\ 192.0f,\ vl),}
+\DoxyCodeLine{01374\ \ \ \ \ \ \ \ \ vl);}
+\DoxyCodeLine{01375\ \}}
+\DoxyCodeLine{01376\ }
+\DoxyCodeLine{01377\ \textcolor{comment}{//\ computes\ silu\ x/(1+exp(-\/x))\ in\ single\ precision\ vector}}
+\DoxyCodeLine{01378\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ vfloat32m2\_t\ ggml\_v\_silu\_m2(vfloat32m2\_t\ x,\ \textcolor{keywordtype}{int}\ vl)\ \{}
+\DoxyCodeLine{01379\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ neg\_x\ =\ \_\_riscv\_vfneg\_v\_f32m2(x,\ vl);}
+\DoxyCodeLine{01380\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ exp\_neg\_x\ =\ ggml\_v\_expf\_m2(neg\_x,\ vl);}
+\DoxyCodeLine{01381\ \ \ \ \ \textcolor{keyword}{const}\ vfloat32m2\_t\ one\_plus\_exp\_neg\_x\ =\ \_\_riscv\_vfadd\_vf\_f32m2(exp\_neg\_x,\ 1.0f,\ vl);}
+\DoxyCodeLine{01382\ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_riscv\_vfdiv\_vv\_f32m2(x,\ one\_plus\_exp\_neg\_x,\ vl);}
+\DoxyCodeLine{01383\ \}}
+\DoxyCodeLine{01384\ }
+\DoxyCodeLine{01385\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_ARM\_NEON\ /\ \_\_AVX2\_\_\ /\ \_\_SSE2\_\_\ /\ \_\_riscv\_v\_intrinsic}}
+\DoxyCodeLine{01386\ }
+\DoxyCodeLine{01387\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_silu\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{01388\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01389\ \ \ \ \ \ \ \ \ y[i]\ =\ ggml\_silu\_f16(x[i]);}
+\DoxyCodeLine{01390\ \ \ \ \ \}}
+\DoxyCodeLine{01391\ \}}
+\DoxyCodeLine{01392\ }
+\DoxyCodeLine{01393\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ ggml\_silu\_backward\_f32(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ dy)\ \{}
+\DoxyCodeLine{01394\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ s\ =\ 1.0f/(1.0f\ +\ expf(-\/x));}
+\DoxyCodeLine{01395\ \ \ \ \ \textcolor{keywordflow}{return}\ dy*s*(1.0f\ +\ x*(1.0f\ -\/\ s));}
+\DoxyCodeLine{01396\ \}}
+\DoxyCodeLine{01397\ }
+\DoxyCodeLine{01398\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_fp16\_t\ ggml\_silu\_backward\_f16(ggml\_fp16\_t\ x,\ ggml\_fp16\_t\ dy)\ \{}
+\DoxyCodeLine{01399\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x);}
+\DoxyCodeLine{01400\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ s\ =\ 1.0f/(1.0f\ +\ expf(-\/v));}
+\DoxyCodeLine{01401\ \ \ \ \ \textcolor{keywordflow}{return}\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(dy)*s*(1.0f\ +\ v*(1.0f\ -\/\ s)));}
+\DoxyCodeLine{01402\ \}}
+\DoxyCodeLine{01403\ }
+\DoxyCodeLine{01404\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_silu\_backward\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ dx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ dy)\ \{}
+\DoxyCodeLine{01405\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01406\ \ \ \ \ \ \ \ \ dx[i]\ =\ ggml\_silu\_backward\_f32(x[i],\ dy[i]);}
+\DoxyCodeLine{01407\ \ \ \ \ \}}
+\DoxyCodeLine{01408\ \}}
+\DoxyCodeLine{01409\ }
+\DoxyCodeLine{01410\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_silu\_backward\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ dx,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ dy)\ \{}
+\DoxyCodeLine{01411\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01412\ \ \ \ \ \ \ \ \ dx[i]\ =\ ggml\_silu\_backward\_f16(x[i],\ dy[i]);}
+\DoxyCodeLine{01413\ \ \ \ \ \}}
+\DoxyCodeLine{01414\ \}}
+\DoxyCodeLine{01415\ }
+\DoxyCodeLine{01416\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_reglu\_f32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ g)\ \{}
+\DoxyCodeLine{01417\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01418\ \ \ \ \ \ \ \ \ y[i]\ =\ (x[i]\ >\ 0.f)\ ?\ x[i]\ *\ g[i]\ :\ 0.f;}
+\DoxyCodeLine{01419\ \ \ \ \ \}}
+\DoxyCodeLine{01420\ \}}
+\DoxyCodeLine{01421\ }
+\DoxyCodeLine{01422\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_reglu\_f16\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ g)\ \{}
+\DoxyCodeLine{01423\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01424\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{01425\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16((v\ >\ 0.f)\ ?\ v\ *\ GGML\_CPU\_FP16\_TO\_FP32(g[i])\ :\ 0.f);}
+\DoxyCodeLine{01426\ \ \ \ \ \}}
+\DoxyCodeLine{01427\ \}}
+\DoxyCodeLine{01428\ }
+\DoxyCodeLine{01429\ \textcolor{preprocessor}{\#ifdef\ GGML\_GELU\_FP16}}
+\DoxyCodeLine{01430\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_geglu\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ g)\ \{}
+\DoxyCodeLine{01431\ \ \ \ \ uint16\_t\ t;}
+\DoxyCodeLine{01432\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01433\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (x[i]\ <=\ -\/10.0f)\ \{}
+\DoxyCodeLine{01434\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ 0.0f;}
+\DoxyCodeLine{01435\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (x[i]\ >=\ 10.0f)\ \{}
+\DoxyCodeLine{01436\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ x[i]\ *\ g[i];}
+\DoxyCodeLine{01437\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01438\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_fp16\_t\ fp16\ =\ GGML\_CPU\_FP32\_TO\_FP16(x[i]);}
+\DoxyCodeLine{01439\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\&t,\ \&fp16,\ \textcolor{keyword}{sizeof}(uint16\_t));}
+\DoxyCodeLine{01440\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP16\_TO\_FP32(ggml\_table\_gelu\_f16[t])\ *\ g[i];}
+\DoxyCodeLine{01441\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01442\ \ \ \ \ \}}
+\DoxyCodeLine{01443\ \}}
+\DoxyCodeLine{01444\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01445\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_geglu\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ g)\ \{}
+\DoxyCodeLine{01446\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01447\ \ \ \ \ \ \ \ \ y[i]\ =\ ggml\_gelu\_f32(x[i])\ *\ g[i];}
+\DoxyCodeLine{01448\ \ \ \ \ \}}
+\DoxyCodeLine{01449\ \}}
+\DoxyCodeLine{01450\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01451\ }
+\DoxyCodeLine{01452\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_geglu\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ g)\ \{}
+\DoxyCodeLine{01453\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ i16\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)\ x;}
+\DoxyCodeLine{01454\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01455\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(g[i]);}
+\DoxyCodeLine{01456\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(ggml\_table\_gelu\_f16[i16[i]])\ *\ v);}
+\DoxyCodeLine{01457\ \ \ \ \ \}}
+\DoxyCodeLine{01458\ \}}
+\DoxyCodeLine{01459\ }
+\DoxyCodeLine{01460\ \textcolor{keywordtype}{void}\ ggml\_vec\_swiglu\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ g);}
+\DoxyCodeLine{01461\ }
+\DoxyCodeLine{01462\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_swiglu\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ g)\ \{}
+\DoxyCodeLine{01463\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01464\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xi\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{01465\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ gi\ =\ GGML\_CPU\_FP16\_TO\_FP32(g[i]);}
+\DoxyCodeLine{01466\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16((xi/(1.0f\ +\ expf(-\/xi)))\ *\ gi);}
+\DoxyCodeLine{01467\ \ \ \ \ \}}
+\DoxyCodeLine{01468\ \}}
+\DoxyCodeLine{01469\ }
+\DoxyCodeLine{01470\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_geglu\_erf\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ g)\ \{}
+\DoxyCodeLine{01471\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01472\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xi\ =\ x[i];}
+\DoxyCodeLine{01473\ \ \ \ \ \ \ \ \ y[i]\ =\ 0.5f\ *\ xi\ *\ (1.0f\ +\ erff(xi*SQRT\_2\_INV))\ *\ g[i];}
+\DoxyCodeLine{01474\ \ \ \ \ \}}
+\DoxyCodeLine{01475\ \}}
+\DoxyCodeLine{01476\ }
+\DoxyCodeLine{01477\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_geglu\_erf\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ g)\ \{}
+\DoxyCodeLine{01478\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01479\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xi\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{01480\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ gi\ =\ GGML\_CPU\_FP16\_TO\_FP32(g[i]);}
+\DoxyCodeLine{01481\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(0.5f\ *\ xi\ *\ (1.0f\ +\ erff(xi*SQRT\_2\_INV))\ *\ gi);}
+\DoxyCodeLine{01482\ \ \ \ \ \}}
+\DoxyCodeLine{01483\ \}}
+\DoxyCodeLine{01484\ }
+\DoxyCodeLine{01485\ \textcolor{preprocessor}{\#ifdef\ GGML\_GELU\_QUICK\_FP16}}
+\DoxyCodeLine{01486\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_geglu\_quick\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ g)\ \{}
+\DoxyCodeLine{01487\ \ \ \ \ uint16\_t\ t;}
+\DoxyCodeLine{01488\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01489\ \ \ \ \ \ \ \ \ ggml\_fp16\_t\ fp16\ =\ GGML\_CPU\_FP32\_TO\_FP16(x[i]);}
+\DoxyCodeLine{01490\ \ \ \ \ \ \ \ \ memcpy(\&t,\ \&fp16,\ \textcolor{keyword}{sizeof}(uint16\_t));}
+\DoxyCodeLine{01491\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP16\_TO\_FP32(ggml\_table\_gelu\_quick\_f16[t])\ *\ g[i];}
+\DoxyCodeLine{01492\ \ \ \ \ \}}
+\DoxyCodeLine{01493\ \}}
+\DoxyCodeLine{01494\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01495\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_geglu\_quick\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ g)\ \{}
+\DoxyCodeLine{01496\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01497\ \ \ \ \ \ \ \ \ y[i]\ =\ ggml\_gelu\_quick\_f32(x[i])\ *\ g[i];}
+\DoxyCodeLine{01498\ \ \ \ \ \}}
+\DoxyCodeLine{01499\ \}}
+\DoxyCodeLine{01500\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01501\ }
+\DoxyCodeLine{01502\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_geglu\_quick\_f16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_fp16\_t\ *\ y,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ g)\ \{}
+\DoxyCodeLine{01503\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ i16\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)\ x;}
+\DoxyCodeLine{01504\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01505\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v\ =\ GGML\_CPU\_FP16\_TO\_FP32(g[i]);}
+\DoxyCodeLine{01506\ \ \ \ \ \ \ \ \ y[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(GGML\_CPU\_FP16\_TO\_FP32(ggml\_table\_gelu\_quick\_f16[i16[i]])\ *\ v);}
+\DoxyCodeLine{01507\ \ \ \ \ \}}
+\DoxyCodeLine{01508\ \}}
+\DoxyCodeLine{01509\ }
+\DoxyCodeLine{01510\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sum\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ s,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01511\ \textcolor{preprocessor}{\#ifndef\ GGML\_USE\_ACCELERATE}}
+\DoxyCodeLine{01512\ \ \ \ \ ggml\_float\ sum\ =\ 0.0;}
+\DoxyCodeLine{01513\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01514\ \ \ \ \ \ \ \ \ sum\ +=\ (ggml\_float)x[i];}
+\DoxyCodeLine{01515\ \ \ \ \ \}}
+\DoxyCodeLine{01516\ \ \ \ \ *s\ =\ (float)sum;}
+\DoxyCodeLine{01517\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01518\ \ \ \ \ vDSP\_sve(x,\ 1,\ s,\ n);}
+\DoxyCodeLine{01519\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01520\ \}}
+\DoxyCodeLine{01521\ }
+\DoxyCodeLine{01522\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_cumsum\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01523\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01524\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ 0)\ \{}
+\DoxyCodeLine{01525\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ x[i];}
+\DoxyCodeLine{01526\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01527\ \ \ \ \ \ \ \ \ \ \ \ \ y[i]\ =\ y[i\ -\/\ 1]\ +\ x[i];}
+\DoxyCodeLine{01528\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01529\ \ \ \ \ \}}
+\DoxyCodeLine{01530\ \}}
+\DoxyCodeLine{01531\ }
+\DoxyCodeLine{01532\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sum\_f32\_ggf(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ ggml\_float\ *\ s,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01533\ \ \ \ \ ggml\_float\ sum\ =\ 0.0;}
+\DoxyCodeLine{01534\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01535\ \ \ \ \ \ \ \ \ sum\ +=\ (ggml\_float)x[i];}
+\DoxyCodeLine{01536\ \ \ \ \ \}}
+\DoxyCodeLine{01537\ \ \ \ \ *s\ =\ sum;}
+\DoxyCodeLine{01538\ \}}
+\DoxyCodeLine{01539\ }
+\DoxyCodeLine{01540\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sum\_f16\_ggf(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ s,\ \textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{01541\ \ \ \ \ \textcolor{keywordtype}{float}\ sum\ =\ 0.0f;}
+\DoxyCodeLine{01542\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01543\ \ \ \ \ \ \ \ \ sum\ +=\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{01544\ \ \ \ \ \}}
+\DoxyCodeLine{01545\ \ \ \ \ *s\ =\ sum;}
+\DoxyCodeLine{01546\ \}}
+\DoxyCodeLine{01547\ }
+\DoxyCodeLine{01548\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_sum\_bf16\_ggf(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ s,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ *\ x)\ \{}
+\DoxyCodeLine{01549\ \ \ \ \ \textcolor{keywordtype}{float}\ sum\ =\ 0.0f;}
+\DoxyCodeLine{01550\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01551\ \ \ \ \ \ \ \ \ sum\ +=\ GGML\_BF16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{01552\ \ \ \ \ \}}
+\DoxyCodeLine{01553\ \ \ \ \ *s\ =\ sum;}
+\DoxyCodeLine{01554\ \}}
+\DoxyCodeLine{01555\ }
+\DoxyCodeLine{01556\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_max\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ s,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01557\ \textcolor{preprocessor}{\#ifndef\ GGML\_USE\_ACCELERATE}}
+\DoxyCodeLine{01558\ \ \ \ \ \textcolor{keywordtype}{float}\ max\ =\ -\/INFINITY;}
+\DoxyCodeLine{01559\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01560\ \ \ \ \ \ \ \ \ max\ =\ MAX(max,\ x[i]);}
+\DoxyCodeLine{01561\ \ \ \ \ \}}
+\DoxyCodeLine{01562\ \ \ \ \ *s\ =\ max;}
+\DoxyCodeLine{01563\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01564\ \ \ \ \ vDSP\_maxv(x,\ 1,\ s,\ n);}
+\DoxyCodeLine{01565\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01566\ \}}
+\DoxyCodeLine{01567\ }
+\DoxyCodeLine{01568\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_norm\_inv\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ s,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01569\ \ \ \ \ ggml\_vec\_norm\_f32(n,\ s,\ x);}
+\DoxyCodeLine{01570\ \ \ \ \ *s\ =\ 1.f/(*s);}
+\DoxyCodeLine{01571\ \}}
+\DoxyCodeLine{01572\ }
+\DoxyCodeLine{01573\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_vec\_argmax\_f32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{int}\ *\ s,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x)\ \{}
+\DoxyCodeLine{01574\ \ \ \ \ \textcolor{keywordtype}{float}\ max\ =\ -\/INFINITY;}
+\DoxyCodeLine{01575\ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ 0;}
+\DoxyCodeLine{01576\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{01577\ \ \ \ \ \ \ \ \ max\ =\ MAX(max,\ x[i]);}
+\DoxyCodeLine{01578\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (max\ ==\ x[i])\ \{\ idx\ =\ i;\ \}}
+\DoxyCodeLine{01579\ \ \ \ \ \}}
+\DoxyCodeLine{01580\ \ \ \ \ *s\ =\ idx;}
+\DoxyCodeLine{01581\ \}}
+\DoxyCodeLine{01582\ }
+\DoxyCodeLine{01583\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{01584\ \}}
+\DoxyCodeLine{01585\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

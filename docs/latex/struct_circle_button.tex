@@ -1,0 +1,91 @@
+\doxysection{Circle\+Button Struct Reference}
+\hypertarget{struct_circle_button}{}\label{struct_circle_button}\index{CircleButton@{CircleButton}}
+
+
+Circular button UI component.  
+
+
+
+
+{\ttfamily \+\#include $<$UIWidgets.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{struct_circle_button_aaa5a241f8b0bfeead502a75084e2871b}{hit}} (sf::\+\+Vector2f p) const
+\begin{DoxyCompactList}\small\item\em Checks if a point is inside the button. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_circle_button_a8a38278721d47f59121d750aaa9dcd44}{draw}} (sf::\+\+Render\+Window \&win, const sf::\+\+Font \&font, sf::\+\+Vector2f mouse) const
+\begin{DoxyCompactList}\small\item\em Draws the button. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_circle_button_a4f8c1e800142bd003d588d3d5d81f694}\label{struct_circle_button_a4f8c1e800142bd003d588d3d5d81f694} 
+float {\bfseries cx}
+\item 
+\Hypertarget{struct_circle_button_a4f411a3bcfb2f6af0ad6e832bcfa9083}\label{struct_circle_button_a4f411a3bcfb2f6af0ad6e832bcfa9083} 
+float {\bfseries cy}
+\item 
+\Hypertarget{struct_circle_button_a968063c85022a1a373e0fd0045f6197e}\label{struct_circle_button_a968063c85022a1a373e0fd0045f6197e} 
+float {\bfseries r}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Circular button UI component. 
+
+Typically used for navigation (e.\+g., back button).
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{struct_circle_button_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_circle_button_a8a38278721d47f59121d750aaa9dcd44}\index{CircleButton@{CircleButton}!draw@{draw}}
+\index{draw@{draw}!CircleButton@{CircleButton}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily \label{struct_circle_button_a8a38278721d47f59121d750aaa9dcd44} 
+void Circle\+Button::\+draw (\begin{DoxyParamCaption}\item[{sf::\+\+Render\+Window \&}]{win}{, }\item[{const sf::\+\+Font \&}]{font}{, }\item[{sf::\+\+Vector2f}]{mouse}{}\end{DoxyParamCaption}) const}
+
+
+
+Draws the button. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & Render window. \\
+\hline
+{\em font} & Font used for icon/\+text. \\
+\hline
+{\em mouse} & Current mouse position (for hover effect). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_circle_button_aaa5a241f8b0bfeead502a75084e2871b}\index{CircleButton@{CircleButton}!hit@{hit}}
+\index{hit@{hit}!CircleButton@{CircleButton}}
+\doxysubsubsection{\texorpdfstring{hit()}{hit()}}
+{\footnotesize\ttfamily \label{struct_circle_button_aaa5a241f8b0bfeead502a75084e2871b} 
+bool Circle\+Button::\+hit (\begin{DoxyParamCaption}\item[{sf::\+\+Vector2f}]{p}{}\end{DoxyParamCaption}) const}
+
+
+
+Checks if a point is inside the button. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Mouse position. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if inside. 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_u_i_widgets_8h}{UIWidgets.\+h}}\item 
+UIWidgets.\+cpp\end{DoxyCompactItemize}

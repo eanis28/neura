@@ -1,0 +1,85 @@
+\doxysection{presets.\+hpp}
+\hypertarget{presets_8hpp_source}{}\label{presets_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/presets.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/presets.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2024\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_PRESETS\_HPP}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_PRESETS\_HPP}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_MAX\_STREAMS\ \ \ \ \ \ \ 8}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_MAX\_BUFFERS\ \ \ \ \ \ \ 256}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ WARP\_SIZE\ GGML\_SYCL\_WARP\_SIZE}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ MATRIX\_ROW\_PADDING\ 512\ }\textcolor{comment}{//\ last\ row\ of\ quant.\ matrices\ is\ a\ multiple\ of\ this\ to\ avoid\ out-\/of-\/bounds\ memory\ accesses}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ SYCL\_GELU\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SYCL\_SILU\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SYCL\_TANH\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SYCL\_RELU\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ SYCL\_HARDSIGMOID\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ SYCL\_HARDSWISH\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ SYCL\_EXP\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ SYCL\_NEG\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ SYCL\_SIGMOID\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ SYCL\_SQRT\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ SYCL\_SIN\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ SYCL\_SQR\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ SYCL\_SET\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ SYCL\_CPY\_BLOCK\_SIZE\ 32}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ SYCL\_SCALE\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ SYCL\_CLAMP\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ SYCL\_ROPE\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ SYCL\_ALIBI\_BLOCK\_SIZE\ 32}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ SYCL\_DIAG\_MASK\_INF\_BLOCK\_SIZE\ 32}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ SYCL\_QUANTIZE\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ SYCL\_DEQUANTIZE\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ SYCL\_GET\_ROWS\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ SYCL\_UPSCALE\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ SYCL\_CONCAT\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ SYCL\_PAD\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ SYCL\_ACC\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ SYCL\_IM2COL\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ SYCL\_POOL2D\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ SYCL\_ARGMAX\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ SYCL\_CONV\_TRANPOSE\_1D\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ SYCL\_TIMESTEP\_EMBEDDING\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ SYCL\_ARANGE\_BLOCK\_SIZE\ 256}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ dmmv\ =\ dequantize\_mul\_mat\_vec}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_DMMV\_X}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_DMMV\_X\ 32}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_MMV\_Y}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_MMV\_Y\ 1}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#ifndef\ K\_QUANTS\_PER\_ITERATION}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ K\_QUANTS\_PER\_ITERATION\ 2}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00066\ \textcolor{keyword}{static\_assert}(K\_QUANTS\_PER\_ITERATION\ ==\ 1\ ||\ K\_QUANTS\_PER\_ITERATION\ ==\ 2,\ \textcolor{stringliteral}{"{}K\_QUANTS\_PER\_ITERATION\ must\ be\ 1\ or\ 2"{}});}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_PEER\_MAX\_BATCH\_SIZE}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_PEER\_MAX\_BATCH\_SIZE\ 128}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_PEER\_MAX\_BATCH\_SIZE}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ MUL\_MAT\_SRC1\_COL\_STRIDE\ 128}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ QK\_WARP\_SIZE\ 32}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ WARP\_32\_SIZE\ 32}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ WARP\_16\_SIZE\ 16}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_PRESETS\_HPP}}
+
+\end{DoxyCode}

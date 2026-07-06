@@ -1,0 +1,416 @@
+\doxysection{Voice\+Command\+Listener Class Reference}
+\hypertarget{class_voice_command_listener}{}\label{class_voice_command_listener}\index{VoiceCommandListener@{VoiceCommandListener}}
+
+
+Handles speech recognition and voice-\/command processing for Neura.  
+
+
+
+
+{\ttfamily \+\#include $<$Voice\+Command\+Listener.\+h$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request}{Pending\+Calendar\+Request}}
+\begin{DoxyCompactList}\small\item\em Stores information for a calendar event being created through voice prompts. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247a}{Calendar\+Prompt\+Step}} \{ \newline
+\doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aab50339a10e1de285ac99d4c3990b8693}{NONE}}
+, \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aa8f696bec03db96fb2a63980d8760fdcb}{ASK\+\_\+\+TITLE}}
+, \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aa0314ad9163fbabbad97a54f3bca37e8b}{ASK\+\_\+\+WHEN}}
+, \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aad40cda581867e9748dbc9aa432bb07b5}{ASK\+\_\+\+DURATION}}
+, \newline
+\doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aad3e1677b5d191507cbeb848847c4d4f7}{ASK\+\_\+\+RECURRENCE}}
+ \}
+\begin{DoxyCompactList}\small\item\em Represents the current step in a multi-\/step calendar event prompt. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_voice_command_listener_a73ebfb0fe314ef45d56dd8935ba6d282}{Voice\+Command\+Listener}} (const std::\+string \&model\+Path, \doxymbox{\hyperlink{struct_shared_audio_buffer}{Shared\+Audio\+Buffer}} \&shared\+Buf, std::\+atomic$<$ bool $>$ \&mic\+Muted, \doxymbox{\hyperlink{struct_shared_response}{Shared\+Response}} \&shared\+Response)
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{class_voice_command_listener}{Voice\+Command\+Listener} object. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_voice_command_listener_a3549ca73ac8aaa2087dc4d2b61066b54}{\texorpdfstring{$\sim$}{\string~}\+Voice\+Command\+Listener}} ()
+\begin{DoxyCompactList}\small\item\em Destroys the \doxylink{class_voice_command_listener}{Voice\+Command\+Listener} object. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_voice_command_listener_a249eb1518a7d6f355a9fa9d065a9a066}{start}} ()
+\begin{DoxyCompactList}\small\item\em Starts the voice command listener. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_voice_command_listener_a2893b72a70288b053f19093b14be0c74}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stops the voice command listener. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{class_voice_command_listener_a684a74fc7b528b58be4862f6b656027e}{run\+Loop}} ()
+\begin{DoxyCompactList}\small\item\em Runs the main background listening loop. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_voice_command_listener_a082d7dd5337c8cfa0b9f739e25338fe2}{dispatch}} (const std::\+string \&text)
+\begin{DoxyCompactList}\small\item\em Dispatches a recognized voice command. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_voice_command_listener_a68e10ba623f039a8344bc8414c689476}{respond}} (const std::\+string \&msg)
+\begin{DoxyCompactList}\small\item\em Sends a response message back to the user. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_voice_command_listener_a8613df4bdd7cf5e131d3e2e1b977b96b}{finish\+Pending\+Calendar\+Request}} ()
+\begin{DoxyCompactList}\small\item\em Finalizes a pending calendar event request. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+whisper\+\_\+context \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_voice_command_listener_a22083284d9c6e06df2756689e11539b7}{m\+\_\+ctx}} = nullptr
+\item 
+\doxymbox{\hyperlink{struct_shared_audio_buffer}{Shared\+Audio\+Buffer}} \& \doxymbox{\hyperlink{class_voice_command_listener_a17b0d1c84a0d347a2e4443e3a04521a6}{m\+\_\+buf}}
+\item 
+std::\+atomic$<$ bool $>$ \& \doxymbox{\hyperlink{class_voice_command_listener_a0471c4f2b280f2c7db4efe147ce24fca}{m\+\_\+mic\+Muted}}
+\item 
+\doxymbox{\hyperlink{struct_shared_response}{Shared\+Response}} \& \doxymbox{\hyperlink{class_voice_command_listener_a7e2c6f4d69abbb4276c712216d531146}{m\+\_\+response}}
+\item 
+std::\+atomic$<$ bool $>$ \doxymbox{\hyperlink{class_voice_command_listener_a805cf5f28d4b2f551fc1e76c76ff2b6e}{m\+\_\+running}} \{false\}
+\item 
+std::\+thread \doxymbox{\hyperlink{class_voice_command_listener_aad68d14a3a666e00f1e3262598ae6406}{m\+\_\+thread}}
+\item 
+std::\+atomic$<$ bool $>$ \doxymbox{\hyperlink{class_voice_command_listener_a64d469febd29fbd56b3967860fea8696}{m\+\_\+assistant\+Paused}} \{false\}
+\item 
+\doxymbox{\hyperlink{class_timer_action}{Timer\+Action}} \doxymbox{\hyperlink{class_voice_command_listener_a467904bcf62acfec2b66756462c7c298}{m\+\_\+timer}}
+\item 
+\doxymbox{\hyperlink{class_system_command_action}{System\+Command\+Action}} \doxymbox{\hyperlink{class_voice_command_listener_abe81c4dddd7bfec2ade1328bdb9a32c9}{m\+\_\+sys}}
+\item 
+\doxymbox{\hyperlink{class_configuration}{Configuration}} \doxymbox{\hyperlink{class_voice_command_listener_a0bf25e79e3d2bad258c7381278ffce3d}{m\+\_\+config}} \{"{}config.\+ini"{}\}
+\item 
+\doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request}{Pending\+Calendar\+Request}} \doxymbox{\hyperlink{class_voice_command_listener_ac65aece90a6a65ef99c7b36b7ea0506a}{m\+\_\+pending\+Calendar}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr int \doxymbox{\hyperlink{class_voice_command_listener_ae23922fdfcc68c1db5efee8a768ff375}{WINDOW\+\_\+\+SECONDS}} = 3
+\item 
+static constexpr int \doxymbox{\hyperlink{class_voice_command_listener_a7e3a78294dc0291a9ac09121294f6d5c}{SAMPLE\+\_\+\+RATE}} = 16000
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles speech recognition and voice-\/command processing for Neura. 
+
+This class is responsible for continuously listening to microphone input, converting spoken audio into text using Whisper, and dispatching recognized commands to the appropriate actions in the system.
+
+It also manages multi-\/step voice interactions such as creating calendar events by prompting the user for missing details step by step. 
+
+\label{doc-enum-members}
+\Hypertarget{class_voice_command_listener_doc-enum-members}
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247a}\index{VoiceCommandListener@{VoiceCommandListener}!CalendarPromptStep@{CalendarPromptStep}}
+\index{CalendarPromptStep@{CalendarPromptStep}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{CalendarPromptStep}{CalendarPromptStep}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247a} 
+enum class \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247a}{Voice\+Command\+Listener::\+\+Calendar\+Prompt\+Step}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Represents the current step in a multi-\/step calendar event prompt. 
+
+This enum is used to track which piece of information the assistant is currently asking the user for when building a calendar event request. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NONE@{NONE}!VoiceCommandListener@{VoiceCommandListener}}
+\index{VoiceCommandListener@{VoiceCommandListener}!NONE@{NONE}}
+}\Hypertarget{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aab50339a10e1de285ac99d4c3990b8693}\label{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aab50339a10e1de285ac99d4c3990b8693} 
+NONE&No calendar interaction is currently in progress. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ASK\_TITLE@{ASK\_TITLE}!VoiceCommandListener@{VoiceCommandListener}}
+\index{VoiceCommandListener@{VoiceCommandListener}!ASK\_TITLE@{ASK\_TITLE}}
+}\Hypertarget{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aa8f696bec03db96fb2a63980d8760fdcb}\label{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aa8f696bec03db96fb2a63980d8760fdcb} 
+ASK\+\_\+\+TITLE&\doxylink{requirements_The}{The} assistant is asking for the event title. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ASK\_WHEN@{ASK\_WHEN}!VoiceCommandListener@{VoiceCommandListener}}
+\index{VoiceCommandListener@{VoiceCommandListener}!ASK\_WHEN@{ASK\_WHEN}}
+}\Hypertarget{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aa0314ad9163fbabbad97a54f3bca37e8b}\label{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aa0314ad9163fbabbad97a54f3bca37e8b} 
+ASK\+\_\+\+WHEN&\doxylink{requirements_The}{The} assistant is asking for the date and time. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ASK\_DURATION@{ASK\_DURATION}!VoiceCommandListener@{VoiceCommandListener}}
+\index{VoiceCommandListener@{VoiceCommandListener}!ASK\_DURATION@{ASK\_DURATION}}
+}\Hypertarget{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aad40cda581867e9748dbc9aa432bb07b5}\label{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aad40cda581867e9748dbc9aa432bb07b5} 
+ASK\+\_\+\+DURATION&\doxylink{requirements_The}{The} assistant is asking for the duration. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ASK\_RECURRENCE@{ASK\_RECURRENCE}!VoiceCommandListener@{VoiceCommandListener}}
+\index{VoiceCommandListener@{VoiceCommandListener}!ASK\_RECURRENCE@{ASK\_RECURRENCE}}
+}\Hypertarget{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aad3e1677b5d191507cbeb848847c4d4f7}\label{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aad3e1677b5d191507cbeb848847c4d4f7} 
+ASK\+\_\+\+RECURRENCE&\doxylink{requirements_The}{The} assistant is asking for the recurrence type. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-constructors}
+\Hypertarget{class_voice_command_listener_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_voice_command_listener_a73ebfb0fe314ef45d56dd8935ba6d282}\index{VoiceCommandListener@{VoiceCommandListener}!VoiceCommandListener@{VoiceCommandListener}}
+\index{VoiceCommandListener@{VoiceCommandListener}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{VoiceCommandListener()}{VoiceCommandListener()}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a73ebfb0fe314ef45d56dd8935ba6d282} 
+Voice\+Command\+Listener::\+\+Voice\+Command\+Listener (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{model\+Path}{, }\item[{\doxymbox{\hyperlink{struct_shared_audio_buffer}{Shared\+Audio\+Buffer}} \&}]{shared\+Buf}{, }\item[{std::\+atomic$<$ bool $>$ \&}]{mic\+Muted}{, }\item[{\doxymbox{\hyperlink{struct_shared_response}{Shared\+Response}} \&}]{shared\+Response}{}\end{DoxyParamCaption})}
+
+
+
+Constructs a \doxylink{class_voice_command_listener}{Voice\+Command\+Listener} object. 
+
+Constructs a {\ttfamily \doxylink{class_voice_command_listener}{Voice\+Command\+Listener}} and loads the Whisper model.
+
+Initializes the listener with the Whisper model path, shared audio buffer, microphone mute state, and shared response object used by the UI.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+Path} & Path to the Whisper model file. \\
+\hline
+{\em shared\+Buf} & Shared audio buffer containing microphone input samples. \\
+\hline
+{\em mic\+Muted} & Shared atomic flag indicating whether the microphone is muted. \\
+\hline
+{\em shared\+Response} & Shared response object used to display assistant replies.\\
+\hline
+\end{DoxyParams}
+Initializes shared references used for microphone input and UI responses, loads configuration settings, and attempts to create the Whisper context.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+Path} & Path to the Whisper model file. \\
+\hline
+{\em shared\+Buf} & Shared microphone audio buffer. \\
+\hline
+{\em mic\+Muted} & Shared flag indicating whether the microphone is muted. \\
+\hline
+{\em shared\+Response} & Shared response object used by the UI. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_voice_command_listener_a3549ca73ac8aaa2087dc4d2b61066b54}\index{VoiceCommandListener@{VoiceCommandListener}!````~VoiceCommandListener@{\texorpdfstring{$\sim$}{\string~}VoiceCommandListener}}
+\index{````~VoiceCommandListener@{\texorpdfstring{$\sim$}{\string~}VoiceCommandListener}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}VoiceCommandListener()}{\string~VoiceCommandListener()}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a3549ca73ac8aaa2087dc4d2b61066b54} 
+Voice\+Command\+Listener::\+\texorpdfstring{$\sim$}{\string~}\+Voice\+Command\+Listener (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Destroys the \doxylink{class_voice_command_listener}{Voice\+Command\+Listener} object. 
+
+Destroys the {\ttfamily \doxylink{class_voice_command_listener}{Voice\+Command\+Listener}}.
+
+Ensures resources such as threads and Whisper context are properly cleaned up.
+
+Stops the background thread and frees the Whisper context if it exists. 
+
+\label{doc-func-members}
+\Hypertarget{class_voice_command_listener_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_voice_command_listener_a082d7dd5337c8cfa0b9f739e25338fe2}\index{VoiceCommandListener@{VoiceCommandListener}!dispatch@{dispatch}}
+\index{dispatch@{dispatch}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{dispatch()}{dispatch()}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a082d7dd5337c8cfa0b9f739e25338fe2} 
+void Voice\+Command\+Listener::\+dispatch (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{text}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Dispatches a recognized voice command. 
+
+Interprets and executes a recognized voice command.
+
+Interprets the given text and triggers the corresponding action, such as timers, system commands, or calendar actions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em text} & \doxylink{requirements_The}{The} recognized voice command text.\\
+\hline
+\end{DoxyParams}
+This method routes normalized user speech to the appropriate feature, including calendar creation, pause/\+resume commands, timers, system actions, clipboard operations, weather queries, media controls, and song playback.
+
+
+\begin{DoxyParams}{Parameters}
+{\em text} & \doxylink{requirements_The}{The} normalized recognized speech command. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_voice_command_listener_a8613df4bdd7cf5e131d3e2e1b977b96b}\index{VoiceCommandListener@{VoiceCommandListener}!finishPendingCalendarRequest@{finishPendingCalendarRequest}}
+\index{finishPendingCalendarRequest@{finishPendingCalendarRequest}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{finishPendingCalendarRequest()}{finishPendingCalendarRequest()}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a8613df4bdd7cf5e131d3e2e1b977b96b} 
+bool Voice\+Command\+Listener::\+finish\+Pending\+Calendar\+Request (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalizes a pending calendar event request. 
+
+Finalizes and submits a pending calendar event request.
+
+Uses the collected event details to create the calendar event through the appropriate API action.
+
+\begin{DoxyReturn}{Returns}
+true if the calendar event was created successfully, false otherwise.
+\end{DoxyReturn}
+Creates a {\ttfamily \doxylink{struct_calendar_event}{Calendar\+Event}} from the fields collected in the multi-\/step calendar conversation, sends it through the API action, logs the result, and clears the pending request state.
+
+\begin{DoxyReturn}{Returns}
+true if the calendar event was created successfully, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_voice_command_listener_a68e10ba623f039a8344bc8414c689476}\index{VoiceCommandListener@{VoiceCommandListener}!respond@{respond}}
+\index{respond@{respond}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{respond()}{respond()}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a68e10ba623f039a8344bc8414c689476} 
+void Voice\+Command\+Listener::\+respond (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{msg}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Sends a response message back to the user. 
+
+Sends a spoken and on-\/screen response to the user.
+
+Updates the shared response object so the UI can display or speak the assistant\textquotesingle{}s reply.
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & \doxylink{requirements_The}{The} message to respond with.\\
+\hline
+\end{DoxyParams}
+Updates the shared UI response text and launches asynchronous text-\/to-\/speech playback using the current voice and volume settings.
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & \doxylink{requirements_The}{The} message to display and speak. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_voice_command_listener_a684a74fc7b528b58be4862f6b656027e}\index{VoiceCommandListener@{VoiceCommandListener}!runLoop@{runLoop}}
+\index{runLoop@{runLoop}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{runLoop()}{runLoop()}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a684a74fc7b528b58be4862f6b656027e} 
+bool Voice\+Command\+Listener::\+run\+Loop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Runs the main background listening loop. 
+
+Runs the main microphone listening and speech recognition loop.
+
+Captures microphone input, processes audio with Whisper, and forwards recognized text to the dispatcher.
+
+\begin{DoxyReturn}{Returns}
+true if the loop ran successfully, false otherwise.
+\end{DoxyReturn}
+This function waits for speech to begin, captures audio until silence is detected, resamples the audio to Whisper\textquotesingle{}s expected sample rate, runs speech recognition, normalizes the resulting transcript, and dispatches recognized commands for execution.
+
+\begin{DoxyReturn}{Returns}
+true when the loop exits normally. 
+\end{DoxyReturn}
+\Hypertarget{class_voice_command_listener_a249eb1518a7d6f355a9fa9d065a9a066}\index{VoiceCommandListener@{VoiceCommandListener}!start@{start}}
+\index{start@{start}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a249eb1518a7d6f355a9fa9d065a9a066} 
+bool Voice\+Command\+Listener::\+start (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Starts the voice command listener. 
+
+Starts the background voice listening thread.
+
+Begins the background listening loop that captures audio, performs speech recognition, and processes recognized commands.
+
+\begin{DoxyReturn}{Returns}
+true if the listener started successfully, false otherwise.
+
+true if the listener starts successfully, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_voice_command_listener_a2893b72a70288b053f19093b14be0c74}\index{VoiceCommandListener@{VoiceCommandListener}!stop@{stop}}
+\index{stop@{stop}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a2893b72a70288b053f19093b14be0c74} 
+void Voice\+Command\+Listener::\+stop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops the voice command listener. 
+
+Stops the background voice listening thread.
+
+Ends the background listening process and stops command recognition.
+
+Signals the listener loop to stop and joins the worker thread if needed. 
+
+\label{doc-variable-members}
+\Hypertarget{class_voice_command_listener_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_voice_command_listener_a64d469febd29fbd56b3967860fea8696}\index{VoiceCommandListener@{VoiceCommandListener}!m\_assistantPaused@{m\_assistantPaused}}
+\index{m\_assistantPaused@{m\_assistantPaused}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_assistantPaused}{m\_assistantPaused}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a64d469febd29fbd56b3967860fea8696} 
+std::\+atomic$<$bool$>$ Voice\+Command\+Listener::\+m\+\_\+assistant\+Paused \{false\}\hspace{0.3cm}{\ttfamily [private]}}
+
+Indicates whether the assistant is paused. \Hypertarget{class_voice_command_listener_a17b0d1c84a0d347a2e4443e3a04521a6}\index{VoiceCommandListener@{VoiceCommandListener}!m\_buf@{m\_buf}}
+\index{m\_buf@{m\_buf}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_buf}{m\_buf}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a17b0d1c84a0d347a2e4443e3a04521a6} 
+\doxymbox{\hyperlink{struct_shared_audio_buffer}{Shared\+Audio\+Buffer}}\& Voice\+Command\+Listener::\+m\+\_\+buf\hspace{0.3cm}{\ttfamily [private]}}
+
+Shared audio buffer containing recorded microphone audio. \Hypertarget{class_voice_command_listener_a0bf25e79e3d2bad258c7381278ffce3d}\index{VoiceCommandListener@{VoiceCommandListener}!m\_config@{m\_config}}
+\index{m\_config@{m\_config}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_config}{m\_config}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a0bf25e79e3d2bad258c7381278ffce3d} 
+\doxymbox{\hyperlink{class_configuration}{Configuration}} Voice\+Command\+Listener::\+m\+\_\+config \{"{}config.\+ini"{}\}\hspace{0.3cm}{\ttfamily [private]}}
+
+Loads configuration settings from file. \Hypertarget{class_voice_command_listener_a22083284d9c6e06df2756689e11539b7}\index{VoiceCommandListener@{VoiceCommandListener}!m\_ctx@{m\_ctx}}
+\index{m\_ctx@{m\_ctx}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_ctx}{m\_ctx}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a22083284d9c6e06df2756689e11539b7} 
+whisper\+\_\+context\texorpdfstring{$\ast$}{*} Voice\+Command\+Listener::\+m\+\_\+ctx = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+Whisper context used for speech recognition. \Hypertarget{class_voice_command_listener_a0471c4f2b280f2c7db4efe147ce24fca}\index{VoiceCommandListener@{VoiceCommandListener}!m\_micMuted@{m\_micMuted}}
+\index{m\_micMuted@{m\_micMuted}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_micMuted}{m\_micMuted}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a0471c4f2b280f2c7db4efe147ce24fca} 
+std::\+atomic$<$bool$>$\& Voice\+Command\+Listener::\+m\+\_\+mic\+Muted\hspace{0.3cm}{\ttfamily [private]}}
+
+Shared flag indicating whether the microphone is muted. \Hypertarget{class_voice_command_listener_ac65aece90a6a65ef99c7b36b7ea0506a}\index{VoiceCommandListener@{VoiceCommandListener}!m\_pendingCalendar@{m\_pendingCalendar}}
+\index{m\_pendingCalendar@{m\_pendingCalendar}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_pendingCalendar}{m\_pendingCalendar}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_ac65aece90a6a65ef99c7b36b7ea0506a} 
+\doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request}{Pending\+Calendar\+Request}} Voice\+Command\+Listener::\+m\+\_\+pending\+Calendar\hspace{0.3cm}{\ttfamily [private]}}
+
+Stores the current in-\/progress calendar request. \Hypertarget{class_voice_command_listener_a7e2c6f4d69abbb4276c712216d531146}\index{VoiceCommandListener@{VoiceCommandListener}!m\_response@{m\_response}}
+\index{m\_response@{m\_response}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_response}{m\_response}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a7e2c6f4d69abbb4276c712216d531146} 
+\doxymbox{\hyperlink{struct_shared_response}{Shared\+Response}}\& Voice\+Command\+Listener::\+m\+\_\+response\hspace{0.3cm}{\ttfamily [private]}}
+
+Shared UI response object for assistant replies. \Hypertarget{class_voice_command_listener_a805cf5f28d4b2f551fc1e76c76ff2b6e}\index{VoiceCommandListener@{VoiceCommandListener}!m\_running@{m\_running}}
+\index{m\_running@{m\_running}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_running}{m\_running}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a805cf5f28d4b2f551fc1e76c76ff2b6e} 
+std::\+atomic$<$bool$>$ Voice\+Command\+Listener::\+m\+\_\+running \{false\}\hspace{0.3cm}{\ttfamily [private]}}
+
+Indicates whether the listener is currently running. \Hypertarget{class_voice_command_listener_abe81c4dddd7bfec2ade1328bdb9a32c9}\index{VoiceCommandListener@{VoiceCommandListener}!m\_sys@{m\_sys}}
+\index{m\_sys@{m\_sys}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_sys}{m\_sys}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_abe81c4dddd7bfec2ade1328bdb9a32c9} 
+\doxymbox{\hyperlink{class_system_command_action}{System\+Command\+Action}} Voice\+Command\+Listener::\+m\+\_\+sys\hspace{0.3cm}{\ttfamily [private]}}
+
+Handles OS-\/level system commands. \Hypertarget{class_voice_command_listener_aad68d14a3a666e00f1e3262598ae6406}\index{VoiceCommandListener@{VoiceCommandListener}!m\_thread@{m\_thread}}
+\index{m\_thread@{m\_thread}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_thread}{m\_thread}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_aad68d14a3a666e00f1e3262598ae6406} 
+std::\+thread Voice\+Command\+Listener::\+m\+\_\+thread\hspace{0.3cm}{\ttfamily [private]}}
+
+Background thread running the listening loop. \Hypertarget{class_voice_command_listener_a467904bcf62acfec2b66756462c7c298}\index{VoiceCommandListener@{VoiceCommandListener}!m\_timer@{m\_timer}}
+\index{m\_timer@{m\_timer}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{m\_timer}{m\_timer}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a467904bcf62acfec2b66756462c7c298} 
+\doxymbox{\hyperlink{class_timer_action}{Timer\+Action}} Voice\+Command\+Listener::\+m\+\_\+timer\hspace{0.3cm}{\ttfamily [private]}}
+
+Handles timer-\/related voice commands. \Hypertarget{class_voice_command_listener_a7e3a78294dc0291a9ac09121294f6d5c}\index{VoiceCommandListener@{VoiceCommandListener}!SAMPLE\_RATE@{SAMPLE\_RATE}}
+\index{SAMPLE\_RATE@{SAMPLE\_RATE}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{SAMPLE\_RATE}{SAMPLE\_RATE}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_a7e3a78294dc0291a9ac09121294f6d5c} 
+int Voice\+Command\+Listener::\+\+SAMPLE\+\_\+\+RATE = 16000\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}, {\ttfamily [private]}}
+
+Audio sample rate expected by Whisper. \Hypertarget{class_voice_command_listener_ae23922fdfcc68c1db5efee8a768ff375}\index{VoiceCommandListener@{VoiceCommandListener}!WINDOW\_SECONDS@{WINDOW\_SECONDS}}
+\index{WINDOW\_SECONDS@{WINDOW\_SECONDS}!VoiceCommandListener@{VoiceCommandListener}}
+\doxysubsubsection{\texorpdfstring{WINDOW\_SECONDS}{WINDOW\_SECONDS}}
+{\footnotesize\ttfamily \label{class_voice_command_listener_ae23922fdfcc68c1db5efee8a768ff375} 
+int Voice\+Command\+Listener::\+\+WINDOW\+\_\+\+SECONDS = 3\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}, {\ttfamily [private]}}
+
+Audio window size used for processing. 
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_voice_command_listener_8h}{Voice\+Command\+Listener.\+h}}\item 
+Voice\+Command\+Listener.\+cpp\end{DoxyCompactItemize}

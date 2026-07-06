@@ -1,0 +1,93 @@
+\doxysection{Quick\+Reference.\+h File Reference}
+\hypertarget{_quick_reference_8h}{}\label{_quick_reference_8h}\index{QuickReference.h@{QuickReference.h}}
+
+
+Quick reference guide UI for available commands and gestures.  
+
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{_quick_reference_8h_a8aed6530260fb5b1ed73156b85545965}{run\+Quick\+Reference}} ()
+\begin{DoxyCompactList}\small\item\em Opens the Neura Quick Reference window. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Quick reference guide UI for available commands and gestures. 
+
+\begin{DoxyAuthor}{Author}
+Erina 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{_quick_reference_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_quick_reference_8h_a8aed6530260fb5b1ed73156b85545965}\index{QuickReference.h@{QuickReference.h}!runQuickReference@{runQuickReference}}
+\index{runQuickReference@{runQuickReference}!QuickReference.h@{QuickReference.h}}
+\doxysubsubsection{\texorpdfstring{runQuickReference()}{runQuickReference()}}
+{\footnotesize\ttfamily \label{_quick_reference_8h_a8aed6530260fb5b1ed73156b85545965} 
+void run\+Quick\+Reference (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Opens the Neura Quick Reference window. 
+
+Launches a separate, non-\/blocking window that displays a structured overview of all assistant capabilities, including:\+
+
+
+\begin{DoxyItemize}
+\item Voice commands (e.\+g., time, screenshot, volume, brightness)
+\item System controls (tabs, windows, recording, reading text)
+\item Gesture interactions (cursor movement, drag, cancel, yes/\+no)
+\item Advanced features (weather, media playback, calendar events, search)
+\item General usage tips and shortcuts
+\end{DoxyItemize}
+
+This window runs independently of the main UI and does not interrupt or close the primary assistant interface.
+
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Erina
+\end{DoxyAuthor}
+Opens the Neura Quick Reference window.
+
+Creates a scrollable SFML window displaying categorized voice commands and gesture controls for Neura. \doxylink{requirements_The}{The} content is rendered as a vertical list with section headers and command descriptions.
+
+Features:\+
+\begin{DoxyItemize}
+\item Platform-\/specific font loading
+\item Scrollable content using mouse wheel
+\item Automatic layout generation from item list
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Note}
+\doxylink{requirements_The}{The} window runs its own event loop and blocks until closed. 
+\end{DoxyNote}
+Main application window
+
+Font used for all UI text
+
+List of all UI items (headers + commands)
+
+Pre-\/built drawable text objects for rendering
+
+Current vertical layout position
+
+Build text elements from item list.
+
+Converts each \doxylink{struct_item}{Item} into one or two sf::\+\+Text objects depending on type. Handles spacing and layout positioning.
+
+Align description next to command text
+
+Total height of all content (used for scrolling bounds)
+
+Current vertical scroll offset
+
+Main render and event loop.
+
+Handles window events, scrolling, and drawing UI elements.
+
+Clamp scroll range

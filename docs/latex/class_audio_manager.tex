@@ -1,0 +1,118 @@
+\doxysection{Audio\+Manager Class Reference}
+\hypertarget{class_audio_manager}{}\label{class_audio_manager}\index{AudioManager@{AudioManager}}
+
+
+Manages microphone audio input using Port\+Audio.  
+
+
+
+
+{\ttfamily \+\#include $<$Audio\+Manager.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_manager_acf874f9a7a4e09b4720d40e2ede4bfd0}\label{class_audio_manager_acf874f9a7a4e09b4720d40e2ede4bfd0} 
+{\bfseries Audio\+Manager} ()=default
+\begin{DoxyCompactList}\small\item\em Constructs an \doxylink{class_audio_manager}{Audio\+Manager} object. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_audio_manager_ad94dc46723c6d7cf8c81fc3772a842aa}{\texorpdfstring{$\sim$}{\string~}\+Audio\+Manager}} ()
+\begin{DoxyCompactList}\small\item\em Destroys the \doxylink{class_audio_manager}{Audio\+Manager} object. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_audio_manager_a90edfcce7ec6cce06f2449c6e1182059}{init}} (int mic\+Index)
+\begin{DoxyCompactList}\small\item\em Initializes and starts the Port\+Audio input stream. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_audio_manager_a9d9d7ef0f5570ab1269ad54358cd3052}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stops the active Port\+Audio stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Pa\+Stream \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_audio_manager_a1e4c3e2caa02c387b00942a827c15e20}{m\+\_\+stream}} = nullptr
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages microphone audio input using Port\+Audio. 
+
+This class wraps the lifecycle of a Port\+Audio input stream. It is responsible for initializing the selected microphone, starting the input stream, and stopping and cleaning up audio resources when finished. 
+
+\label{doc-constructors}
+\Hypertarget{class_audio_manager_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_audio_manager_ad94dc46723c6d7cf8c81fc3772a842aa}\index{AudioManager@{AudioManager}!````~AudioManager@{\texorpdfstring{$\sim$}{\string~}AudioManager}}
+\index{````~AudioManager@{\texorpdfstring{$\sim$}{\string~}AudioManager}!AudioManager@{AudioManager}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}AudioManager()}{\string~AudioManager()}}
+{\footnotesize\ttfamily \label{class_audio_manager_ad94dc46723c6d7cf8c81fc3772a842aa} 
+Audio\+Manager::\+\texorpdfstring{$\sim$}{\string~}\+Audio\+Manager (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Destroys the \doxylink{class_audio_manager}{Audio\+Manager} object. 
+
+Ensures that the Port\+Audio stream is stopped and cleaned up.
+
+Ensures that the Port\+Audio stream is properly stopped and cleaned up. 
+
+\label{doc-func-members}
+\Hypertarget{class_audio_manager_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_audio_manager_a90edfcce7ec6cce06f2449c6e1182059}\index{AudioManager@{AudioManager}!init@{init}}
+\index{init@{init}!AudioManager@{AudioManager}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily \label{class_audio_manager_a90edfcce7ec6cce06f2449c6e1182059} 
+bool Audio\+Manager::\+init (\begin{DoxyParamCaption}\item[{int}]{mic\+Index}{}\end{DoxyParamCaption})}
+
+
+
+Initializes and starts the Port\+Audio input stream. 
+
+Initializes and starts the Port\+Audio microphone input stream.
+
+Opens the microphone stream for the given input device index and begins capturing audio samples.
+
+
+\begin{DoxyParams}{Parameters}
+{\em mic\+Index} & \doxylink{requirements_The}{The} index of the microphone input device to use. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if initialization succeeded, false if no valid input device was available or the stream could not be opened.
+\end{DoxyReturn}
+This function initializes Port\+Audio, selects either the requested microphone device or the default input device, configures the stream parameters, opens the input stream, and starts audio capture.
+
+
+\begin{DoxyParams}{Parameters}
+{\em mic\+Index} & \doxylink{requirements_The}{The} index of the microphone device to use. If {\ttfamily -\/1}, the default input device is used. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the input stream was started successfully, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_audio_manager_a9d9d7ef0f5570ab1269ad54358cd3052}\index{AudioManager@{AudioManager}!stop@{stop}}
+\index{stop@{stop}!AudioManager@{AudioManager}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily \label{class_audio_manager_a9d9d7ef0f5570ab1269ad54358cd3052} 
+void Audio\+Manager::\+stop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops the active Port\+Audio stream. 
+
+Stops and closes the active Port\+Audio stream.
+
+Closes the microphone input stream if it is currently running.
+
+If an audio stream is currently open, this function stops it, closes it, resets the stream pointer, and terminates Port\+Audio. 
+
+\label{doc-variable-members}
+\Hypertarget{class_audio_manager_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_audio_manager_a1e4c3e2caa02c387b00942a827c15e20}\index{AudioManager@{AudioManager}!m\_stream@{m\_stream}}
+\index{m\_stream@{m\_stream}!AudioManager@{AudioManager}}
+\doxysubsubsection{\texorpdfstring{m\_stream}{m\_stream}}
+{\footnotesize\ttfamily \label{class_audio_manager_a1e4c3e2caa02c387b00942a827c15e20} 
+Pa\+Stream\texorpdfstring{$\ast$}{*} Audio\+Manager::\+m\+\_\+stream = nullptr\hspace{0.3cm}{\ttfamily [private]}}
+
+Pointer to the active Port\+Audio stream. 
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_audio_manager_8h}{Audio\+Manager.\+h}}\item 
+Audio\+Manager.\+cpp\end{DoxyCompactItemize}

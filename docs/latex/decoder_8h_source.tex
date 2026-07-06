@@ -1,0 +1,80 @@
+\doxysection{decoder.\+h}
+\hypertarget{decoder_8h_source}{}\label{decoder_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/openvino/decoder.h@{whisper.cpp/ggml/src/ggml-\/openvino/openvino/decoder.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <openvino/core/node.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <openvino/frontend/decoder.hpp>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }ov\ \{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }frontend\ \{}
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }ggml\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classov_1_1frontend_1_1ggml_1_1_ggml_decoder}{GgmlDecoder}}\ :\ \textcolor{keyword}{public}\ DecoderBase\ \{}
+\DoxyCodeLine{00014\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{virtual}\ ov::Any\ get\_attribute(\textcolor{keyword}{const}\ std::string\&\ name)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{virtual}\ PartialShape\ get\_input\_shape(\textcolor{keywordtype}{int}\ node\_idx,\ \textcolor{keyword}{const}\ std::string\&\ name)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<size\_t>\ get\_input\_stride(\textcolor{keywordtype}{int}\ node\_idx,\ \textcolor{keyword}{const}\ std::string\&\ name)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{virtual}\ element::Type\ get\_input\_type(\textcolor{keywordtype}{int}\ node\_idx,\ \textcolor{keyword}{const}\ std::string\&\ name)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{size\_t}\ get\_input\_size()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{size\_t}\ get\_input\_size(\textcolor{keywordtype}{int}\ node\_idx)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ get\_input\_node(\textcolor{keywordtype}{size\_t}\ input\_port\_idx,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\&\ producer\_name,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\&\ producer\_output\_port\_name,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\&\ producer\_output\_port\_index)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<std::string>\ get\_input\_names(\textcolor{keywordtype}{int}\ node\_idx)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{virtual}\ PartialShape\ get\_output\_shape(\textcolor{keywordtype}{int}\ node\_idx)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{virtual}\ element::Type\ get\_output\_type(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ node\_idx)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{virtual}\ int32\_t*\ get\_input\_op\_params(\textcolor{keywordtype}{int}\ node\_idx,\ \textcolor{keyword}{const}\ std::string\&\ name)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{virtual}\ int32\_t\ *\ get\_output\_op\_params(\textcolor{keywordtype}{int}\ node\_idx)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<std::string>\ get\_output\_names(\textcolor{keywordtype}{int}\ node\_idx)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ std::string\&\ get\_op\_type()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ std::string\&\ get\_op\_type(\textcolor{keywordtype}{int}\ node\_idx)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ std::string\&\ get\_op\_name()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ std::string\&\ get\_op\_name(\textcolor{keywordtype}{int}\ node\_idx)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ visit\_subgraph(std::function<\textcolor{keywordtype}{void}(std::shared\_ptr<GgmlDecoder>,\ \textcolor{keywordtype}{int}\ node\_idx)>\ node\_visitor)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ get\_op\_case(\textcolor{keywordtype}{int}\ node\_idx)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ std::map<std::string,\ std::shared\_ptr<ov::Node>>\&\ get\_model\_inputs()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ std::map<std::string,\ std::shared\_ptr<ov::Node>>\&\ get\_model\_extra\_inputs()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ std::map<std::string,\ std::shared\_ptr<ov::Node>>\&\ get\_model\_weights()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<std::string>\ get\_model\_output\_names()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{virtual}\ int32\_t*\ get\_rope\_params()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{virtual}\ std::map<std::string,\ std::string>\ get\_kv\_param\_res\_names()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ is\_static()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ is\_stateful()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ is\_swa\_layer(\textcolor{keywordtype}{int}\ layer)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00070\ \};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \}\ \ \textcolor{comment}{//\ namespace\ ggml}}
+\DoxyCodeLine{00073\ \}\ \ \textcolor{comment}{//\ namespace\ frontend}}
+\DoxyCodeLine{00074\ \}\ \ \textcolor{comment}{//\ namespace\ ov}}
+
+\end{DoxyCode}

@@ -1,0 +1,43 @@
+\doxysection{llama\+\_\+mmap Struct Reference}
+\hypertarget{structllama__mmap}{}\label{structllama__mmap}\index{llama\_mmap@{llama\_mmap}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structllama__mmap_1_1impl}{impl}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__mmap_a9621c5f09fb1b4e41719a6cd99836355}\label{structllama__mmap_a9621c5f09fb1b4e41719a6cd99836355} 
+{\bfseries llama\+\_\+mmap} (const \doxymbox{\hyperlink{structllama__mmap}{llama\+\_\+mmap}} \&)=delete
+\item 
+\Hypertarget{structllama__mmap_a7b6162da083b3dc1a0328c72325b8892}\label{structllama__mmap_a7b6162da083b3dc1a0328c72325b8892} 
+{\bfseries llama\+\_\+mmap} (struct \doxymbox{\hyperlink{structllama__file}{llama\+\_\+file}} \texorpdfstring{$\ast$}{*}file, size\+\_\+t prefetch=(size\+\_\+t) -\/1, bool numa=false)
+\item 
+\Hypertarget{structllama__mmap_a9f7882066ee36b1c9c38d0d818af7efe}\label{structllama__mmap_a9f7882066ee36b1c9c38d0d818af7efe} 
+size\+\_\+t {\bfseries size} () const
+\item 
+\Hypertarget{structllama__mmap_af56b784a70a1534cb3c3445fad047050}\label{structllama__mmap_af56b784a70a1534cb3c3445fad047050} 
+void \texorpdfstring{$\ast$}{*} {\bfseries addr} () const
+\item 
+\Hypertarget{structllama__mmap_a7d0e95b176ea3cf4303feb96cff7bf38}\label{structllama__mmap_a7d0e95b176ea3cf4303feb96cff7bf38} 
+void {\bfseries unmap\+\_\+fragment} (size\+\_\+t first, size\+\_\+t last)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__mmap_a5a7d68d9e523d469204da39451d42ace}\label{structllama__mmap_a5a7d68d9e523d469204da39451d42ace} 
+static const bool {\bfseries SUPPORTED} = false
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__mmap_a18e25c9abeb65c2a19ab013f780dfec1}\label{structllama__mmap_a18e25c9abeb65c2a19ab013f780dfec1} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structllama__mmap_1_1impl}{impl}} $>$ {\bfseries pimpl}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/mmap.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/mmap.\+cpp\end{DoxyCompactItemize}

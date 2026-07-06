@@ -1,0 +1,132 @@
+\doxysection{hvx-\/sqrt.h}
+\hypertarget{hvx-sqrt_8h_source}{}\label{hvx-sqrt_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/sqrt.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/sqrt.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HVX\_SQRT\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HVX\_SQRT\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}hex-\/utils.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}hvx-\/base.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ RSQRT\_CONST\ \ \ \ \ \ \ \ 0x5f3759df\ \ }\textcolor{comment}{//\ Constant\ for\ fast\ inverse\ square\ root\ calculation}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ RSQRT\_ONE\_HALF\ \ \ \ \ 0x3f000000\ \ }\textcolor{comment}{//\ 0.5}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ RSQRT\_THREE\_HALVES\ 0x3fc00000\ \ }\textcolor{comment}{//\ 1.5}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ <\ 79}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ HVX\_OP\_MUL(a,\ b)\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vmpy\_VsfVsf(a,\ b))}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ HVX\_OP\_MUL(a,\ b)\ Q6\_Vsf\_vmpy\_VsfVsf(a,\ b)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_rsqrt\_f32(HVX\_Vector\ in\_vec)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//Algorithm\ :}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ \ x2\ =\ input*0.5}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{//\ \ y\ \ =\ *\ (long\ *)\ \&input}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ \ y\ \ =\ 0x5f3759df\ -\/\ (y>>1)}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ \ y\ \ =\ y*(threehalfs\ -\/\ x2*y*y)}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ HVX\_Vector\ rsqrtconst\ =\ Q6\_V\_vsplat\_R(RSQRT\_CONST);}
+\DoxyCodeLine{00029\ \ \ \ \ HVX\_Vector\ onehalf\ \ \ \ =\ Q6\_V\_vsplat\_R(RSQRT\_ONE\_HALF);}
+\DoxyCodeLine{00030\ \ \ \ \ HVX\_Vector\ threehalfs\ =\ Q6\_V\_vsplat\_R(RSQRT\_THREE\_HALVES);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ HVX\_Vector\ x2,\ y,\ ypower2,\ temp;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ x2\ =\ Q6\_Vqf32\_vmpy\_VsfVsf(in\_vec,\ onehalf);}
+\DoxyCodeLine{00035\ \ \ \ \ x2\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(x2,\ Q6\_V\_vzero());}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ y\ =\ Q6\_Vw\_vasr\_VwR(in\_vec,\ 1);}
+\DoxyCodeLine{00038\ \ \ \ \ y\ =\ Q6\_Vw\_vsub\_VwVw(rsqrtconst,\ y);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ 1st\ iteration}}
+\DoxyCodeLine{00041\ \ \ \ \ ypower2\ =\ Q6\_Vqf32\_vmpy\_VsfVsf(y,\ y);}
+\DoxyCodeLine{00042\ \ \ \ \ ypower2\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(ypower2,\ Q6\_V\_vzero());}
+\DoxyCodeLine{00043\ \ \ \ \ temp\ \ \ \ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(x2,\ ypower2);}
+\DoxyCodeLine{00044\ \ \ \ \ temp\ \ \ \ =\ Q6\_Vqf32\_vsub\_VsfVsf(threehalfs,\ Q6\_Vsf\_equals\_Vqf32(temp));}
+\DoxyCodeLine{00045\ \ \ \ \ temp\ \ \ \ =\ Q6\_Vqf32\_vmpy\_VsfVsf(y,\ Q6\_Vsf\_equals\_Vqf32(temp));}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ 2nd\ iteration}}
+\DoxyCodeLine{00048\ \ \ \ \ y\ \ \ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(temp,\ Q6\_V\_vzero());}
+\DoxyCodeLine{00049\ \ \ \ \ ypower2\ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(y,\ y);}
+\DoxyCodeLine{00050\ \ \ \ \ ypower2\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(ypower2,\ Q6\_V\_vzero());}
+\DoxyCodeLine{00051\ \ \ \ \ temp\ \ \ \ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(x2,\ ypower2);}
+\DoxyCodeLine{00052\ \ \ \ \ temp\ \ \ \ =\ Q6\_Vqf32\_vsub\_VsfVsf(threehalfs,\ Q6\_Vsf\_equals\_Vqf32(temp));}
+\DoxyCodeLine{00053\ \ \ \ \ temp\ \ \ \ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(y,\ temp);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ 3rd\ iteration}}
+\DoxyCodeLine{00056\ \ \ \ \ y\ \ \ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(temp,\ Q6\_V\_vzero());}
+\DoxyCodeLine{00057\ \ \ \ \ ypower2\ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(y,\ y);}
+\DoxyCodeLine{00058\ \ \ \ \ ypower2\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(ypower2,\ Q6\_V\_vzero());}
+\DoxyCodeLine{00059\ \ \ \ \ temp\ \ \ \ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(x2,\ ypower2);}
+\DoxyCodeLine{00060\ \ \ \ \ temp\ \ \ \ =\ Q6\_Vqf32\_vsub\_VsfVsf(threehalfs,\ Q6\_Vsf\_equals\_Vqf32(temp));}
+\DoxyCodeLine{00061\ \ \ \ \ temp\ \ \ \ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(y,\ temp);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vsf\_equals\_Vqf32(temp);}
+\DoxyCodeLine{00064\ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ Compute\ sqrt(x)\ as\ x*inv\_sqrt(x)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ hvx\_sqrt\_f32\_loop\_body(dst\_type,\ src\_type,\ vec\_store)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ dst\_type\ *\ restrict\ vdst\ =\ (dst\_type\ *)\ dst;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ src\_type\ *\ restrict\ vsrc\ =\ (src\_type\ *)\ src;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ nvec\ =\ n\ /\ VLEN\_FP32;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ uint32\_t\ nloe\ =\ n\ \%\ VLEN\_FP32;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ uint32\_t\ i\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}unroll(4)"{})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (;\ i\ <\ nvec;\ i++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ inv\_sqrt\ =\ hvx\_vec\_rsqrt\_f32(vsrc[i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ sqrt\_res\ =\ HVX\_OP\_MUL(inv\_sqrt,\ vsrc[i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ vdst[i]\ =\ sqrt\_res;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (nloe)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ inv\_sqrt\ =\ hvx\_vec\_rsqrt\_f32(vsrc[i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ sqrt\_res\ =\ HVX\_OP\_MUL(inv\_sqrt,\ vsrc[i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ vec\_store((void\ *)\ \&vdst[i],\ nloe\ *\ SIZEOF\_FP32,\ sqrt\_res);\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\ \ \ \ \}\ while(0)}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hvx\_sqrt\_f32\_aa(uint8\_t\ *\ restrict\ dst,\ \textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ assert((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ dst\ \%\ 128\ ==\ 0);}
+\DoxyCodeLine{00092\ \ \ \ \ assert((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ src\ \%\ 128\ ==\ 0);}
+\DoxyCodeLine{00093\ \ \ \ \ hvx\_sqrt\_f32\_loop\_body(HVX\_Vector,\ HVX\_Vector,\ hvx\_vec\_store\_a);}
+\DoxyCodeLine{00094\ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hvx\_sqrt\_f32\_au(uint8\_t\ *\ restrict\ dst,\ \textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ assert((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ dst\ \%\ 128\ ==\ 0);}
+\DoxyCodeLine{00098\ \ \ \ \ hvx\_sqrt\_f32\_loop\_body(HVX\_Vector,\ HVX\_UVector,\ hvx\_vec\_store\_a);}
+\DoxyCodeLine{00099\ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hvx\_sqrt\_f32\_ua(uint8\_t\ *\ restrict\ dst,\ \textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ assert((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ src\ \%\ 128\ ==\ 0);}
+\DoxyCodeLine{00103\ \ \ \ \ hvx\_sqrt\_f32\_loop\_body(HVX\_UVector,\ HVX\_Vector,\ hvx\_vec\_store\_u);}
+\DoxyCodeLine{00104\ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hvx\_sqrt\_f32\_uu(uint8\_t\ *\ restrict\ dst,\ \textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ hvx\_sqrt\_f32\_loop\_body(HVX\_UVector,\ HVX\_UVector,\ hvx\_vec\_store\_u);}
+\DoxyCodeLine{00108\ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hvx\_sqrt\_f32(uint8\_t\ *\ restrict\ dst,\ \textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems)\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordflow}{if}\ ((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ dst\ \%\ 128\ ==\ 0)\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ src\ \%\ 128\ ==\ 0)\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ hvx\_sqrt\_f32\_aa(dst,\ src,\ num\_elems);}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ hvx\_sqrt\_f32\_au(dst,\ src,\ num\_elems);}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00117\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ src\ \%\ 128\ ==\ 0)\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ hvx\_sqrt\_f32\_ua(dst,\ src,\ num\_elems);}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ hvx\_sqrt\_f32\_uu(dst,\ src,\ num\_elems);}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HVX\_SQRT\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

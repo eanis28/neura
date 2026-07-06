@@ -1,0 +1,88 @@
+\doxysection{ggml\+\_\+cann\+\_\+pool Struct Reference}
+\hypertarget{structggml__cann__pool}{}\label{structggml__cann__pool}\index{ggml\_cann\_pool@{ggml\_cann\_pool}}
+
+
+Abstract base class for memory pools used by CANN.  
+
+
+
+
+{\ttfamily \+\#include $<$common.\+h$>$}
+
+Inheritance diagram for ggml\+\_\+cann\+\_\+pool:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{structggml__cann__pool}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__pool_adb7c9d428f618ea6cc1e03ee01bac2ef}\label{structggml__cann__pool_adb7c9d428f618ea6cc1e03ee01bac2ef} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}ggml\+\_\+cann\+\_\+pool} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the memory pool. \end{DoxyCompactList}\item 
+virtual void \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__cann__pool_a1db69310420e48bc125a435b031bdc4d}{alloc}} (size\+\_\+t size, size\+\_\+t \texorpdfstring{$\ast$}{*}actual\+\_\+size)=0
+\begin{DoxyCompactList}\small\item\em Allocates memory from the pool. \end{DoxyCompactList}\item 
+virtual void \doxymbox{\hyperlink{structggml__cann__pool_a8119eb4c8490390a7ebabbb94b40d1ee}{free}} (void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t size)=0
+\begin{DoxyCompactList}\small\item\em Frees a previously allocated memory block. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Abstract base class for memory pools used by CANN. 
+
+\label{doc-func-members}
+\Hypertarget{structggml__cann__pool_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structggml__cann__pool_a1db69310420e48bc125a435b031bdc4d}\index{ggml\_cann\_pool@{ggml\_cann\_pool}!alloc@{alloc}}
+\index{alloc@{alloc}!ggml\_cann\_pool@{ggml\_cann\_pool}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}}
+{\footnotesize\ttfamily \label{structggml__cann__pool_a1db69310420e48bc125a435b031bdc4d} 
+virtual void \texorpdfstring{$\ast$}{*} ggml\+\_\+cann\+\_\+pool::\+alloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{, }\item[{size\+\_\+t \texorpdfstring{$\ast$}{*}}]{actual\+\_\+size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Allocates memory from the pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & \doxylink{requirements_The}{The} size of the memory block to allocate. \\
+\hline
+{\em actual\+\_\+size} & Pointer to a variable where the actual allocated size will be stored. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the allocated memory block. 
+\end{DoxyReturn}
+
+
+Implemented in \doxymbox{\hyperlink{structggml__cann__pool__buf_a24b7e6237354007deee4e0ca7759aaae}{ggml\+\_\+cann\+\_\+pool\+\_\+buf}}, \doxymbox{\hyperlink{structggml__cann__pool__buf__prio_a173e40417eb9602fda30dd4b11412875}{ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio}}, and \doxymbox{\hyperlink{structggml__cann__pool__vmm_a42d6aaaa78dc61760d437173dbc854bb}{ggml\+\_\+cann\+\_\+pool\+\_\+vmm}}.
+
+\Hypertarget{structggml__cann__pool_a8119eb4c8490390a7ebabbb94b40d1ee}\index{ggml\_cann\_pool@{ggml\_cann\_pool}!free@{free}}
+\index{free@{free}!ggml\_cann\_pool@{ggml\_cann\_pool}}
+\doxysubsubsection{\texorpdfstring{free()}{free()}}
+{\footnotesize\ttfamily \label{structggml__cann__pool_a8119eb4c8490390a7ebabbb94b40d1ee} 
+virtual void ggml\+\_\+cann\+\_\+pool::\+free (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{ptr}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Frees a previously allocated memory block. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & Pointer to the memory block to free. \\
+\hline
+{\em size} & Size of the memory block to free. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+Note that all CANN opertors are running async. Make sure memory is still avaiable before this operator finished. 
+\end{DoxyNote}
+
+
+Implemented in \doxymbox{\hyperlink{structggml__cann__pool__buf_aee05b8ce4ae970c8aa6fd8cda2a8ea93}{ggml\+\_\+cann\+\_\+pool\+\_\+buf}}, \doxymbox{\hyperlink{structggml__cann__pool__buf__prio_afd45e635d0e26db1213836321fe91e82}{ggml\+\_\+cann\+\_\+pool\+\_\+buf\+\_\+prio}}, and \doxymbox{\hyperlink{structggml__cann__pool__vmm_a2cd405d8b414c265bf453f4245912979}{ggml\+\_\+cann\+\_\+pool\+\_\+vmm}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+common.\+h\end{DoxyCompactItemize}

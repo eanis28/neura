@@ -1,0 +1,250 @@
+\doxysection{Weather\+Action Class Reference}
+\hypertarget{class_weather_action}{}\label{class_weather_action}\index{WeatherAction@{WeatherAction}}
+
+
+Fetches and exposes current weather for a given or resolved location.  
+
+
+
+
+{\ttfamily \+\#include $<$Weather\+Action.\+h$>$}
+
+Inheritance diagram for Weather\+Action:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_weather_action}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_weather_action_acfbe899e3a442efe639546d9f9e2a26f}{Weather\+Action}} (const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&cfg, const std::\+string \&location="{}"{})
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{class_weather_action}{Weather\+Action} targeting the specified location. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{execute}} () override
+\begin{DoxyCompactList}\small\item\em Resolves the location, calls the Open\+Weather\+Map API, and stores the result. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_weather_action_a360f2f78ca008f916d831f636b1e6a92}{describe}} () const override
+\begin{DoxyCompactList}\small\item\em Returns a human-\/readable description of the action. \end{DoxyCompactList}\item 
+std::\+optional$<$ \doxymbox{\hyperlink{struct_weather_data}{Weather\+Data}} $>$ \doxymbox{\hyperlink{class_weather_action_a6f230a93f12322a2aaf9df48de4fc431}{get\+Result}} () const
+\begin{DoxyCompactList}\small\item\em Returns the weather data from the last successful \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{execute()} call. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_weather_action_ac931dc242c1ee8ac4c8c7cd1271fb904}{get\+Summary}} () const
+\begin{DoxyCompactList}\small\item\em Returns a formatted single-\/line weather summary. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_action_adf6d17666645657d71bee9f12386db6b}{Action}} (const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&cfg)
+\begin{DoxyCompactList}\small\item\em Constructs an \doxylink{class_action}{Action} with the application-\/wide configuration. \end{DoxyCompactList}\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+Action} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor — ensures correct cleanup of derived classes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string \doxymbox{\hyperlink{class_weather_action_a299e67e6357ac92a207842b82b5013e2}{resolve\+Location}} () const
+\begin{DoxyCompactList}\small\item\em Determines the location to query when none was provided at construction. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_weather_data}{Weather\+Data}} \doxymbox{\hyperlink{class_weather_action_a1be02eed81d251de4991190802a4d616}{parse\+Response}} (const std::\+string \&json\+Body, const std::\+string \&location) const
+\begin{DoxyCompactList}\small\item\em Parses an Open\+Weather\+Map JSON response into a \doxylink{struct_weather_data}{Weather\+Data} struct. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_weather_action_a61b31a6b54ae59bad12cc6fe50bbed26}\label{class_weather_action_a61b31a6b54ae59bad12cc6fe50bbed26} 
+std::\+string {\bfseries target\+Location}
+\begin{DoxyCompactList}\small\item\em Location supplied at construction; may be empty. \end{DoxyCompactList}\item 
+\Hypertarget{class_weather_action_a1c1148dda7f5794de60e31a67d20476c}\label{class_weather_action_a1c1148dda7f5794de60e31a67d20476c} 
+std::\+optional$<$ \doxymbox{\hyperlink{struct_weather_data}{Weather\+Data}} $>$ {\bfseries last\+Result}
+\begin{DoxyCompactList}\small\item\em Populated after a successful \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{execute()} call. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_action_a13c6ee9594194b04786b10850402f6d3}{log}} (const std::\+string \&message) const
+\begin{DoxyCompactList}\small\item\em Writes a timestamped log line to {\ttfamily stdout}. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_action_a31a34834f233fc45a14b944d48c1971d}{http\+Get}} (const std::\+string \&url) const
+\begin{DoxyCompactList}\small\item\em Performs a synchronous HTTP GET request via libcurl. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_action_a005ac4b700f13661b881a7df5d40b6a2}{http\+Post}} (const std::\+string \&url, const std::\+string \&bearer\+Token, const std::\+string \&body, const std::\+string \&content\+Type="{}application/\+json"{}) const
+\begin{DoxyCompactList}\small\item\em Performs a synchronous HTTP POST request via libcurl. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+string \doxymbox{\hyperlink{class_action_aea26611d135c5a8a585cfcfd4cf963fe}{url\+Encode}} (const std::\+string \&raw)
+\begin{DoxyCompactList}\small\item\em Percent-\/encodes a raw string according to RFC 3986. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+const \doxymbox{\hyperlink{class_configuration}{Configuration}} \& {\bfseries config}
+\begin{DoxyCompactList}\small\item\em Shared, read-\/only application configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Fetches and exposes current weather for a given or resolved location. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Inherits HTTP helpers from \doxylink{class_action}{Action}. On \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{execute()}, the action:\+
+\begin{DoxyItemize}
+\item Resolves the target location via \doxylink{class_weather_action_a299e67e6357ac92a207842b82b5013e2}{resolve\+Location()} if none was provided at construction.
+\item Builds and issues an Open\+Weather\+Map Current Weather API request using \doxylink{class_action_a31a34834f233fc45a14b944d48c1971d}{http\+Get()}.
+\item Parses the JSON response body into a \doxylink{struct_weather_data}{Weather\+Data} struct via \doxylink{class_weather_action_a1be02eed81d251de4991190802a4d616}{parse\+Response()} and stores it as last\+Result. 
+\end{DoxyItemize}
+
+\label{doc-constructors}
+\Hypertarget{class_weather_action_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_weather_action_acfbe899e3a442efe639546d9f9e2a26f}\index{WeatherAction@{WeatherAction}!WeatherAction@{WeatherAction}}
+\index{WeatherAction@{WeatherAction}!WeatherAction@{WeatherAction}}
+\doxysubsubsection{\texorpdfstring{WeatherAction()}{WeatherAction()}}
+{\footnotesize\ttfamily \label{class_weather_action_acfbe899e3a442efe639546d9f9e2a26f} 
+Weather\+Action::\+\+Weather\+Action (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&}]{cfg}{, }\item[{const std::\+string \&}]{location}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructs a \doxylink{class_weather_action}{Weather\+Action} targeting the specified location. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+If location is empty, the target is deferred to \doxylink{class_weather_action_a299e67e6357ac92a207842b82b5013e2}{resolve\+Location()} at \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{execute()} time, which consults config.\+default\+Location and then IP geolocation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cfg} & Application configuration (must contain weather\+Api\+Key). \\
+\hline
+{\em location} & City name or location string to fetch weather for. Pass an empty string to use automatic resolution. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_weather_action_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_weather_action_a360f2f78ca008f916d831f636b1e6a92}\index{WeatherAction@{WeatherAction}!describe@{describe}}
+\index{describe@{describe}!WeatherAction@{WeatherAction}}
+\doxysubsubsection{\texorpdfstring{describe()}{describe()}}
+{\footnotesize\ttfamily \label{class_weather_action_a360f2f78ca008f916d831f636b1e6a92} 
+std::\+string Weather\+Action::\+describe (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Returns a human-\/readable description of the action. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+A string of the form "{}\+Fetch weather for $<$location$>$"{}, using the resolved location if available, otherwise the raw constructor argument. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{class_action_a564b8be4c69e16668ba4f41ec7dd6cbf}{Action}}.
+
+\Hypertarget{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}\index{WeatherAction@{WeatherAction}!execute@{execute}}
+\index{execute@{execute}!WeatherAction@{WeatherAction}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_weather_action_a314ad36554b6a8b571374e7b4305aa66} 
+bool Weather\+Action::\+execute (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Resolves the location, calls the Open\+Weather\+Map API, and stores the result. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+true if weather data was fetched and parsed successfully; false if the API key is missing, the request failed, or the response could not be parsed. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{class_action_a018c91fe89cff73911c5862df0cd8f63}{Action}}.
+
+\Hypertarget{class_weather_action_a6f230a93f12322a2aaf9df48de4fc431}\index{WeatherAction@{WeatherAction}!getResult@{getResult}}
+\index{getResult@{getResult}!WeatherAction@{WeatherAction}}
+\doxysubsubsection{\texorpdfstring{getResult()}{getResult()}}
+{\footnotesize\ttfamily \label{class_weather_action_a6f230a93f12322a2aaf9df48de4fc431} 
+std::\+optional$<$ \doxymbox{\hyperlink{struct_weather_data}{Weather\+Data}} $>$ Weather\+Action::\+get\+Result (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the weather data from the last successful \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{execute()} call. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+A std::\+optional$<$\+Weather\+Data$>$ containing the result, or std::\+nullopt if \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{execute()} has not been called or failed. 
+\end{DoxyReturn}
+\Hypertarget{class_weather_action_ac931dc242c1ee8ac4c8c7cd1271fb904}\index{WeatherAction@{WeatherAction}!getSummary@{getSummary}}
+\index{getSummary@{getSummary}!WeatherAction@{WeatherAction}}
+\doxysubsubsection{\texorpdfstring{getSummary()}{getSummary()}}
+{\footnotesize\ttfamily \label{class_weather_action_ac931dc242c1ee8ac4c8c7cd1271fb904} 
+std::\+string Weather\+Action::\+get\+Summary (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Returns a formatted single-\/line weather summary. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Composes a human-\/readable string from last\+Result, e.\+g. "{}\+Toronto:\+ Partly cloudy, 14°\+C (57°\+F), humidity 60\%, wind 18 km/\+h"{}. Returns an empty string if no result is available.
+
+\begin{DoxyReturn}{Returns}
+A formatted weather summary, or an empty string if \doxylink{class_weather_action_a314ad36554b6a8b571374e7b4305aa66}{execute()} has not been called or failed. 
+\end{DoxyReturn}
+\Hypertarget{class_weather_action_a1be02eed81d251de4991190802a4d616}\index{WeatherAction@{WeatherAction}!parseResponse@{parseResponse}}
+\index{parseResponse@{parseResponse}!WeatherAction@{WeatherAction}}
+\doxysubsubsection{\texorpdfstring{parseResponse()}{parseResponse()}}
+{\footnotesize\ttfamily \label{class_weather_action_a1be02eed81d251de4991190802a4d616} 
+\doxymbox{\hyperlink{struct_weather_data}{Weather\+Data}} Weather\+Action::\+parse\+Response (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{json\+Body}{, }\item[{const std::\+string \&}]{location}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Parses an Open\+Weather\+Map JSON response into a \doxylink{struct_weather_data}{Weather\+Data} struct. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Extracts temperature (Kelvin → Celsius + Fahrenheit), humidity, wind speed, condition text, icon code, and stamps fetched\+At with the current UTC time.
+
+
+\begin{DoxyParams}{Parameters}
+{\em json\+Body} & \doxylink{requirements_The}{The} raw JSON response body returned by the API. \\
+\hline
+{\em location} & \doxylink{requirements_The}{The} resolved location string to store in \doxylink{struct_weather_data_ab3f98d5b57d97a937d6a1f8caa5512d1}{Weather\+Data::\+location}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A fully populated \doxylink{struct_weather_data}{Weather\+Data} struct. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std::\+runtime\+\_\+error} & if required JSON fields are missing or malformed. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{class_weather_action_a299e67e6357ac92a207842b82b5013e2}\index{WeatherAction@{WeatherAction}!resolveLocation@{resolveLocation}}
+\index{resolveLocation@{resolveLocation}!WeatherAction@{WeatherAction}}
+\doxysubsubsection{\texorpdfstring{resolveLocation()}{resolveLocation()}}
+{\footnotesize\ttfamily \label{class_weather_action_a299e67e6357ac92a207842b82b5013e2} 
+std::\+string Weather\+Action::\+resolve\+Location (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determines the location to query when none was provided at construction. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Resolution order:\+
+\begin{DoxyItemize}
+\item config.\+default\+Location, if non-\/empty.
+\item IP-\/based geolocation via an external lookup service, as a last resort.
+\end{DoxyItemize}
+
+\begin{DoxyReturn}{Returns}
+A non-\/empty location string, or an empty string if all resolution strategies fail. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_weather_action_8h}{Weather\+Action.\+h}}\item 
+Weather\+Action.\+cpp\end{DoxyCompactItemize}

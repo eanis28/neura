@@ -1,0 +1,145 @@
+\doxysection{llama\+\_\+kv\+\_\+cells Class Reference}
+\hypertarget{classllama__kv__cells}{}\label{classllama__kv__cells}\index{llama\_kv\_cells@{llama\_kv\_cells}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__kv__cells_ad87fab03835df0659db7570b87c2e8a5}\label{classllama__kv__cells_ad87fab03835df0659db7570b87c2e8a5} 
+void {\bfseries reset} ()
+\item 
+\Hypertarget{classllama__kv__cells_abb3f45bf41dfc1e7f42d31efb37f1663}\label{classllama__kv__cells_abb3f45bf41dfc1e7f42d31efb37f1663} 
+void {\bfseries reset\+\_\+shift} ()
+\item 
+\Hypertarget{classllama__kv__cells_a893d86d37f386e7436f82350c7f1ff32}\label{classllama__kv__cells_a893d86d37f386e7436f82350c7f1ff32} 
+uint32\+\_\+t {\bfseries size} () const
+\item 
+\Hypertarget{classllama__kv__cells_adefcd244a51cf492de198e15dbc76ab7}\label{classllama__kv__cells_adefcd244a51cf492de198e15dbc76ab7} 
+void {\bfseries resize} (uint32\+\_\+t n)
+\item 
+\Hypertarget{classllama__kv__cells_a388b99cc1781521888f86758de77fc90}\label{classllama__kv__cells_a388b99cc1781521888f86758de77fc90} 
+bool {\bfseries is\+\_\+empty} (uint32\+\_\+t i) const
+\item 
+\Hypertarget{classllama__kv__cells_a5667ff37eb2e6e9be18c3c79d59244f5}\label{classllama__kv__cells_a5667ff37eb2e6e9be18c3c79d59244f5} 
+uint32\+\_\+t {\bfseries get\+\_\+used} () const
+\item 
+\Hypertarget{classllama__kv__cells_a505c6e156bf5634f7374c1d03d595bdd}\label{classllama__kv__cells_a505c6e156bf5634f7374c1d03d595bdd} 
+uint32\+\_\+t {\bfseries used\+\_\+min} () const
+\item 
+\Hypertarget{classllama__kv__cells_a607a0669950b25825d549dffad838785}\label{classllama__kv__cells_a607a0669950b25825d549dffad838785} 
+uint32\+\_\+t {\bfseries used\+\_\+max\+\_\+p1} () const
+\item 
+\Hypertarget{classllama__kv__cells_abcbb8afcef1a40c7557051f69eb09ef4}\label{classllama__kv__cells_abcbb8afcef1a40c7557051f69eb09ef4} 
+bool {\bfseries get\+\_\+has\+\_\+shift} () const
+\item 
+\Hypertarget{classllama__kv__cells_a71da130430974164d4dac99e5501f9ad}\label{classllama__kv__cells_a71da130430974164d4dac99e5501f9ad} 
+\doxymbox{\hyperlink{classllama__kv__cells}{llama\+\_\+kv\+\_\+cells}} {\bfseries cp} (uint32\+\_\+t i, uint32\+\_\+t n) const
+\item 
+\Hypertarget{classllama__kv__cells_a42e57c9bd871d4dae54b3d6bb5872d8c}\label{classllama__kv__cells_a42e57c9bd871d4dae54b3d6bb5872d8c} 
+\doxymbox{\hyperlink{classllama__kv__cells}{llama\+\_\+kv\+\_\+cells}} {\bfseries cp} (const std::\+vector$<$ uint32\+\_\+t $>$ \&idxs) const
+\item 
+\Hypertarget{classllama__kv__cells_afcc2edd70ef95840d019267bcc85f12d}\label{classllama__kv__cells_afcc2edd70ef95840d019267bcc85f12d} 
+void {\bfseries set} (uint32\+\_\+t i, const \doxymbox{\hyperlink{classllama__kv__cells}{llama\+\_\+kv\+\_\+cells}} \&other)
+\item 
+\Hypertarget{classllama__kv__cells_a0cf2ef21466362a829653e8c403fd3a4}\label{classllama__kv__cells_a0cf2ef21466362a829653e8c403fd3a4} 
+void {\bfseries set} (const std::\+vector$<$ uint32\+\_\+t $>$ \&idxs, const \doxymbox{\hyperlink{classllama__kv__cells}{llama\+\_\+kv\+\_\+cells}} \&other)
+\item 
+\Hypertarget{classllama__kv__cells_a19625503c47baf3b2aef4d114c69d6fb}\label{classllama__kv__cells_a19625503c47baf3b2aef4d114c69d6fb} 
+void {\bfseries rm} (uint32\+\_\+t i)
+\item 
+\Hypertarget{classllama__kv__cells_a86df2e7d45deeb2e15a942e6c1b4990b}\label{classllama__kv__cells_a86df2e7d45deeb2e15a942e6c1b4990b} 
+bool {\bfseries seq\+\_\+rm} (uint32\+\_\+t i, llama\+\_\+seq\+\_\+id seq\+\_\+id)
+\item 
+\Hypertarget{classllama__kv__cells_a3608f41bcc06e6fb77bef75281279ed6}\label{classllama__kv__cells_a3608f41bcc06e6fb77bef75281279ed6} 
+bool {\bfseries seq\+\_\+keep} (uint32\+\_\+t i, llama\+\_\+seq\+\_\+id seq\+\_\+id)
+\item 
+\Hypertarget{classllama__kv__cells_a12b0ffc32ee636ab44f1ea8594ea8f8f}\label{classllama__kv__cells_a12b0ffc32ee636ab44f1ea8594ea8f8f} 
+int {\bfseries seq\+\_\+count} (uint32\+\_\+t i) const
+\item 
+\Hypertarget{classllama__kv__cells_a38e3df72e3b5283fa7e9a1db18767c1b}\label{classllama__kv__cells_a38e3df72e3b5283fa7e9a1db18767c1b} 
+bool {\bfseries seq\+\_\+has} (uint32\+\_\+t i, llama\+\_\+seq\+\_\+id seq\+\_\+id) const
+\item 
+\Hypertarget{classllama__kv__cells_a110db2c3d0b040e964583b28e417803d}\label{classllama__kv__cells_a110db2c3d0b040e964583b28e417803d} 
+void {\bfseries seq\+\_\+add} (uint32\+\_\+t i, llama\+\_\+seq\+\_\+id seq\+\_\+id)
+\item 
+\Hypertarget{classllama__kv__cells_aec7ca0f19f9f2cc8aa64f8735b802f9d}\label{classllama__kv__cells_aec7ca0f19f9f2cc8aa64f8735b802f9d} 
+llama\+\_\+seq\+\_\+id {\bfseries seq\+\_\+get} (uint32\+\_\+t i) const
+\item 
+\Hypertarget{classllama__kv__cells_a19b21b8f8d27e47d6c7a51581cd8a41d}\label{classllama__kv__cells_a19b21b8f8d27e47d6c7a51581cd8a41d} 
+llama\+\_\+pos {\bfseries seq\+\_\+pos\+\_\+min} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const
+\item 
+\Hypertarget{classllama__kv__cells_abc5911c22fda174a63cbc7ec59d1907d}\label{classllama__kv__cells_abc5911c22fda174a63cbc7ec59d1907d} 
+llama\+\_\+pos {\bfseries seq\+\_\+pos\+\_\+max} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const
+\item 
+\Hypertarget{classllama__kv__cells_a7c9ccd1ed786ce3343689e922ee851fa}\label{classllama__kv__cells_a7c9ccd1ed786ce3343689e922ee851fa} 
+llama\+\_\+pos {\bfseries pos\+\_\+get} (uint32\+\_\+t i) const
+\item 
+\Hypertarget{classllama__kv__cells_a847129b0deab9d61451a780c2fc1d5f6}\label{classllama__kv__cells_a847129b0deab9d61451a780c2fc1d5f6} 
+const \doxymbox{\hyperlink{structllama__kv__cell__ext}{llama\+\_\+kv\+\_\+cell\+\_\+ext}} \& {\bfseries ext\+\_\+get} (uint32\+\_\+t i) const
+\item 
+\Hypertarget{classllama__kv__cells_af776f8d8eee2a302c6210aed4eae345a}\label{classllama__kv__cells_af776f8d8eee2a302c6210aed4eae345a} 
+llama\+\_\+pos {\bfseries get\+\_\+shift} (uint32\+\_\+t i) const
+\item 
+\Hypertarget{classllama__kv__cells_aef2beb518479e52f2e85f5c14b08012e}\label{classllama__kv__cells_aef2beb518479e52f2e85f5c14b08012e} 
+bool {\bfseries pos\+\_\+in} (uint32\+\_\+t i, llama\+\_\+pos p0, llama\+\_\+pos p1) const
+\item 
+\Hypertarget{classllama__kv__cells_a530a25fae20cd0ada8242e407d23d18b}\label{classllama__kv__cells_a530a25fae20cd0ada8242e407d23d18b} 
+void {\bfseries pos\+\_\+set} (uint32\+\_\+t i, llama\+\_\+pos p)
+\item 
+\Hypertarget{classllama__kv__cells_a52876a5873ac453a41504e0ebf15cef4}\label{classllama__kv__cells_a52876a5873ac453a41504e0ebf15cef4} 
+void {\bfseries ext\+\_\+set} (uint32\+\_\+t i, \doxymbox{\hyperlink{structllama__kv__cell__ext}{llama\+\_\+kv\+\_\+cell\+\_\+ext}} p)
+\item 
+\Hypertarget{classllama__kv__cells_a3f3180f3fa013fd26891dd828bfd37d2}\label{classllama__kv__cells_a3f3180f3fa013fd26891dd828bfd37d2} 
+bool {\bfseries pos\+\_\+add} (uint32\+\_\+t i, llama\+\_\+pos d)
+\item 
+\Hypertarget{classllama__kv__cells_a8855030727397d6d614a1fddb0558cc9}\label{classllama__kv__cells_a8855030727397d6d614a1fddb0558cc9} 
+void {\bfseries pos\+\_\+div} (uint32\+\_\+t i, int d)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__kv__cells_a07001ea31c27991265c3ac8af94c7766}\label{classllama__kv__cells_a07001ea31c27991265c3ac8af94c7766} 
+using {\bfseries seq\+\_\+set\+\_\+t} = std::\+bitset$<$LLAMA\+\_\+\+MAX\+\_\+\+SEQ$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__kv__cells_ab0831547f7eeb987fd74639db95dfc66}\label{classllama__kv__cells_ab0831547f7eeb987fd74639db95dfc66} 
+void {\bfseries seq\+\_\+pos\+\_\+dec} (llama\+\_\+seq\+\_\+id s, llama\+\_\+pos p)
+\item 
+\Hypertarget{classllama__kv__cells_a54917498180f111c6b43f77fafd3741f}\label{classllama__kv__cells_a54917498180f111c6b43f77fafd3741f} 
+void {\bfseries seq\+\_\+pos\+\_\+inc} (llama\+\_\+seq\+\_\+id s, llama\+\_\+pos p)
+\item 
+\Hypertarget{classllama__kv__cells_ac5b9b4ceab1e8d998611ba0276740a48}\label{classllama__kv__cells_ac5b9b4ceab1e8d998611ba0276740a48} 
+void {\bfseries seq\+\_\+pos\+\_\+rm} (uint32\+\_\+t i)
+\item 
+\Hypertarget{classllama__kv__cells_a4789b0776caa2fc729abceea49e7191c}\label{classllama__kv__cells_a4789b0776caa2fc729abceea49e7191c} 
+void {\bfseries seq\+\_\+pos\+\_\+add} (uint32\+\_\+t i)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__kv__cells_a15f77d6d0a382ac2635432a3831cfde6}\label{classllama__kv__cells_a15f77d6d0a382ac2635432a3831cfde6} 
+bool {\bfseries has\+\_\+shift} = false
+\item 
+\Hypertarget{classllama__kv__cells_a58f6f709157269bc65a2ba196a4f3126}\label{classllama__kv__cells_a58f6f709157269bc65a2ba196a4f3126} 
+std::\+set$<$ uint32\+\_\+t $>$ {\bfseries used}
+\item 
+\Hypertarget{classllama__kv__cells_a949f2981996b32704684aadcb3f4a949}\label{classllama__kv__cells_a949f2981996b32704684aadcb3f4a949} 
+std::\+vector$<$ llama\+\_\+pos $>$ {\bfseries pos}
+\item 
+\Hypertarget{classllama__kv__cells_aa1568f0293f672f9738e28893c970d75}\label{classllama__kv__cells_aa1568f0293f672f9738e28893c970d75} 
+std::\+vector$<$ \doxymbox{\hyperlink{structllama__kv__cell__ext}{llama\+\_\+kv\+\_\+cell\+\_\+ext}} $>$ {\bfseries ext}
+\item 
+\Hypertarget{classllama__kv__cells_a4dc423ab6dd0066d74d27fc9a424dcc7}\label{classllama__kv__cells_a4dc423ab6dd0066d74d27fc9a424dcc7} 
+std::\+vector$<$ llama\+\_\+pos $>$ {\bfseries shift}
+\item 
+\Hypertarget{classllama__kv__cells_a43b878f6628682fbc67a04835ecebcf7}\label{classllama__kv__cells_a43b878f6628682fbc67a04835ecebcf7} 
+std::\+vector$<$ seq\+\_\+set\+\_\+t $>$ {\bfseries seq}
+\item 
+\Hypertarget{classllama__kv__cells_ad172f71c2d9db92dbd5de3bf18a36ff9}\label{classllama__kv__cells_ad172f71c2d9db92dbd5de3bf18a36ff9} 
+std::\+map$<$ llama\+\_\+pos, int $>$ {\bfseries seq\+\_\+pos} \+[LLAMA\+\_\+\+MAX\+\_\+\+SEQ]\+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/kv-\/cells.\+h\end{DoxyCompactItemize}

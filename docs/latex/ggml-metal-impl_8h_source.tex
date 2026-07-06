@@ -1,0 +1,1141 @@
+\doxysection{ggml-\/metal-\/impl.h}
+\hypertarget{ggml-metal-impl_8h_source}{}\label{ggml-metal-impl_8h_source}\index{whisper.cpp/ggml/src/ggml-\/metal/ggml-\/metal-\/impl.h@{whisper.cpp/ggml/src/ggml-\/metal/ggml-\/metal-\/impl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GGML\_METAL\_IMPL}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GGML\_METAL\_IMPL}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ kernel\ parameters\ for\ mat-\/vec\ threadgroups}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ N\_R0:\ number\ of\ src0\ rows\ to\ process\ per\ simdgroup}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ N\_SG:\ number\ of\ simdgroups\ per\ threadgroup}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ TODO:\ for\ optimal\ performance,\ become\ function\ of\ the\ device\ and\ work\ size}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ N\_R0\_Q4\_0\ 4}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ N\_SG\_Q4\_0\ 2}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ N\_R0\_Q4\_1\ 4}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ N\_SG\_Q4\_1\ 2}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ N\_R0\_Q5\_0\ 4}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ N\_SG\_Q5\_0\ 2}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ N\_R0\_Q5\_1\ 4}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ N\_SG\_Q5\_1\ 2}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ N\_R0\_Q8\_0\ 2}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ N\_SG\_Q8\_0\ 4}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ N\_R0\_MXFP4\ 2}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ N\_SG\_MXFP4\ 2}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ N\_R0\_Q2\_K\ 4}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ N\_SG\_Q2\_K\ 2}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ N\_R0\_Q3\_K\ 2}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ N\_SG\_Q3\_K\ 2}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ N\_R0\_Q4\_K\ 2}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ N\_SG\_Q4\_K\ 2}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ N\_R0\_Q5\_K\ 1}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ N\_SG\_Q5\_K\ 2}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ N\_R0\_Q6\_K\ 2}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ N\_SG\_Q6\_K\ 2}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ N\_R0\_IQ1\_S\ 4}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ N\_SG\_IQ1\_S\ 2}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ N\_R0\_IQ1\_M\ 4}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ N\_SG\_IQ1\_M\ 2}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ N\_R0\_IQ2\_XXS\ 4}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ N\_SG\_IQ2\_XXS\ 2}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ N\_R0\_IQ2\_XS\ 4}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ N\_SG\_IQ2\_XS\ 2}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ N\_R0\_IQ2\_S\ 4}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ N\_SG\_IQ2\_S\ 2}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ N\_R0\_IQ3\_XXS\ 4}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ N\_SG\_IQ3\_XXS\ 2}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ N\_R0\_IQ3\_S\ 4}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ N\_SG\_IQ3\_S\ 2}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ N\_R0\_IQ4\_NL\ 2}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ N\_SG\_IQ4\_NL\ 2}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ N\_R0\_IQ4\_XS\ 2}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ N\_SG\_IQ4\_XS\ 2}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{//\ function\ constants\ offsets}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ FC\_FLASH\_ATTN\_EXT\_PAD\ \ \ \ \ \ \ \ \ \ 100}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ FC\_FLASH\_ATTN\_EXT\_BLK\ \ \ \ \ \ \ \ \ \ 200}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ FC\_FLASH\_ATTN\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ 300}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ FC\_FLASH\_ATTN\_EXT\_VEC\ \ \ \ \ \ \ \ \ \ 400}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ FC\_FLASH\_ATTN\_EXT\_VEC\_REDUCE\ \ \ 500}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ FC\_MUL\_MV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 600}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ FC\_MUL\_MM\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 700}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ FC\_ROPE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 800}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ FC\_SSM\_CONV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 900}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ FC\_SOLVE\_TRI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1000}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ FC\_COUNT\_EQUAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1100}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ FC\_UNARY\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1200}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ FC\_BIN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1300}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ FC\_SUM\_ROWS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1400}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ FC\_UPSCALE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1500}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ FC\_GATED\_DELTA\_NET\ \ \ \ \ \ \ \ \ \ \ \ \ 1600}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ op-\/specific\ constants}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ OP\_FLASH\_ATTN\_EXT\_NQPSG\ 8}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ OP\_FLASH\_ATTN\_EXT\_NCPSG\ 64}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ OP\_FLASH\_ATTN\_EXT\_VEC\_NQPSG\ 1}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ OP\_FLASH\_ATTN\_EXT\_VEC\_NCPSG\ 32}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_SCALE\ \ \ \ \ \ 10}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_FILL\ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_CLAMP\ \ \ \ \ \ 12}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_SQR\ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_SQRT\ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_SIN\ \ \ \ \ \ \ \ 15}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_COS\ \ \ \ \ \ \ \ 16}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_LOG\ \ \ \ \ \ \ \ 17}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_LEAKY\_RELU\ 18}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_TANH\ \ \ \ \ \ \ \ 100}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_RELU\ \ \ \ \ \ \ \ 101}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_SIGMOID\ \ \ \ \ 102}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_GELU\ \ \ \ \ \ \ \ 103}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_GELU\_ERF\ \ \ \ 104}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_GELU\_QUICK\ \ 105}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_SILU\ \ \ \ \ \ \ \ 106}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_ELU\ \ \ \ \ \ \ \ \ 107}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_NEG\ \ \ \ \ \ \ \ \ 108}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_ABS\ \ \ \ \ \ \ \ \ 109}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_SGN\ \ \ \ \ \ \ \ \ 110}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_STEP\ \ \ \ \ \ \ \ 111}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_HARDSWISH\ \ \ 112}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_HARDSIGMOID\ 113}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_EXP\ \ \ \ \ \ \ \ \ 114}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_SOFTPLUS\ \ \ \ 115}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_EXPM1\ \ \ \ \ \ \ 116}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_FLOOR\ \ \ \ \ \ \ 117}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_CEIL\ \ \ \ \ \ \ \ 118}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_ROUND\ \ \ \ \ \ \ 119}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ OP\_UNARY\_NUM\_TRUNC\ \ \ \ \ \ \ 120}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ OP\_SUM\_ROWS\_NUM\_SUM\_ROWS\ 10}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ OP\_SUM\_ROWS\_NUM\_MEAN\ \ \ \ \ 11}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{comment}{//\ kernel\ argument\ structs}}
+\DoxyCodeLine{00132\ \textcolor{comment}{//}}
+\DoxyCodeLine{00133\ \textcolor{comment}{//\ -\/\ element\ counters\ (e.g.\ ne00)\ typically\ use\ int32\_t\ to\ reduce\ register\ usage}}
+\DoxyCodeLine{00134\ \textcolor{comment}{//\ \ \ however,\ be\ careful\ from\ int\ overflows\ when\ using\ those\ in\ the\ kernel\ implementation}}
+\DoxyCodeLine{00135\ \textcolor{comment}{//}}
+\DoxyCodeLine{00136\ \textcolor{comment}{//\ -\/\ strides\ (e.g.\ nb00)\ use\ uint64\_t}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00139\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00140\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00141\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00142\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00143\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00144\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00145\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00146\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00147\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00148\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00149\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00150\ \ \ \ \ int32\_t\ \ ne13;}
+\DoxyCodeLine{00151\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00152\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00153\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00154\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00155\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00156\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00157\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00158\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00159\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00160\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00161\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00162\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00163\ \ \ \ \ int32\_t\ \ dim;}
+\DoxyCodeLine{00164\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__concat}{ggml\_metal\_kargs\_concat}};}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00167\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00168\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00169\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00170\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00171\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00172\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00173\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00174\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00175\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00176\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00177\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00178\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00179\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00180\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00181\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00182\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ slope;}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ scale;}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ bias;}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ val;}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ min;}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ max;}
+\DoxyCodeLine{00189\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__unary}{ggml\_metal\_kargs\_unary}};}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00192\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00193\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00194\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00195\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00196\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00197\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00198\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00199\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00200\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00201\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00202\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00203\ \ \ \ \ int32\_t\ \ ne13;}
+\DoxyCodeLine{00204\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00205\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00206\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00207\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00208\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00209\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00210\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00211\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00212\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00213\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00214\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00215\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00216\ \ \ \ \ uint64\_t\ offs;}
+\DoxyCodeLine{00217\ \ \ \ \ uint64\_t\ o1[8];}
+\DoxyCodeLine{00218\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__bin}{ggml\_metal\_kargs\_bin}};}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00221\ \ \ \ \ int64\_t\ ne0;}
+\DoxyCodeLine{00222\ \ \ \ \ int64\_t\ ne1;}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ nb01;}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ nb02;}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ nb11;}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ nb21;}
+\DoxyCodeLine{00227\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__add__id}{ggml\_metal\_kargs\_add\_id}};}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00230\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00231\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00232\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00233\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00234\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00235\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00236\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00237\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00238\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00239\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00240\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00241\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00242\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00243\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00244\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00245\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00246\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__repeat}{ggml\_metal\_kargs\_repeat}};}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00249\ \ \ \ \ int64\_t\ \ nk0;}
+\DoxyCodeLine{00250\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{00251\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{00252\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{00253\ \ \ \ \ int64\_t\ \ ne03;}
+\DoxyCodeLine{00254\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00255\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00256\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00257\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00258\ \ \ \ \ int64\_t\ \ ne0;}
+\DoxyCodeLine{00259\ \ \ \ \ int64\_t\ \ ne1;}
+\DoxyCodeLine{00260\ \ \ \ \ int64\_t\ \ ne2;}
+\DoxyCodeLine{00261\ \ \ \ \ int64\_t\ \ ne3;}
+\DoxyCodeLine{00262\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00263\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00264\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00265\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00266\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__cpy}{ggml\_metal\_kargs\_cpy}};}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00269\ \ \ \ \ int64\_t\ \ ne10;}
+\DoxyCodeLine{00270\ \ \ \ \ int64\_t\ \ ne11;}
+\DoxyCodeLine{00271\ \ \ \ \ int64\_t\ \ ne12;}
+\DoxyCodeLine{00272\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00273\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00274\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00275\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00276\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00277\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00278\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00279\ \ \ \ \ uint64\_t\ offs;}
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ inplace;}
+\DoxyCodeLine{00281\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__set}{ggml\_metal\_kargs\_set}};}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00284\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00285\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00286\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00287\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00288\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00289\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00290\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00291\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00292\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00293\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00294\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00295\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00296\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00297\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00298\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00299\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00300\ \ \ \ \ int32\_t\ \ n\_past;}
+\DoxyCodeLine{00301\ \ \ \ \ int32\_t\ \ n\_dims;}
+\DoxyCodeLine{00302\ \ \ \ \ int32\_t\ \ n\_ctx\_orig;}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ freq\_base;}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ freq\_scale;}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ ext\_factor;}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ attn\_factor;}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ beta\_fast;}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ beta\_slow;}
+\DoxyCodeLine{00309\ \ \ \ \ int32\_t\ \ sect\_0;}
+\DoxyCodeLine{00310\ \ \ \ \ int32\_t\ \ sect\_1;}
+\DoxyCodeLine{00311\ \ \ \ \ int32\_t\ \ sect\_2;}
+\DoxyCodeLine{00312\ \ \ \ \ int32\_t\ \ sect\_3;}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ src2;}
+\DoxyCodeLine{00314\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__rope}{ggml\_metal\_kargs\_rope}};}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00317\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00318\ \ \ \ \ int32\_t\ \ ne\_12\_2;\ \textcolor{comment}{//\ assume\ K\ and\ V\ are\ same\ shape}}
+\DoxyCodeLine{00319\ \ \ \ \ int32\_t\ \ ne\_12\_3;}
+\DoxyCodeLine{00320\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00321\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00322\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00323\ \ \ \ \ uint64\_t\ nb21;}
+\DoxyCodeLine{00324\ \ \ \ \ uint64\_t\ nb22;}
+\DoxyCodeLine{00325\ \ \ \ \ uint64\_t\ nb23;}
+\DoxyCodeLine{00326\ \ \ \ \ int32\_t\ \ ne31;}
+\DoxyCodeLine{00327\ \ \ \ \ int32\_t\ \ ne32;}
+\DoxyCodeLine{00328\ \ \ \ \ int32\_t\ \ ne33;}
+\DoxyCodeLine{00329\ \ \ \ \ uint64\_t\ nb31;}
+\DoxyCodeLine{00330\ \ \ \ \ uint64\_t\ nb32;}
+\DoxyCodeLine{00331\ \ \ \ \ uint64\_t\ nb33;}
+\DoxyCodeLine{00332\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__flash__attn__ext__pad}{ggml\_metal\_kargs\_flash\_attn\_ext\_pad}};}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00335\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00336\ \ \ \ \ int32\_t\ \ ne30;}
+\DoxyCodeLine{00337\ \ \ \ \ int32\_t\ \ ne31;}
+\DoxyCodeLine{00338\ \ \ \ \ int32\_t\ \ ne32;}
+\DoxyCodeLine{00339\ \ \ \ \ int32\_t\ \ ne33;}
+\DoxyCodeLine{00340\ \ \ \ \ uint64\_t\ nb31;}
+\DoxyCodeLine{00341\ \ \ \ \ uint64\_t\ nb32;}
+\DoxyCodeLine{00342\ \ \ \ \ uint64\_t\ nb33;}
+\DoxyCodeLine{00343\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__flash__attn__ext__blk}{ggml\_metal\_kargs\_flash\_attn\_ext\_blk}};}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00346\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00347\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00348\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00349\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00350\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00351\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00352\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00353\ \ \ \ \ int32\_t\ \ ne\_12\_2;\ \textcolor{comment}{//\ assume\ K\ and\ V\ are\ same\ shape}}
+\DoxyCodeLine{00354\ \ \ \ \ int32\_t\ \ ne\_12\_3;}
+\DoxyCodeLine{00355\ \ \ \ \ int32\_t\ \ ns10;}
+\DoxyCodeLine{00356\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00357\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00358\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00359\ \ \ \ \ int32\_t\ \ ns20;}
+\DoxyCodeLine{00360\ \ \ \ \ uint64\_t\ nb21;}
+\DoxyCodeLine{00361\ \ \ \ \ uint64\_t\ nb22;}
+\DoxyCodeLine{00362\ \ \ \ \ uint64\_t\ nb23;}
+\DoxyCodeLine{00363\ \ \ \ \ int32\_t\ \ ne31;}
+\DoxyCodeLine{00364\ \ \ \ \ int32\_t\ \ ne32;}
+\DoxyCodeLine{00365\ \ \ \ \ int32\_t\ \ ne33;}
+\DoxyCodeLine{00366\ \ \ \ \ uint64\_t\ nb31;}
+\DoxyCodeLine{00367\ \ \ \ \ uint64\_t\ nb32;}
+\DoxyCodeLine{00368\ \ \ \ \ uint64\_t\ nb33;}
+\DoxyCodeLine{00369\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00370\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00371\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ scale;}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ max\_bias;}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ m0;}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ m1;}
+\DoxyCodeLine{00376\ \ \ \ \ int32\_t\ \ n\_head\_log2;}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ logit\_softcap;}
+\DoxyCodeLine{00378\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__flash__attn__ext}{ggml\_metal\_kargs\_flash\_attn\_ext}};}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00381\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00382\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00383\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00384\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00385\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00386\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00387\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00388\ \ \ \ \ int32\_t\ \ ne\_12\_2;\ \textcolor{comment}{//\ assume\ K\ and\ V\ are\ same\ shape}}
+\DoxyCodeLine{00389\ \ \ \ \ int32\_t\ \ ne\_12\_3;}
+\DoxyCodeLine{00390\ \ \ \ \ int32\_t\ \ ns10;}
+\DoxyCodeLine{00391\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00392\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00393\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00394\ \ \ \ \ int32\_t\ \ ns20;}
+\DoxyCodeLine{00395\ \ \ \ \ uint64\_t\ nb21;}
+\DoxyCodeLine{00396\ \ \ \ \ uint64\_t\ nb22;}
+\DoxyCodeLine{00397\ \ \ \ \ uint64\_t\ nb23;}
+\DoxyCodeLine{00398\ \ \ \ \ int32\_t\ \ ne31;}
+\DoxyCodeLine{00399\ \ \ \ \ int32\_t\ \ ne32;}
+\DoxyCodeLine{00400\ \ \ \ \ int32\_t\ \ ne33;}
+\DoxyCodeLine{00401\ \ \ \ \ uint64\_t\ nb31;}
+\DoxyCodeLine{00402\ \ \ \ \ uint64\_t\ nb32;}
+\DoxyCodeLine{00403\ \ \ \ \ uint64\_t\ nb33;}
+\DoxyCodeLine{00404\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00405\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00406\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ scale;}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ max\_bias;}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ m0;}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ m1;}
+\DoxyCodeLine{00411\ \ \ \ \ int32\_t\ \ n\_head\_log2;}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ logit\_softcap;}
+\DoxyCodeLine{00413\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__flash__attn__ext__vec}{ggml\_metal\_kargs\_flash\_attn\_ext\_vec}};}
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00416\ \ \ \ \ int32\_t\ \ nrows;}
+\DoxyCodeLine{00417\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__flash__attn__ext__vec__reduce}{ggml\_metal\_kargs\_flash\_attn\_ext\_vec\_reduce}};}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00420\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00421\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00422\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00423\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00424\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00425\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00426\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00427\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00428\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00429\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00430\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00431\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00432\ \ \ \ \ int16\_t\ \ r2;}
+\DoxyCodeLine{00433\ \ \ \ \ int16\_t\ \ r3;}
+\DoxyCodeLine{00434\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__mul__mm}{ggml\_metal\_kargs\_mul\_mm}};}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00437\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00438\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00439\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00440\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00441\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00442\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00443\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00444\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00445\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00446\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00447\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00448\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00449\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00450\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00451\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00452\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00453\ \ \ \ \ int32\_t\ \ nr0;}
+\DoxyCodeLine{00454\ \ \ \ \ int16\_t\ \ r2;}
+\DoxyCodeLine{00455\ \ \ \ \ int16\_t\ \ r3;}
+\DoxyCodeLine{00456\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__mul__mv}{ggml\_metal\_kargs\_mul\_mv}};}
+\DoxyCodeLine{00457\ }
+\DoxyCodeLine{00458\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00459\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00460\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00461\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00462\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00463\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00464\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00465\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00466\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00467\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00468\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00469\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00470\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00471\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00472\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00473\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00474\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00475\ \ \ \ \ int16\_t\ \ r2;}
+\DoxyCodeLine{00476\ \ \ \ \ int16\_t\ \ r3;}
+\DoxyCodeLine{00477\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__mul__mv__ext}{ggml\_metal\_kargs\_mul\_mv\_ext}};}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00480\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00481\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00482\ \ \ \ \ int32\_t\ \ ne11;\ \ \textcolor{comment}{//\ n\_expert\_used\ (bcast)}}
+\DoxyCodeLine{00483\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00484\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00485\ \ \ \ \ int32\_t\ \ ne21;\ \textcolor{comment}{//\ n\_tokens}}
+\DoxyCodeLine{00486\ \ \ \ \ int32\_t\ \ ne20;\ \ \textcolor{comment}{//\ n\_expert\_used}}
+\DoxyCodeLine{00487\ \ \ \ \ uint64\_t\ nb21;}
+\DoxyCodeLine{00488\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__mul__mm__id__map0}{ggml\_metal\_kargs\_mul\_mm\_id\_map0}};}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00491\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00492\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00493\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00494\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00495\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00496\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00497\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00498\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00499\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00500\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00501\ \ \ \ \ int32\_t\ \ ne20;}
+\DoxyCodeLine{00502\ \ \ \ \ int32\_t\ \ ne21;}
+\DoxyCodeLine{00503\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00504\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00505\ \ \ \ \ int16\_t\ \ r2;}
+\DoxyCodeLine{00506\ \ \ \ \ int16\_t\ \ r3;}
+\DoxyCodeLine{00507\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__mul__mm__id}{ggml\_metal\_kargs\_mul\_mm\_id}};}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00510\ \ \ \ \ int32\_t\ \ nei0;}
+\DoxyCodeLine{00511\ \ \ \ \ int32\_t\ \ nei1;}
+\DoxyCodeLine{00512\ \ \ \ \ uint64\_t\ nbi1;}
+\DoxyCodeLine{00513\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00514\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00515\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00516\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00517\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00518\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00519\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00520\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00521\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00522\ \ \ \ \ int32\_t\ \ ne13;}
+\DoxyCodeLine{00523\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00524\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00525\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00526\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00527\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00528\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00529\ \ \ \ \ int32\_t\ \ nr0;}
+\DoxyCodeLine{00530\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__mul__mv__id}{ggml\_metal\_kargs\_mul\_mv\_id}};}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \textcolor{comment}{//\ NORM}}
+\DoxyCodeLine{00533\ \textcolor{comment}{//\ RMS\_NORM}}
+\DoxyCodeLine{00534\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00535\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00536\ \ \ \ \ int32\_t\ \ ne00\_t;}
+\DoxyCodeLine{00537\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00538\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00539\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ eps;}
+\DoxyCodeLine{00541\ \ \ \ \ int32\_t\ \ nef1[3];}
+\DoxyCodeLine{00542\ \ \ \ \ int32\_t\ \ nef2[3];}
+\DoxyCodeLine{00543\ \ \ \ \ int32\_t\ \ nef3[3];}
+\DoxyCodeLine{00544\ \ \ \ \ uint64\_t\ nbf1[3];}
+\DoxyCodeLine{00545\ \ \ \ \ uint64\_t\ nbf2[3];}
+\DoxyCodeLine{00546\ \ \ \ \ uint64\_t\ nbf3[3];}
+\DoxyCodeLine{00547\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__norm}{ggml\_metal\_kargs\_norm}};}
+\DoxyCodeLine{00548\ }
+\DoxyCodeLine{00549\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00550\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00551\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00552\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00553\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00554\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00555\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00556\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00557\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00558\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00559\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00560\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00561\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00562\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00563\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00564\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00565\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00566\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ eps;}
+\DoxyCodeLine{00567\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__l2__norm}{ggml\_metal\_kargs\_l2\_norm}};}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00570\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{00571\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{00572\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{00573\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00574\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00575\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00576\ \ \ \ \ int32\_t\ \ ngrp;}
+\DoxyCodeLine{00577\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ eps;}
+\DoxyCodeLine{00578\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__group__norm}{ggml\_metal\_kargs\_group\_norm}};}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00581\ \ \ \ \ int32\_t\ \ IC;}
+\DoxyCodeLine{00582\ \ \ \ \ int32\_t\ \ IL;}
+\DoxyCodeLine{00583\ \ \ \ \ int32\_t\ \ K;}
+\DoxyCodeLine{00584\ \ \ \ \ int32\_t\ \ s0;}
+\DoxyCodeLine{00585\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00586\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00587\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__conv__transpose__1d}{ggml\_metal\_kargs\_conv\_transpose\_1d}};}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00590\ \ \ \ \ int32\_t\ \ IC;}
+\DoxyCodeLine{00591\ \ \ \ \ int32\_t\ \ IH;}
+\DoxyCodeLine{00592\ \ \ \ \ int32\_t\ \ IW;}
+\DoxyCodeLine{00593\ \ \ \ \ int32\_t\ \ KH;}
+\DoxyCodeLine{00594\ \ \ \ \ int32\_t\ \ KW;}
+\DoxyCodeLine{00595\ \ \ \ \ int32\_t\ \ OC;}
+\DoxyCodeLine{00596\ \ \ \ \ int32\_t\ \ s0;}
+\DoxyCodeLine{00597\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00598\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00599\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00600\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__conv__transpose__2d}{ggml\_metal\_kargs\_conv\_transpose\_2d}};}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00603\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00604\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00605\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00606\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00607\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00608\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00609\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00610\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00611\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00612\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00613\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00614\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00615\ \ \ \ \ int32\_t\ \ IW;}
+\DoxyCodeLine{00616\ \ \ \ \ int32\_t\ \ IH;}
+\DoxyCodeLine{00617\ \ \ \ \ int32\_t\ \ KW;}
+\DoxyCodeLine{00618\ \ \ \ \ int32\_t\ \ KH;}
+\DoxyCodeLine{00619\ \ \ \ \ int32\_t\ \ IC;}
+\DoxyCodeLine{00620\ \ \ \ \ int32\_t\ \ OC;}
+\DoxyCodeLine{00621\ \ \ \ \ int32\_t\ \ OW;}
+\DoxyCodeLine{00622\ \ \ \ \ int32\_t\ \ OH;}
+\DoxyCodeLine{00623\ \ \ \ \ int32\_t\ \ N;}
+\DoxyCodeLine{00624\ \ \ \ \ int32\_t\ \ s0;}
+\DoxyCodeLine{00625\ \ \ \ \ int32\_t\ \ s1;}
+\DoxyCodeLine{00626\ \ \ \ \ int32\_t\ \ p0;}
+\DoxyCodeLine{00627\ \ \ \ \ int32\_t\ \ p1;}
+\DoxyCodeLine{00628\ \ \ \ \ int32\_t\ \ d0;}
+\DoxyCodeLine{00629\ \ \ \ \ int32\_t\ \ d1;}
+\DoxyCodeLine{00630\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__conv__2d}{ggml\_metal\_kargs\_conv\_2d}};}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00633\ \ \ \ \ uint64\_t\ \ ofs0;}
+\DoxyCodeLine{00634\ \ \ \ \ uint64\_t\ \ ofs1;}
+\DoxyCodeLine{00635\ \ \ \ \ int32\_t\ \ IW;}
+\DoxyCodeLine{00636\ \ \ \ \ int32\_t\ \ IH;}
+\DoxyCodeLine{00637\ \ \ \ \ int32\_t\ \ CHW;}
+\DoxyCodeLine{00638\ \ \ \ \ int32\_t\ \ s0;}
+\DoxyCodeLine{00639\ \ \ \ \ int32\_t\ \ s1;}
+\DoxyCodeLine{00640\ \ \ \ \ int32\_t\ \ p0;}
+\DoxyCodeLine{00641\ \ \ \ \ int32\_t\ \ p1;}
+\DoxyCodeLine{00642\ \ \ \ \ int32\_t\ \ d0;}
+\DoxyCodeLine{00643\ \ \ \ \ int32\_t\ \ d1;}
+\DoxyCodeLine{00644\ \ \ \ \ int32\_t\ \ N;}
+\DoxyCodeLine{00645\ \ \ \ \ int32\_t\ \ KH;}
+\DoxyCodeLine{00646\ \ \ \ \ int32\_t\ \ KW;}
+\DoxyCodeLine{00647\ \ \ \ \ int32\_t\ \ KHW;\ \textcolor{comment}{//\ KH\ *\ KW,\ pre-\/computed\ on\ CPU\ to\ save\ GPU\ resources}}
+\DoxyCodeLine{00648\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__im2col}{ggml\_metal\_kargs\_im2col}};}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00651\ \ \ \ \ int32\_t\ \ IW;}
+\DoxyCodeLine{00652\ \ \ \ \ int32\_t\ \ IH;}
+\DoxyCodeLine{00653\ \ \ \ \ int32\_t\ \ ID;}
+\DoxyCodeLine{00654\ \ \ \ \ int32\_t\ \ OW;}
+\DoxyCodeLine{00655\ \ \ \ \ int32\_t\ \ OH;}
+\DoxyCodeLine{00656\ \ \ \ \ int32\_t\ \ OD;}
+\DoxyCodeLine{00657\ \ \ \ \ int32\_t\ \ KW;}
+\DoxyCodeLine{00658\ \ \ \ \ int32\_t\ \ KH;}
+\DoxyCodeLine{00659\ \ \ \ \ int32\_t\ \ KD;}
+\DoxyCodeLine{00660\ \ \ \ \ int32\_t\ \ s0;}
+\DoxyCodeLine{00661\ \ \ \ \ int32\_t\ \ s1;}
+\DoxyCodeLine{00662\ \ \ \ \ int32\_t\ \ s2;}
+\DoxyCodeLine{00663\ \ \ \ \ int32\_t\ \ p0;}
+\DoxyCodeLine{00664\ \ \ \ \ int32\_t\ \ p1;}
+\DoxyCodeLine{00665\ \ \ \ \ int32\_t\ \ p2;}
+\DoxyCodeLine{00666\ \ \ \ \ int32\_t\ \ d0;}
+\DoxyCodeLine{00667\ \ \ \ \ int32\_t\ \ d1;}
+\DoxyCodeLine{00668\ \ \ \ \ int32\_t\ \ d2;}
+\DoxyCodeLine{00669\ \ \ \ \ int32\_t\ \ IC;}
+\DoxyCodeLine{00670\ \ \ \ \ int32\_t\ \ N;}
+\DoxyCodeLine{00671\ \ \ \ \ int32\_t\ \ OC;}
+\DoxyCodeLine{00672\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00673\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00674\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00675\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00676\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00677\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00678\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00679\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00680\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00681\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00682\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00683\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00684\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__conv__3d}{ggml\_metal\_kargs\_conv\_3d}};}
+\DoxyCodeLine{00685\ }
+\DoxyCodeLine{00686\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}\{}
+\DoxyCodeLine{00687\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00688\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00689\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00690\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00691\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00692\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00693\ \ \ \ \ int32\_t\ \ i00;}
+\DoxyCodeLine{00694\ \ \ \ \ int32\_t\ \ i10;}
+\DoxyCodeLine{00695\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ alpha;}
+\DoxyCodeLine{00696\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ limit;}
+\DoxyCodeLine{00697\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__glu}{ggml\_metal\_kargs\_glu}};}
+\DoxyCodeLine{00698\ }
+\DoxyCodeLine{00699\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00700\ \ \ \ \ uint64\_t\ np;}
+\DoxyCodeLine{00701\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__sum}{ggml\_metal\_kargs\_sum}};}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00704\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{00705\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{00706\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{00707\ \ \ \ \ int64\_t\ \ ne03;}
+\DoxyCodeLine{00708\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00709\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00710\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00711\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00712\ \ \ \ \ int64\_t\ \ ne0;}
+\DoxyCodeLine{00713\ \ \ \ \ int64\_t\ \ ne1;}
+\DoxyCodeLine{00714\ \ \ \ \ int64\_t\ \ ne2;}
+\DoxyCodeLine{00715\ \ \ \ \ int64\_t\ \ ne3;}
+\DoxyCodeLine{00716\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00717\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00718\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00719\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00720\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__sum__rows}{ggml\_metal\_kargs\_sum\_rows}};}
+\DoxyCodeLine{00721\ }
+\DoxyCodeLine{00722\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00723\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{00724\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{00725\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{00726\ \ \ \ \ int64\_t\ \ ne03;}
+\DoxyCodeLine{00727\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00728\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00729\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00730\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00731\ \ \ \ \ int64\_t\ \ net0;}
+\DoxyCodeLine{00732\ \ \ \ \ int64\_t\ \ net1;}
+\DoxyCodeLine{00733\ \ \ \ \ int64\_t\ \ net2;}
+\DoxyCodeLine{00734\ \ \ \ \ int64\_t\ \ net3;}
+\DoxyCodeLine{00735\ \ \ \ \ uint64\_t\ nbt0;}
+\DoxyCodeLine{00736\ \ \ \ \ uint64\_t\ nbt1;}
+\DoxyCodeLine{00737\ \ \ \ \ uint64\_t\ nbt2;}
+\DoxyCodeLine{00738\ \ \ \ \ uint64\_t\ nbt3;}
+\DoxyCodeLine{00739\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ outb;}
+\DoxyCodeLine{00740\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__cumsum__blk}{ggml\_metal\_kargs\_cumsum\_blk}};}
+\DoxyCodeLine{00741\ }
+\DoxyCodeLine{00742\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00743\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{00744\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{00745\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{00746\ \ \ \ \ int64\_t\ \ ne03;}
+\DoxyCodeLine{00747\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00748\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00749\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00750\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00751\ \ \ \ \ int64\_t\ \ net0;}
+\DoxyCodeLine{00752\ \ \ \ \ int64\_t\ \ net1;}
+\DoxyCodeLine{00753\ \ \ \ \ int64\_t\ \ net2;}
+\DoxyCodeLine{00754\ \ \ \ \ int64\_t\ \ net3;}
+\DoxyCodeLine{00755\ \ \ \ \ uint64\_t\ nbt0;}
+\DoxyCodeLine{00756\ \ \ \ \ uint64\_t\ nbt1;}
+\DoxyCodeLine{00757\ \ \ \ \ uint64\_t\ nbt2;}
+\DoxyCodeLine{00758\ \ \ \ \ uint64\_t\ nbt3;}
+\DoxyCodeLine{00759\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__cumsum__add}{ggml\_metal\_kargs\_cumsum\_add}};}
+\DoxyCodeLine{00760\ }
+\DoxyCodeLine{00761\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00762\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00763\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00764\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00765\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00766\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00767\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00768\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00769\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00770\ \ \ \ \ int32\_t\ \ ne13;}
+\DoxyCodeLine{00771\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00772\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00773\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00774\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00775\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00776\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00777\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ scale;}
+\DoxyCodeLine{00778\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ max\_bias;}
+\DoxyCodeLine{00779\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ m0;}
+\DoxyCodeLine{00780\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ m1;}
+\DoxyCodeLine{00781\ \ \ \ \ int32\_t\ \ n\_head\_log2;}
+\DoxyCodeLine{00782\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__soft__max}{ggml\_metal\_kargs\_soft\_max}};}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00785\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{00786\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{00787\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{00788\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00789\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00790\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00791\ \ \ \ \ int64\_t\ \ ne10;}
+\DoxyCodeLine{00792\ \ \ \ \ int64\_t\ \ ne11;}
+\DoxyCodeLine{00793\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00794\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00795\ \ \ \ \ int64\_t\ \ ne0;}
+\DoxyCodeLine{00796\ \ \ \ \ int64\_t\ \ ne1;}
+\DoxyCodeLine{00797\ \ \ \ \ int64\_t\ \ ne2;}
+\DoxyCodeLine{00798\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00799\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00800\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00801\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__ssm__conv}{ggml\_metal\_kargs\_ssm\_conv}};}
+\DoxyCodeLine{00802\ }
+\DoxyCodeLine{00803\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00804\ \ \ \ \ int64\_t\ \ d\_state;}
+\DoxyCodeLine{00805\ \ \ \ \ int64\_t\ \ d\_inner;}
+\DoxyCodeLine{00806\ \ \ \ \ int64\_t\ \ n\_head;}
+\DoxyCodeLine{00807\ \ \ \ \ int64\_t\ \ n\_group;}
+\DoxyCodeLine{00808\ \ \ \ \ int64\_t\ \ n\_seq\_tokens;}
+\DoxyCodeLine{00809\ \ \ \ \ int64\_t\ \ n\_seqs;}
+\DoxyCodeLine{00810\ \ \ \ \ uint64\_t\ s\_off;}
+\DoxyCodeLine{00811\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00812\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00813\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00814\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00815\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00816\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00817\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00818\ \ \ \ \ uint64\_t\ ns12;}
+\DoxyCodeLine{00819\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00820\ \ \ \ \ uint64\_t\ nb20;}
+\DoxyCodeLine{00821\ \ \ \ \ uint64\_t\ nb21;}
+\DoxyCodeLine{00822\ \ \ \ \ uint64\_t\ ns21;}
+\DoxyCodeLine{00823\ \ \ \ \ uint64\_t\ nb22;}
+\DoxyCodeLine{00824\ \ \ \ \ int64\_t\ \ ne30;}
+\DoxyCodeLine{00825\ \ \ \ \ uint64\_t\ nb31;}
+\DoxyCodeLine{00826\ \ \ \ \ uint64\_t\ nb41;}
+\DoxyCodeLine{00827\ \ \ \ \ uint64\_t\ nb42;}
+\DoxyCodeLine{00828\ \ \ \ \ uint64\_t\ ns42;}
+\DoxyCodeLine{00829\ \ \ \ \ uint64\_t\ nb43;}
+\DoxyCodeLine{00830\ \ \ \ \ uint64\_t\ nb51;}
+\DoxyCodeLine{00831\ \ \ \ \ uint64\_t\ nb52;}
+\DoxyCodeLine{00832\ \ \ \ \ uint64\_t\ ns52;}
+\DoxyCodeLine{00833\ \ \ \ \ uint64\_t\ nb53;}
+\DoxyCodeLine{00834\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00835\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__ssm__scan}{ggml\_metal\_kargs\_ssm\_scan}};}
+\DoxyCodeLine{00836\ }
+\DoxyCodeLine{00837\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00838\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00839\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00840\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00841\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00842\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00843\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00844\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00845\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00846\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00847\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00848\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00849\ \ \ \ \ int32\_t\ \ ne13;}
+\DoxyCodeLine{00850\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00851\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00852\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00853\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00854\ \ \ \ \ int32\_t\ \ ne20;}
+\DoxyCodeLine{00855\ \ \ \ \ int32\_t\ \ ne21;}
+\DoxyCodeLine{00856\ \ \ \ \ int32\_t\ \ ne22;}
+\DoxyCodeLine{00857\ \ \ \ \ int32\_t\ \ ne23;}
+\DoxyCodeLine{00858\ \ \ \ \ uint64\_t\ nb20;}
+\DoxyCodeLine{00859\ \ \ \ \ uint64\_t\ nb21;}
+\DoxyCodeLine{00860\ \ \ \ \ uint64\_t\ nb22;}
+\DoxyCodeLine{00861\ \ \ \ \ uint64\_t\ nb23;}
+\DoxyCodeLine{00862\ \ \ \ \ int32\_t\ \ ns02;}
+\DoxyCodeLine{00863\ \ \ \ \ int32\_t\ \ ns12;}
+\DoxyCodeLine{00864\ \ \ \ \ int32\_t\ \ ns22;}
+\DoxyCodeLine{00865\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00866\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00867\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00868\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00869\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00870\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00871\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00872\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00873\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__gated__delta__net}{ggml\_metal\_kargs\_gated\_delta\_net}};}
+\DoxyCodeLine{00874\ }
+\DoxyCodeLine{00875\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00876\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00877\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00878\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00879\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00880\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00881\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00882\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00883\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00884\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00885\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00886\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00887\ \ \ \ \ int32\_t\ \ ne13;}
+\DoxyCodeLine{00888\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00889\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00890\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00891\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{00892\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00893\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00894\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00895\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00896\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00897\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00898\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00899\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00900\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__solve__tri}{ggml\_metal\_kargs\_solve\_tri}};}
+\DoxyCodeLine{00901\ }
+\DoxyCodeLine{00902\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00903\ \ \ \ \ int32\_t\ \ ne00t;}
+\DoxyCodeLine{00904\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00905\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00906\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00907\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00908\ \ \ \ \ int32\_t\ \ ne10;}
+\DoxyCodeLine{00909\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00910\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00911\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00912\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00913\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00914\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00915\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__get__rows}{ggml\_metal\_kargs\_get\_rows}};}
+\DoxyCodeLine{00916\ }
+\DoxyCodeLine{00917\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00918\ \ \ \ \ int32\_t\ \ nk0;}
+\DoxyCodeLine{00919\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00920\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00921\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00922\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00923\ \ \ \ \ int32\_t\ \ ne11;}
+\DoxyCodeLine{00924\ \ \ \ \ int32\_t\ \ ne12;}
+\DoxyCodeLine{00925\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{00926\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{00927\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{00928\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00929\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00930\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00931\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__set__rows}{ggml\_metal\_kargs\_set\_rows}};}
+\DoxyCodeLine{00932\ }
+\DoxyCodeLine{00933\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00934\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{00935\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{00936\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{00937\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{00938\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00939\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00940\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00941\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00942\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{00943\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{00944\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{00945\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{00946\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00947\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00948\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00949\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00950\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__diag}{ggml\_metal\_kargs\_diag}};}
+\DoxyCodeLine{00951\ }
+\DoxyCodeLine{00952\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00953\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{00954\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{00955\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{00956\ \ \ \ \ int64\_t\ \ ne03;}
+\DoxyCodeLine{00957\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00958\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00959\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00960\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00961\ \ \ \ \ int64\_t\ \ ne0;}
+\DoxyCodeLine{00962\ \ \ \ \ int64\_t\ \ ne1;}
+\DoxyCodeLine{00963\ \ \ \ \ int64\_t\ \ ne2;}
+\DoxyCodeLine{00964\ \ \ \ \ int64\_t\ \ ne3;}
+\DoxyCodeLine{00965\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00966\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00967\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00968\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00969\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ sf0;}
+\DoxyCodeLine{00970\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ sf1;}
+\DoxyCodeLine{00971\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ sf2;}
+\DoxyCodeLine{00972\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ sf3;}
+\DoxyCodeLine{00973\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ poffs;}
+\DoxyCodeLine{00974\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__upscale}{ggml\_metal\_kargs\_upscale}};}
+\DoxyCodeLine{00975\ }
+\DoxyCodeLine{00976\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00977\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{00978\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{00979\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{00980\ \ \ \ \ int64\_t\ \ ne03;}
+\DoxyCodeLine{00981\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{00982\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{00983\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{00984\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{00985\ \ \ \ \ int64\_t\ \ ne0;}
+\DoxyCodeLine{00986\ \ \ \ \ int64\_t\ \ ne1;}
+\DoxyCodeLine{00987\ \ \ \ \ int64\_t\ \ ne2;}
+\DoxyCodeLine{00988\ \ \ \ \ int64\_t\ \ ne3;}
+\DoxyCodeLine{00989\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{00990\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{00991\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{00992\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{00993\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__pad}{ggml\_metal\_kargs\_pad}};}
+\DoxyCodeLine{00994\ }
+\DoxyCodeLine{00995\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00996\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{00997\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{00998\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{00999\ \ \ \ \ int64\_t\ \ ne03;}
+\DoxyCodeLine{01000\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{01001\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{01002\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{01003\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{01004\ \ \ \ \ int64\_t\ \ ne0;}
+\DoxyCodeLine{01005\ \ \ \ \ int64\_t\ \ ne1;}
+\DoxyCodeLine{01006\ \ \ \ \ int64\_t\ \ ne2;}
+\DoxyCodeLine{01007\ \ \ \ \ int64\_t\ \ ne3;}
+\DoxyCodeLine{01008\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{01009\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{01010\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{01011\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{01012\ \ \ \ \ int32\_t\ \ p0;}
+\DoxyCodeLine{01013\ \ \ \ \ int32\_t\ \ p1;}
+\DoxyCodeLine{01014\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__pad__reflect__1d}{ggml\_metal\_kargs\_pad\_reflect\_1d}};}
+\DoxyCodeLine{01015\ }
+\DoxyCodeLine{01016\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01017\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{01018\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ dim;}
+\DoxyCodeLine{01019\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ max\_period;}
+\DoxyCodeLine{01020\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__timestep__embedding}{ggml\_metal\_kargs\_timestep\_embedding}};}
+\DoxyCodeLine{01021\ }
+\DoxyCodeLine{01022\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01023\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{01024\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{01025\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{01026\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{01027\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{01028\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{01029\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{01030\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{01031\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{01032\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{01033\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{01034\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{01035\ \ \ \ \ uint64\_t\ nb0;}
+\DoxyCodeLine{01036\ \ \ \ \ uint64\_t\ nb1;}
+\DoxyCodeLine{01037\ \ \ \ \ uint64\_t\ nb2;}
+\DoxyCodeLine{01038\ \ \ \ \ uint64\_t\ nb3;}
+\DoxyCodeLine{01039\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__tri}{ggml\_metal\_kargs\_tri}};}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01042\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{01043\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{01044\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{01045\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{01046\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{01047\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{01048\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{01049\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{01050\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{01051\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{01052\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{01053\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{01054\ \ \ \ \ int32\_t\ \ top\_k;}
+\DoxyCodeLine{01055\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__argsort}{ggml\_metal\_kargs\_argsort}};}
+\DoxyCodeLine{01056\ }
+\DoxyCodeLine{01057\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01058\ \ \ \ \ int64\_t\ \ ne00;}
+\DoxyCodeLine{01059\ \ \ \ \ int64\_t\ \ ne01;}
+\DoxyCodeLine{01060\ \ \ \ \ int64\_t\ \ ne02;}
+\DoxyCodeLine{01061\ \ \ \ \ int64\_t\ \ ne03;}
+\DoxyCodeLine{01062\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{01063\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{01064\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{01065\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{01066\ \ \ \ \ int32\_t\ \ ne0;}
+\DoxyCodeLine{01067\ \ \ \ \ int32\_t\ \ ne1;}
+\DoxyCodeLine{01068\ \ \ \ \ int32\_t\ \ ne2;}
+\DoxyCodeLine{01069\ \ \ \ \ int32\_t\ \ ne3;}
+\DoxyCodeLine{01070\ \ \ \ \ int32\_t\ \ top\_k;}
+\DoxyCodeLine{01071\ \ \ \ \ int32\_t\ \ len;}
+\DoxyCodeLine{01072\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__argsort__merge}{ggml\_metal\_kargs\_argsort\_merge}};}
+\DoxyCodeLine{01073\ }
+\DoxyCodeLine{01074\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01075\ \ \ \ \ int64\_t\ \ ne0;}
+\DoxyCodeLine{01076\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ start;}
+\DoxyCodeLine{01077\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ step;}
+\DoxyCodeLine{01078\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__arange}{ggml\_metal\_kargs\_arange}};}
+\DoxyCodeLine{01079\ }
+\DoxyCodeLine{01080\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01081\ \ \ \ \ int64\_t\ val;}
+\DoxyCodeLine{01082\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__memset}{ggml\_metal\_kargs\_memset}};}
+\DoxyCodeLine{01083\ }
+\DoxyCodeLine{01084\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01085\ \ \ \ \ int32\_t\ \ ne00;}
+\DoxyCodeLine{01086\ \ \ \ \ int32\_t\ \ ne01;}
+\DoxyCodeLine{01087\ \ \ \ \ int32\_t\ \ ne02;}
+\DoxyCodeLine{01088\ \ \ \ \ int32\_t\ \ ne03;}
+\DoxyCodeLine{01089\ \ \ \ \ uint64\_t\ nb00;}
+\DoxyCodeLine{01090\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{01091\ \ \ \ \ uint64\_t\ nb02;}
+\DoxyCodeLine{01092\ \ \ \ \ uint64\_t\ nb03;}
+\DoxyCodeLine{01093\ \ \ \ \ uint64\_t\ nb10;}
+\DoxyCodeLine{01094\ \ \ \ \ uint64\_t\ nb11;}
+\DoxyCodeLine{01095\ \ \ \ \ uint64\_t\ nb12;}
+\DoxyCodeLine{01096\ \ \ \ \ uint64\_t\ nb13;}
+\DoxyCodeLine{01097\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__count__equal}{ggml\_metal\_kargs\_count\_equal}};}
+\DoxyCodeLine{01098\ }
+\DoxyCodeLine{01099\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01100\ \ \ \ \ int32\_t\ \ k0;}
+\DoxyCodeLine{01101\ \ \ \ \ int32\_t\ \ k1;}
+\DoxyCodeLine{01102\ \ \ \ \ int32\_t\ \ s0;}
+\DoxyCodeLine{01103\ \ \ \ \ int32\_t\ \ s1;}
+\DoxyCodeLine{01104\ \ \ \ \ int32\_t\ \ p0;}
+\DoxyCodeLine{01105\ \ \ \ \ int32\_t\ \ p1;}
+\DoxyCodeLine{01106\ \ \ \ \ int64\_t\ \ IH;}
+\DoxyCodeLine{01107\ \ \ \ \ int64\_t\ \ IW;}
+\DoxyCodeLine{01108\ \ \ \ \ int64\_t\ \ OH;}
+\DoxyCodeLine{01109\ \ \ \ \ int64\_t\ \ OW;}
+\DoxyCodeLine{01110\ \ \ \ \ int64\_t\ \ np;}
+\DoxyCodeLine{01111\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__pool__2d}{ggml\_metal\_kargs\_pool\_2d}};}
+\DoxyCodeLine{01112\ }
+\DoxyCodeLine{01113\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01114\ \ \ \ \ int32\_t\ \ k0;}
+\DoxyCodeLine{01115\ \ \ \ \ int32\_t\ \ s0;}
+\DoxyCodeLine{01116\ \ \ \ \ int32\_t\ \ p0;}
+\DoxyCodeLine{01117\ \ \ \ \ int64\_t\ \ IW;}
+\DoxyCodeLine{01118\ \ \ \ \ int64\_t\ \ OW;}
+\DoxyCodeLine{01119\ \ \ \ \ int64\_t\ \ np;}
+\DoxyCodeLine{01120\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__pool__1d}{ggml\_metal\_kargs\_pool\_1d}};}
+\DoxyCodeLine{01121\ }
+\DoxyCodeLine{01122\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01123\ \ \ \ \ \ int64\_t\ ne00;}
+\DoxyCodeLine{01124\ \ \ \ \ uint64\_t\ nb01;}
+\DoxyCodeLine{01125\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__argmax}{ggml\_metal\_kargs\_argmax}};}
+\DoxyCodeLine{01126\ }
+\DoxyCodeLine{01127\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01128\ \ \ \ \ int64\_t\ \ np;}
+\DoxyCodeLine{01129\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__opt__step__adamw}{ggml\_metal\_kargs\_opt\_step\_adamw}};}
+\DoxyCodeLine{01130\ }
+\DoxyCodeLine{01131\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{01132\ \ \ \ \ int64\_t\ \ np;}
+\DoxyCodeLine{01133\ \}\ \doxymbox{\hyperlink{structggml__metal__kargs__opt__step__sgd}{ggml\_metal\_kargs\_opt\_step\_sgd}};}
+\DoxyCodeLine{01134\ }
+\DoxyCodeLine{01135\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_METAL\_IMPL}}
+
+\end{DoxyCode}

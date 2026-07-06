@@ -1,0 +1,59 @@
+\doxysection{virtgpu-\/forward.gen.\+h}
+\hypertarget{virtgpu-forward_8gen_8h_source}{}\label{virtgpu-forward_8gen_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu-\/forward.gen.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu-\/forward.gen.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{/*\ device\ */}}
+\DoxyCodeLine{00004\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_device\_get\_device\_count(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu);}
+\DoxyCodeLine{00005\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_device\_get\_count(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu);}
+\DoxyCodeLine{00006\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_device\_get\_name(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu);}
+\DoxyCodeLine{00007\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_device\_get\_description(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu);}
+\DoxyCodeLine{00008\ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_device\_get\_type(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu);}
+\DoxyCodeLine{00009\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_device\_get\_memory(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \textcolor{keywordtype}{size\_t}\ *\ free,\ \textcolor{keywordtype}{size\_t}\ *\ total);}
+\DoxyCodeLine{00010\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_device\_supports\_op(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00011\ apir\_buffer\_type\_host\_handle\_t\ apir\_device\_get\_buffer\_type(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu);}
+\DoxyCodeLine{00012\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_device\_get\_props(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ *\ \ \ \ \ \ \ \ \ \ \ async,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ *\ \ \ \ \ \ \ \ \ \ \ host\_buffer,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ *\ \ \ \ \ \ \ \ \ \ \ buffer\_from\_host\_ptr,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ *\ \ \ \ \ \ \ \ \ \ \ events);}
+\DoxyCodeLine{00017\ \doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ \ \ \ \ \ \ \ \ \ apir\_device\_buffer\_from\_ptr(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{size\_t}\ max\_tensor\_size);}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{/*\ buffer-\/type\ */}}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_buffer\_type\_get\_name(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ apir\_buffer\_type\_host\_handle\_t\ host\_handle);}
+\DoxyCodeLine{00021\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_buffer\_type\_get\_alignment(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ apir\_buffer\_type\_host\_handle\_t\ host\_handle);}
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_buffer\_type\_get\_max\_size(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ apir\_buffer\_type\_host\_handle\_t\ host\_handle);}
+\DoxyCodeLine{00023\ \textcolor{comment}{/*\ apir\_buffer\_type\_is\_host\ is\ deprecated.\ */}}
+\DoxyCodeLine{00024\ \doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ apir\_buffer\_type\_alloc\_buffer(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gpu,}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_buffer\_type\_host\_handle\_t\ host\_handle,}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ size);}
+\DoxyCodeLine{00027\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_buffer\_type\_get\_alloc\_size(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gpu,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_buffer\_type\_host\_handle\_t\ host\_handle,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ \ \ \ \ \ \ \ op);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{/*\ buffer\ */}}
+\DoxyCodeLine{00032\ \textcolor{keywordtype}{void}\ *\ apir\_buffer\_get\_base(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ *\ buffer\_context);}
+\DoxyCodeLine{00033\ \textcolor{keywordtype}{void}\ \ \ apir\_buffer\_set\_tensor(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ \ \ \ \ \ \ \ gpu,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ *\ buffer\_context,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ \ \ \ \ \ \ tensor,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ data,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ offset,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ size);}
+\DoxyCodeLine{00039\ \textcolor{keywordtype}{void}\ \ \ apir\_buffer\_get\_tensor(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ \ \ \ \ \ \ \ gpu,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ *\ buffer\_context,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ tensor,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ offset,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ size);}
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{bool}\ \ \ apir\_buffer\_cpy\_tensor(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ \ \ \ \ \ \ \ gpu,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ *\ buffer\_context,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ src,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ dst);}
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{void}\ \ \ apir\_buffer\_clear(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ *\ buffer\_context,\ uint8\_t\ value);}
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{void}\ \ \ apir\_buffer\_free\_buffer(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ *\ buffer\_context);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{comment}{/*\ backend\ */}}
+\DoxyCodeLine{00053\ ggml\_status\ apir\_backend\_graph\_compute(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph);}
+
+\end{DoxyCode}

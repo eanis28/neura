@@ -1,0 +1,471 @@
+\doxysection{httplib::\+Server Class Reference}
+\hypertarget{classhttplib_1_1_server}{}\label{classhttplib_1_1_server}\index{httplib::Server@{httplib::Server}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structhttplib_1_1_server_1_1_mount_point_entry}{Mount\+Point\+Entry}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_server_a68cf8c175834bde61120ac4216ea943b}\label{classhttplib_1_1_server_a68cf8c175834bde61120ac4216ea943b} 
+enum class {\bfseries Handler\+Response} \{ {\bfseries Handled}
+, {\bfseries Unhandled}
+ \}
+\item 
+\Hypertarget{classhttplib_1_1_server_a7dd90fb4275b663feff97966b3581b9e}\label{classhttplib_1_1_server_a7dd90fb4275b663feff97966b3581b9e} 
+using {\bfseries Handler} = std::\+function$<$void(const \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&)$>$
+\item 
+using \doxymbox{\hyperlink{classhttplib_1_1_server_aa759168fe715e06d071a25f6aa8c995e}{Exception\+Handler}}
+\item 
+using \doxymbox{\hyperlink{classhttplib_1_1_server_af5c4cf3bdcdcd782b325def4eee56776}{Handler\+With\+Response}}
+\item 
+using \doxymbox{\hyperlink{classhttplib_1_1_server_abca5e21b948277a84f9d55ca0f6b0e55}{Handler\+With\+Content\+Reader}}
+\item 
+using \doxymbox{\hyperlink{classhttplib_1_1_server_a37d82925d38ce7e3e1f6752be686615d}{Expect100\+Continue\+Handler}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_server_a4f02314a47adbae984a7483e8e820c05}\label{classhttplib_1_1_server_a4f02314a47adbae984a7483e8e820c05} 
+virtual bool {\bfseries is\+\_\+valid} () const
+\item 
+\Hypertarget{classhttplib_1_1_server_a74a4a4a3142e60854e8e24da96cdbcca}\label{classhttplib_1_1_server_a74a4a4a3142e60854e8e24da96cdbcca} 
+Server \& {\bfseries Get} (const std::\+string \&pattern, Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a94c2dad6da1c6e4e02095a692a5b02a8}\label{classhttplib_1_1_server_a94c2dad6da1c6e4e02095a692a5b02a8} 
+Server \& {\bfseries Post} (const std::\+string \&pattern, Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_ab454f425b92fc5a857cb60bb322727dd}\label{classhttplib_1_1_server_ab454f425b92fc5a857cb60bb322727dd} 
+Server \& {\bfseries Post} (const std::\+string \&pattern, Handler\+With\+Content\+Reader handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a1cf7f1accef56826b2bf09117f1d4103}\label{classhttplib_1_1_server_a1cf7f1accef56826b2bf09117f1d4103} 
+Server \& {\bfseries Put} (const std::\+string \&pattern, Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a2d450f42f8b6fc6ababec2fcaca22d50}\label{classhttplib_1_1_server_a2d450f42f8b6fc6ababec2fcaca22d50} 
+Server \& {\bfseries Put} (const std::\+string \&pattern, Handler\+With\+Content\+Reader handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a6c72621c8b7ab935c7a3872999eeb692}\label{classhttplib_1_1_server_a6c72621c8b7ab935c7a3872999eeb692} 
+Server \& {\bfseries Patch} (const std::\+string \&pattern, Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a865253d431defef7a894e58fe41c92a0}\label{classhttplib_1_1_server_a865253d431defef7a894e58fe41c92a0} 
+Server \& {\bfseries Patch} (const std::\+string \&pattern, Handler\+With\+Content\+Reader handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a20a2348fa99b1107853dda9ef9b3e6e2}\label{classhttplib_1_1_server_a20a2348fa99b1107853dda9ef9b3e6e2} 
+Server \& {\bfseries Delete} (const std::\+string \&pattern, Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a255eb85d73a38405c9a46f2b16c9cb43}\label{classhttplib_1_1_server_a255eb85d73a38405c9a46f2b16c9cb43} 
+Server \& {\bfseries Delete} (const std::\+string \&pattern, Handler\+With\+Content\+Reader handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a4e5873454e8a2003810e80511e9e2830}\label{classhttplib_1_1_server_a4e5873454e8a2003810e80511e9e2830} 
+Server \& {\bfseries Options} (const std::\+string \&pattern, Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a36c137f4b03c3d1128b1e07d1a029169}\label{classhttplib_1_1_server_a36c137f4b03c3d1128b1e07d1a029169} 
+bool {\bfseries set\+\_\+base\+\_\+dir} (const std::\+string \&dir, const std::\+string \&mount\+\_\+point=std::\+string())
+\item 
+\Hypertarget{classhttplib_1_1_server_ac6d41f4b6066757830b91064a0043a3e}\label{classhttplib_1_1_server_ac6d41f4b6066757830b91064a0043a3e} 
+bool {\bfseries set\+\_\+mount\+\_\+point} (const std::\+string \&mount\+\_\+point, const std::\+string \&dir, Headers headers=Headers())
+\item 
+\Hypertarget{classhttplib_1_1_server_aa6937f9f0804b55f1a0af1673118acd5}\label{classhttplib_1_1_server_aa6937f9f0804b55f1a0af1673118acd5} 
+bool {\bfseries remove\+\_\+mount\+\_\+point} (const std::\+string \&mount\+\_\+point)
+\item 
+\Hypertarget{classhttplib_1_1_server_af3bca9e3d68dcc860ba75c1b6e5241ea}\label{classhttplib_1_1_server_af3bca9e3d68dcc860ba75c1b6e5241ea} 
+Server \& {\bfseries set\+\_\+file\+\_\+extension\+\_\+and\+\_\+mimetype\+\_\+mapping} (const std::\+string \&ext, const std::\+string \&mime)
+\item 
+\Hypertarget{classhttplib_1_1_server_a0af6b429a195771184c3b13e999b59fe}\label{classhttplib_1_1_server_a0af6b429a195771184c3b13e999b59fe} 
+Server \& {\bfseries set\+\_\+default\+\_\+file\+\_\+mimetype} (const std::\+string \&mime)
+\item 
+\Hypertarget{classhttplib_1_1_server_a7b6925d325402d78965f77588044b741}\label{classhttplib_1_1_server_a7b6925d325402d78965f77588044b741} 
+Server \& {\bfseries set\+\_\+file\+\_\+request\+\_\+handler} (Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a307008ea04d24cbdafd6c801817de63d}\label{classhttplib_1_1_server_a307008ea04d24cbdafd6c801817de63d} 
+{\footnotesize template$<$class Error\+Handler\+Func$>$ }\\Server \& {\bfseries set\+\_\+error\+\_\+handler} (Error\+Handler\+Func \&\&handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_ad66316cc550d27081398c69be8e38935}\label{classhttplib_1_1_server_ad66316cc550d27081398c69be8e38935} 
+Server \& {\bfseries set\+\_\+exception\+\_\+handler} (Exception\+Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a26bbbe58ee42f3eef5703015b16c696a}\label{classhttplib_1_1_server_a26bbbe58ee42f3eef5703015b16c696a} 
+Server \& {\bfseries set\+\_\+pre\+\_\+routing\+\_\+handler} (Handler\+With\+Response handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_a9399eb3235f737c934618b9f8f16f7a6}\label{classhttplib_1_1_server_a9399eb3235f737c934618b9f8f16f7a6} 
+Server \& {\bfseries set\+\_\+post\+\_\+routing\+\_\+handler} (Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_ada7a1b8419547c9ea72f21ecb6d1f2d3}\label{classhttplib_1_1_server_ada7a1b8419547c9ea72f21ecb6d1f2d3} 
+Server \& {\bfseries set\+\_\+expect\+\_\+100\+\_\+continue\+\_\+handler} (Expect100\+Continue\+Handler handler)
+\item 
+\Hypertarget{classhttplib_1_1_server_ab3f469bd07871a357da96de772ec7987}\label{classhttplib_1_1_server_ab3f469bd07871a357da96de772ec7987} 
+Server \& {\bfseries set\+\_\+logger} (Logger logger)
+\item 
+\Hypertarget{classhttplib_1_1_server_a964e626f335e98b5cd20902cf8088d1a}\label{classhttplib_1_1_server_a964e626f335e98b5cd20902cf8088d1a} 
+Server \& {\bfseries set\+\_\+address\+\_\+family} (int family)
+\item 
+\Hypertarget{classhttplib_1_1_server_a3fcd849f27f63fec7f62a6d8cc7d8435}\label{classhttplib_1_1_server_a3fcd849f27f63fec7f62a6d8cc7d8435} 
+Server \& {\bfseries set\+\_\+tcp\+\_\+nodelay} (bool on)
+\item 
+\Hypertarget{classhttplib_1_1_server_ae08a105e4085ff8c72ffa7c970f24e83}\label{classhttplib_1_1_server_ae08a105e4085ff8c72ffa7c970f24e83} 
+Server \& {\bfseries set\+\_\+ipv6\+\_\+v6only} (bool on)
+\item 
+\Hypertarget{classhttplib_1_1_server_ac6e87e1cedccef84813a4638694acd5c}\label{classhttplib_1_1_server_ac6e87e1cedccef84813a4638694acd5c} 
+Server \& {\bfseries set\+\_\+socket\+\_\+options} (Socket\+Options socket\+\_\+options)
+\item 
+\Hypertarget{classhttplib_1_1_server_a6db0eaa0afd802fc59d845688f8ed8f3}\label{classhttplib_1_1_server_a6db0eaa0afd802fc59d845688f8ed8f3} 
+Server \& {\bfseries set\+\_\+default\+\_\+headers} (Headers headers)
+\item 
+\Hypertarget{classhttplib_1_1_server_a496293dd3c104f14fd73251b350324db}\label{classhttplib_1_1_server_a496293dd3c104f14fd73251b350324db} 
+Server \& {\bfseries set\+\_\+header\+\_\+writer} (std::\+function$<$ ssize\+\_\+t(\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&, Headers \&)$>$ const \&writer)
+\item 
+\Hypertarget{classhttplib_1_1_server_af8905c1e99bdc3a0b353b8c3985fe7fc}\label{classhttplib_1_1_server_af8905c1e99bdc3a0b353b8c3985fe7fc} 
+Server \& {\bfseries set\+\_\+keep\+\_\+alive\+\_\+max\+\_\+count} (size\+\_\+t count)
+\item 
+\Hypertarget{classhttplib_1_1_server_aae7a9a5c73dc8cd71003da7d5d1cbd7d}\label{classhttplib_1_1_server_aae7a9a5c73dc8cd71003da7d5d1cbd7d} 
+Server \& {\bfseries set\+\_\+keep\+\_\+alive\+\_\+timeout} (time\+\_\+t sec)
+\item 
+\Hypertarget{classhttplib_1_1_server_af9522ea3e32aa5b2e1cb9c7c93cf9473}\label{classhttplib_1_1_server_af9522ea3e32aa5b2e1cb9c7c93cf9473} 
+Server \& {\bfseries set\+\_\+read\+\_\+timeout} (time\+\_\+t sec, time\+\_\+t usec=0)
+\item 
+\Hypertarget{classhttplib_1_1_server_abd1a933ed52d307f3c6625dbe20f6772}\label{classhttplib_1_1_server_abd1a933ed52d307f3c6625dbe20f6772} 
+{\footnotesize template$<$class Rep, class Period$>$ }\\Server \& {\bfseries set\+\_\+read\+\_\+timeout} (const std::\+chrono::\+duration$<$ Rep, Period $>$ \&duration)
+\item 
+\Hypertarget{classhttplib_1_1_server_a286064a2bc6aa22cdd7e022f093deaad}\label{classhttplib_1_1_server_a286064a2bc6aa22cdd7e022f093deaad} 
+Server \& {\bfseries set\+\_\+write\+\_\+timeout} (time\+\_\+t sec, time\+\_\+t usec=0)
+\item 
+\Hypertarget{classhttplib_1_1_server_a4b23a94ce77ac1ede2c5b67a6b369064}\label{classhttplib_1_1_server_a4b23a94ce77ac1ede2c5b67a6b369064} 
+{\footnotesize template$<$class Rep, class Period$>$ }\\Server \& {\bfseries set\+\_\+write\+\_\+timeout} (const std::\+chrono::\+duration$<$ Rep, Period $>$ \&duration)
+\item 
+\Hypertarget{classhttplib_1_1_server_a9604f44fb0bd01389635442e4f1f9e77}\label{classhttplib_1_1_server_a9604f44fb0bd01389635442e4f1f9e77} 
+Server \& {\bfseries set\+\_\+idle\+\_\+interval} (time\+\_\+t sec, time\+\_\+t usec=0)
+\item 
+\Hypertarget{classhttplib_1_1_server_aee285a502bbfa6c5ae8e1915c7d4fde4}\label{classhttplib_1_1_server_aee285a502bbfa6c5ae8e1915c7d4fde4} 
+{\footnotesize template$<$class Rep, class Period$>$ }\\Server \& {\bfseries set\+\_\+idle\+\_\+interval} (const std::\+chrono::\+duration$<$ Rep, Period $>$ \&duration)
+\item 
+\Hypertarget{classhttplib_1_1_server_a4d6c37f9ae370d54513775082340a255}\label{classhttplib_1_1_server_a4d6c37f9ae370d54513775082340a255} 
+Server \& {\bfseries set\+\_\+payload\+\_\+max\+\_\+length} (size\+\_\+t length)
+\item 
+\Hypertarget{classhttplib_1_1_server_a5bde755667689ba58fa80eedcc4fd2f3}\label{classhttplib_1_1_server_a5bde755667689ba58fa80eedcc4fd2f3} 
+bool {\bfseries bind\+\_\+to\+\_\+port} (const std::\+string \&host, int port, int socket\+\_\+flags=0)
+\item 
+\Hypertarget{classhttplib_1_1_server_a5535b14de270d9bc64deae069a55592a}\label{classhttplib_1_1_server_a5535b14de270d9bc64deae069a55592a} 
+int {\bfseries bind\+\_\+to\+\_\+any\+\_\+port} (const std::\+string \&host, int socket\+\_\+flags=0)
+\item 
+\Hypertarget{classhttplib_1_1_server_a3e50f66dfe531fe18590aa421ef2595f}\label{classhttplib_1_1_server_a3e50f66dfe531fe18590aa421ef2595f} 
+bool {\bfseries listen\+\_\+after\+\_\+bind} ()
+\item 
+\Hypertarget{classhttplib_1_1_server_a319d49f06dc5484b234bcc1f8e637fd3}\label{classhttplib_1_1_server_a319d49f06dc5484b234bcc1f8e637fd3} 
+bool {\bfseries listen} (const std::\+string \&host, int port, int socket\+\_\+flags=0)
+\item 
+\Hypertarget{classhttplib_1_1_server_a93a632ffae8eea0380daaac719cba06c}\label{classhttplib_1_1_server_a93a632ffae8eea0380daaac719cba06c} 
+bool {\bfseries is\+\_\+running} () const
+\item 
+\Hypertarget{classhttplib_1_1_server_a9365350e22a3baec09a711ee1ec8ecb4}\label{classhttplib_1_1_server_a9365350e22a3baec09a711ee1ec8ecb4} 
+void {\bfseries wait\+\_\+until\+\_\+ready} () const
+\item 
+\Hypertarget{classhttplib_1_1_server_a0f2a6a638ad99012886c87c9786a43b3}\label{classhttplib_1_1_server_a0f2a6a638ad99012886c87c9786a43b3} 
+void {\bfseries stop} ()
+\item 
+\Hypertarget{classhttplib_1_1_server_a3781b84c57ecb53376b5ee40fba3bbe8}\label{classhttplib_1_1_server_a3781b84c57ecb53376b5ee40fba3bbe8} 
+void {\bfseries decommission} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_server_ab02ba5727ab7e9c757f329d557e8d60f}\label{classhttplib_1_1_server_ab02ba5727ab7e9c757f329d557e8d60f} 
+std::\+function$<$ \doxymbox{\hyperlink{classhttplib_1_1_task_queue}{Task\+Queue}} \texorpdfstring{$\ast$}{*}(void)$>$ {\bfseries new\+\_\+task\+\_\+queue}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_server_ab1ba81c352b6091e3ab741634c590f7b}\label{classhttplib_1_1_server_ab1ba81c352b6091e3ab741634c590f7b} 
+bool {\bfseries process\+\_\+request} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, const std::\+string \&remote\+\_\+addr, int remote\+\_\+port, const std::\+string \&local\+\_\+addr, int local\+\_\+port, bool close\+\_\+connection, bool \&connection\+\_\+closed, const std::\+function$<$ void(\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&)$>$ \&setup\+\_\+request)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_server_a8bc06c5e7e93632a22db8fd35f68b4a1}\label{classhttplib_1_1_server_a8bc06c5e7e93632a22db8fd35f68b4a1} 
+std::\+atomic$<$ \doxymbox{\hyperlink{structsocket__t}{socket\+\_\+t}} $>$ {\bfseries svr\+\_\+sock\+\_\+} \{INVALID\+\_\+\+SOCKET\}
+\item 
+\Hypertarget{classhttplib_1_1_server_a2a39446892282230d483cd137c56e4f7}\label{classhttplib_1_1_server_a2a39446892282230d483cd137c56e4f7} 
+size\+\_\+t {\bfseries keep\+\_\+alive\+\_\+max\+\_\+count\+\_\+} = CPPHTTPLIB\+\_\+\+KEEPALIVE\+\_\+\+MAX\+\_\+\+COUNT
+\item 
+\Hypertarget{classhttplib_1_1_server_a65cd6213eca9dedec862e9477436a625}\label{classhttplib_1_1_server_a65cd6213eca9dedec862e9477436a625} 
+time\+\_\+t {\bfseries keep\+\_\+alive\+\_\+timeout\+\_\+sec\+\_\+} = CPPHTTPLIB\+\_\+\+KEEPALIVE\+\_\+\+TIMEOUT\+\_\+\+SECOND
+\item 
+\Hypertarget{classhttplib_1_1_server_ac9f203c13fe12f2ecb04386df44f6081}\label{classhttplib_1_1_server_ac9f203c13fe12f2ecb04386df44f6081} 
+time\+\_\+t {\bfseries read\+\_\+timeout\+\_\+sec\+\_\+} = CPPHTTPLIB\+\_\+\+SERVER\+\_\+\+READ\+\_\+\+TIMEOUT\+\_\+\+SECOND
+\item 
+\Hypertarget{classhttplib_1_1_server_a03a97129a6573eab65a00e5e190e2f7a}\label{classhttplib_1_1_server_a03a97129a6573eab65a00e5e190e2f7a} 
+time\+\_\+t {\bfseries read\+\_\+timeout\+\_\+usec\+\_\+} = CPPHTTPLIB\+\_\+\+SERVER\+\_\+\+READ\+\_\+\+TIMEOUT\+\_\+\+USECOND
+\item 
+\Hypertarget{classhttplib_1_1_server_a30362cb23ea93927768bc2a1a93e61bb}\label{classhttplib_1_1_server_a30362cb23ea93927768bc2a1a93e61bb} 
+time\+\_\+t {\bfseries write\+\_\+timeout\+\_\+sec\+\_\+} = CPPHTTPLIB\+\_\+\+SERVER\+\_\+\+WRITE\+\_\+\+TIMEOUT\+\_\+\+SECOND
+\item 
+\Hypertarget{classhttplib_1_1_server_a5fabd1ab73b311873c2e6d555d8ed6f8}\label{classhttplib_1_1_server_a5fabd1ab73b311873c2e6d555d8ed6f8} 
+time\+\_\+t {\bfseries write\+\_\+timeout\+\_\+usec\+\_\+} = CPPHTTPLIB\+\_\+\+SERVER\+\_\+\+WRITE\+\_\+\+TIMEOUT\+\_\+\+USECOND
+\item 
+\Hypertarget{classhttplib_1_1_server_a5a100e3e30db5c877c093c035b434a0e}\label{classhttplib_1_1_server_a5a100e3e30db5c877c093c035b434a0e} 
+time\+\_\+t {\bfseries idle\+\_\+interval\+\_\+sec\+\_\+} = CPPHTTPLIB\+\_\+\+IDLE\+\_\+\+INTERVAL\+\_\+\+SECOND
+\item 
+\Hypertarget{classhttplib_1_1_server_a29c76072511d044af75f81140e7ae34e}\label{classhttplib_1_1_server_a29c76072511d044af75f81140e7ae34e} 
+time\+\_\+t {\bfseries idle\+\_\+interval\+\_\+usec\+\_\+} = CPPHTTPLIB\+\_\+\+IDLE\+\_\+\+INTERVAL\+\_\+\+USECOND
+\item 
+\Hypertarget{classhttplib_1_1_server_aef94224ccf466318570d0309faa6c721}\label{classhttplib_1_1_server_aef94224ccf466318570d0309faa6c721} 
+size\+\_\+t {\bfseries payload\+\_\+max\+\_\+length\+\_\+} = CPPHTTPLIB\+\_\+\+PAYLOAD\+\_\+\+MAX\+\_\+\+LENGTH
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classhttplib_1_1_server_a407d8c2f6da28d3ae163439111ac2592}{Handlers}}
+\item 
+using \doxymbox{\hyperlink{classhttplib_1_1_server_a554f20382939001b951212f540f28fdb}{Handlers\+For\+Content\+Reader}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_server_a741ca70f59b3589b0500dd9b18dceecc}\label{classhttplib_1_1_server_a741ca70f59b3589b0500dd9b18dceecc} 
+Server \& {\bfseries set\+\_\+error\+\_\+handler\+\_\+core} (Handler\+With\+Response handler, std::\+true\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_server_af0d511b21009abebb9a4f5b2e6b76ba6}\label{classhttplib_1_1_server_af0d511b21009abebb9a4f5b2e6b76ba6} 
+Server \& {\bfseries set\+\_\+error\+\_\+handler\+\_\+core} (Handler handler, std::\+false\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_server_a95489183f727c825e8a9ff041d31c35a}\label{classhttplib_1_1_server_a95489183f727c825e8a9ff041d31c35a} 
+\doxymbox{\hyperlink{structsocket__t}{socket\+\_\+t}} {\bfseries create\+\_\+server\+\_\+socket} (const std::\+string \&host, int port, int socket\+\_\+flags, Socket\+Options socket\+\_\+options) const
+\item 
+\Hypertarget{classhttplib_1_1_server_a238aa1a28613b9639977816292427208}\label{classhttplib_1_1_server_a238aa1a28613b9639977816292427208} 
+int {\bfseries bind\+\_\+internal} (const std::\+string \&host, int port, int socket\+\_\+flags)
+\item 
+\Hypertarget{classhttplib_1_1_server_a294f20bcfc35d82236ab92b76c16d862}\label{classhttplib_1_1_server_a294f20bcfc35d82236ab92b76c16d862} 
+bool {\bfseries listen\+\_\+internal} ()
+\item 
+\Hypertarget{classhttplib_1_1_server_affee90a82135504bd0945a22d9bf16f5}\label{classhttplib_1_1_server_affee90a82135504bd0945a22d9bf16f5} 
+bool {\bfseries routing} (\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, \doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm)
+\item 
+\Hypertarget{classhttplib_1_1_server_a49a447f1c1304873df518178cbd51c5f}\label{classhttplib_1_1_server_a49a447f1c1304873df518178cbd51c5f} 
+bool {\bfseries handle\+\_\+file\+\_\+request} (const \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, bool head=false)
+\item 
+\Hypertarget{classhttplib_1_1_server_a9e6fa4f530029f122387789ca875784d}\label{classhttplib_1_1_server_a9e6fa4f530029f122387789ca875784d} 
+bool {\bfseries dispatch\+\_\+request} (\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, const Handlers \&handlers) const
+\item 
+\Hypertarget{classhttplib_1_1_server_a1f26e223640aaef36110f65b1f524d31}\label{classhttplib_1_1_server_a1f26e223640aaef36110f65b1f524d31} 
+bool {\bfseries dispatch\+\_\+request\+\_\+for\+\_\+content\+\_\+reader} (\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, \doxymbox{\hyperlink{classhttplib_1_1_content_reader}{Content\+Reader}} content\+\_\+reader, const Handlers\+For\+Content\+Reader \&handlers) const
+\item 
+\Hypertarget{classhttplib_1_1_server_a7828d01755f1cd3f33c6e4d221b2fe49}\label{classhttplib_1_1_server_a7828d01755f1cd3f33c6e4d221b2fe49} 
+bool {\bfseries parse\+\_\+request\+\_\+line} (const char \texorpdfstring{$\ast$}{*}s, \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req) const
+\item 
+\Hypertarget{classhttplib_1_1_server_a57867122abf5979387bc3b704f877752}\label{classhttplib_1_1_server_a57867122abf5979387bc3b704f877752} 
+void {\bfseries apply\+\_\+ranges} (const \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, std::\+string \&content\+\_\+type, std::\+string \&boundary) const
+\item 
+\Hypertarget{classhttplib_1_1_server_a61f782f1492b13d525ddec03b2412797}\label{classhttplib_1_1_server_a61f782f1492b13d525ddec03b2412797} 
+bool {\bfseries write\+\_\+response} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, bool close\+\_\+connection, \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res)
+\item 
+\Hypertarget{classhttplib_1_1_server_a1e7f1269fb97140ed003e6e1f64210c1}\label{classhttplib_1_1_server_a1e7f1269fb97140ed003e6e1f64210c1} 
+bool {\bfseries write\+\_\+response\+\_\+with\+\_\+content} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, bool close\+\_\+connection, const \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res)
+\item 
+\Hypertarget{classhttplib_1_1_server_a01c6136577d21b708780a9e42de992d6}\label{classhttplib_1_1_server_a01c6136577d21b708780a9e42de992d6} 
+bool {\bfseries write\+\_\+response\+\_\+core} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, bool close\+\_\+connection, const \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, bool need\+\_\+apply\+\_\+ranges)
+\item 
+\Hypertarget{classhttplib_1_1_server_aef004bcdc946af56186dd226442691d4}\label{classhttplib_1_1_server_aef004bcdc946af56186dd226442691d4} 
+bool {\bfseries write\+\_\+content\+\_\+with\+\_\+provider} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, const \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, const std::\+string \&boundary, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_server_a32ad29652062d18383a1a1688892f9f2}\label{classhttplib_1_1_server_a32ad29652062d18383a1a1688892f9f2} 
+bool {\bfseries read\+\_\+content} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res)
+\item 
+\Hypertarget{classhttplib_1_1_server_af0053e85d97391bb7e36b01009140747}\label{classhttplib_1_1_server_af0053e85d97391bb7e36b01009140747} 
+bool {\bfseries read\+\_\+content\+\_\+with\+\_\+content\+\_\+receiver} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, Content\+Receiver receiver, Multipart\+Content\+Header multipart\+\_\+header, Content\+Receiver multipart\+\_\+receiver)
+\item 
+\Hypertarget{classhttplib_1_1_server_a1fc26b4f3c6d53b4400f643ddd360d35}\label{classhttplib_1_1_server_a1fc26b4f3c6d53b4400f643ddd360d35} 
+bool {\bfseries read\+\_\+content\+\_\+core} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, Content\+Receiver receiver, Multipart\+Content\+Header multipart\+\_\+header, Content\+Receiver multipart\+\_\+receiver) const
+\item 
+\Hypertarget{classhttplib_1_1_server_a28221db99b5a35e45515553fdb9458a0}\label{classhttplib_1_1_server_a28221db99b5a35e45515553fdb9458a0} 
+virtual bool {\bfseries process\+\_\+and\+\_\+close\+\_\+socket} (\doxymbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_server_ab891c52f56857eaf596107b945f260de}\label{classhttplib_1_1_server_ab891c52f56857eaf596107b945f260de} 
+static std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classhttplib_1_1detail_1_1_matcher_base}{detail::\+\+Matcher\+Base}} $>$ {\bfseries make\+\_\+matcher} (const std::\+string \&pattern)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_server_a294c8e913e0146e2701e9c17b4552f0f}\label{classhttplib_1_1_server_a294c8e913e0146e2701e9c17b4552f0f} 
+std::\+atomic$<$ bool $>$ {\bfseries is\+\_\+running\+\_\+} \{false\}
+\item 
+\Hypertarget{classhttplib_1_1_server_a89e884df59256264b1297869cb341b7e}\label{classhttplib_1_1_server_a89e884df59256264b1297869cb341b7e} 
+std::\+atomic$<$ bool $>$ {\bfseries is\+\_\+decommissioned} \{false\}
+\item 
+\Hypertarget{classhttplib_1_1_server_a5634d1fde80b467d3e42680a098d944d}\label{classhttplib_1_1_server_a5634d1fde80b467d3e42680a098d944d} 
+std::\+vector$<$ \doxymbox{\hyperlink{structhttplib_1_1_server_1_1_mount_point_entry}{Mount\+Point\+Entry}} $>$ {\bfseries base\+\_\+dirs\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_aa336decd371629e075bd0aa17167fcd6}\label{classhttplib_1_1_server_aa336decd371629e075bd0aa17167fcd6} 
+std::\+map$<$ std::\+string, std::\+string $>$ {\bfseries file\+\_\+extension\+\_\+and\+\_\+mimetype\+\_\+map\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_aa30856789985e86d71967c1a5ab211fe}\label{classhttplib_1_1_server_aa30856789985e86d71967c1a5ab211fe} 
+std::\+string {\bfseries default\+\_\+file\+\_\+mimetype\+\_\+} = "{}application/\+octet-\/stream"{}
+\item 
+\Hypertarget{classhttplib_1_1_server_a5c5501d42f8a1aeae5ab2a1f2a730832}\label{classhttplib_1_1_server_a5c5501d42f8a1aeae5ab2a1f2a730832} 
+Handler {\bfseries file\+\_\+request\+\_\+handler\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a6d7b8d7ec13ecb5332c257bf432bb896}\label{classhttplib_1_1_server_a6d7b8d7ec13ecb5332c257bf432bb896} 
+Handlers {\bfseries get\+\_\+handlers\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a251316c55dd62d86bd58392eaba35afe}\label{classhttplib_1_1_server_a251316c55dd62d86bd58392eaba35afe} 
+Handlers {\bfseries post\+\_\+handlers\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a52c52ae3e743e86a23826bbb79d14005}\label{classhttplib_1_1_server_a52c52ae3e743e86a23826bbb79d14005} 
+Handlers\+For\+Content\+Reader {\bfseries post\+\_\+handlers\+\_\+for\+\_\+content\+\_\+reader\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_af1535ba048469823646a37d8462577c9}\label{classhttplib_1_1_server_af1535ba048469823646a37d8462577c9} 
+Handlers {\bfseries put\+\_\+handlers\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_af603bc50c785a1cfef3618499ba74b3a}\label{classhttplib_1_1_server_af603bc50c785a1cfef3618499ba74b3a} 
+Handlers\+For\+Content\+Reader {\bfseries put\+\_\+handlers\+\_\+for\+\_\+content\+\_\+reader\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_ac8f540c50353fa35b4e8d2b668f33f59}\label{classhttplib_1_1_server_ac8f540c50353fa35b4e8d2b668f33f59} 
+Handlers {\bfseries patch\+\_\+handlers\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_ae43f2284e5f0caffa0a9ddaa344c4be0}\label{classhttplib_1_1_server_ae43f2284e5f0caffa0a9ddaa344c4be0} 
+Handlers\+For\+Content\+Reader {\bfseries patch\+\_\+handlers\+\_\+for\+\_\+content\+\_\+reader\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a1a2a7ccfd32db528b82588f2e3fac19c}\label{classhttplib_1_1_server_a1a2a7ccfd32db528b82588f2e3fac19c} 
+Handlers {\bfseries delete\+\_\+handlers\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a6cb15bfc1025c672c6b6b64cec7dd2de}\label{classhttplib_1_1_server_a6cb15bfc1025c672c6b6b64cec7dd2de} 
+Handlers\+For\+Content\+Reader {\bfseries delete\+\_\+handlers\+\_\+for\+\_\+content\+\_\+reader\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_af3181bdeb88440f6abb5a595ceb41b04}\label{classhttplib_1_1_server_af3181bdeb88440f6abb5a595ceb41b04} 
+Handlers {\bfseries options\+\_\+handlers\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a1f36f29e6eed3b18b5f0fc32ca6f7654}\label{classhttplib_1_1_server_a1f36f29e6eed3b18b5f0fc32ca6f7654} 
+Handler\+With\+Response {\bfseries error\+\_\+handler\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a9cc812f8f81679580c9a1b9ce25fa69e}\label{classhttplib_1_1_server_a9cc812f8f81679580c9a1b9ce25fa69e} 
+Exception\+Handler {\bfseries exception\+\_\+handler\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a32f84250edf87582331cee1ae5afa138}\label{classhttplib_1_1_server_a32f84250edf87582331cee1ae5afa138} 
+Handler\+With\+Response {\bfseries pre\+\_\+routing\+\_\+handler\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a3808fcfd568f9967c28983fb12213582}\label{classhttplib_1_1_server_a3808fcfd568f9967c28983fb12213582} 
+Handler {\bfseries post\+\_\+routing\+\_\+handler\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a00d432af06ea4de39934020883be2117}\label{classhttplib_1_1_server_a00d432af06ea4de39934020883be2117} 
+Expect100\+Continue\+Handler {\bfseries expect\+\_\+100\+\_\+continue\+\_\+handler\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_a5213a394fa9849f4710a5e26081d129f}\label{classhttplib_1_1_server_a5213a394fa9849f4710a5e26081d129f} 
+Logger {\bfseries logger\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_server_ae7b4bd019468059aa09947526f95b152}\label{classhttplib_1_1_server_ae7b4bd019468059aa09947526f95b152} 
+int {\bfseries address\+\_\+family\+\_\+} = AF\+\_\+\+UNSPEC
+\item 
+\Hypertarget{classhttplib_1_1_server_a826e59666e8b0b26c1a3843473c34e56}\label{classhttplib_1_1_server_a826e59666e8b0b26c1a3843473c34e56} 
+bool {\bfseries tcp\+\_\+nodelay\+\_\+} = CPPHTTPLIB\+\_\+\+TCP\+\_\+\+NODELAY
+\item 
+\Hypertarget{classhttplib_1_1_server_abd168d72e607d3600187309a23ec71ca}\label{classhttplib_1_1_server_abd168d72e607d3600187309a23ec71ca} 
+bool {\bfseries ipv6\+\_\+v6only\+\_\+} = CPPHTTPLIB\+\_\+\+IPV6\+\_\+\+V6\+ONLY
+\item 
+\Hypertarget{classhttplib_1_1_server_a9be7e79372d3659b4ff2d78ce7f09df8}\label{classhttplib_1_1_server_a9be7e79372d3659b4ff2d78ce7f09df8} 
+Socket\+Options {\bfseries socket\+\_\+options\+\_\+} = default\+\_\+socket\+\_\+options
+\item 
+\Hypertarget{classhttplib_1_1_server_ad719231cf1a4b366cb884b984f700404}\label{classhttplib_1_1_server_ad719231cf1a4b366cb884b984f700404} 
+Headers {\bfseries default\+\_\+headers\+\_\+}
+\item 
+std::\+function$<$ ssize\+\_\+t(\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&, Headers \&)$>$ \doxymbox{\hyperlink{classhttplib_1_1_server_a283c7954ef3bc16fb8fbf6a3e42e4f2b}{header\+\_\+writer\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-typedef-members}
+\Hypertarget{classhttplib_1_1_server_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classhttplib_1_1_server_aa759168fe715e06d071a25f6aa8c995e}\index{httplib::Server@{httplib::Server}!ExceptionHandler@{ExceptionHandler}}
+\index{ExceptionHandler@{ExceptionHandler}!httplib::Server@{httplib::Server}}
+\doxysubsubsection{\texorpdfstring{ExceptionHandler}{ExceptionHandler}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_server_aa759168fe715e06d071a25f6aa8c995e} 
+using httplib::\+\+Server::\+\+Exception\+Handler}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{std::function<void(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}}\ \&,\ \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}}\ \&,\ std::exception\_ptr\ ep)>}
+
+\end{DoxyCode}
+\Hypertarget{classhttplib_1_1_server_a37d82925d38ce7e3e1f6752be686615d}\index{httplib::Server@{httplib::Server}!Expect100ContinueHandler@{Expect100ContinueHandler}}
+\index{Expect100ContinueHandler@{Expect100ContinueHandler}!httplib::Server@{httplib::Server}}
+\doxysubsubsection{\texorpdfstring{Expect100ContinueHandler}{Expect100ContinueHandler}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_server_a37d82925d38ce7e3e1f6752be686615d} 
+using httplib::\+\+Server::\+\+Expect100\+Continue\+Handler}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{std::function<int(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}}\ \&,\ \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}}\ \&)>}
+
+\end{DoxyCode}
+\Hypertarget{classhttplib_1_1_server_a407d8c2f6da28d3ae163439111ac2592}\index{httplib::Server@{httplib::Server}!Handlers@{Handlers}}
+\index{Handlers@{Handlers}!httplib::Server@{httplib::Server}}
+\doxysubsubsection{\texorpdfstring{Handlers}{Handlers}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_server_a407d8c2f6da28d3ae163439111ac2592} 
+using httplib::\+\+Server::\+\+Handlers\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{std::vector<std::pair<std::unique\_ptr<detail::MatcherBase>,\ Handler>>}
+
+\end{DoxyCode}
+\Hypertarget{classhttplib_1_1_server_a554f20382939001b951212f540f28fdb}\index{httplib::Server@{httplib::Server}!HandlersForContentReader@{HandlersForContentReader}}
+\index{HandlersForContentReader@{HandlersForContentReader}!httplib::Server@{httplib::Server}}
+\doxysubsubsection{\texorpdfstring{HandlersForContentReader}{HandlersForContentReader}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_server_a554f20382939001b951212f540f28fdb} 
+using httplib::\+\+Server::\+\+Handlers\+For\+Content\+Reader\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{std::vector<std::pair<std::unique\_ptr<detail::MatcherBase>,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HandlerWithContentReader>>}
+
+\end{DoxyCode}
+\Hypertarget{classhttplib_1_1_server_abca5e21b948277a84f9d55ca0f6b0e55}\index{httplib::Server@{httplib::Server}!HandlerWithContentReader@{HandlerWithContentReader}}
+\index{HandlerWithContentReader@{HandlerWithContentReader}!httplib::Server@{httplib::Server}}
+\doxysubsubsection{\texorpdfstring{HandlerWithContentReader}{HandlerWithContentReader}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_server_abca5e21b948277a84f9d55ca0f6b0e55} 
+using httplib::\+\+Server::\+\+Handler\+With\+Content\+Reader}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{std::function<void(}
+\DoxyCodeLine{\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}}\ \&,\ \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}}\ \&,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classhttplib_1_1_content_reader}{ContentReader}}\ \&content\_reader)>}
+
+\end{DoxyCode}
+\Hypertarget{classhttplib_1_1_server_af5c4cf3bdcdcd782b325def4eee56776}\index{httplib::Server@{httplib::Server}!HandlerWithResponse@{HandlerWithResponse}}
+\index{HandlerWithResponse@{HandlerWithResponse}!httplib::Server@{httplib::Server}}
+\doxysubsubsection{\texorpdfstring{HandlerWithResponse}{HandlerWithResponse}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_server_af5c4cf3bdcdcd782b325def4eee56776} 
+using httplib::\+\+Server::\+\+Handler\+With\+Response}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{std::function<HandlerResponse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}}\ \&,\ \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}}\ \&)>}
+
+\end{DoxyCode}
+
+
+\label{doc-variable-members}
+\Hypertarget{classhttplib_1_1_server_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classhttplib_1_1_server_a283c7954ef3bc16fb8fbf6a3e42e4f2b}\index{httplib::Server@{httplib::Server}!header\_writer\_@{header\_writer\_}}
+\index{header\_writer\_@{header\_writer\_}!httplib::Server@{httplib::Server}}
+\doxysubsubsection{\texorpdfstring{header\_writer\_}{header\_writer\_}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_server_a283c7954ef3bc16fb8fbf6a3e42e4f2b} 
+std::\+function$<$ssize\+\_\+t(\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&, Headers \&)$>$ httplib::\+\+Server::\+header\+\_\+writer\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =}
+\DoxyCodeLine{detail::write\_headers}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+server/\+httplib.\+h\end{DoxyCompactItemize}

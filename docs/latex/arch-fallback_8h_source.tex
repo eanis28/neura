@@ -1,0 +1,349 @@
+\doxysection{arch-\/fallback.h}
+\hypertarget{arch-fallback_8h_source}{}\label{arch-fallback_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/arch-\/fallback.h@{whisper.cpp/ggml/src/ggml-\/cpu/arch-\/fallback.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Rename\ \`{}\_generic`\ functions\ if\ no\ native\ implementation\ is\ available.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ This\ effectively\ selects\ the\ generic\ implementation.}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#if\ defined(GGML\_CPU\_GENERIC)}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ quants.c}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ quantize\_row\_q8\_0\_generic\ quantize\_row\_q8\_0}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ quantize\_row\_q8\_1\_generic\ quantize\_row\_q8\_1}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ quantize\_row\_q8\_K\_generic\ quantize\_row\_q8\_K}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q4\_0\_q8\_0\_generic\ ggml\_vec\_dot\_q4\_0\_q8\_0}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q4\_1\_q8\_1\_generic\ ggml\_vec\_dot\_q4\_1\_q8\_1}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q5\_0\_q8\_0\_generic\ ggml\_vec\_dot\_q5\_0\_q8\_0}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q5\_1\_q8\_1\_generic\ ggml\_vec\_dot\_q5\_1\_q8\_1}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q8\_0\_q8\_0\_generic\ ggml\_vec\_dot\_q8\_0\_q8\_0}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_mxfp4\_q8\_0\_generic\ ggml\_vec\_dot\_mxfp4\_q8\_0}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_nvfp4\_q8\_0\_generic\ ggml\_vec\_dot\_nvfp4\_q8\_0}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq1\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq1\_0\_q8\_K}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq2\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq2\_0\_q8\_K}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q2\_K\_q8\_K\_generic\ ggml\_vec\_dot\_q2\_K\_q8\_K}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q3\_K\_q8\_K\_generic\ ggml\_vec\_dot\_q3\_K\_q8\_K}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q4\_K\_q8\_K\_generic\ ggml\_vec\_dot\_q4\_K\_q8\_K}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q5\_K\_q8\_K\_generic\ ggml\_vec\_dot\_q5\_K\_q8\_K}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q6\_K\_q8\_K\_generic\ ggml\_vec\_dot\_q6\_K\_q8\_K}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq2\_xxs\_q8\_K\_generic\ ggml\_vec\_dot\_iq2\_xxs\_q8\_K}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq2\_xs\_q8\_K\_generic\ ggml\_vec\_dot\_iq2\_xs\_q8\_K}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq2\_s\_q8\_K\_generic\ ggml\_vec\_dot\_iq2\_s\_q8\_K}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq3\_xxs\_q8\_K\_generic\ ggml\_vec\_dot\_iq3\_xxs\_q8\_K}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq3\_s\_q8\_K\_generic\ ggml\_vec\_dot\_iq3\_s\_q8\_K}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq1\_s\_q8\_K\_generic\ ggml\_vec\_dot\_iq1\_s\_q8\_K}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq1\_m\_q8\_K\_generic\ ggml\_vec\_dot\_iq1\_m\_q8\_K}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq4\_nl\_q8\_0\_generic\ ggml\_vec\_dot\_iq4\_nl\_q8\_0}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq4\_xs\_q8\_K\_generic\ ggml\_vec\_dot\_iq4\_xs\_q8\_K}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ repack.cpp}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x4\_generic\ ggml\_quantize\_mat\_q8\_0\_4x4}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x8\_generic\ ggml\_quantize\_mat\_q8\_0\_4x8}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x4\_generic\ ggml\_quantize\_mat\_q8\_K\_4x4}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x8\_generic\ ggml\_quantize\_mat\_q8\_K\_4x8}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#elif\ defined(\_\_aarch64\_\_)\ ||\ defined(\_\_arm\_\_)\ ||\ defined(\_M\_ARM)\ ||\ defined(\_M\_ARM64)}}
+\DoxyCodeLine{00073\ \textcolor{comment}{//\ repack.cpp}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x4\_generic\ ggml\_quantize\_mat\_q8\_K\_4x4}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x8\_generic\ ggml\_quantize\_mat\_q8\_K\_4x8}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#elif\ defined(\_\_x86\_64\_\_)\ ||\ defined(\_\_i386\_\_)\ ||\ defined(\_M\_IX86)\ ||\ defined(\_M\_X64)}}
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ quants.c}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_nvfp4\_q8\_0\_generic\ ggml\_vec\_dot\_nvfp4\_q8\_0}}
+\DoxyCodeLine{00085\ \textcolor{comment}{//\ repack.cpp}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x4\_generic\ ggml\_quantize\_mat\_q8\_0\_4x4}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x4\_generic\ ggml\_quantize\_mat\_q8\_K\_4x4}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#elif\ defined(\_\_POWERPC\_\_)\ ||\ defined(\_\_powerpc\_\_)}}
+\DoxyCodeLine{00111\ \textcolor{comment}{//\ ref:\ https://github.com/ggml-\/org/llama.cpp/pull/14146\#issuecomment-\/2972561679}}
+\DoxyCodeLine{00112\ \textcolor{comment}{//\ quants.c}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ quantize\_row\_q8\_K\_generic\ quantize\_row\_q8\_K}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_nvfp4\_q8\_0\_generic\ ggml\_vec\_dot\_nvfp4\_q8\_0}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq1\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq1\_0\_q8\_K}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq2\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq2\_0\_q8\_K}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq1\_m\_q8\_K\_generic\ ggml\_vec\_dot\_iq1\_m\_q8\_K}}
+\DoxyCodeLine{00118\ \textcolor{comment}{//\ repack.cpp}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x4\_generic\ ggml\_quantize\_mat\_q8\_0\_4x4}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x8\_generic\ ggml\_quantize\_mat\_q8\_0\_4x8}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x4\_generic\ ggml\_quantize\_mat\_q8\_K\_4x4}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x8\_generic\ ggml\_quantize\_mat\_q8\_K\_4x8}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#elif\ defined(\_\_loongarch64)}}
+\DoxyCodeLine{00156\ \textcolor{comment}{//\ quants.c}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ quantize\_row\_q8\_K\_generic\ quantize\_row\_q8\_K}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq1\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq1\_0\_q8\_K}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq2\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq2\_0\_q8\_K}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq1\_m\_q8\_K\_generic\ ggml\_vec\_dot\_iq1\_m\_q8\_K}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_mxfp4\_q8\_0\_generic\ ggml\_vec\_dot\_mxfp4\_q8\_0}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_nvfp4\_q8\_0\_generic\ ggml\_vec\_dot\_nvfp4\_q8\_0}}
+\DoxyCodeLine{00163\ \textcolor{comment}{//\ repack.cpp}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x4\_generic\ ggml\_quantize\_mat\_q8\_0\_4x4}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x8\_generic\ ggml\_quantize\_mat\_q8\_0\_4x8}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x4\_generic\ ggml\_quantize\_mat\_q8\_K\_4x4}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x8\_generic\ ggml\_quantize\_mat\_q8\_K\_4x8}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#elif\ defined(\_\_riscv)}}
+\DoxyCodeLine{00201\ \textcolor{comment}{//\ quants.c}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_nvfp4\_q8\_0\_generic\ ggml\_vec\_dot\_nvfp4\_q8\_0}}
+\DoxyCodeLine{00203\ \textcolor{comment}{//\ repack.cpp}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x1\_generic\ ggml\_quantize\_mat\_q8\_0\_4x1}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x4\_generic\ ggml\_quantize\_mat\_q8\_0\_4x4}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x1\_generic\ ggml\_quantize\_mat\_q8\_K\_4x1}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x4\_generic\ ggml\_quantize\_mat\_q8\_K\_4x4}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x8\_generic\ ggml\_quantize\_mat\_q8\_K\_4x8}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#elif\ defined(\_\_s390x\_\_)}}
+\DoxyCodeLine{00240\ \textcolor{comment}{//\ quants.c}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#define\ quantize\_row\_q8\_K\_generic\ quantize\_row\_q8\_K}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_nvfp4\_q8\_0\_generic\ ggml\_vec\_dot\_nvfp4\_q8\_0}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq1\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq1\_0\_q8\_K}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq2\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq2\_0\_q8\_K}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q2\_K\_q8\_K\_generic\ ggml\_vec\_dot\_q2\_K\_q8\_K}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq2\_xxs\_q8\_K\_generic\ ggml\_vec\_dot\_iq2\_xxs\_q8\_K}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq2\_xs\_q8\_K\_generic\ ggml\_vec\_dot\_iq2\_xs\_q8\_K}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq2\_s\_q8\_K\_generic\ ggml\_vec\_dot\_iq2\_s\_q8\_K}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq3\_xxs\_q8\_K\_generic\ ggml\_vec\_dot\_iq3\_xxs\_q8\_K}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq3\_s\_q8\_K\_generic\ ggml\_vec\_dot\_iq3\_s\_q8\_K}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq1\_s\_q8\_K\_generic\ ggml\_vec\_dot\_iq1\_s\_q8\_K}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq1\_m\_q8\_K\_generic\ ggml\_vec\_dot\_iq1\_m\_q8\_K}}
+\DoxyCodeLine{00253\ \textcolor{comment}{//\ repack.cpp}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x4\_generic\ ggml\_quantize\_mat\_q8\_0\_4x4}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x8\_generic\ ggml\_quantize\_mat\_q8\_0\_4x8}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x4\_generic\ ggml\_quantize\_mat\_q8\_K\_4x4}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x8\_generic\ ggml\_quantize\_mat\_q8\_K\_4x8}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#elif\ defined(\_\_wasm\_\_)}}
+\DoxyCodeLine{00291\ \textcolor{comment}{//\ quants.c}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_q4\_1\_q8\_1\_generic\ ggml\_vec\_dot\_q4\_1\_q8\_1}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq1\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq1\_0\_q8\_K}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_tq2\_0\_q8\_K\_generic\ ggml\_vec\_dot\_tq2\_0\_q8\_K}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq2\_xxs\_q8\_K\_generic\ ggml\_vec\_dot\_iq2\_xxs\_q8\_K}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq2\_xs\_q8\_K\_generic\ ggml\_vec\_dot\_iq2\_xs\_q8\_K}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq2\_s\_q8\_K\_generic\ ggml\_vec\_dot\_iq2\_s\_q8\_K}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq3\_xxs\_q8\_K\_generic\ ggml\_vec\_dot\_iq3\_xxs\_q8\_K}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq3\_s\_q8\_K\_generic\ ggml\_vec\_dot\_iq3\_s\_q8\_K}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq1\_s\_q8\_K\_generic\ ggml\_vec\_dot\_iq1\_s\_q8\_K}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq1\_m\_q8\_K\_generic\ ggml\_vec\_dot\_iq1\_m\_q8\_K}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq4\_nl\_q8\_0\_generic\ ggml\_vec\_dot\_iq4\_nl\_q8\_0}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_iq4\_xs\_q8\_K\_generic\ ggml\_vec\_dot\_iq4\_xs\_q8\_K}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_mxfp4\_q8\_0\_generic\ ggml\_vec\_dot\_mxfp4\_q8\_0}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#define\ ggml\_vec\_dot\_nvfp4\_q8\_0\_generic\ ggml\_vec\_dot\_nvfp4\_q8\_0}}
+\DoxyCodeLine{00306\ \textcolor{comment}{//\ repack.cpp}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x4\_generic\ ggml\_quantize\_mat\_q8\_0\_4x4}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_0\_4x8\_generic\ ggml\_quantize\_mat\_q8\_0\_4x8}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x4\_generic\ ggml\_quantize\_mat\_q8\_K\_4x4}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#define\ ggml\_quantize\_mat\_q8\_K\_4x8\_generic\ ggml\_quantize\_mat\_q8\_K\_4x8}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemv\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemv\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemv\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemv\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#define\ ggml\_gemv\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemv\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_0\_8x8\_q8\_0\_generic\ ggml\_gemm\_q4\_0\_8x8\_q8\_0}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q2\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q2\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q4\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q4\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q5\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q5\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x4\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x4\_q8\_K}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q6\_K\_8x8\_q8\_K\_generic\ ggml\_gemm\_q6\_K\_8x8\_q8\_K}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_4x4\_q8\_0}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0\_generic\ ggml\_gemm\_iq4\_nl\_8x8\_q8\_0}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_4x4\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_4x4\_q8\_0}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_mxfp4\_8x8\_q8\_0\_generic\ ggml\_gemm\_mxfp4\_8x8\_q8\_0}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x4\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x4\_q8\_0}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#define\ ggml\_gemm\_q8\_0\_4x8\_q8\_0\_generic\ ggml\_gemm\_q8\_0\_4x8\_q8\_0}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

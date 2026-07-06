@@ -1,0 +1,55 @@
+\doxysection{common-\/sdl.h}
+\hypertarget{common-sdl_8h_source}{}\label{common-sdl_8h_source}\index{whisper.cpp/examples/common-\/sdl.h@{whisper.cpp/examples/common-\/sdl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <SDL.h>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <SDL\_audio.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ SDL\ Audio\ capture}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }audio\_async\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00017\ \ \ \ \ audio\_async(\textcolor{keywordtype}{int}\ len\_ms);}
+\DoxyCodeLine{00018\ \ \ \ \ \string~audio\_async();}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{bool}\ init(\textcolor{keywordtype}{int}\ capture\_id,\ \textcolor{keywordtype}{int}\ sample\_rate);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//\ start\ capturing\ audio\ via\ the\ provided\ SDL\ callback}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ keep\ last\ len\_ms\ seconds\ of\ audio\ in\ a\ circular\ buffer}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{bool}\ resume();}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{bool}\ pause();}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{bool}\ clear();}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ callback\ to\ be\ called\ by\ SDL}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ callback(uint8\_t\ *\ stream,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ get\ audio\ data\ from\ the\ circular\ buffer}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ get(\textcolor{keywordtype}{int}\ ms,\ std::vector<float>\ \&\ audio);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00035\ \ \ \ \ SDL\_AudioDeviceID\ m\_dev\_id\_in\ =\ 0;}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_len\_ms\ =\ 0;}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_sample\_rate\ =\ 0;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ std::atomic\_bool\ m\_running;}
+\DoxyCodeLine{00041\ \ \ \ \ std::mutex\ \ \ \ \ \ \ m\_mutex;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ std::vector<float>\ m\_audio;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ m\_audio\_pos\ =\ 0;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ m\_audio\_len\ =\ 0;}
+\DoxyCodeLine{00046\ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ Return\ false\ if\ need\ to\ quit}}
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{bool}\ sdl\_poll\_events();}
+
+\end{DoxyCode}

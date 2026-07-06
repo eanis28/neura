@@ -1,0 +1,30 @@
+\doxysection{ggml\+\_\+cann\+\_\+pool\+\_\+buf::\+ggml\+\_\+cann\+\_\+buffer Struct Reference}
+\hypertarget{structggml__cann__pool__buf_1_1ggml__cann__buffer}{}\label{structggml__cann__pool__buf_1_1ggml__cann__buffer}\index{ggml\_cann\_pool\_buf::ggml\_cann\_buffer@{ggml\_cann\_pool\_buf::ggml\_cann\_buffer}}
+
+
+Structure representing a CANN buffer.  
+
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__pool__buf_1_1ggml__cann__buffer_a6bec33364da6028c4536d7be1edfeb5a}\label{structggml__cann__pool__buf_1_1ggml__cann__buffer_a6bec33364da6028c4536d7be1edfeb5a} 
+void \texorpdfstring{$\ast$}{*} {\bfseries ptr} = nullptr
+\begin{DoxyCompactList}\small\item\em Pointer to the buffer memory. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__buf_1_1ggml__cann__buffer_a31038e03d445b86a9960a2bea473b62b}\label{structggml__cann__pool__buf_1_1ggml__cann__buffer_a31038e03d445b86a9960a2bea473b62b} 
+size\+\_\+t {\bfseries size} = 0
+\begin{DoxyCompactList}\small\item\em Size of the buffer. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__buf_1_1ggml__cann__buffer_aa95ef6b85662772ff3b4d34177d40c50}\label{structggml__cann__pool__buf_1_1ggml__cann__buffer_aa95ef6b85662772ff3b4d34177d40c50} 
+bool {\bfseries used} = false
+\begin{DoxyCompactList}\small\item\em Whether the buffer is currently in use. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__cann__pool__buf_1_1ggml__cann__buffer_abce30ed36cd2a58e52f535720a69ad16}\label{structggml__cann__pool__buf_1_1ggml__cann__buffer_abce30ed36cd2a58e52f535720a69ad16} 
+std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point {\bfseries last\+\_\+used}
+\begin{DoxyCompactList}\small\item\em Last used time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Structure representing a CANN buffer. 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+ggml-\/cann.\+cpp\end{DoxyCompactItemize}

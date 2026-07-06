@@ -1,0 +1,63 @@
+\doxysection{convert-\/whisper-\/to-\/coreml.Text\+Decoder\+ANE Class Reference}
+\hypertarget{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e}{}\label{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e}\index{convert-\/whisper-\/to-\/coreml.TextDecoderANE@{convert-\/whisper-\/to-\/coreml.TextDecoderANE}}
+Inheritance diagram for convert-\/whisper-\/to-\/coreml.Text\+Decoder\+ANE:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a338931573bac0419b524a17f1c98c94f}\label{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a338931573bac0419b524a17f1c98c94f} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, int n\+\_\+vocab, int n\+\_\+ctx, int n\+\_\+state, int n\+\_\+head, int n\+\_\+layer)
+\item 
+\doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a6e24ec66da978d759ed974d42dff0ffe}{forward}} (self, Tensor x, Tensor xa, Optional\+[dict]\+ kv\+\_\+cache=None)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a9ac2ecd10692def90017a1443b0a481d}{blocks}}
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a60e2531301bd2a61066ffef4dcfd8578}\label{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a60e2531301bd2a61066ffef4dcfd8578} 
+{\bfseries ln} = \doxymbox{\hyperlink{classconvert-whisper-to-coreml_1_1_layer_norm_a_n_e}{Layer\+Norm\+ANE}}(n\+\_\+state)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a6e24ec66da978d759ed974d42dff0ffe}\index{convert-\/whisper-\/to-\/coreml.TextDecoderANE@{convert-\/whisper-\/to-\/coreml.TextDecoderANE}!forward@{forward}}
+\index{forward@{forward}!convert-\/whisper-\/to-\/coreml.TextDecoderANE@{convert-\/whisper-\/to-\/coreml.TextDecoderANE}}
+\doxysubsubsection{\texorpdfstring{forward()}{forward()}}
+{\footnotesize\ttfamily \label{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a6e24ec66da978d759ed974d42dff0ffe} 
+convert-\/whisper-\/to-\/coreml.\+Text\+Decoder\+ANE.\+forward (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{Tensor}]{x}{, }\item[{Tensor}]{xa}{, }\item[{Optional\+[dict]\+ }]{kv\+\_\+cache}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}x : torch.LongTensor, shape = (batch_size, <= n_ctx)
+    the text tokens
+xa : torch.Tensor, shape = (batch_size, n_mels, n_audio_ctx)
+    the encoded audio features to be attended on
+\end{DoxyVerb}
+ 
+
+\label{doc-variable-members}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a9ac2ecd10692def90017a1443b0a481d}\index{convert-\/whisper-\/to-\/coreml.TextDecoderANE@{convert-\/whisper-\/to-\/coreml.TextDecoderANE}!blocks@{blocks}}
+\index{blocks@{blocks}!convert-\/whisper-\/to-\/coreml.TextDecoderANE@{convert-\/whisper-\/to-\/coreml.TextDecoderANE}}
+\doxysubsubsection{\texorpdfstring{blocks}{blocks}}
+{\footnotesize\ttfamily \label{classconvert-whisper-to-coreml_1_1_text_decoder_a_n_e_a9ac2ecd10692def90017a1443b0a481d} 
+convert-\/whisper-\/to-\/coreml.\+Text\+Decoder\+ANE.\+blocks}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \ nn.ModuleList(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ [ResidualAttentionBlockANE(n\_state,\ n\_head,\ cross\_attention=\textcolor{keyword}{True})\ \textcolor{keywordflow}{for}\ \_\ \textcolor{keywordflow}{in}\ range(n\_layer)]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ )}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+models/\+convert-\/whisper-\/to-\/coreml.\+py\end{DoxyCompactItemize}

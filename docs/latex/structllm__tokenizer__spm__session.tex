@@ -1,0 +1,40 @@
+\doxysection{llm\+\_\+tokenizer\+\_\+spm\+\_\+session Struct Reference}
+\hypertarget{structllm__tokenizer__spm__session}{}\label{structllm__tokenizer__spm__session}\index{llm\_tokenizer\_spm\_session@{llm\_tokenizer\_spm\_session}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__spm__session_a7133a69d9dddcec65f8ae3755aa320ca}\label{structllm__tokenizer__spm__session_a7133a69d9dddcec65f8ae3755aa320ca} 
+{\bfseries llm\+\_\+tokenizer\+\_\+spm\+\_\+session} (const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \&vocab)
+\item 
+\Hypertarget{structllm__tokenizer__spm__session_a5f6d89429fc4c8821a9e9f3d6da98466}\label{structllm__tokenizer__spm__session_a5f6d89429fc4c8821a9e9f3d6da98466} 
+void {\bfseries tokenize} (const std::\+string \&text, std::\+vector$<$ llama\+\_\+token $>$ \&output)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__spm__session_a3369c9a502aede7a88553df30bded00f}\label{structllm__tokenizer__spm__session_a3369c9a502aede7a88553df30bded00f} 
+void {\bfseries resegment} (\doxymbox{\hyperlink{structllm__symbol}{llm\+\_\+symbol}} \&symbol, std::\+vector$<$ llama\+\_\+token $>$ \&output)
+\item 
+\Hypertarget{structllm__tokenizer__spm__session_a6c191351f9d05d87185a70c50cf2944b}\label{structllm__tokenizer__spm__session_a6c191351f9d05d87185a70c50cf2944b} 
+void {\bfseries try\+\_\+add\+\_\+bigram} (int left, int right)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__spm__session_ae59d9e6b82f972f02306e8fefd5643aa}\label{structllm__tokenizer__spm__session_ae59d9e6b82f972f02306e8fefd5643aa} 
+const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \& {\bfseries vocab}
+\item 
+\Hypertarget{structllm__tokenizer__spm__session_a97ba69c8e77f2eaba4927da827e00809}\label{structllm__tokenizer__spm__session_a97ba69c8e77f2eaba4927da827e00809} 
+std::\+vector$<$ \doxymbox{\hyperlink{structllm__symbol}{llm\+\_\+symbol}} $>$ {\bfseries symbols}
+\item 
+\Hypertarget{structllm__tokenizer__spm__session_ac3723d1ed8c4a793ffcc295f8ddac676}\label{structllm__tokenizer__spm__session_ac3723d1ed8c4a793ffcc295f8ddac676} 
+llm\+\_\+bigram\+\_\+spm::\+queue {\bfseries work\+\_\+queue}
+\item 
+\Hypertarget{structllm__tokenizer__spm__session_a59cc41672bff0bfee86521f3e7a2c5f1}\label{structllm__tokenizer__spm__session_a59cc41672bff0bfee86521f3e7a2c5f1} 
+std::\+map$<$ std::\+string, std::\+pair$<$ int, int $>$ $>$ {\bfseries rev\+\_\+merge}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/vocab.\+cpp\end{DoxyCompactItemize}

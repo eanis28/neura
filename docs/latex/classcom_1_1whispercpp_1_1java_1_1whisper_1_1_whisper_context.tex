@@ -1,0 +1,61 @@
+\doxysection{com.\+whispercpp.\+java.\+whisper.\+Whisper\+Context Class Reference}
+\hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context}{}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context}\index{com.whispercpp.java.whisper.WhisperContext@{com.whispercpp.java.whisper.WhisperContext}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_aea5a823a3720fc37d2aa7d229ca8c936}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_aea5a823a3720fc37d2aa7d229ca8c936} 
+String {\bfseries transcribe\+Data} (float\+[$\,$]\+ data)  throws Execution\+Exception, Interrupted\+Exception 
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ad522fc39632a820453b2ed2ea89c8643}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ad522fc39632a820453b2ed2ea89c8643} 
+List$<$ \doxymbox{\hyperlink{classcom_1_1litongjava_1_1whisper_1_1android_1_1java_1_1bean_1_1_whisper_segment}{Whisper\+Segment}} $>$ {\bfseries transcribe\+Data\+With\+Time} (float\+[$\,$]\+ data)  throws Execution\+Exception, Interrupted\+Exception 
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_acf0f027e8cc71b1414dbc0ed2fc0384d}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_acf0f027e8cc71b1414dbc0ed2fc0384d} 
+String {\bfseries bench\+Memory} (int nthreads)  throws Execution\+Exception, Interrupted\+Exception 
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ac6869dc68ac3eb875ae2faeea1155946}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ac6869dc68ac3eb875ae2faeea1155946} 
+String {\bfseries bench\+Ggml\+Mul\+Mat} (int nthreads)  throws Execution\+Exception, Interrupted\+Exception 
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ada0702e9167dc633093a1481fdd61dbf}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ada0702e9167dc633093a1481fdd61dbf} 
+void {\bfseries release} ()  throws Execution\+Exception, Interrupted\+Exception 
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_a01e65c2cbb416823dffb7222d5025b01}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_a01e65c2cbb416823dffb7222d5025b01} 
+static Whisper\+Context {\bfseries create\+Context\+From\+File} (String file\+Path)
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_acd32968f31b002fa994898a324151468}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_acd32968f31b002fa994898a324151468} 
+static Whisper\+Context {\bfseries create\+Context\+From\+Input\+Stream} (Input\+Stream stream)
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_a5a9ba97faa3b8d47f7aa3feab73259f0}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_a5a9ba97faa3b8d47f7aa3feab73259f0} 
+static Whisper\+Context {\bfseries create\+Context\+From\+Asset} (Asset\+Manager asset\+Manager, String asset\+Path)
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_aecd9afbbafffa2cbeec14e5e0a131ba6}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_aecd9afbbafffa2cbeec14e5e0a131ba6} 
+static String {\bfseries get\+System\+Info} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_aec1309eab396df029d3c4b855cdfa032}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_aec1309eab396df029d3c4b855cdfa032} 
+{\bfseries Whisper\+Context} (long ptr)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ae5458d5681b749ed6cb1bd60ac457af9}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ae5458d5681b749ed6cb1bd60ac457af9} 
+long {\bfseries ptr}
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ab8a1d90caf2019a1c2c9c0e19c88a498}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_ab8a1d90caf2019a1c2c9c0e19c88a498} 
+final Executor\+Service {\bfseries executor\+Service}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_aef3c15dcc7f2ccf91ddb690d1e1d6e4c}\label{classcom_1_1whispercpp_1_1java_1_1whisper_1_1_whisper_context_aef3c15dcc7f2ccf91ddb690d1e1d6e4c} 
+static final String {\bfseries LOG\+\_\+\+TAG} = "{}Lib\+Whisper"{}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+whisper.\+android.\+java/\+app/\+src/\+main/\+java/\+com/\+whispercpp/\+java/\+whisper/\+Whisper\+Context.\+java\end{DoxyCompactItemize}

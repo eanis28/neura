@@ -1,0 +1,5 @@
+<map id="VoiceCommandListener::~VoiceCommandListener" name="VoiceCommandListener::~VoiceCommandListener">
+<area shape="rect" id="Node000001" title="Destroys the VoiceCommandListener object." alt="" coords="5,5,182,46"/>
+<area shape="rect" id="Node000002" href="$class_voice_command_listener.html#a2893b72a70288b053f19093b14be0c74" title="Stops the voice command listener." alt="" coords="230,5,390,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,23,217,25,211,26,182,28"/>
+</map>

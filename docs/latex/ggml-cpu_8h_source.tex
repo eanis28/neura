@@ -1,0 +1,157 @@
+\doxysection{ggml-\/cpu.h}
+\hypertarget{ggml-cpu_8h_source}{}\label{ggml-cpu_8h_source}\index{whisper.cpp/ggml/include/ggml-\/cpu.h@{whisper.cpp/ggml/include/ggml-\/cpu.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00007\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{comment}{//\ the\ compute\ plan\ that\ needs\ to\ be\ prepared\ for\ ggml\_graph\_compute()}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{comment}{//\ since\ https://github.com/ggml-\/org/ggml/issues/287}}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cplan}{ggml\_cplan}}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ work\_size;\ \textcolor{comment}{//\ size\ of\ work\ buffer,\ calculated\ by\ \`{}ggml\_graph\_plan()`}}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ uint8\_t\ *\ work\_data;\ \textcolor{comment}{//\ work\ buffer,\ to\ be\ allocated\ by\ caller\ before\ calling\ to\ \`{}ggml\_graph\_compute()`}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_threads;}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ threadpool;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ abort\ ggml\_graph\_compute\ when\ true}}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ ggml\_abort\_callback\ abort\_callback;}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ abort\_callback\_data;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ use\ only\ reference\ implementations}}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_ref;}
+\DoxyCodeLine{00025\ \ \ \ \ \};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ numa\ strategies}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_numa\_strategy\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ GGML\_NUMA\_STRATEGY\_DISABLED\ \ \ =\ 0,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ GGML\_NUMA\_STRATEGY\_DISTRIBUTE\ =\ 1,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ GGML\_NUMA\_STRATEGY\_ISOLATE\ \ \ \ =\ 2,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ GGML\_NUMA\_STRATEGY\_NUMACTL\ \ \ \ =\ 3,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ GGML\_NUMA\_STRATEGY\_MIRROR\ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ GGML\_NUMA\_STRATEGY\_COUNT}
+\DoxyCodeLine{00035\ \ \ \ \ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ \ \ \ ggml\_numa\_init(\textcolor{keyword}{enum}\ ggml\_numa\_strategy\ numa);\ \textcolor{comment}{//\ call\ once\ for\ better\ performance\ on\ NUMA\ systems}}
+\DoxyCodeLine{00038\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ \ \ \ ggml\_is\_numa(\textcolor{keywordtype}{void});\ \textcolor{comment}{//\ true\ if\ init\ detected\ that\ system\ has\ >1\ NUMA\ node}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_new\_i32(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx,\ int32\_t\ value);}
+\DoxyCodeLine{00041\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_new\_f32(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx,\ \textcolor{keywordtype}{float}\ value);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_set\_i32\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ int32\_t\ value);}
+\DoxyCodeLine{00044\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_set\_f32\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{float}\ value);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ GGML\_BACKEND\_API\ int32\_t\ ggml\_get\_i32\_1d(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00047\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ \ \ \ ggml\_set\_i32\_1d(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{int}\ i,\ int32\_t\ value);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ GGML\_BACKEND\_API\ int32\_t\ ggml\_get\_i32\_nd(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{int}\ i0,\ \textcolor{keywordtype}{int}\ i1,\ \textcolor{keywordtype}{int}\ i2,\ \textcolor{keywordtype}{int}\ i3);}
+\DoxyCodeLine{00050\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ \ \ \ ggml\_set\_i32\_nd(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{int}\ i0,\ \textcolor{keywordtype}{int}\ i1,\ \textcolor{keywordtype}{int}\ i2,\ \textcolor{keywordtype}{int}\ i3,\ int32\_t\ value);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{float}\ \ \ ggml\_get\_f32\_1d(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00053\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ \ \ \ ggml\_set\_f32\_1d(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{float}\ value);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{float}\ \ \ ggml\_get\_f32\_nd(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{int}\ i0,\ \textcolor{keywordtype}{int}\ i1,\ \textcolor{keywordtype}{int}\ i2,\ \textcolor{keywordtype}{int}\ i3);}
+\DoxyCodeLine{00056\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ \ \ \ ggml\_set\_f32\_nd(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{int}\ i0,\ \textcolor{keywordtype}{int}\ i1,\ \textcolor{keywordtype}{int}\ i2,\ \textcolor{keywordtype}{int}\ i3,\ \textcolor{keywordtype}{float}\ value);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ \ \ \ \ \ ggml\_threadpool\_new\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__threadpool__params}{ggml\_threadpool\_params}}\ \ *\ params);}
+\DoxyCodeLine{00059\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_threadpool\_free\ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ threadpool);}
+\DoxyCodeLine{00060\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_threadpool\_get\_n\_threads\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ threadpool);}
+\DoxyCodeLine{00061\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_threadpool\_pause\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ threadpool);}
+\DoxyCodeLine{00062\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_threadpool\_resume\ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ threadpool);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ ggml\_graph\_plan()\ has\ to\ be\ called\ before\ ggml\_graph\_compute()}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ when\ plan.work\_size\ >\ 0,\ caller\ must\ allocate\ memory\ for\ plan.work\_data}}
+\DoxyCodeLine{00066\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cplan}{ggml\_cplan}}\ ggml\_graph\_plan(}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ const\ struct\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads,\ \textcolor{comment}{/*\ =\ GGML\_DEFAULT\_N\_THREADS\ */}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ threadpool\ \textcolor{comment}{/*\ =\ NULL\ */}\ );}
+\DoxyCodeLine{00070\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keyword}{enum}\ ggml\_status\ \ ggml\_graph\_compute(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cplan}{ggml\_cplan}}\ *\ cplan);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//\ same\ as\ ggml\_graph\_compute()\ but\ the\ work\ data\ is\ allocated\ as\ a\ part\ of\ the\ context}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//\ note:\ the\ drawback\ of\ this\ API\ is\ that\ you\ must\ have\ ensured\ that\ the\ context\ has\ enough\ memory\ for\ the\ work\ data}}
+\DoxyCodeLine{00074\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keyword}{enum}\ ggml\_status\ \ ggml\_graph\_compute\_with\_ctx(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ \textcolor{keywordtype}{int}\ n\_threads);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ system\ info}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ x86}}
+\DoxyCodeLine{00081\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_sse3\ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00082\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_ssse3\ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00083\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_avx\ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00084\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_avx\_vnni\ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00085\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_avx2\ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00086\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_bmi2\ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00087\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_f16c\ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00088\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_fma\ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00089\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_avx512\ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00090\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_avx512\_vbmi(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00091\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_avx512\_vnni(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00092\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_avx512\_bf16(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00093\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_amx\_int8\ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ ARM}}
+\DoxyCodeLine{00095\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_neon\ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00096\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_arm\_fma\ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00097\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_fp16\_va\ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00098\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_dotprod\ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00099\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_matmul\_int8(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00100\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_sve\ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00101\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_get\_sve\_cnt\ \ \ \ (\textcolor{keywordtype}{void});\ \ \textcolor{comment}{//\ sve\ vector\ length\ in\ bytes}}
+\DoxyCodeLine{00102\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_sme\ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ other}}
+\DoxyCodeLine{00104\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_riscv\_v\ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00105\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_get\_rvv\_vlen\ \ \ (\textcolor{keywordtype}{void});\ \ \textcolor{comment}{//\ risc-\/v\ vector\ length\ in\ bytes}}
+\DoxyCodeLine{00106\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_vsx\ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00107\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_vxe\ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00108\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_wasm\_simd\ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00109\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ ggml\_cpu\_has\_llamafile\ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{//\ Internal\ types\ and\ functions\ exposed\ for\ tests\ and\ benchmarks}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{typedef}\ void\ (*ggml\_vec\_dot\_t)\ \ (\textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ s,\ \textcolor{keywordtype}{size\_t}\ bs,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ x,\ \textcolor{keywordtype}{size\_t}\ bx,}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ GGML\_RESTRICT\ y,\ \textcolor{keywordtype}{size\_t}\ by,\ \textcolor{keywordtype}{int}\ nrc);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__type__traits__cpu}{ggml\_type\_traits\_cpu}}\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ ggml\_from\_float\_t\ \ \ \ \ \ \ \ from\_float;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ ggml\_vec\_dot\_t\ \ \ \ \ \ \ \ \ \ \ vec\_dot;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_type\ \ \ \ \ \ \ \ \ \ \ vec\_dot\_type;}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nrows;\ \textcolor{comment}{//\ number\ of\ rows\ to\ process\ simultaneously}}
+\DoxyCodeLine{00121\ \ \ \ \ \};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__type__traits__cpu}{ggml\_type\_traits\_cpu}}\ *\ ggml\_get\_type\_traits\_cpu(\textcolor{keyword}{enum}\ ggml\_type\ type);}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_cpu\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ CPU\ backend}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ GGML\_BACKEND\_API\ ggml\_backend\_t\ ggml\_backend\_cpu\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_is\_cpu\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00134\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_cpu\_set\_n\_threads\ \ \ \ \ (ggml\_backend\_t\ backend\_cpu,\ \textcolor{keywordtype}{int}\ n\_threads);}
+\DoxyCodeLine{00135\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_cpu\_set\_threadpool\ \ \ \ (ggml\_backend\_t\ backend\_cpu,\ ggml\_threadpool\_t\ threadpool);}
+\DoxyCodeLine{00136\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_cpu\_set\_abort\_callback(ggml\_backend\_t\ backend\_cpu,\ ggml\_abort\_callback\ abort\_callback,\ \textcolor{keywordtype}{void}\ *\ abort\_callback\_data);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_cpu\_set\_use\_ref(ggml\_backend\_t\ backend\_cpu,\ \textcolor{keywordtype}{bool}\ use\_ref);}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_cpu\_reg(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_cpu\_fp32\_to\_fp32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *,\ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *,\ int64\_t);}
+\DoxyCodeLine{00143\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_cpu\_fp32\_to\_i32\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *,\ \ \ \ \ int32\_t\ *,\ int64\_t);}
+\DoxyCodeLine{00144\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_cpu\_fp32\_to\_fp16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *,\ ggml\_fp16\_t\ *,\ int64\_t);}
+\DoxyCodeLine{00145\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_cpu\_fp16\_to\_fp32(\textcolor{keyword}{const}\ ggml\_fp16\_t\ *,\ \textcolor{keywordtype}{float}\ *,\ int64\_t);}
+\DoxyCodeLine{00146\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_cpu\_fp32\_to\_bf16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *,\ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ *,\ int64\_t);}
+\DoxyCodeLine{00147\ \ \ \ \ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_cpu\_bf16\_to\_fp32(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ *,\ \textcolor{keywordtype}{float}\ *,\ int64\_t);}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00150\ \}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

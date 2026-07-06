@@ -1,0 +1,129 @@
+\doxysection{utils.\+h}
+\hypertarget{utils_8h_source}{}\label{utils_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/utils.h@{whisper.cpp/ggml/src/ggml-\/openvino/utils.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend-\/impl.h"{}}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}ggml-\/decoder.h"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <openvino/runtime/core.hpp>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <openvino/runtime/infer\_request.hpp>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }graph\_key\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{int}\ n\_nodes;}
+\DoxyCodeLine{00016\ \ \ \ \ std::string\ first\_node\_name;}
+\DoxyCodeLine{00017\ \ \ \ \ std::string\ last\_node\_name;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ graph\_key(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph)\ :\ n\_nodes(cgraph-\/>n\_nodes)\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (n\_nodes\ >\ 0)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ first\_node\_name\ =\ cgraph-\/>nodes[0]-\/>name;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ last\_node\_name\ =\ cgraph-\/>nodes[n\_nodes\ -\/\ 1]-\/>name;}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ graph\_key\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ n\_nodes\ ==\ other.n\_nodes\ \&\&\ first\_node\_name\ ==\ other.first\_node\_name\ \&\&}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last\_node\_name\ ==\ other.last\_node\_name;}
+\DoxyCodeLine{00029\ \ \ \ \ \}}
+\DoxyCodeLine{00030\ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgraph__key__hash}{graph\_key\_hash}}\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structgraph__key}{graph\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ h\ =\ std::hash<int>\{\}(key.n\_nodes);}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.n\_nodes\ >\ 0)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ h\ \string^=\ std::hash<std::string>\{\}(key.first\_node\_name)\ +\ 0x9e3779b9\ +\ (h\ <<\ 6)\ +\ (h\ >>\ 2);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ h\ \string^=\ std::hash<std::string>\{\}(key.last\_node\_name)\ +\ 0x9e3779b9\ +\ (h\ <<\ 6)\ +\ (h\ >>\ 2);}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ h;}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{struct\ }ov\_runtime\_context\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ std::mutex\ ov\_compute\_mutex;}
+\DoxyCodeLine{00045\ \ \ \ \ std::string\ device;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{bool}\ stateful;}
+\DoxyCodeLine{00047\ \ \ \ \ std::unordered\_map<graph\_key,\ std::shared\_ptr<GgmlOvDecoder>,\ \doxymbox{\hyperlink{structgraph__key__hash}{graph\_key\_hash}}>\ decoder\_cache;}
+\DoxyCodeLine{00048\ \ \ \ \ std::unordered\_map<graph\_key,\ std::shared\_ptr<ov::InferRequest>,\ \doxymbox{\hyperlink{structgraph__key__hash}{graph\_key\_hash}}>\ infer\_request\_cache;}
+\DoxyCodeLine{00049\ \ \ \ \ std::unordered\_map<graph\_key,\ std::shared\_ptr<ov::InferRequest>,\ \doxymbox{\hyperlink{structgraph__key__hash}{graph\_key\_hash}}>\ infer\_request\_cache\_prefill;}
+\DoxyCodeLine{00050\ \ \ \ \ std::unordered\_map<graph\_key,\ std::vector<std::string>,\ \doxymbox{\hyperlink{structgraph__key__hash}{graph\_key\_hash}}>\ ov\_input\_names\_cache;}
+\DoxyCodeLine{00051\ \ \ \ \ std::unordered\_map<graph\_key,\ std::vector<std::string>,\ \doxymbox{\hyperlink{structgraph__key__hash}{graph\_key\_hash}}>\ ov\_output\_names\_cache;}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//TODO:\ Stateful\ is\ only\ supported\ for\ single\ request\ at\ a\ time.}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ Simultanous\ stateful\ inference\ request\ support\ to\ be\ added.}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ stateful\_kv\_size;}
+\DoxyCodeLine{00055\ \ \ \ \ std::map<std::string,\ std::string>\ kv\_state\_input\_name\_map;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ ov\_runtime\_context()\ :}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ device(\textcolor{stringliteral}{"{}CPU"{}}),}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ stateful(\textcolor{keyword}{false}),}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ stateful\_kv\_size(0)\ \{\}}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{enum}\ ggml\_status\ ov\_graph\_compute(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{enum}\ ggml\_status\ ov\_graph\_compute\_dynamic(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ std::shared\_ptr<ov\_runtime\_context>\ r\_ctx);}
+\DoxyCodeLine{00066\ \textcolor{keyword}{enum}\ ggml\_status\ ov\_graph\_compute\_static(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ std::shared\_ptr<ov\_runtime\_context>\ r\_ctx);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keywordtype}{size\_t}\ checksum(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keywordtype}{void}\ print\_input\_tensor\_info(\textcolor{keyword}{const}\ std::string\ \&\ name,\ \textcolor{keyword}{const}\ ov::Tensor\ \&\ tensor);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keywordtype}{void}\ print\_output\_tensor\_info(\textcolor{keyword}{const}\ std::string\ \&\ name,\ \textcolor{keyword}{const}\ ov::Tensor\ \&\ tensor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ output\_dst);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00075\ std::vector<T>\ pad\_input(\textcolor{keyword}{const}\ T\ *\ data,}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ rows,}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ cols,}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ padded\_rows,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ padded\_cols,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\ pad\_value)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ std::vector<T>\ padded(padded\_rows\ *\ padded\_cols,\ pad\_value);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ std::min(rows,\ padded\_rows);\ ++i)\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ j\ =\ 0;\ j\ <\ std::min(cols,\ padded\_cols);\ ++j)\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ padded[i\ *\ padded\_cols\ +\ j]\ =\ data[i\ *\ cols\ +\ j];}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{return}\ padded;}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00093\ std::vector<T>\ pad\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{size\_t}\ padded\_rows,\ \textcolor{keywordtype}{size\_t}\ padded\_cols,\ T\ pad\_value)\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{return}\ pad\_input<T>(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }T\ *\textcolor{keyword}{>}(tensor-\/>data),}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(tensor-\/>ne[1]),\ \ \textcolor{comment}{//\ rows}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(tensor-\/>ne[0]),\ \ \textcolor{comment}{//\ cols}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ padded\_rows,\ padded\_cols,\ pad\_value);}
+\DoxyCodeLine{00098\ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{keywordtype}{void}\ set\_zero\_diagonal(std::vector<float>\ \&\ matrix,\ \textcolor{keywordtype}{size\_t}\ rows,\ \textcolor{keywordtype}{size\_t}\ cols);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_inp\_pos\_tensor(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keywordtype}{bool}\ get\_is\_prefill(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ inp\_pos);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ ov::Tensor\ get\_ov\_input\_tensor(std::shared\_ptr<GgmlOvDecoder>\ ggml\_decoder,\ \textcolor{keyword}{const}\ std::string\ \&\ param\_name);}
+\DoxyCodeLine{00107\ ov::Tensor\ get\_ov\_input\_tensor\_static\_decode(std::shared\_ptr<GgmlOvDecoder>\ ggml\_decoder,}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ param\_name);}
+\DoxyCodeLine{00109\ ov::Tensor\ get\_ov\_input\_tensor\_static\_prefill(std::shared\_ptr<GgmlOvDecoder>\ ggml\_decoder,}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ param\_name,}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ chunk\_index);}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ ov::Tensor\ create\_ov\_output\_tensor(std::shared\_ptr<GgmlOvDecoder>\ ggml\_decoder,}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<ov::InferRequest>\ infer\_request,}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ output\_index,}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}});}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{keywordtype}{bool}\ is\_naive(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph);}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{keyword}{enum}\ ggml\_status\ naive\_compute(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Core\ \&\ core,}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ device,}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ov::AnyMap\ \&\ config);}
+
+\end{DoxyCode}

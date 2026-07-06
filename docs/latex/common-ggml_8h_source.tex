@@ -1,0 +1,24 @@
+\doxysection{common-\/ggml.h}
+\hypertarget{common-ggml_8h_source}{}\label{common-ggml_8h_source}\index{whisper.cpp/examples/common-\/ggml.h@{whisper.cpp/examples/common-\/ggml.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{enum}\ ggml\_ftype\ ggml\_parse\_ftype(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ str);}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keywordtype}{void}\ ggml\_print\_ftypes(FILE\ *\ fp\ =\ stderr);}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keywordtype}{bool}\ ggml\_common\_quantize\_0(}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ std::ifstream\ \&\ finp,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ std::ofstream\ \&\ fout,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ggml\_ftype\ ftype,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\ \&\ to\_quant,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\ \&\ to\_skip);}
+
+\end{DoxyCode}

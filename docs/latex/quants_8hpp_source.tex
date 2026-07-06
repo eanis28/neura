@@ -1,0 +1,116 @@
+\doxysection{quants.\+hpp}
+\hypertarget{quants_8hpp_source}{}\label{quants_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/quants.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/quants.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2025\ Codeplay\ Software\ Ltd.}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Copyright\ (C)\ 2025\ Intel\ Corporation}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_QUANTS\_HPP}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_QUANTS\_HPP}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}ggml-\/common.h"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }ggml\_sycl\_reordered\ \{}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ The\ reordered\ block\ moves\ quants\ (qs)\ and\ \ scales(d)\ to\ two}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ uniform\ regions\ of\ memory\ that\ is\ contiguous\ in\ the\ same\ tensor.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ What\ this\ means\ is\ that\ instead\ of\ having:}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ [d0,\ qs0]\ [d1,\ qs1]\ [d2,\ qs2]\ ...\ [dN,\ qsN]}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ We\ have:}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ [qs0,\ qs1,\ qs2,\ ...,\ qsN]\ \ [d0,\ d1,\ d2,\ ...,\ dN]}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ Notes:\ out-\/of-\/bounds\ qs\ will\ run\ into\ d\ values}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ Alignment\ relies\ on\ the\ allocated\ size\ of\ qs}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{template}\ <ggml\_type\ type>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t}{block\_q\_t}};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ qk\ number\ of\ weights\ /\ quants\ in\ a\ block}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ qr\ number\ of\ weights\ in\ a\ byte\ (described\ as\ 'before\ dequantization')}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ \ \ \ for\ quantization\ types\ that\ has\ low\ and\ high\ bits\ split,\ qr\ is\ calculated\ with}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ \ \ \ using\ the\ lower\ bits,\ e.g\ for\ Q6\ quants\ QR6\ is\ 2}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ qi\ number\ of\ 32\ bit\ integers\ needed\ to\ represent\ all\ the\ quants\ from\ a\ block\ (`qs`\ field)}}
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ See\ ggml-\/common.h\ to\ see\ how\ these\ are\ calculated}}
+\DoxyCodeLine{00042\ \textcolor{keyword}{template}\ <>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t}{block\_q\_t}}<GGML\_TYPE\_Q4\_0>\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t_3_01_g_g_m_l___t_y_p_e___q4__0_01_4_1_1traits}{traits}}\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ qk\ \ \ \ \ \ \ =\ QK4\_0;}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ qi\ \ \ \ \ \ \ =\ QI4\_0;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ qr\ \ \ \ \ \ \ =\ QR4\_0;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ vdr\_mmvq\ =\ 2;}
+\DoxyCodeLine{00048\ \ \ \ \ \};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ std::pair<int,\ int>\ get\_block\_offset(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ block\_index,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \textcolor{comment}{/*\ nblocks\ */})\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ block\_index\ *\ (QK4\_0\ /\ QR4\_0),\ 0\ \};}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ std::pair<int,\ int>\ get\_d\_offset(\textcolor{keywordtype}{int}\ nrows,\ \textcolor{keywordtype}{int}\ ncols,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ block\_index)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ (ncols\ /\ QR4\_0\ *\ nrows)\ +\ block\_index\ *\ \textcolor{keyword}{sizeof}(ggml\_half),\ 0\ \};}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ block\_to\_q8\_1\_ratio()\ \{\ \textcolor{keywordflow}{return}\ traits::qk\ /\ QK8\_1;\ \}}
+\DoxyCodeLine{00059\ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{template}\ <>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t}{block\_q\_t}}<GGML\_TYPE\_Q4\_K>\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t_3_01_g_g_m_l___t_y_p_e___q4___k_01_4_1_1traits}{traits}}\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ qk\ \ \ \ \ \ \ =\ QK\_K;}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ qi\ \ \ \ \ \ \ =\ QI4\_K;}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ qr\ \ \ \ \ \ \ =\ QR4\_K;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ vdr\_mmvq\ =\ 2;}
+\DoxyCodeLine{00067\ \ \ \ \ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ std::pair<int,\ int>\ get\_block\_offset(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ block\_index,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \textcolor{comment}{/*\ nblocks\ */})\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ block\_index\ *\ (traits::qk\ /\ traits::qr),\ 0\ \};}
+\DoxyCodeLine{00071\ \ \ \ \ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ std::pair<int,\ int>\ get\_d\_offset(\textcolor{keywordtype}{int}\ nrows,\ \textcolor{keywordtype}{int}\ ncols,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ block\_index)\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ nblocks\ =\ (nrows\ *\ (ncols\ /\ QK\_K));}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ nblocks\ *\ (QK\_K\ /\ 2)\ +\ (block\_index\ *\ K\_SCALE\_SIZE),}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (nblocks\ *\ QK\_K\ /\ 2)\ +\ (nblocks\ *\ K\_SCALE\_SIZE)\ +\ (block\_index\ *\ \textcolor{keyword}{sizeof}(ggml\_half2))\ \};}
+\DoxyCodeLine{00077\ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ block\_to\_q8\_1\_ratio()\ \{\ \textcolor{keywordflow}{return}\ traits::qk\ /\ QK8\_1;\ \}}
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{template}\ <>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t}{block\_q\_t}}<GGML\_TYPE\_Q6\_K>\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_1_1traits}{traits}}\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ qk\ \ \ \ \ \ \ =\ QK\_K;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ qi\ \ \ \ \ \ \ =\ QI6\_K;}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ qr\ \ \ \ \ \ \ =\ QR6\_K;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ vdr\_mmvq\ =\ 1;}
+\DoxyCodeLine{00088\ \ \ \ \ \};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ std::pair<int,\ int>\ get\_block\_offset(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ block\_index,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n\_blocks)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ low\_bits\_index\ \ =\ block\_index\ *\ (QK\_K\ /\ QR6\_K);}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ index\ of\ high\ bits\ it's\ after\ all\ low\ bits}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ high\_bits\_index\ =\ n\_blocks\ *\ (QK\_K\ /\ 2)\ +\ (block\_index\ *\ (QK\_K\ /\ 4));}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ low\_bits\_index,\ high\_bits\_index\ \};}
+\DoxyCodeLine{00095\ \ \ \ \ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ std::pair<int,\ int>\ get\_d\_offset(\textcolor{keywordtype}{int}\ nrows,\ \textcolor{keywordtype}{int}\ ncols,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ block\_index)\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ nblocks\ \ \ \ \ \ \ \ =\ (nrows\ *\ (ncols\ /\ QK\_K));}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ total\_qs\_bytes\ =\ nblocks\ *\ (QK\_K\ /\ 2)\ +\ nblocks\ *\ (QK\_K\ /\ 4);}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ block\_scales\ \ \ =\ total\_qs\_bytes\ +\ block\_index\ *\ (QK\_K\ /\ 16);}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ sb\_scale\ \ \ \ \ \ \ =\ total\_qs\_bytes\ +\ nblocks\ *\ (QK\_K\ /\ 16)\ +\ block\_index\ *\ \textcolor{keyword}{sizeof}(ggml\_half);}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ block\_scales,\ sb\_scale\ \};}
+\DoxyCodeLine{00103\ \ \ \ \ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ block\_to\_q8\_1\_ratio()\ \{\ \textcolor{keywordflow}{return}\ traits::qk\ /\ QK8\_1;\ \}}
+\DoxyCodeLine{00106\ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \}\ \ \textcolor{comment}{//\ namespace\ ggml\_sycl\_reordered}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GGML\_SYCL\_QUANTS\_HPP}}
+
+\end{DoxyCode}

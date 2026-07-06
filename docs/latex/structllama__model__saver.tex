@@ -1,0 +1,68 @@
+\doxysection{llama\+\_\+model\+\_\+saver Struct Reference}
+\hypertarget{structllama__model__saver}{}\label{structllama__model__saver}\index{llama\_model\_saver@{llama\_model\_saver}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__model__saver_a3bcf018ffbcfec6b8ed8d27b4f13f092}\label{structllama__model__saver_a3bcf018ffbcfec6b8ed8d27b4f13f092} 
+{\bfseries llama\+\_\+model\+\_\+saver} (const struct \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \texorpdfstring{$\ast$}{*}model)
+\item 
+\Hypertarget{structllama__model__saver_a4a54aaca639ee20a8f7be4909dcc3f24}\label{structllama__model__saver_a4a54aaca639ee20a8f7be4909dcc3f24} 
+{\bfseries llama\+\_\+model\+\_\+saver} (enum llm\+\_\+arch arch, struct \doxymbox{\hyperlink{structgguf__context}{gguf\+\_\+context}} \texorpdfstring{$\ast$}{*}gguf\+\_\+ctx)
+\item 
+\Hypertarget{structllama__model__saver_a31118b8b24a718b2bed65ab6a2e81eab}\label{structllama__model__saver_a31118b8b24a718b2bed65ab6a2e81eab} 
+void {\bfseries add\+\_\+kv} (enum llm\+\_\+kv key, uint32\+\_\+t value)
+\item 
+\Hypertarget{structllama__model__saver_a6e72d19e9be5f60954185223a0666c50}\label{structllama__model__saver_a6e72d19e9be5f60954185223a0666c50} 
+void {\bfseries add\+\_\+kv} (enum llm\+\_\+kv key, int32\+\_\+t value)
+\item 
+\Hypertarget{structllama__model__saver_a19a2c9ec98f93435465354efdd516d9c}\label{structllama__model__saver_a19a2c9ec98f93435465354efdd516d9c} 
+void {\bfseries add\+\_\+kv} (enum llm\+\_\+kv key, float value)
+\item 
+\Hypertarget{structllama__model__saver_a743e7af12b93f003918d3f8f6633affe}\label{structllama__model__saver_a743e7af12b93f003918d3f8f6633affe} 
+void {\bfseries add\+\_\+kv} (enum llm\+\_\+kv key, bool value)
+\item 
+\Hypertarget{structllama__model__saver_a01297f51102e02a745b810b8e7b16fd3}\label{structllama__model__saver_a01297f51102e02a745b810b8e7b16fd3} 
+void {\bfseries add\+\_\+kv} (enum llm\+\_\+kv key, const char \texorpdfstring{$\ast$}{*}value)
+\item 
+\Hypertarget{structllama__model__saver_aca58a9800629ae2992ab22c328386d0a}\label{structllama__model__saver_aca58a9800629ae2992ab22c328386d0a} 
+void {\bfseries add\+\_\+kv} (enum llm\+\_\+kv key, char value)
+\item 
+\Hypertarget{structllama__model__saver_a57dd7161e868f03f3d65de278d7fd2e9}\label{structllama__model__saver_a57dd7161e868f03f3d65de278d7fd2e9} 
+{\footnotesize template$<$typename Container$>$ }\\void {\bfseries add\+\_\+kv} (enum llm\+\_\+kv key, const Container \&value, bool per\+\_\+layer=false)
+\item 
+\Hypertarget{structllama__model__saver_a4e53eb46ebd4fa75cf16b8c5c5c1eaba}\label{structllama__model__saver_a4e53eb46ebd4fa75cf16b8c5c5c1eaba} 
+void {\bfseries add\+\_\+kv} (enum llm\+\_\+kv key, const std::\+vector$<$ std::\+string $>$ \&value)
+\item 
+\Hypertarget{structllama__model__saver_aa129a354bb3ce510a525673f334820b3}\label{structllama__model__saver_aa129a354bb3ce510a525673f334820b3} 
+void {\bfseries add\+\_\+tensor} (const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor)
+\item 
+\Hypertarget{structllama__model__saver_af7c960b58e76bc7f99827a09719e603a}\label{structllama__model__saver_af7c960b58e76bc7f99827a09719e603a} 
+void {\bfseries add\+\_\+kv\+\_\+from\+\_\+model} ()
+\item 
+\Hypertarget{structllama__model__saver_abbc01f1317e2cb108946949ed0d81480}\label{structllama__model__saver_abbc01f1317e2cb108946949ed0d81480} 
+void {\bfseries add\+\_\+tensors\+\_\+from\+\_\+model} ()
+\item 
+\Hypertarget{structllama__model__saver_ac4756b0700ecc81165a67c3814f3f409}\label{structllama__model__saver_ac4756b0700ecc81165a67c3814f3f409} 
+void {\bfseries save} (const std::\+string \&path\+\_\+model)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__model__saver_ae9d701ff260461635df95d4aa8fbcf9c}\label{structllama__model__saver_ae9d701ff260461635df95d4aa8fbcf9c} 
+struct \doxymbox{\hyperlink{structgguf__context}{gguf\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries gguf\+\_\+ctx} = nullptr
+\item 
+\Hypertarget{structllama__model__saver_a7ed8c53e2453e9f23c1e5076cf6d5ab2}\label{structllama__model__saver_a7ed8c53e2453e9f23c1e5076cf6d5ab2} 
+const bool {\bfseries gguf\+\_\+ctx\+\_\+owned}
+\item 
+\Hypertarget{structllama__model__saver_a0cb3b31b16fb5e1c68a49ad5e99576fb}\label{structllama__model__saver_a0cb3b31b16fb5e1c68a49ad5e99576fb} 
+const struct \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \texorpdfstring{$\ast$}{*} {\bfseries model}
+\item 
+\Hypertarget{structllama__model__saver_aa59a336a3ab840633e5e24707faaef31}\label{structllama__model__saver_aa59a336a3ab840633e5e24707faaef31} 
+const struct \doxymbox{\hyperlink{struct_l_l_m___k_v}{LLM\+\_\+\+KV}} {\bfseries llm\+\_\+kv}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/model-\/saver.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/model-\/saver.\+cpp\end{DoxyCompactItemize}

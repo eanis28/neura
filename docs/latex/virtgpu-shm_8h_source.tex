@@ -1,0 +1,29 @@
+\doxysection{virtgpu-\/shm.h}
+\hypertarget{virtgpu-shm_8h_source}{}\label{virtgpu-shm_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu-\/shm.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu-\/shm.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}virtgpu-\/utils.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <sys/mman.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structvirtgpu}{virtgpu}};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structvirtgpu__shmem}{virtgpu\_shmem}}\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ uint32\_t\ res\_id;}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ mmap\_size;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ mmap\_ptr;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ uint32\_t\ gem\_handle;}
+\DoxyCodeLine{00020\ \};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{int}\ \ virtgpu\_shmem\_create(\doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \textcolor{keywordtype}{size\_t}\ size,\ \doxymbox{\hyperlink{structvirtgpu__shmem}{virtgpu\_shmem}}\ *\ shmem);}
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{void}\ virtgpu\_shmem\_destroy(\doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \doxymbox{\hyperlink{structvirtgpu__shmem}{virtgpu\_shmem}}\ *\ shmem);}
+
+\end{DoxyCode}

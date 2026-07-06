@@ -1,0 +1,35 @@
+\doxysection{ggml-\/vulkan.h}
+\hypertarget{ggml-vulkan_8h_source}{}\label{ggml-vulkan_8h_source}\index{whisper.cpp/ggml/include/ggml-\/vulkan.h@{whisper.cpp/ggml/include/ggml-\/vulkan.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00007\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ GGML\_VK\_NAME\ "{}Vulkan"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ GGML\_VK\_MAX\_DEVICES\ 16}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ backend\ API}}
+\DoxyCodeLine{00014\ GGML\_BACKEND\_API\ ggml\_backend\_t\ ggml\_backend\_vk\_init(\textcolor{keywordtype}{size\_t}\ dev\_num);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_is\_vk(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00017\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ \ ggml\_backend\_vk\_get\_device\_count(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00018\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_vk\_get\_device\_description(\textcolor{keywordtype}{int}\ device,\ \textcolor{keywordtype}{char}\ *\ description,\ \textcolor{keywordtype}{size\_t}\ description\_size);}
+\DoxyCodeLine{00019\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_vk\_get\_device\_memory(\textcolor{keywordtype}{int}\ device,\ \textcolor{keywordtype}{size\_t}\ *\ free,\ \textcolor{keywordtype}{size\_t}\ *\ total);}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_vk\_buffer\_type(\textcolor{keywordtype}{size\_t}\ dev\_num);}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ pinned\ host\ buffer\ for\ use\ with\ the\ CPU\ backend\ for\ faster\ copies\ between\ CPU\ and\ GPU}}
+\DoxyCodeLine{00023\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_vk\_host\_buffer\_type(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_vk\_reg(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00028\ \}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

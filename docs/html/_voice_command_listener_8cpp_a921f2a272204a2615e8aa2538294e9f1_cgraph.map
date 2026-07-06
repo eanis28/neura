@@ -1,0 +1,7 @@
+<map id="parseHourMin" name="parseHourMin">
+<area shape="rect" id="Node000001" title="Parses a spoken time into 24&#45;hour format." alt="" coords="5,31,108,56"/>
+<area shape="rect" id="Node000002" href="$_voice_command_listener_8cpp.html#a82e3ba74a85eb30b3d56fcf19e723720" title="Converts a string to lowercase." alt="" coords="156,5,223,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,31,143,27,138,28,109,36"/>
+<area shape="rect" id="Node000003" href="$_voice_command_listener_8cpp.html#ab5dcb5ce95b02dd9b4fd019c54847303" title="Removes leading and trailing whitespace from a string." alt="" coords="168,55,211,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,50,155,60,150,61,108,55"/>
+</map>

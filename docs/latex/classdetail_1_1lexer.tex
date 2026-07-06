@@ -1,0 +1,383 @@
+\doxysection{detail::\+lexer\texorpdfstring{$<$}{<} Basic\+Json\+Type, Input\+Adapter\+Type \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classdetail_1_1lexer}{}\label{classdetail_1_1lexer}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+
+
+lexical analysis  
+
+
+
+
+{\ttfamily \+\#include $<$json.\+hpp$>$}
+
+Inheritance diagram for detail::\+lexer\texorpdfstring{$<$}{<} Basic\+Json\+Type, Input\+Adapter\+Type \texorpdfstring{$>$}{>}:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classdetail_1_1lexer}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1lexer_a74052693c02be1a1e245295b62e5fcb6}\label{classdetail_1_1lexer_a74052693c02be1a1e245295b62e5fcb6} 
+using {\bfseries token\+\_\+type} = typename \doxymbox{\hyperlink{classdetail_1_1lexer__base}{lexer\+\_\+base}}$<$Basic\+Json\+Type$>$::\+token\+\_\+type
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \doxymbox{\hyperlink{classdetail_1_1lexer__base}{detail::\+lexer\+\_\+base$<$ Basic\+Json\+Type $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540}{token\+\_\+type}} \{ \newline
+\doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a42dd1a73d072bb6bf3f494f22b15db8e}{uninitialized}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a85cc1a37b0aaa52de40e72f0ed4e0c0d}{literal\+\_\+true}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540afab1694b1b3937a079f4625fe0b6108b}{literal\+\_\+false}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540ab7ae4c0e46d86f884677768160b26e9e}{literal\+\_\+null}}
+, \newline
+\doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a2b490e8bf366b4cbe3ebd99b26ce15ce}{value\+\_\+string}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540aaf1f040fcd2f674d2e5893d7a731078f}{value\+\_\+unsigned}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a5064b6655d88a50ae16665cf7751c0ee}{value\+\_\+integer}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a0d2671a6f81efb91e77f6ac3bdb11443}{value\+\_\+float}}
+, \newline
+\doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a16c226b4425b68560fea322b46dabe01}{begin\+\_\+array}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a9a9ffd53b6869d4eca271b1ed5b57fe8}{begin\+\_\+object}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a2f3e68e7f111a1e5c7728742b3ca2b7f}{end\+\_\+array}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a7d5b4427866814de4d8f132721d59c87}{end\+\_\+object}}
+, \newline
+\doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540acc3c64f8ae08c00de1b33f19a4d2913a}{name\+\_\+separator}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a745373036100d7392ad62c617cab59af}{value\+\_\+separator}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540a456e19aeafa334241c7ff3f589547f9d}{parse\+\_\+error}}
+, \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540aca11f56dd477c09e06583dbdcda0985f}{end\+\_\+of\+\_\+input}}
+, \newline
+\doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540ad2a8e6f6721cccec0b466301dd9495a5}{literal\+\_\+or\+\_\+value}}
+ \}
+\begin{DoxyCompactList}\small\item\em token types for the parser \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1lexer_a384af885c37d58c963b902008c279fd6}\label{classdetail_1_1lexer_a384af885c37d58c963b902008c279fd6} 
+{\bfseries lexer} (Input\+Adapter\+Type \&\&adapter, bool ignore\+\_\+comments\+\_\+=false) noexcept
+\item 
+\Hypertarget{classdetail_1_1lexer_a963dce44c9d66c9a7c9d3206e1cff2ed}\label{classdetail_1_1lexer_a963dce44c9d66c9a7c9d3206e1cff2ed} 
+{\bfseries lexer} (const lexer \&)=delete
+\item 
+\Hypertarget{classdetail_1_1lexer_a79ce2eb7f127977f1d2499a1f10aa262}\label{classdetail_1_1lexer_a79ce2eb7f127977f1d2499a1f10aa262} 
+{\bfseries lexer} (lexer \&\&)=default
+\item 
+\Hypertarget{classdetail_1_1lexer_aa64ea2cdf34301e5d1280de82750cd83}\label{classdetail_1_1lexer_aa64ea2cdf34301e5d1280de82750cd83} 
+lexer \& {\bfseries operator=} (lexer \&)=delete
+\item 
+\Hypertarget{classdetail_1_1lexer_a8436bd7b1296151e8555c6f2b7bd2b2a}\label{classdetail_1_1lexer_a8436bd7b1296151e8555c6f2b7bd2b2a} 
+lexer \& {\bfseries operator=} (lexer \&\&)=default
+\item 
+\Hypertarget{classdetail_1_1lexer_a4227de7d0382fb4d3e18b119f0cc87d7}\label{classdetail_1_1lexer_a4227de7d0382fb4d3e18b119f0cc87d7} 
+constexpr number\+\_\+integer\+\_\+t {\bfseries get\+\_\+number\+\_\+integer} () const noexcept
+\begin{DoxyCompactList}\small\item\em return integer value \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a65495d5d60a279adb009efa728708441}\label{classdetail_1_1lexer_a65495d5d60a279adb009efa728708441} 
+constexpr number\+\_\+unsigned\+\_\+t {\bfseries get\+\_\+number\+\_\+unsigned} () const noexcept
+\begin{DoxyCompactList}\small\item\em return unsigned integer value \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_af2e903d32a7e3705c66539ea1e30ce59}\label{classdetail_1_1lexer_af2e903d32a7e3705c66539ea1e30ce59} 
+constexpr number\+\_\+float\+\_\+t {\bfseries get\+\_\+number\+\_\+float} () const noexcept
+\begin{DoxyCompactList}\small\item\em return floating-\/point value \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_aae63a63a83ae7e7bd5dc1a83669ba281}\label{classdetail_1_1lexer_aae63a63a83ae7e7bd5dc1a83669ba281} 
+string\+\_\+t \& {\bfseries get\+\_\+string} ()
+\begin{DoxyCompactList}\small\item\em return current string value (implicitly resets the token; useful only once) \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a569266654a88a2dc6f0e9a587067fc9d}\label{classdetail_1_1lexer_a569266654a88a2dc6f0e9a587067fc9d} 
+constexpr \doxymbox{\hyperlink{structdetail_1_1position__t}{position\+\_\+t}} {\bfseries get\+\_\+position} () const noexcept
+\begin{DoxyCompactList}\small\item\em return position of last read token \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{classdetail_1_1lexer_a41481d87dc1bcaaf532f529fbc0e690b}{get\+\_\+token\+\_\+string}} () const
+\item 
+\Hypertarget{classdetail_1_1lexer_a412c108d8b931630d54e42fbbf764fc4}\label{classdetail_1_1lexer_a412c108d8b931630d54e42fbbf764fc4} 
+JSON\+\_\+\+HEDLEY\+\_\+\+RETURNS\+\_\+\+NON\+\_\+\+NULL constexpr const char \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+error\+\_\+message} () const noexcept
+\begin{DoxyCompactList}\small\item\em return syntax error message \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1lexer_a04ae0c7807a761f4162ff42290be5490}{skip\+\_\+bom}} ()
+\begin{DoxyCompactList}\small\item\em skip the UTF-\/8 byte order mark \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a230468eb9130a7173e0636fc1fc5606b}\label{classdetail_1_1lexer_a230468eb9130a7173e0636fc1fc5606b} 
+void {\bfseries skip\+\_\+whitespace} ()
+\item 
+\Hypertarget{classdetail_1_1lexer_a6497d12a0c35b355b3e22da69d6819f9}\label{classdetail_1_1lexer_a6497d12a0c35b355b3e22da69d6819f9} 
+token\+\_\+type {\bfseries scan} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1lexer_a6363c73fbc1f540b78436e5d8f5fc4aa}\label{classdetail_1_1lexer_a6363c73fbc1f540b78436e5d8f5fc4aa} 
+using {\bfseries number\+\_\+integer\+\_\+t} = typename Basic\+Json\+Type::\+number\+\_\+integer\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1lexer_a485291568b67ed42da79a6770ab175bd}\label{classdetail_1_1lexer_a485291568b67ed42da79a6770ab175bd} 
+using {\bfseries number\+\_\+unsigned\+\_\+t} = typename Basic\+Json\+Type::\+number\+\_\+unsigned\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1lexer_a416235693b134eddca9f5f4b31a4cf9f}\label{classdetail_1_1lexer_a416235693b134eddca9f5f4b31a4cf9f} 
+using {\bfseries number\+\_\+float\+\_\+t} = typename Basic\+Json\+Type::\+number\+\_\+float\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1lexer_a46da6c8d9de1c68f26fde92c9f3d058f}\label{classdetail_1_1lexer_a46da6c8d9de1c68f26fde92c9f3d058f} 
+using {\bfseries string\+\_\+t} = typename Basic\+Json\+Type::\+string\+\_\+t
+\item 
+\Hypertarget{classdetail_1_1lexer_aa3fb5e6c89617d56dd992115c4210b58}\label{classdetail_1_1lexer_aa3fb5e6c89617d56dd992115c4210b58} 
+using {\bfseries char\+\_\+type} = typename Input\+Adapter\+Type::\+char\+\_\+type
+\item 
+\Hypertarget{classdetail_1_1lexer_aac5ed09bd3726caa96245ecff14ceef1}\label{classdetail_1_1lexer_aac5ed09bd3726caa96245ecff14ceef1} 
+using {\bfseries char\+\_\+int\+\_\+type} = typename std::\+char\+\_\+traits$<$char\+\_\+type$>$::\+int\+\_\+type
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{classdetail_1_1lexer_a10530239775d94248e99f235a3d144b3}{get\+\_\+codepoint}} ()
+\begin{DoxyCompactList}\small\item\em get codepoint from 4 hex characters following {\ttfamily \textbackslash{}u} \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1lexer_a505c0c6842a668fc4e9f07dca49b91e9}{next\+\_\+byte\+\_\+in\+\_\+range}} (std::\+initializer\+\_\+list$<$ char\+\_\+int\+\_\+type $>$ ranges)
+\begin{DoxyCompactList}\small\item\em check if the next byte(s) are inside a given range \end{DoxyCompactList}\item 
+token\+\_\+type \doxymbox{\hyperlink{classdetail_1_1lexer_a13c79af5cade626e08f321ead26b83f9}{scan\+\_\+string}} ()
+\begin{DoxyCompactList}\small\item\em scan a string literal \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classdetail_1_1lexer_a7182c4e7a87e32686cc06be2c31cbc5f}{scan\+\_\+comment}} ()
+\begin{DoxyCompactList}\small\item\em scan a comment \end{DoxyCompactList}\item 
+token\+\_\+type \doxymbox{\hyperlink{classdetail_1_1lexer_aab65133db39717a496764cb97fcf3f46}{scan\+\_\+number}} ()
+\begin{DoxyCompactList}\small\item\em scan a number literal \end{DoxyCompactList}\item 
+token\+\_\+type \doxymbox{\hyperlink{classdetail_1_1lexer_abefd991e3a77297b30698495531f01df}{scan\+\_\+literal}} (const char\+\_\+type \texorpdfstring{$\ast$}{*}literal\+\_\+text, const std::\+size\+\_\+t length, token\+\_\+type return\+\_\+type)
+\item 
+\Hypertarget{classdetail_1_1lexer_a049f7268496ebdbb16573a5ef1bc96b7}\label{classdetail_1_1lexer_a049f7268496ebdbb16573a5ef1bc96b7} 
+void {\bfseries reset} () noexcept
+\begin{DoxyCompactList}\small\item\em reset token\+\_\+buffer; current character is beginning of token \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a558196cb9fc24015d009969c9df8707b}\label{classdetail_1_1lexer_a558196cb9fc24015d009969c9df8707b} 
+char\+\_\+int\+\_\+type {\bfseries get} ()
+\item 
+void \doxymbox{\hyperlink{classdetail_1_1lexer_af15c2d2e743728d99bb6d749a03e5555}{unget}} ()
+\begin{DoxyCompactList}\small\item\em unget current character (read it again on next get) \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_ad59cacf0fdfe48d78b218e49da85797b}\label{classdetail_1_1lexer_ad59cacf0fdfe48d78b218e49da85797b} 
+void {\bfseries add} (char\+\_\+int\+\_\+type c)
+\begin{DoxyCompactList}\small\item\em add a character to token\+\_\+buffer \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1lexer_aff70739b089f47c46623fe68426648e0}\label{classdetail_1_1lexer_aff70739b089f47c46623fe68426648e0} 
+static JSON\+\_\+\+HEDLEY\+\_\+\+PURE char {\bfseries get\+\_\+decimal\+\_\+point} () noexcept
+\begin{DoxyCompactList}\small\item\em return the locale-\/dependent decimal point \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a56bab6981f9c24f2195b192cdafbce11}\label{classdetail_1_1lexer_a56bab6981f9c24f2195b192cdafbce11} 
+static void {\bfseries strtof} (float \&f, const char \texorpdfstring{$\ast$}{*}str, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}endptr) noexcept
+\item 
+\Hypertarget{classdetail_1_1lexer_a6e0525d3112881f32670c01a86aacab1}\label{classdetail_1_1lexer_a6e0525d3112881f32670c01a86aacab1} 
+static void {\bfseries strtof} (double \&f, const char \texorpdfstring{$\ast$}{*}str, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}endptr) noexcept
+\item 
+\Hypertarget{classdetail_1_1lexer_ac8bce8181fe3c3055cbbb088c1c40019}\label{classdetail_1_1lexer_ac8bce8181fe3c3055cbbb088c1c40019} 
+static void {\bfseries strtof} (long double \&f, const char \texorpdfstring{$\ast$}{*}str, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}endptr) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetail_1_1lexer_aa4bc44e36ca96cf9ed2d6705e7ec9cab}\label{classdetail_1_1lexer_aa4bc44e36ca96cf9ed2d6705e7ec9cab} 
+Input\+Adapter\+Type {\bfseries ia}
+\begin{DoxyCompactList}\small\item\em input adapter \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a2be57fd034e07a83acdfa65c68d28d9c}\label{classdetail_1_1lexer_a2be57fd034e07a83acdfa65c68d28d9c} 
+const bool {\bfseries ignore\+\_\+comments} = false
+\begin{DoxyCompactList}\small\item\em whether comments should be ignored (true) or signaled as errors (false) \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a3b20c55a8266c1b4e43b396f00427e61}\label{classdetail_1_1lexer_a3b20c55a8266c1b4e43b396f00427e61} 
+char\+\_\+int\+\_\+type {\bfseries current} = std::\+char\+\_\+traits$<$char\+\_\+type$>$::\+eof()
+\begin{DoxyCompactList}\small\item\em the current character \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a943e132f61f26a85de9075b457ba56a3}\label{classdetail_1_1lexer_a943e132f61f26a85de9075b457ba56a3} 
+bool {\bfseries next\+\_\+unget} = false
+\begin{DoxyCompactList}\small\item\em whether the next get() call should just return current \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_ad605226f572dd81c3f092650ee745225}\label{classdetail_1_1lexer_ad605226f572dd81c3f092650ee745225} 
+\doxymbox{\hyperlink{structdetail_1_1position__t}{position\+\_\+t}} {\bfseries position} \{\}
+\begin{DoxyCompactList}\small\item\em the start position of the current token \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_accedabd8ddcdb183ea2c0fed73875f38}\label{classdetail_1_1lexer_accedabd8ddcdb183ea2c0fed73875f38} 
+std::\+vector$<$ char\+\_\+type $>$ {\bfseries token\+\_\+string} \{\}
+\begin{DoxyCompactList}\small\item\em raw input token string (for error messages) \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a0a7d915c2d152fcf654550191d95130d}\label{classdetail_1_1lexer_a0a7d915c2d152fcf654550191d95130d} 
+string\+\_\+t {\bfseries token\+\_\+buffer} \{\}
+\begin{DoxyCompactList}\small\item\em buffer for variable-\/length tokens (numbers, strings) \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a8187f7263527e07e23e6fae88f1369ee}\label{classdetail_1_1lexer_a8187f7263527e07e23e6fae88f1369ee} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries error\+\_\+message} = "{}"{}
+\begin{DoxyCompactList}\small\item\em a description of occurred lexer errors \end{DoxyCompactList}\item 
+\Hypertarget{classdetail_1_1lexer_a1b67ca6ec5761fbaad6cd888c3484fea}\label{classdetail_1_1lexer_a1b67ca6ec5761fbaad6cd888c3484fea} 
+number\+\_\+integer\+\_\+t {\bfseries value\+\_\+integer} = 0
+\item 
+\Hypertarget{classdetail_1_1lexer_a59c8cd99163764d4aa72f78d57643331}\label{classdetail_1_1lexer_a59c8cd99163764d4aa72f78d57643331} 
+number\+\_\+unsigned\+\_\+t {\bfseries value\+\_\+unsigned} = 0
+\item 
+\Hypertarget{classdetail_1_1lexer_aac46a612aaa762aeb29f83012cee768b}\label{classdetail_1_1lexer_aac46a612aaa762aeb29f83012cee768b} 
+number\+\_\+float\+\_\+t {\bfseries value\+\_\+float} = 0
+\item 
+\Hypertarget{classdetail_1_1lexer_a58b33ff095052c2463255f1e121db74e}\label{classdetail_1_1lexer_a58b33ff095052c2463255f1e121db74e} 
+const char\+\_\+int\+\_\+type {\bfseries decimal\+\_\+point\+\_\+char} = \textquotesingle{}.\textquotesingle{}
+\begin{DoxyCompactList}\small\item\em the decimal point \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Static Public Member Functions inherited from \doxymbox{\hyperlink{classdetail_1_1lexer__base}{detail::\+lexer\+\_\+base$<$ Basic\+Json\+Type $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+JSON\+\_\+\+HEDLEY\+\_\+\+RETURNS\+\_\+\+NON\+\_\+\+NULL static JSON\+\_\+\+HEDLEY\+\_\+\+CONST const char \texorpdfstring{$\ast$}{*} {\bfseries token\+\_\+type\+\_\+name} (const \doxymbox{\hyperlink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540}{token\+\_\+type}} t) noexcept
+\begin{DoxyCompactList}\small\item\em return name of values of type \doxylink{classdetail_1_1lexer__base_add65fa7a85aa15052963809fbcc04540}{token\+\_\+type} (only used for errors) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$\newline
+class detail::\+lexer$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$}
+lexical analysis 
+
+This class organizes the lexical analysis during JSON deserialization. 
+
+\label{doc-func-members}
+\Hypertarget{classdetail_1_1lexer_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classdetail_1_1lexer_a10530239775d94248e99f235a3d144b3}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}!get\_codepoint@{get\_codepoint}}
+\index{get\_codepoint@{get\_codepoint}!detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{get\_codepoint()}{get\_codepoint()}}
+{\footnotesize\ttfamily \label{classdetail_1_1lexer_a10530239775d94248e99f235a3d144b3} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+int \doxymbox{\hyperlink{classdetail_1_1lexer}{detail::\+lexer}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+get\+\_\+codepoint (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+get codepoint from 4 hex characters following {\ttfamily \textbackslash{}u} 
+
+For input "{}\textbackslash{}u c1 c2 c3 c4"{} the codepoint is:\+ (c1 \texorpdfstring{$\ast$}{*} 0x1000) + (c2 \texorpdfstring{$\ast$}{*} 0x0100) + (c3 \texorpdfstring{$\ast$}{*} 0x0010) + c4 = (c1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 12) + (c2 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 8) + (c3 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 4) + (c4 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 0)
+
+Furthermore, the possible characters \textquotesingle{}0\textquotesingle{}..\textquotesingle{}9\textquotesingle{}, \textquotesingle{}A\textquotesingle{}..\textquotesingle{}F\textquotesingle{}, and \textquotesingle{}a\textquotesingle{}..\textquotesingle{}f\textquotesingle{} must be converted to the integers 0x0..0x9, 0xA..0xF, 0xA..0xF, resp. \doxylink{requirements_The}{The} conversion is done by subtracting the offset (0x30, 0x37, and 0x57) between the ASCII value of the character and the desired integer value.
+
+\begin{DoxyReturn}{Returns}
+codepoint (0x0000..0x\+FFFF) or -\/1 in case of an error (e.\+g. EOF or non-\/hex character) 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1lexer_a41481d87dc1bcaaf532f529fbc0e690b}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}!get\_token\_string@{get\_token\_string}}
+\index{get\_token\_string@{get\_token\_string}!detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{get\_token\_string()}{get\_token\_string()}}
+{\footnotesize\ttfamily \label{classdetail_1_1lexer_a41481d87dc1bcaaf532f529fbc0e690b} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+std::\+string \doxymbox{\hyperlink{classdetail_1_1lexer}{detail::\+lexer}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+get\+\_\+token\+\_\+string (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+return the last read token (for errors only). Will never contain EOF (an arbitrary value that is not a valid char value, often -\/1), because 255 may legitimately occur. May contain NUL, which should be escaped. \Hypertarget{classdetail_1_1lexer_a505c0c6842a668fc4e9f07dca49b91e9}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}!next\_byte\_in\_range@{next\_byte\_in\_range}}
+\index{next\_byte\_in\_range@{next\_byte\_in\_range}!detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{next\_byte\_in\_range()}{next\_byte\_in\_range()}}
+{\footnotesize\ttfamily \label{classdetail_1_1lexer_a505c0c6842a668fc4e9f07dca49b91e9} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1lexer}{detail::\+lexer}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+next\+\_\+byte\+\_\+in\+\_\+range (\begin{DoxyParamCaption}\item[{std::\+initializer\+\_\+list$<$ char\+\_\+int\+\_\+type $>$}]{ranges}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+check if the next byte(s) are inside a given range 
+
+Adds the current byte and, for each passed range, reads a new byte and checks if it is inside the range. If a violation was detected, set up an error message and return false. Otherwise, return true.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em ranges} & list of integers; interpreted as list of pairs of inclusive lower and upper bound, respectively\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+\doxylink{requirements_The}{The} passed list {\itshape ranges} must have 2, 4, or 6 elements; that is, 1, 2, or 3 pairs. This precondition is enforced by an assertion.
+\end{DoxyPrecond}
+\begin{DoxyReturn}{Returns}
+true if and only if no range violation was detected 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1lexer_a7182c4e7a87e32686cc06be2c31cbc5f}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}!scan\_comment@{scan\_comment}}
+\index{scan\_comment@{scan\_comment}!detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{scan\_comment()}{scan\_comment()}}
+{\footnotesize\ttfamily \label{classdetail_1_1lexer_a7182c4e7a87e32686cc06be2c31cbc5f} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1lexer}{detail::\+lexer}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+scan\+\_\+comment (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+scan a comment 
+
+\begin{DoxyReturn}{Returns}
+whether comment could be scanned successfully 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1lexer_abefd991e3a77297b30698495531f01df}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}!scan\_literal@{scan\_literal}}
+\index{scan\_literal@{scan\_literal}!detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{scan\_literal()}{scan\_literal()}}
+{\footnotesize\ttfamily \label{classdetail_1_1lexer_abefd991e3a77297b30698495531f01df} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+token\+\_\+type \doxymbox{\hyperlink{classdetail_1_1lexer}{detail::\+lexer}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+scan\+\_\+literal (\begin{DoxyParamCaption}\item[{const char\+\_\+type \texorpdfstring{$\ast$}{*}}]{literal\+\_\+text}{, }\item[{const std::\+size\+\_\+t}]{length}{, }\item[{token\+\_\+type}]{return\+\_\+type}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em literal\+\_\+text} & the literal text to expect \\
+\hline
+\doxymbox{\texttt{in}}  & {\em length} & the length of the passed literal text \\
+\hline
+\doxymbox{\texttt{in}}  & {\em return\+\_\+type} & the token type to return on success \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classdetail_1_1lexer_aab65133db39717a496764cb97fcf3f46}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}!scan\_number@{scan\_number}}
+\index{scan\_number@{scan\_number}!detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{scan\_number()}{scan\_number()}}
+{\footnotesize\ttfamily \label{classdetail_1_1lexer_aab65133db39717a496764cb97fcf3f46} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+token\+\_\+type \doxymbox{\hyperlink{classdetail_1_1lexer}{detail::\+lexer}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+scan\+\_\+number (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+scan a number literal 
+
+This function scans a string according to Sect. 6 of RFC 8259.
+
+\doxylink{requirements_The}{The} function is realized with a deterministic finite state machine derived from the grammar described in RFC 8259. Starting in state "{}init"{}, the input is read and used to determined the next state. Only state "{}done"{} accepts the number. State "{}error"{} is a trap state to model errors. In the table below, "{}anything"{} means any character but the ones listed before.
+
+
+\begin{DoxyTable}{8}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}state  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}0  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}1-\/9  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}e E  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}+  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}-\/  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}.  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}anything  \\
+init  &zero  &any1  &\+[error]\+  &\+[error]\+  &minus  &\+[error]\+  &\+[error]\+  \\
+minus  &zero  &any1  &\+[error]\+  &\+[error]\+  &\+[error]\+  &\+[error]\+  &\+[error]\+  \\
+zero  &done  &done  &exponent  &done  &done  &decimal1  &done  \\
+any1  &any1  &any1  &exponent  &done  &done  &decimal1  &done  \\
+decimal1  &decimal2  &decimal2  &\+[error]\+  &\+[error]\+  &\+[error]\+  &\+[error]\+  &\+[error]\+  \\
+decimal2  &decimal2  &decimal2  &exponent  &done  &done  &done  &done  \\
+exponent  &any2  &any2  &\+[error]\+  &sign  &sign  &\+[error]\+  &\+[error]\+  \\
+sign  &any2  &any2  &\+[error]\+  &\+[error]\+  &\+[error]\+  &\+[error]\+  &\+[error]\+  \\
+any2  &any2  &any2  &done  &done  &done  &done  &done  \\
+\end{DoxyTable}
+
+
+\doxylink{requirements_The}{The} state machine is realized with one label per state (prefixed with "{}scan\+\_\+number\+\_\+"{}) and {\ttfamily goto} statements between them. \doxylink{requirements_The}{The} state machine contains cycles, but any cycle can be left when EOF is read. Therefore, the function is guaranteed to terminate.
+
+During scanning, the read bytes are stored in token\+\_\+buffer. This string is then converted to a signed integer, an unsigned integer, or a floating-\/point number.
+
+\begin{DoxyReturn}{Returns}
+token\+\_\+type::\+value\+\_\+unsigned, token\+\_\+type::\+value\+\_\+integer, or token\+\_\+type::\+value\+\_\+float if number could be successfully scanned, token\+\_\+type::\+parse\+\_\+error otherwise
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+\doxylink{requirements_The}{The} scanner is independent of the current locale. Internally, the locale\textquotesingle{}s decimal point is used instead of {\ttfamily .} to work with the locale-\/dependent converters. 
+\end{DoxyNote}
+\Hypertarget{classdetail_1_1lexer_a13c79af5cade626e08f321ead26b83f9}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}!scan\_string@{scan\_string}}
+\index{scan\_string@{scan\_string}!detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{scan\_string()}{scan\_string()}}
+{\footnotesize\ttfamily \label{classdetail_1_1lexer_a13c79af5cade626e08f321ead26b83f9} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+token\+\_\+type \doxymbox{\hyperlink{classdetail_1_1lexer}{detail::\+lexer}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+scan\+\_\+string (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+scan a string literal 
+
+This function scans a string according to Sect. 7 of RFC 8259. While scanning, bytes are escaped and copied into buffer token\+\_\+buffer. Then the function returns successfully, token\+\_\+buffer is {\itshape not} null-\/terminated (as it may contain \textbackslash{}0 bytes), and token\+\_\+buffer.\+size() is the number of bytes in the string.
+
+\begin{DoxyReturn}{Returns}
+token\+\_\+type::\+value\+\_\+string if string could be successfully scanned, token\+\_\+type::\+parse\+\_\+error otherwise
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+In case of errors, variable error\+\_\+message contains a textual description. 
+\end{DoxyNote}
+\Hypertarget{classdetail_1_1lexer_a04ae0c7807a761f4162ff42290be5490}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}!skip\_bom@{skip\_bom}}
+\index{skip\_bom@{skip\_bom}!detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{skip\_bom()}{skip\_bom()}}
+{\footnotesize\ttfamily \label{classdetail_1_1lexer_a04ae0c7807a761f4162ff42290be5490} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+bool \doxymbox{\hyperlink{classdetail_1_1lexer}{detail::\+lexer}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+skip\+\_\+bom (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+skip the UTF-\/8 byte order mark 
+
+\begin{DoxyReturn}{Returns}
+true iff there is no BOM or the correct BOM has been skipped 
+\end{DoxyReturn}
+\Hypertarget{classdetail_1_1lexer_af15c2d2e743728d99bb6d749a03e5555}\index{detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}!unget@{unget}}
+\index{unget@{unget}!detail::lexer$<$ BasicJsonType, InputAdapterType $>$@{detail::lexer$<$ BasicJsonType, InputAdapterType $>$}}
+\doxysubsubsection{\texorpdfstring{unget()}{unget()}}
+{\footnotesize\ttfamily \label{classdetail_1_1lexer_af15c2d2e743728d99bb6d749a03e5555} 
+template$<$typename Basic\+Json\+Type, typename Input\+Adapter\+Type$>$ \\
+void \doxymbox{\hyperlink{classdetail_1_1lexer}{detail::\+lexer}}$<$ Basic\+Json\+Type, Input\+Adapter\+Type $>$::\+unget (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+unget current character (read it again on next get) 
+
+We implement unget by setting variable next\+\_\+unget to true. \doxylink{requirements_The}{The} input is not changed -\/ we just simulate ungetting by modifying chars\+\_\+read\+\_\+total, chars\+\_\+read\+\_\+current\+\_\+line, and token\+\_\+string. \doxylink{requirements_The}{The} next call to get() will behave as if the unget character is read again. 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+json.\+hpp\end{DoxyCompactItemize}

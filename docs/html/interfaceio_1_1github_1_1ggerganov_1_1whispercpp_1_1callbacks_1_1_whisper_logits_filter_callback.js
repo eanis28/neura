@@ -1,0 +1,4 @@
+var interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_logits_filter_callback =
+[
+    [ "callback", "interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_logits_filter_callback.html#ab7946b0eb217fc7aaf8ff920487c6c08", null ]
+];

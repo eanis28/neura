@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['g_0',['g',['../struct_colour_preset.html#a0b33dca0a4fb5b8d1c35b30d0ac64876',1,'ColourPreset']]],
+  ['g_5faudiobuf_1',['g_audioBuf',['../_audio_manager_8h.html#ab98a94287c677aff9912ecf3ee32ea09',1,'AudioManager.cpp']]],
+  ['g_5fcancelspeech_2',['g_cancelSpeech',['../_u_i_8h.html#ad9c55b47f6511ddc88fd6acfcd7f9499',1,'UI.h']]],
+  ['g_5fgesturestate_3',['g_gestureState',['../_u_i_8h.html#a327c3d5d5e7f63421ab46fe52d7197c5',1,'UI.h']]],
+  ['g_5fmicmuted_4',['g_micMuted',['../_audio_manager_8h.html#ad106db914f1ee348d991ca7ea02d06b0',1,'AudioManager.h']]],
+  ['g_5fneuraspeak_5',['g_neuraSpeak',['../_u_i_8h.html#a20a391153c3253127ab89e902ac2d6fd',1,'UI.h']]],
+  ['g_5fsettings_6',['g_settings',['../_settings_8cpp.html#a7b62273527067a31b5b4075e6090c688',1,'g_settings:&#160;Settings.cpp'],['../_settings_8h.html#a7b62273527067a31b5b4075e6090c688',1,'g_settings:&#160;Settings.cpp']]],
+  ['g_5ftimeractive_7',['g_timerActive',['../_timer_action_8h.html#a39f8f353a43542ebb8d5036855a8c6dc',1,'TimerAction.h']]],
+  ['g_5ftimerremaining_8',['g_timerRemaining',['../_timer_action_8h.html#acb2f0e3d5fdc7274da47ea4bf511c40f',1,'TimerAction.h']]],
+  ['g_5fvolume_9',['g_volume',['../_audio_manager_8h.html#ab11ecc08c66b52541e02c1cd047f38fc',1,'AudioManager.h']]],
+  ['googlecalendarid_10',['googleCalendarId',['../class_a_p_i_settings.html#a3cc06037cc3a88d21f2aad6eb18d4664',1,'APISettings']]],
+  ['googlecalendarurl_11',['googleCalendarUrl',['../class_a_p_i_settings.html#a52cfd2f7cf9ec24dd400e0b4fb775bc1',1,'APISettings']]],
+  ['googleclientid_12',['googleClientId',['../class_a_p_i_settings.html#a7523042c9fdfa5ab07a017bea3972efe',1,'APISettings']]],
+  ['googleclientsecret_13',['googleClientSecret',['../class_a_p_i_settings.html#a8fdeaa4ec181dd4aa669977e5193be05',1,'APISettings']]],
+  ['googlerefreshtoken_14',['googleRefreshToken',['../class_a_p_i_settings.html#ac4ebb2b0678091b52c5c7964be2ba156',1,'APISettings']]],
+  ['googletokenurl_15',['googleTokenUrl',['../class_a_p_i_settings.html#aca47da52a869156c04e210d2d4b9d3cb',1,'APISettings']]]
+];

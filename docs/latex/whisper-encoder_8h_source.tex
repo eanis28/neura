@@ -1,0 +1,32 @@
+\doxysection{whisper-\/encoder.h}
+\hypertarget{whisper-encoder_8h_source}{}\label{whisper-encoder_8h_source}\index{whisper.cpp/src/coreml/whisper-\/encoder.h@{whisper.cpp/src/coreml/whisper-\/encoder.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Wrapper\ of\ the\ Core\ ML\ Whisper\ Encoder\ model}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Code\ is\ derived\ from\ the\ work\ of\ Github\ user\ @wangchou}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ ref:\ https://github.com/wangchou/callCoreMLFromCpp}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ \_\_cplusplus}}
+\DoxyCodeLine{00009\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__coreml__context}{whisper\_coreml\_context}};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__coreml__context}{whisper\_coreml\_context}}\ *\ whisper\_coreml\_init(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model);}
+\DoxyCodeLine{00015\ \textcolor{keywordtype}{void}\ whisper\_coreml\_free(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__coreml__context}{whisper\_coreml\_context}}\ *\ ctx);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{void}\ whisper\_coreml\_encode(}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structwhisper__coreml__context}{whisper\_coreml\_context}}\ *\ ctx,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ n\_ctx,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ n\_mel,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ mel,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ out);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#if\ \_\_cplusplus}}
+\DoxyCodeLine{00025\ \}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

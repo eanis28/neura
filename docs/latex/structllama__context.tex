@@ -1,0 +1,363 @@
+\doxysection{llama\+\_\+context Struct Reference}
+\hypertarget{structllama__context}{}\label{structllama__context}\index{llama\_context@{llama\_context}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structllama__context_1_1sampling__info}{sampling\+\_\+info}}
+\item 
+struct \doxymbox{\hyperlink{structllama__context_1_1swap__info}{swap\+\_\+info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__context_ab5c832441e2caab4a172153d0242b160}\label{structllama__context_ab5c832441e2caab4a172153d0242b160} 
+{\bfseries llama\+\_\+context} (const \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \&model, \doxymbox{\hyperlink{structllama__context__params}{llama\+\_\+context\+\_\+params}} params)
+\item 
+\Hypertarget{structllama__context_a98a662b0e70b806c6c53ecb79e001c3d}\label{structllama__context_a98a662b0e70b806c6c53ecb79e001c3d} 
+void {\bfseries sched\+\_\+reserve} ()
+\item 
+\Hypertarget{structllama__context_a53a23ace050b8164a98d7906e6307809}\label{structllama__context_a53a23ace050b8164a98d7906e6307809} 
+void {\bfseries synchronize} ()
+\item 
+\Hypertarget{structllama__context_a53d7833b2f754f053bee5b4e29ab5ed8}\label{structllama__context_a53d7833b2f754f053bee5b4e29ab5ed8} 
+const \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \& {\bfseries get\+\_\+model} () const
+\item 
+\Hypertarget{structllama__context_ad87c4e9ee5dde9d9614264c6ed23b3b1}\label{structllama__context_ad87c4e9ee5dde9d9614264c6ed23b3b1} 
+const \doxymbox{\hyperlink{structllama__cparams}{llama\+\_\+cparams}} \& {\bfseries get\+\_\+cparams} () const
+\item 
+\Hypertarget{structllama__context_af7e3725bcea1ff599930236507674c3f}\label{structllama__context_af7e3725bcea1ff599930236507674c3f} 
+ggml\+\_\+backend\+\_\+sched\+\_\+t {\bfseries get\+\_\+sched} () const
+\item 
+\Hypertarget{structllama__context_a7163deb55e98a41bb9c52b2bed1e3241}\label{structllama__context_a7163deb55e98a41bb9c52b2bed1e3241} 
+uint32\+\_\+t {\bfseries n\+\_\+ctx} () const
+\item 
+\Hypertarget{structllama__context_a34a04f6ea7d80b863ee1a6bf64db959e}\label{structllama__context_a34a04f6ea7d80b863ee1a6bf64db959e} 
+uint32\+\_\+t {\bfseries n\+\_\+ctx\+\_\+seq} () const
+\item 
+\Hypertarget{structllama__context_a6c9f9fe7431beb39e271ecaca9b82b8d}\label{structllama__context_a6c9f9fe7431beb39e271ecaca9b82b8d} 
+uint32\+\_\+t {\bfseries n\+\_\+batch} () const
+\item 
+\Hypertarget{structllama__context_a258e3ee3a880aac5110f495b50958671}\label{structllama__context_a258e3ee3a880aac5110f495b50958671} 
+uint32\+\_\+t {\bfseries n\+\_\+ubatch} () const
+\item 
+\Hypertarget{structllama__context_ac972e82b0a06a7dd49f33bf70566adca}\label{structllama__context_ac972e82b0a06a7dd49f33bf70566adca} 
+uint32\+\_\+t {\bfseries n\+\_\+seq\+\_\+max} () const
+\item 
+\Hypertarget{structllama__context_adb61aaaac4ae0939b32eaae34773bffc}\label{structllama__context_adb61aaaac4ae0939b32eaae34773bffc} 
+uint32\+\_\+t {\bfseries n\+\_\+threads} () const
+\item 
+\Hypertarget{structllama__context_a1c70009db6782c9aa1c0bf576a2adcd0}\label{structllama__context_a1c70009db6782c9aa1c0bf576a2adcd0} 
+uint32\+\_\+t {\bfseries n\+\_\+threads\+\_\+batch} () const
+\item 
+\Hypertarget{structllama__context_adb87d72dc10286f68e9305af705e064d}\label{structllama__context_adb87d72dc10286f68e9305af705e064d} 
+llama\+\_\+memory\+\_\+t {\bfseries get\+\_\+memory} () const
+\item 
+\Hypertarget{structllama__context_aa64c351d83fe3c1117bd161299689daa}\label{structllama__context_aa64c351d83fe3c1117bd161299689daa} 
+bool {\bfseries memory\+\_\+update} (bool optimize)
+\item 
+\Hypertarget{structllama__context_ab4078646d335fe6f5fa9aaf7482cf1c3}\label{structllama__context_ab4078646d335fe6f5fa9aaf7482cf1c3} 
+enum llama\+\_\+pooling\+\_\+type {\bfseries pooling\+\_\+type} () const
+\item 
+\Hypertarget{structllama__context_af33db3a4308c851c60b0d242e9ea80df}\label{structllama__context_af33db3a4308c851c60b0d242e9ea80df} 
+float \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+logits} ()
+\item 
+\Hypertarget{structllama__context_a86703616b498054a47f1645041eb06c6}\label{structllama__context_a86703616b498054a47f1645041eb06c6} 
+float \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+logits\+\_\+ith} (int32\+\_\+t i)
+\item 
+\Hypertarget{structllama__context_ae79aac53205171a76d1ef5cc7b3d7ed7}\label{structllama__context_ae79aac53205171a76d1ef5cc7b3d7ed7} 
+float \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+embeddings} ()
+\item 
+\Hypertarget{structllama__context_a587b4f27bf81f479dbaa6615cc6c1cdc}\label{structllama__context_a587b4f27bf81f479dbaa6615cc6c1cdc} 
+float \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+embeddings\+\_\+ith} (int32\+\_\+t i)
+\item 
+\Hypertarget{structllama__context_a6896f945658559e156ff43674eb0477c}\label{structllama__context_a6896f945658559e156ff43674eb0477c} 
+float \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+embeddings\+\_\+seq} (llama\+\_\+seq\+\_\+id seq\+\_\+id)
+\item 
+\Hypertarget{structllama__context_a943eaab62f493f77f23e922c10ae684a}\label{structllama__context_a943eaab62f493f77f23e922c10ae684a} 
+llama\+\_\+token \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+sampled\+\_\+tokens} () const
+\item 
+\Hypertarget{structllama__context_a4f7c1a3fb4bfdaee4e1cdca12dda0267}\label{structllama__context_a4f7c1a3fb4bfdaee4e1cdca12dda0267} 
+llama\+\_\+token {\bfseries get\+\_\+sampled\+\_\+token\+\_\+ith} (int32\+\_\+t idx)
+\item 
+\Hypertarget{structllama__context_aa45d69e712753554dfbec632fbfea3c2}\label{structllama__context_aa45d69e712753554dfbec632fbfea3c2} 
+float \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+sampled\+\_\+logits\+\_\+ith} (int32\+\_\+t idx)
+\item 
+\Hypertarget{structllama__context_ae867efa77165cfc660711320a8db842c}\label{structllama__context_ae867efa77165cfc660711320a8db842c} 
+size\+\_\+t {\bfseries get\+\_\+sampled\+\_\+logits\+\_\+count} (int32\+\_\+t idx)
+\item 
+\Hypertarget{structllama__context_a34c61865a59608223ef7d621f308e1ec}\label{structllama__context_a34c61865a59608223ef7d621f308e1ec} 
+float \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+sampled\+\_\+probs\+\_\+ith} (int32\+\_\+t idx)
+\item 
+\Hypertarget{structllama__context_a064deaee0575447b5334e0edcdb39a11}\label{structllama__context_a064deaee0575447b5334e0edcdb39a11} 
+size\+\_\+t {\bfseries get\+\_\+sampled\+\_\+probs\+\_\+count} (int32\+\_\+t idx)
+\item 
+\Hypertarget{structllama__context_ae4ee0b63f11b5d44e1db6c1f65a1b165}\label{structllama__context_ae4ee0b63f11b5d44e1db6c1f65a1b165} 
+const llama\+\_\+token \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+sampled\+\_\+candidates\+\_\+ith} (int32\+\_\+t idx)
+\item 
+\Hypertarget{structllama__context_ab0c2a1716d4b3b7828eeaec36d24f3fe}\label{structllama__context_ab0c2a1716d4b3b7828eeaec36d24f3fe} 
+size\+\_\+t {\bfseries get\+\_\+sampled\+\_\+candidates\+\_\+count} (int32\+\_\+t idx)
+\item 
+\Hypertarget{structllama__context_ad97dd234df550e0bf7537c03add6a2df}\label{structllama__context_ad97dd234df550e0bf7537c03add6a2df} 
+void {\bfseries attach\+\_\+threadpool} (ggml\+\_\+threadpool\+\_\+t threadpool, ggml\+\_\+threadpool\+\_\+t threadpool\+\_\+batch)
+\item 
+\Hypertarget{structllama__context_a1c92ffd9cc5019a6906bfa2d44241dfb}\label{structllama__context_a1c92ffd9cc5019a6906bfa2d44241dfb} 
+void {\bfseries detach\+\_\+threadpool} ()
+\item 
+\Hypertarget{structllama__context_abd099933ec99621cde8931d9e3dd7f82}\label{structllama__context_abd099933ec99621cde8931d9e3dd7f82} 
+void {\bfseries set\+\_\+n\+\_\+threads} (int32\+\_\+t n\+\_\+threads, int32\+\_\+t n\+\_\+threads\+\_\+batch)
+\item 
+\Hypertarget{structllama__context_a9d97677881504aaa4d8c6ee38a75a3ba}\label{structllama__context_a9d97677881504aaa4d8c6ee38a75a3ba} 
+void {\bfseries set\+\_\+abort\+\_\+callback} (bool(\texorpdfstring{$\ast$}{*}abort\+\_\+callback)(void \texorpdfstring{$\ast$}{*}data), void \texorpdfstring{$\ast$}{*}abort\+\_\+callback\+\_\+data)
+\item 
+\Hypertarget{structllama__context_af825da87ff1f1b288eb9ce87ae55fb52}\label{structllama__context_af825da87ff1f1b288eb9ce87ae55fb52} 
+void {\bfseries set\+\_\+embeddings} (bool value)
+\item 
+\Hypertarget{structllama__context_a0e7a90e31d79ccf9c6a5c690fb5684ab}\label{structllama__context_a0e7a90e31d79ccf9c6a5c690fb5684ab} 
+void {\bfseries set\+\_\+causal\+\_\+attn} (bool value)
+\item 
+\Hypertarget{structllama__context_adca8a80f0cff45fbdcc3024166fc3488}\label{structllama__context_adca8a80f0cff45fbdcc3024166fc3488} 
+void {\bfseries set\+\_\+warmup} (bool value)
+\item 
+\Hypertarget{structllama__context_a4fe75470314143a3c2683fd5fe0d9b3f}\label{structllama__context_a4fe75470314143a3c2683fd5fe0d9b3f} 
+void {\bfseries set\+\_\+adapters\+\_\+lora} (\doxymbox{\hyperlink{structllama__adapter__lora}{llama\+\_\+adapter\+\_\+lora}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}adapters, size\+\_\+t n\+\_\+adapters, float \texorpdfstring{$\ast$}{*}scales)
+\item 
+\Hypertarget{structllama__context_aaf9cda75300e6a13930944d9a94ffdd5}\label{structllama__context_aaf9cda75300e6a13930944d9a94ffdd5} 
+bool {\bfseries adapters\+\_\+lora\+\_\+are\+\_\+same} (\doxymbox{\hyperlink{structllama__adapter__lora}{llama\+\_\+adapter\+\_\+lora}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}adapters, size\+\_\+t n\+\_\+adapters, float \texorpdfstring{$\ast$}{*}scales)
+\item 
+\Hypertarget{structllama__context_a061ad429abfa2169195b5f5fdb64850c}\label{structllama__context_a061ad429abfa2169195b5f5fdb64850c} 
+bool {\bfseries set\+\_\+adapter\+\_\+cvec} (const float \texorpdfstring{$\ast$}{*}data, size\+\_\+t len, int32\+\_\+t n\+\_\+embd, int32\+\_\+t il\+\_\+start, int32\+\_\+t il\+\_\+end)
+\item 
+\Hypertarget{structllama__context_ac8027cfb2460028fe7341f9053895342}\label{structllama__context_ac8027cfb2460028fe7341f9053895342} 
+\doxymbox{\hyperlink{classllm__graph__result}{llm\+\_\+graph\+\_\+result}} \texorpdfstring{$\ast$}{*} {\bfseries process\+\_\+ubatch} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \&ubatch, llm\+\_\+graph\+\_\+type gtype, \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}} \texorpdfstring{$\ast$}{*}mctx, ggml\+\_\+status \&ret)
+\item 
+\Hypertarget{structllama__context_a930da4b7cae3b1678bbc599903763979}\label{structllama__context_a930da4b7cae3b1678bbc599903763979} 
+int {\bfseries encode} (const \doxymbox{\hyperlink{structllama__batch}{llama\+\_\+batch}} \&batch\+\_\+inp)
+\item 
+\Hypertarget{structllama__context_aec41d0bd54fb5b4ab29aad9612cc1a9a}\label{structllama__context_aec41d0bd54fb5b4ab29aad9612cc1a9a} 
+int {\bfseries decode} (const \doxymbox{\hyperlink{structllama__batch}{llama\+\_\+batch}} \&batch\+\_\+inp)
+\item 
+\Hypertarget{structllama__context_a16aaffc61ecef59d9e2921586b97b536}\label{structllama__context_a16aaffc61ecef59d9e2921586b97b536} 
+size\+\_\+t {\bfseries state\+\_\+get\+\_\+size} ()
+\item 
+\Hypertarget{structllama__context_a5ae9c53dde118522b6554afc2e831205}\label{structllama__context_a5ae9c53dde118522b6554afc2e831205} 
+size\+\_\+t {\bfseries state\+\_\+get\+\_\+data} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}dst, size\+\_\+t size)
+\item 
+\Hypertarget{structllama__context_a8a6cc0b3454974b8650a35eb1cb6e3e2}\label{structllama__context_a8a6cc0b3454974b8650a35eb1cb6e3e2} 
+size\+\_\+t {\bfseries state\+\_\+set\+\_\+data} (const uint8\+\_\+t \texorpdfstring{$\ast$}{*}src, size\+\_\+t size)
+\item 
+\Hypertarget{structllama__context_ad7ba9c900b44c7ab595c98895519bd9e}\label{structllama__context_ad7ba9c900b44c7ab595c98895519bd9e} 
+size\+\_\+t {\bfseries state\+\_\+seq\+\_\+get\+\_\+size} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+state\+\_\+seq\+\_\+flags flags)
+\item 
+\Hypertarget{structllama__context_aba5d0e07aa16a968da86163184a40f90}\label{structllama__context_aba5d0e07aa16a968da86163184a40f90} 
+size\+\_\+t {\bfseries state\+\_\+seq\+\_\+get\+\_\+data} (llama\+\_\+seq\+\_\+id seq\+\_\+id, uint8\+\_\+t \texorpdfstring{$\ast$}{*}dst, size\+\_\+t size, llama\+\_\+state\+\_\+seq\+\_\+flags flags)
+\item 
+\Hypertarget{structllama__context_ad98a3e6045bc3ae44f39e26cc32cb07b}\label{structllama__context_ad98a3e6045bc3ae44f39e26cc32cb07b} 
+size\+\_\+t {\bfseries state\+\_\+seq\+\_\+set\+\_\+data} (llama\+\_\+seq\+\_\+id seq\+\_\+id, const uint8\+\_\+t \texorpdfstring{$\ast$}{*}src, size\+\_\+t size, llama\+\_\+state\+\_\+seq\+\_\+flags flags)
+\item 
+\Hypertarget{structllama__context_adf88341d76aecfe00eda3babd3a9880b}\label{structllama__context_adf88341d76aecfe00eda3babd3a9880b} 
+bool {\bfseries state\+\_\+load\+\_\+file} (const char \texorpdfstring{$\ast$}{*}filepath, llama\+\_\+token \texorpdfstring{$\ast$}{*}tokens\+\_\+out, size\+\_\+t n\+\_\+token\+\_\+capacity, size\+\_\+t \texorpdfstring{$\ast$}{*}n\+\_\+token\+\_\+count\+\_\+out)
+\item 
+\Hypertarget{structllama__context_a295f81a868b4e5d6e74059ffa7dcee89}\label{structllama__context_a295f81a868b4e5d6e74059ffa7dcee89} 
+bool {\bfseries state\+\_\+save\+\_\+file} (const char \texorpdfstring{$\ast$}{*}filepath, const llama\+\_\+token \texorpdfstring{$\ast$}{*}tokens, size\+\_\+t n\+\_\+token\+\_\+count)
+\item 
+\Hypertarget{structllama__context_a3198e150c6fc555f52d5474e2561064a}\label{structllama__context_a3198e150c6fc555f52d5474e2561064a} 
+size\+\_\+t {\bfseries state\+\_\+seq\+\_\+load\+\_\+file} (llama\+\_\+seq\+\_\+id seq\+\_\+id, const char \texorpdfstring{$\ast$}{*}filepath, llama\+\_\+token \texorpdfstring{$\ast$}{*}tokens\+\_\+out, size\+\_\+t n\+\_\+token\+\_\+capacity, size\+\_\+t \texorpdfstring{$\ast$}{*}n\+\_\+token\+\_\+count\+\_\+out)
+\item 
+\Hypertarget{structllama__context_a6431c813c8465adedaf5dd3411dc2931}\label{structllama__context_a6431c813c8465adedaf5dd3411dc2931} 
+size\+\_\+t {\bfseries state\+\_\+seq\+\_\+save\+\_\+file} (llama\+\_\+seq\+\_\+id seq\+\_\+id, const char \texorpdfstring{$\ast$}{*}filepath, const llama\+\_\+token \texorpdfstring{$\ast$}{*}tokens, size\+\_\+t n\+\_\+token\+\_\+count)
+\item 
+\Hypertarget{structllama__context_ae0ea01c6940e3b78daf6e84ece032f3a}\label{structllama__context_ae0ea01c6940e3b78daf6e84ece032f3a} 
+\doxymbox{\hyperlink{structllama__perf__context__data}{llama\+\_\+perf\+\_\+context\+\_\+data}} {\bfseries perf\+\_\+get\+\_\+data} () const
+\item 
+\Hypertarget{structllama__context_a669ccf524f4a9f3d9f5085405ebb8611}\label{structllama__context_a669ccf524f4a9f3d9f5085405ebb8611} 
+void {\bfseries perf\+\_\+reset} ()
+\item 
+\Hypertarget{structllama__context_a8615f1fecd4819afab18fca808b0cabc}\label{structllama__context_a8615f1fecd4819afab18fca808b0cabc} 
+std::\+map$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t, \doxymbox{\hyperlink{structllama__memory__breakdown__data}{llama\+\_\+memory\+\_\+breakdown\+\_\+data}} $>$ {\bfseries memory\+\_\+breakdown} () const
+\item 
+\Hypertarget{structllama__context_a9b3e62128c68fb65745df274cbc81f4f}\label{structllama__context_a9b3e62128c68fb65745df274cbc81f4f} 
+void {\bfseries opt\+\_\+init} (struct \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \texorpdfstring{$\ast$}{*}model, struct \doxymbox{\hyperlink{structllama__opt__params}{llama\+\_\+opt\+\_\+params}} lopt\+\_\+params)
+\item 
+\Hypertarget{structllama__context_aad51683fe3b2d9243460476392319801}\label{structllama__context_aad51683fe3b2d9243460476392319801} 
+void {\bfseries opt\+\_\+epoch} (ggml\+\_\+opt\+\_\+dataset\+\_\+t dataset, ggml\+\_\+opt\+\_\+result\+\_\+t result\+\_\+train, ggml\+\_\+opt\+\_\+result\+\_\+t result\+\_\+eval, int64\+\_\+t idata\+\_\+split, ggml\+\_\+opt\+\_\+epoch\+\_\+callback callback\+\_\+train, ggml\+\_\+opt\+\_\+epoch\+\_\+callback callback\+\_\+eval)
+\item 
+\Hypertarget{structllama__context_aa6e2fdd403aef64d6bb027f2041654c5}\label{structllama__context_aa6e2fdd403aef64d6bb027f2041654c5} 
+void {\bfseries opt\+\_\+epoch\+\_\+iter} (ggml\+\_\+opt\+\_\+dataset\+\_\+t dataset, ggml\+\_\+opt\+\_\+result\+\_\+t result, const std::\+vector$<$ llama\+\_\+token $>$ \&tokens, const std::\+vector$<$ llama\+\_\+token $>$ \&labels\+\_\+sparse, \doxymbox{\hyperlink{structllama__batch}{llama\+\_\+batch}} \&batch, ggml\+\_\+opt\+\_\+epoch\+\_\+callback callback, bool train, int64\+\_\+t idata\+\_\+in\+\_\+loop, int64\+\_\+t ndata\+\_\+in\+\_\+loop, int64\+\_\+t t\+\_\+loop\+\_\+start)
+\item 
+\Hypertarget{structllama__context_aaa10212359431c7083f675b27e6c0339}\label{structllama__context_aaa10212359431c7083f675b27e6c0339} 
+uint32\+\_\+t {\bfseries graph\+\_\+max\+\_\+nodes} (uint32\+\_\+t n\+\_\+tokens) const
+\item 
+\Hypertarget{structllama__context_a525e51b2f6c1b3c6a998e8e11aa2afd0}\label{structllama__context_a525e51b2f6c1b3c6a998e8e11aa2afd0} 
+\doxymbox{\hyperlink{classllm__graph__result}{llm\+\_\+graph\+\_\+result}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+gf\+\_\+res\+\_\+reserve} () const
+\item 
+\Hypertarget{structllama__context_a1ecfca6a4b3eb5170d21729ddcb670c1}\label{structllama__context_a1ecfca6a4b3eb5170d21729ddcb670c1} 
+ggml\+\_\+status {\bfseries graph\+\_\+compute} (\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}gf, bool batched)
+\item 
+\Hypertarget{structllama__context_a5207711a01e4476ba27322d8447fcd2b}\label{structllama__context_a5207711a01e4476ba27322d8447fcd2b} 
+\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*} {\bfseries graph\+\_\+reserve} (uint32\+\_\+t n\+\_\+tokens, uint32\+\_\+t n\+\_\+seqs, uint32\+\_\+t n\+\_\+outputs, const \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}} \texorpdfstring{$\ast$}{*}mctx, bool split\+\_\+only=false, size\+\_\+t \texorpdfstring{$\ast$}{*}sizes=nullptr)
+\item 
+\Hypertarget{structllama__context_a173f5bd6b960a43ee6928a7e7226cdb1}\label{structllama__context_a173f5bd6b960a43ee6928a7e7226cdb1} 
+bool {\bfseries set\+\_\+sampler} (llama\+\_\+seq\+\_\+id seq\+\_\+id, \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}sampler)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__context_a4faa3a662f0c24f956a0b7cb86df0201}\label{structllama__context_a4faa3a662f0c24f956a0b7cb86df0201} 
+uint32\+\_\+t {\bfseries output\+\_\+reserve} (int32\+\_\+t n\+\_\+outputs)
+\item 
+\Hypertarget{structllama__context_a40fa31b3a077cf192815de5f5160899d}\label{structllama__context_a40fa31b3a077cf192815de5f5160899d} 
+void {\bfseries output\+\_\+reorder} ()
+\item 
+\Hypertarget{structllama__context_a103b1baa3699b22430928793dfbf978f}\label{structllama__context_a103b1baa3699b22430928793dfbf978f} 
+int64\+\_\+t {\bfseries output\+\_\+resolve\+\_\+row} (int32\+\_\+t i) const
+\item 
+\Hypertarget{structllama__context_a6e065fdfac86f60b8d51f40fc52f6978}\label{structllama__context_a6e065fdfac86f60b8d51f40fc52f6978} 
+\doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} {\bfseries graph\+\_\+params} (\doxymbox{\hyperlink{classllm__graph__result}{llm\+\_\+graph\+\_\+result}} \texorpdfstring{$\ast$}{*}res, const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \&ubatch, const \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}} \texorpdfstring{$\ast$}{*}mctx, llm\+\_\+graph\+\_\+type gtype) const
+\item 
+\Hypertarget{structllama__context_aefc36583a1da16868dc65db5e04ef114}\label{structllama__context_aefc36583a1da16868dc65db5e04ef114} 
+llm\+\_\+graph\+\_\+cb {\bfseries graph\+\_\+get\+\_\+cb} () const
+\item 
+\Hypertarget{structllama__context_a47a6076aa18581d6019cdaec01ebe839}\label{structllama__context_a47a6076aa18581d6019cdaec01ebe839} 
+size\+\_\+t {\bfseries state\+\_\+write\+\_\+data} (\doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}} \&io)
+\item 
+\Hypertarget{structllama__context_a9afe329b4ddde264cfac4d1c2adfbde8}\label{structllama__context_a9afe329b4ddde264cfac4d1c2adfbde8} 
+size\+\_\+t {\bfseries state\+\_\+read\+\_\+data} (\doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}} \&io)
+\item 
+\Hypertarget{structllama__context_a533e9619e4177dd27f53350670c67bf4}\label{structllama__context_a533e9619e4177dd27f53350670c67bf4} 
+size\+\_\+t {\bfseries state\+\_\+seq\+\_\+write\+\_\+data} (\doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}} \&io, llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+state\+\_\+seq\+\_\+flags flags)
+\item 
+\Hypertarget{structllama__context_a90ff2f469c60d6abb6a4055e0795da63}\label{structllama__context_a90ff2f469c60d6abb6a4055e0795da63} 
+size\+\_\+t {\bfseries state\+\_\+seq\+\_\+read\+\_\+data} (\doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}} \&io, llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+state\+\_\+seq\+\_\+flags flags)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__context_ab8f872253f2f6d2c59c7ebf4cdd39d58}\label{structllama__context_ab8f872253f2f6d2c59c7ebf4cdd39d58} 
+const \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \& {\bfseries model}
+\item 
+\Hypertarget{structllama__context_a60fc7e9aa78946f55b298768ac745ecf}\label{structllama__context_a60fc7e9aa78946f55b298768ac745ecf} 
+\doxymbox{\hyperlink{structllama__cparams}{llama\+\_\+cparams}} {\bfseries cparams}
+\item 
+\Hypertarget{structllama__context_a3eeec1ca6198544df3d95db8315e62c7}\label{structllama__context_a3eeec1ca6198544df3d95db8315e62c7} 
+llama\+\_\+adapter\+\_\+cvec\+\_\+ptr {\bfseries cvec}
+\item 
+\Hypertarget{structllama__context_a911c8b0164a50dfce5b8d47cf7036672}\label{structllama__context_a911c8b0164a50dfce5b8d47cf7036672} 
+llama\+\_\+adapter\+\_\+loras\+\_\+ptr {\bfseries loras}
+\item 
+\Hypertarget{structllama__context_a88f6a750bad95ad11237f456785453d2}\label{structllama__context_a88f6a750bad95ad11237f456785453d2} 
+\doxymbox{\hyperlink{structllama__cross}{llama\+\_\+cross}} {\bfseries cross}
+\item 
+\Hypertarget{structllama__context_a0c9d34f52c6d673e1a7ca23ab3fb164e}\label{structllama__context_a0c9d34f52c6d673e1a7ca23ab3fb164e} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}} $>$ {\bfseries memory}
+\item 
+\Hypertarget{structllama__context_ac927598734e68bdddb41ffe2cd7c50b3}\label{structllama__context_ac927598734e68bdddb41ffe2cd7c50b3} 
+\doxymbox{\hyperlink{structbuffer__view}{buffer\+\_\+view}}$<$ float $>$ {\bfseries logits} = \{nullptr, 0\}
+\item 
+\Hypertarget{structllama__context_a1fdc2f8ef306e9f5d1e912be9a3afc30}\label{structllama__context_a1fdc2f8ef306e9f5d1e912be9a3afc30} 
+\doxymbox{\hyperlink{structbuffer__view}{buffer\+\_\+view}}$<$ float $>$ {\bfseries embd} = \{nullptr, 0\}
+\item 
+\Hypertarget{structllama__context_a0b844c7565c0234e2ea59fbc7f4fb12b}\label{structllama__context_a0b844c7565c0234e2ea59fbc7f4fb12b} 
+\doxymbox{\hyperlink{structllama__context_1_1sampling__info}{sampling\+\_\+info}} {\bfseries sampling}
+\item 
+\Hypertarget{structllama__context_a6aff3e1f70644024618128cec3b3c418}\label{structllama__context_a6aff3e1f70644024618128cec3b3c418} 
+std::\+map$<$ llama\+\_\+seq\+\_\+id, std::\+vector$<$ float $>$ $>$ {\bfseries embd\+\_\+seq}
+\item 
+\Hypertarget{structllama__context_a8880874dbb8e7bb4e696236fd026fb7a}\label{structllama__context_a8880874dbb8e7bb4e696236fd026fb7a} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classllama__batch__allocr}{llama\+\_\+batch\+\_\+allocr}} $>$ {\bfseries balloc}
+\item 
+\Hypertarget{structllama__context_a1a1fe76f7dd848d507a9e8f51e4017bb}\label{structllama__context_a1a1fe76f7dd848d507a9e8f51e4017bb} 
+uint32\+\_\+t {\bfseries n\+\_\+outputs} = 0
+\item 
+\Hypertarget{structllama__context_a6b51b8f72b6494dab684777d027257bc}\label{structllama__context_a6b51b8f72b6494dab684777d027257bc} 
+std::\+vector$<$ int32\+\_\+t $>$ {\bfseries output\+\_\+ids}
+\item 
+\Hypertarget{structllama__context_a49bf94a63ca9ccc328d5821b27db0005}\label{structllama__context_a49bf94a63ca9ccc328d5821b27db0005} 
+std::\+vector$<$ \doxymbox{\hyperlink{structllama__context_1_1swap__info}{swap\+\_\+info}} $>$ {\bfseries output\+\_\+swaps}
+\item 
+\Hypertarget{structllama__context_a31fdf65093fad868cfa8b8c8c273768a}\label{structllama__context_a31fdf65093fad868cfa8b8c8c273768a} 
+ggml\+\_\+backend\+\_\+sched\+\_\+ptr {\bfseries sched}
+\item 
+\Hypertarget{structllama__context_aeba513864c63d869a8cbffa2186de6fc}\label{structllama__context_aeba513864c63d869a8cbffa2186de6fc} 
+bool {\bfseries sched\+\_\+need\+\_\+reserve} = true
+\item 
+\Hypertarget{structllama__context_aa2f12eadc37bd6092454524448a9113b}\label{structllama__context_aa2f12eadc37bd6092454524448a9113b} 
+ggml\+\_\+backend\+\_\+t {\bfseries backend\+\_\+cpu} = nullptr
+\item 
+\Hypertarget{structllama__context_acd5a3c80cb681b2e1d4a8f00be2df1e2}\label{structllama__context_acd5a3c80cb681b2e1d4a8f00be2df1e2} 
+std::\+vector$<$ ggml\+\_\+backend\+\_\+ptr $>$ {\bfseries backends}
+\item 
+\Hypertarget{structllama__context_a46020701f3cedd930a3ad65f39cc6b28}\label{structllama__context_a46020701f3cedd930a3ad65f39cc6b28} 
+ggml\+\_\+opt\+\_\+context\+\_\+t {\bfseries opt\+\_\+ctx} = nullptr
+\item 
+\Hypertarget{structllama__context_ac35c5221097bd3e692bdc386bc584c3c}\label{structllama__context_ac35c5221097bd3e692bdc386bc584c3c} 
+ggml\+\_\+threadpool\+\_\+t {\bfseries threadpool} = nullptr
+\item 
+\Hypertarget{structllama__context_a6fc96e591550492701c4b236883791fa}\label{structllama__context_a6fc96e591550492701c4b236883791fa} 
+ggml\+\_\+threadpool\+\_\+t {\bfseries threadpool\+\_\+batch} = nullptr
+\item 
+\Hypertarget{structllama__context_a6bd45697f5ad05477246357c718e80df}\label{structllama__context_a6bd45697f5ad05477246357c718e80df} 
+ggml\+\_\+abort\+\_\+callback {\bfseries abort\+\_\+callback} = nullptr
+\item 
+\Hypertarget{structllama__context_a94b34cbd4b61d4c50caddd14c71797a6}\label{structllama__context_a94b34cbd4b61d4c50caddd14c71797a6} 
+void \texorpdfstring{$\ast$}{*} {\bfseries abort\+\_\+callback\+\_\+data} = nullptr
+\item 
+\Hypertarget{structllama__context_a86045db2be21e2ae045c15af1745b7b0}\label{structllama__context_a86045db2be21e2ae045c15af1745b7b0} 
+std::\+vector$<$ std::\+pair$<$ ggml\+\_\+backend\+\_\+t, ggml\+\_\+backend\+\_\+set\+\_\+n\+\_\+threads\+\_\+t $>$ $>$ {\bfseries set\+\_\+n\+\_\+threads\+\_\+fns}
+\item 
+\Hypertarget{structllama__context_adbfb06ec3a20a5a4a0702bb9ed79a9b2}\label{structllama__context_adbfb06ec3a20a5a4a0702bb9ed79a9b2} 
+std::\+vector$<$ ggml\+\_\+backend\+\_\+t $>$ {\bfseries backend\+\_\+ptrs}
+\item 
+\Hypertarget{structllama__context_a65b7730aaf7b5306926ab5cdf266c92a}\label{structllama__context_a65b7730aaf7b5306926ab5cdf266c92a} 
+std::\+vector$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t $>$ {\bfseries backend\+\_\+buft}
+\item 
+\Hypertarget{structllama__context_a83669049ca24bffb5532110f2d4ed4d3}\label{structllama__context_a83669049ca24bffb5532110f2d4ed4d3} 
+std::\+vector$<$ size\+\_\+t $>$ {\bfseries backend\+\_\+buf\+\_\+exp\+\_\+size}
+\item 
+\Hypertarget{structllama__context_af092df9f65224eeff69ac79fef74d7ec}\label{structllama__context_af092df9f65224eeff69ac79fef74d7ec} 
+llm\+\_\+graph\+\_\+result\+\_\+ptr {\bfseries gf\+\_\+res\+\_\+prev}
+\item 
+\Hypertarget{structllama__context_ab5e3994fe7be814eb4617e6dd216cb61}\label{structllama__context_ab5e3994fe7be814eb4617e6dd216cb61} 
+llm\+\_\+graph\+\_\+result\+\_\+ptr {\bfseries gf\+\_\+res\+\_\+reserve}
+\item 
+\Hypertarget{structllama__context_a582e9a27a78303c188f6f3c33a957324}\label{structllama__context_a582e9a27a78303c188f6f3c33a957324} 
+ggml\+\_\+backend\+\_\+buffer\+\_\+ptr {\bfseries buf\+\_\+output}
+\item 
+\Hypertarget{structllama__context_ac47751031a543c4bd9d539b40bae1bd6}\label{structllama__context_ac47751031a543c4bd9d539b40bae1bd6} 
+bool {\bfseries has\+\_\+evaluated\+\_\+once} = false
+\item 
+\Hypertarget{structllama__context_a598aebe2eaadd016011f63e2f3916e14}\label{structllama__context_a598aebe2eaadd016011f63e2f3916e14} 
+bool {\bfseries graph\+\_\+reuse\+\_\+disable} = false
+\item 
+\Hypertarget{structllama__context_a5e37baedf7fe4171eb0d5ba8669a5841}\label{structllama__context_a5e37baedf7fe4171eb0d5ba8669a5841} 
+int64\+\_\+t {\bfseries t\+\_\+start\+\_\+us} = 0
+\item 
+\Hypertarget{structllama__context_a5249ff52758857a91e7f51f7f467356d}\label{structllama__context_a5249ff52758857a91e7f51f7f467356d} 
+int64\+\_\+t {\bfseries t\+\_\+load\+\_\+us} = 0
+\item 
+\Hypertarget{structllama__context_a260ef6b2f9e0aa85552c92cc192897aa}\label{structllama__context_a260ef6b2f9e0aa85552c92cc192897aa} 
+int64\+\_\+t {\bfseries t\+\_\+p\+\_\+eval\+\_\+us} = 0
+\item 
+\Hypertarget{structllama__context_a4fa74ea20b9931f6f8a1689e2c6a9773}\label{structllama__context_a4fa74ea20b9931f6f8a1689e2c6a9773} 
+int64\+\_\+t {\bfseries t\+\_\+eval\+\_\+us} = 0
+\item 
+\Hypertarget{structllama__context_a81d6dcc3ffcbc4e5cfc6337f0fd54ae5}\label{structllama__context_a81d6dcc3ffcbc4e5cfc6337f0fd54ae5} 
+int64\+\_\+t {\bfseries t\+\_\+compute\+\_\+start\+\_\+us} = 0
+\item 
+\Hypertarget{structllama__context_a52c1e9bed44908896ea5bf776406cfe7}\label{structllama__context_a52c1e9bed44908896ea5bf776406cfe7} 
+int64\+\_\+t {\bfseries n\+\_\+queued\+\_\+tokens} = 0
+\item 
+\Hypertarget{structllama__context_ab8d833df77abc0128252d78554650d2e}\label{structllama__context_ab8d833df77abc0128252d78554650d2e} 
+int32\+\_\+t {\bfseries n\+\_\+p\+\_\+eval} = 0
+\item 
+\Hypertarget{structllama__context_a3760f1f801eedffe72a81d970039391d}\label{structllama__context_a3760f1f801eedffe72a81d970039391d} 
+int32\+\_\+t {\bfseries n\+\_\+eval} = 0
+\item 
+\Hypertarget{structllama__context_a8e41e645e66dc5695ce50482b615c51f}\label{structllama__context_a8e41e645e66dc5695ce50482b615c51f} 
+int32\+\_\+t {\bfseries n\+\_\+reused} = 0
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/context.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/context.\+cpp\end{DoxyCompactItemize}

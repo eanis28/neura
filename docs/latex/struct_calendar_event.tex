@@ -1,0 +1,48 @@
+\doxysection{Calendar\+Event Struct Reference}
+\hypertarget{struct_calendar_event}{}\label{struct_calendar_event}\index{CalendarEvent@{CalendarEvent}}
+
+
+Plain data structure describing a Google Calendar event.  
+
+
+
+
+{\ttfamily \+\#include $<$APIAction.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_calendar_event_a2b5f5b41796fb1634635632f9c001c19}\label{struct_calendar_event_a2b5f5b41796fb1634635632f9c001c19} 
+std::\+string {\bfseries title}
+\begin{DoxyCompactList}\small\item\em Display title /\+ summary of the event. \end{DoxyCompactList}\item 
+\Hypertarget{struct_calendar_event_af95eb7c915ad3f1534698de7c1336491}\label{struct_calendar_event_af95eb7c915ad3f1534698de7c1336491} 
+std::\+string {\bfseries start\+Date\+Time\+ISO}
+\begin{DoxyCompactList}\small\item\em Event start time, e.\+g. {\ttfamily "{}2026-\/03-\/10\+T14:\+00:\+00"{}}. \end{DoxyCompactList}\item 
+\Hypertarget{struct_calendar_event_a8eb422724e54f3e87e75968d9df88cf3}\label{struct_calendar_event_a8eb422724e54f3e87e75968d9df88cf3} 
+std::\+string {\bfseries end\+Date\+Time\+ISO}
+\begin{DoxyCompactList}\small\item\em Event end time, e.\+g. {\ttfamily "{}2026-\/03-\/10\+T14:\+30:\+00"{}}. \end{DoxyCompactList}\item 
+\Hypertarget{struct_calendar_event_aea29f1cab12caffc87755d7ef54a39b3}\label{struct_calendar_event_aea29f1cab12caffc87755d7ef54a39b3} 
+std::\+string {\bfseries time\+Zone}
+\begin{DoxyCompactList}\small\item\em IANA time zone, e.\+g. {\ttfamily "{}\+America/\+\+Toronto"{}}. \end{DoxyCompactList}\item 
+\Hypertarget{struct_calendar_event_adc8cc82e56ad2ce8d7c348631a21c1db}\label{struct_calendar_event_adc8cc82e56ad2ce8d7c348631a21c1db} 
+std::\+optional$<$ std::\+string $>$ {\bfseries location}
+\begin{DoxyCompactList}\small\item\em Optional physical or virtual location string. \end{DoxyCompactList}\item 
+\Hypertarget{struct_calendar_event_a43cdf5b7831ddbfa197b52246c50aba8}\label{struct_calendar_event_a43cdf5b7831ddbfa197b52246c50aba8} 
+std::\+optional$<$ std::\+string $>$ {\bfseries notes}
+\begin{DoxyCompactList}\small\item\em Optional free-\/text description /\+ notes. \end{DoxyCompactList}\item 
+\Hypertarget{struct_calendar_event_a519915e100a28b52e0c8c5dc458a9625}\label{struct_calendar_event_a519915e100a28b52e0c8c5dc458a9625} 
+\doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5aca}{Recurrence}} {\bfseries recurrence} = \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaab50339a10e1de285ac99d4c3990b8693}{Recurrence::\+\+NONE}}
+\begin{DoxyCompactList}\small\item\em Repeat frequency; defaults to a one-\/time event. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Plain data structure describing a Google Calendar event. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+All date/\+time strings must be ISO 8601 combined date-\/time format (YYYY-\/\+MM-\/\+DDTHH:\+MM:\+SS). \doxylink{requirements_The}{The} time\+Zone field must be a valid IANA time zone identifier (e.\+g. "{}\+America/\+\+Toronto"{}). 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_a_p_i_action_8h}{APIAction.\+h}}\end{DoxyCompactItemize}

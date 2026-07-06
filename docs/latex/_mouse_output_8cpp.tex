@@ -1,0 +1,45 @@
+\doxysection{Mouse\+Output.\+cpp File Reference}
+\hypertarget{_mouse_output_8cpp}{}\label{_mouse_output_8cpp}\index{MouseOutput.cpp@{MouseOutput.cpp}}
+
+
+Implementation of cross-\/platform mouse and keyboard control.  
+
+
+{\ttfamily \+\#include "{}Mouse\+Output.\+h"{}}\newline
+{\ttfamily \+\#include $<$iostream$>$}\newline
+{\ttfamily \+\#include $<$X11/\+\+Xlib.\+h$>$}\newline
+{\ttfamily \+\#include $<$X11/\+extensions/\+\+XTest.\+h$>$}\newline
+{\ttfamily \+\#include $<$X11/\+keysym.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static Display \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{_mouse_output_8cpp_a2cf63e099338fa114e89e78740402aef}{get\+Display}} ()
+\begin{DoxyCompactList}\small\item\em Returns singleton X11 display connection for Linux. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementation of cross-\/platform mouse and keyboard control. 
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{_mouse_output_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_mouse_output_8cpp_a2cf63e099338fa114e89e78740402aef}\index{MouseOutput.cpp@{MouseOutput.cpp}!getDisplay@{getDisplay}}
+\index{getDisplay@{getDisplay}!MouseOutput.cpp@{MouseOutput.cpp}}
+\doxysubsubsection{\texorpdfstring{getDisplay()}{getDisplay()}}
+{\footnotesize\ttfamily \label{_mouse_output_8cpp_a2cf63e099338fa114e89e78740402aef} 
+Display \texorpdfstring{$\ast$}{*} get\+Display (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Returns singleton X11 display connection for Linux. 
+
+Opens the display connection once and reuses it for all X11 operations.
+
+\begin{DoxyReturn}{Returns}
+Pointer to X11 Display, or nullptr if connection failed 
+\end{DoxyReturn}

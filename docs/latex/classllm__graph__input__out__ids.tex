@@ -1,0 +1,70 @@
+\doxysection{llm\+\_\+graph\+\_\+input\+\_\+out\+\_\+ids Class Reference}
+\hypertarget{classllm__graph__input__out__ids}{}\label{classllm__graph__input__out__ids}\index{llm\_graph\_input\_out\_ids@{llm\_graph\_input\_out\_ids}}
+Inheritance diagram for llm\+\_\+graph\+\_\+input\+\_\+out\+\_\+ids:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllm__graph__input__out__ids}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__out__ids_af93c3c9c6d230502fbb26b92a5bdfd0b}\label{classllm__graph__input__out__ids_af93c3c9c6d230502fbb26b92a5bdfd0b} 
+{\bfseries llm\+\_\+graph\+\_\+input\+\_\+out\+\_\+ids} (const \doxymbox{\hyperlink{structllama__hparams}{llama\+\_\+hparams}} \&hparams, const \doxymbox{\hyperlink{structllama__cparams}{llama\+\_\+cparams}} \&cparams, uint32\+\_\+t n\+\_\+outputs)
+\item 
+void \doxymbox{\hyperlink{classllm__graph__input__out__ids_a8843658f27460275636b9549170e0580}{set\+\_\+input}} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) override
+\item 
+bool \doxymbox{\hyperlink{classllm__graph__input__out__ids_af41e70401fb4b572d53bb8512dbaba4f}{can\+\_\+reuse}} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params) override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__out__ids_a2ee9fc4bcedf2173533e3a0ae1b316a6}\label{classllm__graph__input__out__ids_a2ee9fc4bcedf2173533e3a0ae1b316a6} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries out\+\_\+ids}
+\item 
+\Hypertarget{classllm__graph__input__out__ids_ad3befedfda6fc9588bbe2ac61b8f0b71}\label{classllm__graph__input__out__ids_ad3befedfda6fc9588bbe2ac61b8f0b71} 
+const \doxymbox{\hyperlink{structllama__hparams}{llama\+\_\+hparams}} {\bfseries hparams}
+\item 
+\Hypertarget{classllm__graph__input__out__ids_a48d53494e74f27f45ad768d033f1671f}\label{classllm__graph__input__out__ids_a48d53494e74f27f45ad768d033f1671f} 
+const \doxymbox{\hyperlink{structllama__cparams}{llama\+\_\+cparams}} {\bfseries cparams}
+\item 
+\Hypertarget{classllm__graph__input__out__ids_a7af70347335657af5479000df918116c}\label{classllm__graph__input__out__ids_a7af70347335657af5479000df918116c} 
+const uint32\+\_\+t {\bfseries n\+\_\+outputs}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries debug} = 0
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllm__graph__input__out__ids_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllm__graph__input__out__ids_af41e70401fb4b572d53bb8512dbaba4f}\index{llm\_graph\_input\_out\_ids@{llm\_graph\_input\_out\_ids}!can\_reuse@{can\_reuse}}
+\index{can\_reuse@{can\_reuse}!llm\_graph\_input\_out\_ids@{llm\_graph\_input\_out\_ids}}
+\doxysubsubsection{\texorpdfstring{can\_reuse()}{can\_reuse()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__out__ids_af41e70401fb4b572d53bb8512dbaba4f} 
+bool llm\+\_\+graph\+\_\+input\+\_\+out\+\_\+ids::\+can\+\_\+reuse (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&}]{params}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+\Hypertarget{classllm__graph__input__out__ids_a8843658f27460275636b9549170e0580}\index{llm\_graph\_input\_out\_ids@{llm\_graph\_input\_out\_ids}!set\_input@{set\_input}}
+\index{set\_input@{set\_input}!llm\_graph\_input\_out\_ids@{llm\_graph\_input\_out\_ids}}
+\doxysubsubsection{\texorpdfstring{set\_input()}{set\_input()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__out__ids_a8843658f27460275636b9549170e0580} 
+void llm\+\_\+graph\+\_\+input\+\_\+out\+\_\+ids::\+set\+\_\+input (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}}]{ubatch}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+cpp\end{DoxyCompactItemize}

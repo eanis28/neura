@@ -1,0 +1,37 @@
+\doxysection{llama\+\_\+context::\+sampling\+\_\+info Struct Reference}
+\hypertarget{structllama__context_1_1sampling__info}{}\label{structllama__context_1_1sampling__info}\index{llama\_context::sampling\_info@{llama\_context::sampling\_info}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__context_1_1sampling__info_a8eaae9de8a433360c0c0a1691c83633f}\label{structllama__context_1_1sampling__info_a8eaae9de8a433360c0c0a1691c83633f} 
+std::\+map$<$ llama\+\_\+seq\+\_\+id, \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries samplers}
+\item 
+\Hypertarget{structllama__context_1_1sampling__info_a3cb104915e8f6f6ab4a1275afe6b8128}\label{structllama__context_1_1sampling__info_a3cb104915e8f6f6ab4a1275afe6b8128} 
+\doxymbox{\hyperlink{structbuffer__view}{buffer\+\_\+view}}$<$ float $>$ {\bfseries logits} = \{nullptr, 0\}
+\item 
+\Hypertarget{structllama__context_1_1sampling__info_a277d04561876a6ada73247481905f0fc}\label{structllama__context_1_1sampling__info_a277d04561876a6ada73247481905f0fc} 
+\doxymbox{\hyperlink{structbuffer__view}{buffer\+\_\+view}}$<$ llama\+\_\+token $>$ {\bfseries sampled} = \{nullptr, 0\}
+\item 
+\Hypertarget{structllama__context_1_1sampling__info_af7648f71875b8a5b8d7dfb90e4ecd671}\label{structllama__context_1_1sampling__info_af7648f71875b8a5b8d7dfb90e4ecd671} 
+\doxymbox{\hyperlink{structbuffer__view}{buffer\+\_\+view}}$<$ float $>$ {\bfseries probs} = \{nullptr, 0\}
+\item 
+\Hypertarget{structllama__context_1_1sampling__info_a1baf7b4198bd1bd5bc7e2cd3cad3805f}\label{structllama__context_1_1sampling__info_a1baf7b4198bd1bd5bc7e2cd3cad3805f} 
+\doxymbox{\hyperlink{structbuffer__view}{buffer\+\_\+view}}$<$ llama\+\_\+token $>$ {\bfseries candidates} = \{nullptr, 0\}
+\item 
+\Hypertarget{structllama__context_1_1sampling__info_aef5603e87fc235a7c3280c9c472a9e5a}\label{structllama__context_1_1sampling__info_aef5603e87fc235a7c3280c9c472a9e5a} 
+std::\+vector$<$ uint32\+\_\+t $>$ {\bfseries logits\+\_\+count}
+\item 
+\Hypertarget{structllama__context_1_1sampling__info_aa5f28d8012563e9e531078fccb77b896}\label{structllama__context_1_1sampling__info_aa5f28d8012563e9e531078fccb77b896} 
+std::\+vector$<$ uint32\+\_\+t $>$ {\bfseries probs\+\_\+count}
+\item 
+\Hypertarget{structllama__context_1_1sampling__info_a8b52978d06bd60e11b128955ec703497}\label{structllama__context_1_1sampling__info_a8b52978d06bd60e11b128955ec703497} 
+std::\+vector$<$ uint32\+\_\+t $>$ {\bfseries candidates\+\_\+count}
+\item 
+\Hypertarget{structllama__context_1_1sampling__info_ae157e7fbafb9906a275ae924e5f4bde1}\label{structllama__context_1_1sampling__info_ae157e7fbafb9906a275ae924e5f4bde1} 
+std::\+vector$<$ llama\+\_\+token $>$ {\bfseries token\+\_\+ids\+\_\+full\+\_\+vocab}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/context.\+h\end{DoxyCompactItemize}

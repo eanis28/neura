@@ -1,0 +1,105 @@
+\doxysection{whisper.\+cpp/\+models Directory Reference}
+\hypertarget{dir_ed1912900bdd2dba357d4b741115b76b}{}\label{dir_ed1912900bdd2dba357d4b741115b76b}\index{whisper.cpp/models Directory Reference@{whisper.cpp/models Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md130}{}\doxysubsection{\texorpdfstring{Whisper model files in custom \`{}ggml\`{} format}{Whisper model files in custom \`{}ggml\`{} format}}\label{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md130}
+\doxylink{requirements_The}{The} \href{https://github.com/openai/whisper/blob/main/whisper/__init__.py\#L17-L30}{\texttt{original Whisper Py\+Torch models provided by Open\+AI}} are converted to custom {\ttfamily ggml} format in order to be able to load them in C/\+\+C++. Conversion is performed using the \href{convert-pt-to-ggml.py}{\texttt{convert-\/pt-\/to-\/ggml.\+py}} script.
+
+There are three ways to obtain {\ttfamily ggml} models:\+\hypertarget{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md131}{}\doxysubsubsection{\texorpdfstring{1. Use \href{download-ggml-model.sh}{\texttt{download-\/ggml-\/model.\+sh}} to download pre-\/converted models}{1. Use \href{download-ggml-model.sh}{\texttt{download-\/ggml-\/model.\+sh}} to download pre-\/converted models}}\label{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md131}
+Example download:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ ./download-\/ggml-\/model.sh\ base.en}
+\DoxyCodeLine{Downloading\ ggml\ model\ base.en\ ...}
+\DoxyCodeLine{models/ggml-\/base.en.bin\ \ \ \ \ \ \ \ \ \ 100\%[=============================================>]\ 141.11M\ \ 5.41MB/s\ \ \ \ in\ 22s}
+\DoxyCodeLine{Done!\ Model\ 'base.en'\ saved\ in\ 'models/ggml-\/base.en.bin'}
+\DoxyCodeLine{You\ can\ now\ use\ it\ like\ this:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \$\ ./build/bin/whisper-\/cli\ -\/m\ models/ggml-\/base.en.bin\ -\/f\ samples/jfk.wav}
+
+\end{DoxyCode}
+\hypertarget{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md132}{}\doxysubsubsection{\texorpdfstring{2. Manually download pre-\/converted models}{2. Manually download pre-\/converted models}}\label{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md132}
+{\ttfamily ggml} models are available from the following locations:\+
+
+
+\begin{DoxyItemize}
+\item \href{https://huggingface.co/ggerganov/whisper.cpp/tree/main}{\texttt{https:\+/\+/\+huggingface.\+co/\+ggerganov/\+whisper.\+cpp/\+tree/\+main}}
+\end{DoxyItemize}\hypertarget{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md133}{}\doxysubsubsection{\texorpdfstring{3. Convert with \href{convert-pt-to-ggml.py}{\texttt{convert-\/pt-\/to-\/ggml.\+py}}}{3. Convert with \href{convert-pt-to-ggml.py}{\texttt{convert-\/pt-\/to-\/ggml.\+py}}}}\label{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md133}
+Download one of the \href{https://github.com/openai/whisper/blob/main/whisper/__init__.py\#L17-L30}{\texttt{models provided by Open\+AI}} and generate the {\ttfamily ggml} files using the \href{convert-pt-to-ggml.py}{\texttt{convert-\/pt-\/to-\/ggml.\+py}} script.
+
+Example conversion, assuming the original Py\+Torch files have been downloaded into {\ttfamily \texorpdfstring{$\sim$}{\string~}/\+.cache/\+whisper}. Change {\ttfamily \texorpdfstring{$\sim$}{\string~}/\+path/\+to/\+repo/\+whisper/\+} to the location for your copy of the Whisper source:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ models/whisper-\/medium}
+\DoxyCodeLine{python\ models/convert-\/pt-\/to-\/ggml.py\ \string~/.cache/whisper/medium.pt\ \string~/path/to/repo/whisper/\ ./models/whisper-\/medium}
+\DoxyCodeLine{mv\ ./models/whisper-\/medium/ggml-\/model.bin\ models/ggml-\/medium.bin}
+\DoxyCodeLine{rmdir\ models/whisper-\/medium}
+
+\end{DoxyCode}
+\hypertarget{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md134}{}\doxysubsection{\texorpdfstring{Available models}{Available models}}\label{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md134}
+
+\begin{DoxyTable}{3}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Model  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Disk  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}SHA  \\
+tiny  &75 MiB  &{\ttfamily bd577a113a864445d4c299885e0cb97d4ba92b5f}  \\
+tiny.\+en  &75 MiB  &{\ttfamily c78c86eb1a8faa21b369bcd33207cc90d64ae9df}  \\
+base  &142 MiB  &{\ttfamily 465707469ff3a37a2b9b8d8f89f2f99de7299dac}  \\
+base.\+en  &142 MiB  &{\ttfamily 137c40403d78fd54d454da0f9bd998f78703390c}  \\
+small  &466 MiB  &{\ttfamily 55356645c2b361a969dfd0ef2c5a50d530afd8d5}  \\
+small.\+en  &466 MiB  &{\ttfamily db8a495a91d927739e50b3fc1cc4c6b8f6c2d022}  \\
+small.\+en-\/tdrz  &465 MiB  &{\ttfamily b6c6e7e89af1a35c08e6de56b66ca6a02a2fdfa1}  \\
+medium  &1.\+5 GiB  &{\ttfamily fd9727b6e1217c2f614f9b698455c4ffd82463b4}  \\
+medium.\+en  &1.\+5 GiB  &{\ttfamily 8c30f0e44ce9560643ebd10bbe50cd20eafd3723}  \\
+large-\/v1  &2.\+9 GiB  &{\ttfamily b1caaf735c4cc1429223d5a74f0f4d0b9b59a299}  \\
+large-\/v2  &2.\+9 GiB  &{\ttfamily 0f4c8e34f21cf1a914c59d8b3ce882345ad349d6}  \\
+large-\/v2-\/q5\+\_\+0  &1.\+1 GiB  &{\ttfamily 00e39f2196344e901b3a2bd5814807a769bd1630}  \\
+large-\/v3  &2.\+9 GiB  &{\ttfamily ad82bf6a9043ceed055076d0fd39f5f186ff8062}  \\
+large-\/v3-\/q5\+\_\+0  &1.\+1 GiB  &{\ttfamily e6e2ed78495d403bef4b7cff42ef4aaadcfea8de}  \\
+large-\/v3-\/turbo  &1.\+5 GiB  &{\ttfamily 4af2b29d7ec73d781377bfd1758ca957a807e941}  \\
+large-\/v3-\/turbo-\/q5\+\_\+0  &547 MiB  &{\ttfamily e050f7970618a659205450ad97eb95a18d69c9ee}  \\
+\end{DoxyTable}
+
+
+Models are multilingual unless the model name includes {\ttfamily .en}. Models ending in {\ttfamily -\/q5\+\_\+0} are \href{../README.md\#quantization}{\texttt{quantized}}. Models ending in {\ttfamily -\/tdrz} support local diarization (marking of speaker turns) using \href{https://github.com/akashmjn/tinydiarize}{\texttt{tinydiarize}}. More information about models is available \href{https://github.com/openai/whisper\#available-models-and-languages}{\texttt{upstream (openai/\+whisper)}}. \doxylink{requirements_The}{The} list above is a subset of the models supported by the \href{download-ggml-model.sh}{\texttt{download-\/ggml-\/model.\+sh}} script, but many more are available at \href{https://huggingface.co/ggerganov/whisper.cpp/tree/main}{\texttt{https:\+/\+/\+huggingface.\+co/\+ggerganov/\+whisper.\+cpp/\+tree/\+main}} and elsewhere.\hypertarget{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md135}{}\doxysubsection{\texorpdfstring{Model files for testing purposes}{Model files for testing purposes}}\label{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md135}
+\doxylink{requirements_The}{The} model files prefixed with {\ttfamily for-\/tests-\/} are empty (i.\+e. do not contain any weights) and are used by the CI for testing purposes. They are directly included in this repository for convenience and the Github Actions CI uses them to run various sanitizer tests.\hypertarget{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md136}{}\doxysubsection{\texorpdfstring{Fine-\/tuned models}{Fine-\/tuned models}}\label{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md136}
+There are community efforts for creating fine-\/tuned Whisper models using extra training data. For example, this \href{https://huggingface.co/blog/fine-tune-whisper}{\texttt{blog post}} describes a method for fine-\/tuning using Hugging Face (HF) Transformer implementation of Whisper. \doxylink{requirements_The}{The} produced models are in slightly different format compared to the original Open\+AI format. To read the HF models you can use the \href{convert-h5-to-ggml.py}{\texttt{convert-\/h5-\/to-\/ggml.\+py}} script like this:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/openai/whisper}
+\DoxyCodeLine{git\ clone\ https://github.com/ggml-\/org/whisper.cpp}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ clone\ HF\ fine-\/tuned\ model\ (this\ is\ just\ an\ example)}
+\DoxyCodeLine{git\ clone\ https://huggingface.co/openai/whisper-\/medium}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ convert\ the\ model\ to\ ggml}
+\DoxyCodeLine{python3\ ./whisper.cpp/models/convert-\/h5-\/to-\/ggml.py\ ./whisper-\/medium/\ ./whisper\ .}
+
+\end{DoxyCode}
+\hypertarget{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md137}{}\doxysubsection{\texorpdfstring{Distilled models}{Distilled models}}\label{dir_ed1912900bdd2dba357d4b741115b76b_autotoc_md137}
+Initial support for \href{https://huggingface.co/distil-whisper}{\texttt{https:\+/\+/\+huggingface.\+co/\+distil-\/whisper}} is available.
+
+Currently, the chunk-\/based transcription strategy is not implemented, so there can be sub-\/optimal quality when using the distilled models with {\ttfamily whisper.\+cpp}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ clone\ OpenAI\ whisper\ and\ whisper.cpp}
+\DoxyCodeLine{git\ clone\ https://github.com/openai/whisper}
+\DoxyCodeLine{git\ clone\ https://github.com/ggml-\/org/whisper.cpp}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ get\ the\ models}
+\DoxyCodeLine{cd\ whisper.cpp/models}
+\DoxyCodeLine{git\ clone\ https://huggingface.co/distil-\/whisper/distil-\/medium.en}
+\DoxyCodeLine{git\ clone\ https://huggingface.co/distil-\/whisper/distil-\/large-\/v2}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ convert\ to\ ggml}
+\DoxyCodeLine{python3\ ./convert-\/h5-\/to-\/ggml.py\ ./distil-\/medium.en/\ ../../whisper\ .}
+\DoxyCodeLine{mv\ ggml-\/model.bin\ ggml-\/medium.en-\/distil.bin}
+\DoxyCodeLine{}
+\DoxyCodeLine{python3\ ./convert-\/h5-\/to-\/ggml.py\ ./distil-\/large-\/v2/\ ../../whisper\ .}
+\DoxyCodeLine{mv\ ggml-\/model.bin\ ggml-\/large-\/v2-\/distil.bin}
+
+\end{DoxyCode}
+ 

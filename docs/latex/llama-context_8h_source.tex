@@ -1,0 +1,365 @@
+\doxysection{llama-\/context.h}
+\hypertarget{llama-context_8h_source}{}\label{llama-context_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/context.h@{whisper.cpp/examples/talk-\/llama/llama-\/context.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}llama-\/cparams.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}llama-\/graph.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}llama-\/adapter.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}llama-\/impl.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}ggml-\/cpp.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}ggml-\/opt.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model}{llama\_model}};}
+\DoxyCodeLine{00016\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classllama__batch__allocr}{llama\_batch\_allocr}};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classllama__io__read__i}{llama\_io\_read\_i}};}
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classllama__io__write__i}{llama\_io\_write\_i}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ "{}memory"{}\ as\ in\ abstract\ memory\ for\ the\ context}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__memory__i}{llama\_memory\_i}};}
+\DoxyCodeLine{00023\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__memory__context__i}{llama\_memory\_context\_i}};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ "{}memory"{}\ as\ in\ physical\ memory\ for\ a\ buffer\ type,\ in\ bytes}}
+\DoxyCodeLine{00026\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__memory__breakdown__data}{llama\_memory\_breakdown\_data}}\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ model\ \ \ =\ 0;\ \textcolor{comment}{//\ memory\ allocated\ for\ the\ model}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ context\ =\ 0;\ \textcolor{comment}{//\ memory\ allocated\ for\ the\ context}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ compute\ =\ 0;\ \textcolor{comment}{//\ memory\ allocated\ for\ temporary\ compute\ buffers}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ total()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ model\ +\ context\ +\ compute;}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{struct\ }llama\_context\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ init\ scheduler\ and\ compute\ buffers,\ reserve\ worst-\/case\ graphs}}
+\DoxyCodeLine{00038\ \ \ \ \ llama\_context(}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ \&\ model,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structllama__context__params}{llama\_context\_params}}\ params);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \string~llama\_context();}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//\ reserve\ a\ new\ backend\ scheduler\ (if\ needed)}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ for\ example,\ when:}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ changing\ loras}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ changing\ samplers}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ changing\ attention\ type}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ etc.}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ sched\_reserve();}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ synchronize();}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ \ \ \&\ get\_model()\ \ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ get\_cparams()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ ggml\_backend\_sched\_t\ get\_sched()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ uint32\_t\ n\_ctx()\ \ \ \ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00060\ \ \ \ \ uint32\_t\ n\_ctx\_seq()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00061\ \ \ \ \ uint32\_t\ n\_batch()\ \ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00062\ \ \ \ \ uint32\_t\ n\_ubatch()\ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00063\ \ \ \ \ uint32\_t\ n\_seq\_max()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ uint32\_t\ n\_threads()\ \ \ \ \ \ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00066\ \ \ \ \ uint32\_t\ n\_threads\_batch()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ llama\_memory\_t\ get\_memory()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ return\ true\ if\ the\ memory\ was\ updated}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{bool}\ memory\_update(\textcolor{keywordtype}{bool}\ optimize);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_pooling\_type\ pooling\_type()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{float}\ *\ get\_logits();}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{float}\ *\ get\_logits\_ith(int32\_t\ i);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{float}\ *\ get\_embeddings();}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{float}\ *\ get\_embeddings\_ith(int32\_t\ i);}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{float}\ *\ get\_embeddings\_seq(llama\_seq\_id\ seq\_id);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ llama\_token\ *\ get\_sampled\_tokens()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00083\ \ \ \ \ llama\_token\ \ \ get\_sampled\_token\_ith(int32\_t\ idx);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{float}\ *\ get\_sampled\_logits\_ith(int32\_t\ idx);}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ get\_sampled\_logits\_count(int32\_t\ idx);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{float}\ *\ get\_sampled\_probs\_ith(int32\_t\ idx);}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ get\_sampled\_probs\_count(int32\_t\ idx);}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ get\_sampled\_candidates\_ith(int32\_t\ idx);}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ get\_sampled\_candidates\_count(int32\_t\ idx);}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{void}\ attach\_threadpool(}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_threadpool\_t\ threadpool,}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_threadpool\_t\ threadpool\_batch);}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{void}\ detach\_threadpool();}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_n\_threads(int32\_t\ n\_threads,\ int32\_t\ n\_threads\_batch);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_abort\_callback(\textcolor{keywordtype}{bool}\ (*abort\_callback)(\textcolor{keywordtype}{void}\ *\ data),\ \textcolor{keywordtype}{void}\ *\ abort\_callback\_data);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_embeddings\ (\textcolor{keywordtype}{bool}\ value);}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_causal\_attn(\textcolor{keywordtype}{bool}\ value);}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_warmup(\textcolor{keywordtype}{bool}\ value);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_adapters\_lora(\doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ **\ adapters,\ \textcolor{keywordtype}{size\_t}\ n\_adapters,\ \textcolor{keywordtype}{float}\ *\ scales);}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{bool}\ adapters\_lora\_are\_same(\doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ **\ adapters,\ \textcolor{keywordtype}{size\_t}\ n\_adapters,\ \textcolor{keywordtype}{float}\ *\ scales);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{bool}\ set\_adapter\_cvec(}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ data,}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ len,}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_embd,}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ il\_start,}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ il\_end);}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ process\ a\ single\ ubatch\ with\ a\ specific\ graph\ type}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//\ if\ memory\_context\ is\ provided,\ it\ will\ be\ applied\ first\ to\ the\ context's\ memory}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{comment}{//\ ret\ contains\ the\ status\ of\ the\ graph\ computation}}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{comment}{//\ returns\ nullptr\ only\ if\ ret\ !=\ GGML\_STATUS\_SUCCESS}}
+\DoxyCodeLine{00123\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__result}{llm\_graph\_result}}\ *\ process\_ubatch(}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ \&\ ubatch,}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llm\_graph\_type\ \ \ gtype,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structllama__memory__context__i}{llama\_memory\_context\_i}}\ *\ mctx,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_status\ \&\ ret);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{int}\ encode(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ \&\ batch\_inp);}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordtype}{int}\ decode(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ \&\ batch\_inp);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{comment}{//\ state\ save/load}}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_get\_size();}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_get\_data(\ \ \ \ \ \ uint8\_t\ *\ dst,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_set\_data(\textcolor{keyword}{const}\ uint8\_t\ *\ src,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_seq\_get\_size(llama\_seq\_id\ seq\_id,\ llama\_state\_seq\_flags\ flags);}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_seq\_get\_data(llama\_seq\_id\ seq\_id,\ \ \ \ \ \ \ uint8\_t\ *\ dst,\ \textcolor{keywordtype}{size\_t}\ size,\ llama\_state\_seq\_flags\ flags);}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_seq\_set\_data(llama\_seq\_id\ seq\_id,\ \textcolor{keyword}{const}\ uint8\_t\ *\ src,\ \textcolor{keywordtype}{size\_t}\ size,\ llama\_state\_seq\_flags\ flags);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{bool}\ state\_load\_file(}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filepath,}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ *\ tokens\_out,}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_capacity,}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ n\_token\_count\_out);}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{bool}\ state\_save\_file(}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filepath,}
+\DoxyCodeLine{00152\ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ tokens,}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_count);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_seq\_load\_file(}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ seq\_id,}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filepath,}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ *\ tokens\_out,}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_capacity,}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ n\_token\_count\_out);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_seq\_save\_file(}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ seq\_id,}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filepath,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ tokens,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_count);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{comment}{//\ perf}}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \doxymbox{\hyperlink{structllama__perf__context__data}{llama\_perf\_context\_data}}\ perf\_get\_data()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordtype}{void}\ perf\_reset();}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ std::map<ggml\_backend\_buffer\_type\_t,\ llama\_memory\_breakdown\_data>\ memory\_breakdown()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{comment}{//\ training}}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordtype}{void}\ opt\_init(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__opt__params}{llama\_opt\_params}}\ lopt\_params);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{comment}{//\ TODO:\ more\ flexible\ combinations\ of\ logical/physical\ batch\ size\ and\ context\ size}}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keywordtype}{void}\ opt\_epoch(}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_t\ \ \ \ \ \ dataset,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_result\_t\ \ \ \ \ \ \ result\_train,}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_result\_t\ \ \ \ \ \ \ result\_eval,}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ idata\_split,}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_epoch\_callback\ callback\_train,}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_epoch\_callback\ callback\_eval);}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordtype}{void}\ opt\_epoch\_iter(}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dataset,}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_result\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result,}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<llama\_token>\ \&\ tokens,}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<llama\_token>\ \&\ labels\_sparse,}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&\ batch,}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_epoch\_callback\ \ \ \ \ \ \ \ \ \ callback,}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ train,}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ idata\_in\_loop,}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ndata\_in\_loop,}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t\_loop\_start);}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{comment}{//\ output}}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ enough\ space\ is\ available\ for\ outputs.}}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{comment}{//\ Returns\ max\ number\ of\ outputs\ for\ which\ space\ was\ reserved.}}
+\DoxyCodeLine{00211\ \ \ \ \ uint32\_t\ output\_reserve(int32\_t\ n\_outputs);}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordtype}{void}\ output\_reorder();}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{comment}{//\ map\ the\ output\ row\ index\ \`{}i`\ to\ batch\ index}}
+\DoxyCodeLine{00216\ \ \ \ \ int64\_t\ output\_resolve\_row(int32\_t\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{comment}{//\ graph}}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00223\ \ \ \ \ uint32\_t\ graph\_max\_nodes(uint32\_t\ n\_tokens)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{comment}{//\ can\ reuse\ the\ llm\_graph\_result\ instance\ of\ the\ context\ (for\ example\ to\ update\ a\ memory\ module)}}
+\DoxyCodeLine{00226\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__result}{llm\_graph\_result}}\ *\ get\_gf\_res\_reserve()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ returns\ the\ result\ of\ ggml\_backend\_sched\_graph\_compute\_async\ execution}}
+\DoxyCodeLine{00229\ \ \ \ \ ggml\_status\ graph\_compute(\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ gf,\ \textcolor{keywordtype}{bool}\ batched);}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{//\ reserve\ a\ graph\ with\ a\ dummy\ ubatch\ of\ the\ specified\ size}}
+\DoxyCodeLine{00232\ \ \ \ \ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph\_reserve(}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ uint32\_t\ n\_tokens,\ uint32\_t\ n\_seqs,\ uint32\_t\ n\_outputs,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__memory__context__i}{llama\_memory\_context\_i}}\ *\ mctx,\ \textcolor{keywordtype}{bool}\ split\_only\ =\ \textcolor{keyword}{false},\ \textcolor{keywordtype}{size\_t}\ *\ sizes\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordtype}{bool}\ set\_sampler(llama\_seq\_id\ seq\_id,\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ sampler);}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00238\ \ \ \ \ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ graph\_params(}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__result}{llm\_graph\_result}}\ *\ res,}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ \&\ ubatch,}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__memory__context__i}{llama\_memory\_context\_i}}\ *\ mctx,}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llm\_graph\_type\ \ \ gtype)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ llm\_graph\_cb\ graph\_get\_cb()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{comment}{//\ TODO:\ read/write\ lora\ adapters\ and\ cvec}}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_write\_data(\doxymbox{\hyperlink{classllama__io__write__i}{llama\_io\_write\_i}}\ \&\ io);}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_read\_data\ (\doxymbox{\hyperlink{classllama__io__read__i}{llama\_io\_read\_i}}\ \ \&\ io);}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_seq\_write\_data(\doxymbox{\hyperlink{classllama__io__write__i}{llama\_io\_write\_i}}\ \&\ io,\ llama\_seq\_id\ seq\_id,\ llama\_state\_seq\_flags\ flags);}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ state\_seq\_read\_data\ (\doxymbox{\hyperlink{classllama__io__read__i}{llama\_io\_read\_i}}\ \ \&\ io,\ llama\_seq\_id\ seq\_id,\ llama\_state\_seq\_flags\ flags);}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{comment}{//\ members}}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ \&\ model;}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ llama\_adapter\_cvec\_ptr\ \ cvec;}
+\DoxyCodeLine{00262\ \ \ \ \ llama\_adapter\_loras\_ptr\ loras;}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \ \ \ \ \doxymbox{\hyperlink{structllama__cross}{llama\_cross}}\ cross;\ \textcolor{comment}{//\ TODO:\ tmp\ for\ handling\ cross-\/attention\ -\/\ need\ something\ better\ probably}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ std::unique\_ptr<llama\_memory\_i>\ memory;}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{comment}{//\ decode\ output\ (2-\/dimensional\ array:\ [n\_outputs][n\_vocab])}}
+\DoxyCodeLine{00269\ \ \ \ \ \doxymbox{\hyperlink{structbuffer__view}{buffer\_view<float>}}\ logits\ =\ \{\textcolor{keyword}{nullptr},\ 0\};}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{comment}{//\ embeddings\ output\ (2-\/dimensional\ array:\ [n\_outputs][n\_embd])}}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{comment}{//\ populated\ only\ when\ pooling\_type\ ==\ LLAMA\_POOLING\_TYPE\_NONE}}
+\DoxyCodeLine{00273\ \ \ \ \ \doxymbox{\hyperlink{structbuffer__view}{buffer\_view<float>}}\ embd\ =\ \{\textcolor{keyword}{nullptr},\ 0\};}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__context_1_1sampling__info}{sampling\_info}}\ \{}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ !samplers.empty()\ to\ check\ if\ any\ samplers\ are\ active}}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ std::map<llama\_seq\_id,\ llama\_sampler\ *>\ samplers;}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structbuffer__view}{buffer\_view<float>}}\ \ \ \ \ \ \ logits\ \ \ \ \ =\ \{\textcolor{keyword}{nullptr},\ 0\};}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structbuffer__view}{buffer\_view<llama\_token>}}\ sampled\ \ \ \ =\ \{\textcolor{keyword}{nullptr},\ 0\};}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structbuffer__view}{buffer\_view<float>}}\ \ \ \ \ \ \ probs\ \ \ \ \ \ =\ \{\textcolor{keyword}{nullptr},\ 0\};}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structbuffer__view}{buffer\_view<llama\_token>}}\ candidates\ =\ \{\textcolor{keyword}{nullptr},\ 0\};}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ std::vector<uint32\_t>\ logits\_count;}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ std::vector<uint32\_t>\ probs\_count;}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ std::vector<uint32\_t>\ candidates\_count;}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ optimization}}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ std::vector<llama\_token>\ token\_ids\_full\_vocab;}
+\DoxyCodeLine{00290\ \ \ \ \ \};}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \ \ \ \ \doxymbox{\hyperlink{structllama__context_1_1sampling__info}{sampling\_info}}\ sampling;}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{comment}{//\ sequence\ embeddings\ output\ (map\ of\ [n\_embd]\ vectors)}}
+\DoxyCodeLine{00295\ \ \ \ \ \textcolor{comment}{//\ populated\ only\ when\ pooling\_type\ !=\ LLAMA\_POOLING\_TYPE\_NONE}}
+\DoxyCodeLine{00296\ \ \ \ \ std::map<llama\_seq\_id,\ std::vector<float>>\ embd\_seq;}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{comment}{//\ reuse\ the\ batch\_allocr\ to\ avoid\ unnecessary\ memory\ allocations}}
+\DoxyCodeLine{00299\ \ \ \ \ std::unique\_ptr<llama\_batch\_allocr>\ balloc;}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ uint32\_t\ n\_outputs\ =\ 0;\ \textcolor{comment}{//\ number\ of\ actually-\/used\ outputs\ in\ the\ current\ ubatch\ or\ last\ logical\ batch}}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \ \ \ \ std::vector<int32\_t>\ output\_ids;\ \textcolor{comment}{//\ map\ batch\ token\ positions\ to\ ids\ of\ the\ logits\ and\ embd\ buffers}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__context_1_1swap__info}{swap\_info}}\ \{}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ uint32\_t\ i0;}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ uint32\_t\ i1;}
+\DoxyCodeLine{00308\ \ \ \ \ \};}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ std::vector<swap\_info>\ output\_swaps;}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ ggml\_backend\_sched\_ptr\ sched;}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keywordtype}{bool}\ sched\_need\_reserve\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \ \ ggml\_backend\_t\ backend\_cpu\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00317\ \ \ \ \ std::vector<ggml\_backend\_ptr>\ backends;}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{comment}{//\ training}}
+\DoxyCodeLine{00320\ \ \ \ \ ggml\_opt\_context\_t\ opt\_ctx\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ ggml\_threadpool\_t\ threadpool\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00323\ \ \ \ \ ggml\_threadpool\_t\ threadpool\_batch\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ ggml\_abort\_callback\ abort\_callback\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ abort\_callback\_data\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ \ \ std::vector<std::pair<ggml\_backend\_t,\ ggml\_backend\_set\_n\_threads\_t>>\ set\_n\_threads\_fns;}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{comment}{//\ pointers\ and\ buffer\ types\ used\ for\ the\ compute\ buffer\ of\ each\ backend}}
+\DoxyCodeLine{00331\ \ \ \ \ std::vector<ggml\_backend\_t>\ \ \ \ \ \ \ \ \ \ \ \ \ backend\_ptrs;}
+\DoxyCodeLine{00332\ \ \ \ \ std::vector<ggml\_backend\_buffer\_type\_t>\ backend\_buft;}
+\DoxyCodeLine{00333\ \ \ \ \ std::vector<size\_t>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backend\_buf\_exp\_size;\ \textcolor{comment}{//\ expected\ buffer\ sizes}}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ llm\_graph\_result\_ptr\ gf\_res\_prev;}
+\DoxyCodeLine{00336\ \ \ \ \ llm\_graph\_result\_ptr\ gf\_res\_reserve;}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{comment}{//\ host\ buffer\ for\ the\ model\ output\ (logits\ and\ embeddings)}}
+\DoxyCodeLine{00339\ \ \ \ \ ggml\_backend\_buffer\_ptr\ buf\_output;}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_evaluated\_once\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{comment}{//\ env:\ LLAMA\_GRAPH\_REUSE\_DISABLE}}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{keywordtype}{bool}\ graph\_reuse\_disable\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{comment}{//\ perf}}
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keyword}{mutable}\ int64\_t\ t\_start\_us\ \ =\ 0;}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keyword}{mutable}\ int64\_t\ t\_load\_us\ \ \ =\ 0;}
+\DoxyCodeLine{00349\ \ \ \ \ \textcolor{keyword}{mutable}\ int64\_t\ t\_p\_eval\_us\ =\ 0;}
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keyword}{mutable}\ int64\_t\ t\_eval\_us\ \ \ =\ 0;}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{keyword}{mutable}\ int64\_t\ t\_compute\_start\_us\ =\ 0;}
+\DoxyCodeLine{00353\ \ \ \ \ \textcolor{keyword}{mutable}\ int64\_t\ n\_queued\_tokens\ \ \ \ =\ 0;}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keyword}{mutable}\ int32\_t\ n\_p\_eval\ =\ 0;\ \textcolor{comment}{//\ number\ of\ tokens\ in\ eval\ calls\ for\ the\ prompt\ (with\ batch\ size\ >\ 1)}}
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keyword}{mutable}\ int32\_t\ n\_eval\ \ \ =\ 0;\ \textcolor{comment}{//\ number\ of\ eval\ calls}}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keyword}{mutable}\ int32\_t\ n\_reused\ =\ 0;\ \textcolor{comment}{//\ number\ of\ times\ the\ previous\ graph\ was\ reused}}
+\DoxyCodeLine{00359\ \};}
+
+\end{DoxyCode}

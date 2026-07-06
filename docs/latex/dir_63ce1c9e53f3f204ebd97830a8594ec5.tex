@@ -1,0 +1,48 @@
+\doxysection{whisper.\+cpp/\+examples/\+stream Directory Reference}
+\hypertarget{dir_63ce1c9e53f3f204ebd97830a8594ec5}{}\label{dir_63ce1c9e53f3f204ebd97830a8594ec5}\index{whisper.cpp/examples/stream Directory Reference@{whisper.cpp/examples/stream Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_63ce1c9e53f3f204ebd97830a8594ec5_autotoc_md84}{}\doxysubsection{\texorpdfstring{whisper.\+cpp/\+examples/\+stream}{whisper.\+cpp/\+examples/\+stream}}\label{dir_63ce1c9e53f3f204ebd97830a8594ec5_autotoc_md84}
+This is a naive example of performing real-\/time inference on audio from your microphone. \doxylink{requirements_The}{The} {\ttfamily whisper-\/stream} tool samples the audio every half a second and runs the transcription continously. More info is available in \href{https://github.com/ggerganov/whisper.cpp/issues/10}{\texttt{issue \#10}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/bin/whisper-\/stream\ -\/m\ ./models/ggml-\/base.en.bin\ -\/t\ 8\ -\/-\/step\ 500\ -\/-\/length\ 5000}
+
+\end{DoxyCode}
+
+
+\href{https://user-images.githubusercontent.com/1991296/194935793-76afede7-cfa8-48d8-a80f-28ba83be7d09.mp4}{\texttt{https:\+/\+/\+user-\/images.\+githubusercontent.\+com/\+1991296/\+194935793-\/76afede7-\/cfa8-\/48d8-\/a80f-\/28ba83be7d09.\+mp4}}\hypertarget{dir_63ce1c9e53f3f204ebd97830a8594ec5_autotoc_md85}{}\doxysubsection{\texorpdfstring{Sliding window mode with VAD}{Sliding window mode with VAD}}\label{dir_63ce1c9e53f3f204ebd97830a8594ec5_autotoc_md85}
+Setting the {\ttfamily -\/-\/step} argument to {\ttfamily 0} enables the sliding window mode:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/bin/whisper-\/stream\ -\/m\ ./models/ggml-\/base.en.bin\ -\/t\ 6\ -\/-\/step\ 0\ -\/-\/length\ 30000\ -\/vth\ 0.6}
+
+\end{DoxyCode}
+
+
+In this mode, the tool will transcribe only after some speech activity is detected. A very basic VAD detector is used, but in theory a more sophisticated approach can be added. \doxylink{requirements_The}{The} {\ttfamily -\/vth} argument determines the VAD threshold -\/ higher values will make it detect silence more often. It\textquotesingle{}s best to tune it to the specific use case, but a value around {\ttfamily 0.\+6} should be OK in general. When silence is detected, it will transcribe the last {\ttfamily -\/-\/length} milliseconds of audio and output a transcription block that is suitable for parsing.\hypertarget{dir_63ce1c9e53f3f204ebd97830a8594ec5_autotoc_md86}{}\doxysubsection{\texorpdfstring{Building}{Building}}\label{dir_63ce1c9e53f3f204ebd97830a8594ec5_autotoc_md86}
+\doxylink{requirements_The}{The} {\ttfamily whisper-\/stream} tool depends on SDL2 library to capture audio from the microphone. You can build it like this:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Install\ SDL2}
+\DoxyCodeLine{\#\ On\ Debian\ based\ linux\ distributions:}
+\DoxyCodeLine{sudo\ apt-\/get\ install\ libsdl2-\/dev}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ On\ Fedora\ Linux:}
+\DoxyCodeLine{sudo\ dnf\ install\ SDL2\ SDL2-\/devel}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Install\ SDL2\ on\ Mac\ OS}
+\DoxyCodeLine{brew\ install\ sdl2}
+\DoxyCodeLine{}
+\DoxyCodeLine{cmake\ -\/B\ build\ -\/DWHISPER\_SDL2=ON}
+\DoxyCodeLine{cmake\ -\/-\/build\ build\ -\/-\/config\ Release}
+\DoxyCodeLine{}
+\DoxyCodeLine{./build/bin/whisper-\/stream}
+
+\end{DoxyCode}
+\hypertarget{dir_63ce1c9e53f3f204ebd97830a8594ec5_autotoc_md87}{}\doxysubsection{\texorpdfstring{Web version}{Web version}}\label{dir_63ce1c9e53f3f204ebd97830a8594ec5_autotoc_md87}
+This tool can also run in the browser:\+ \href{/examples/stream.wasm}{\texttt{examples/\+stream.\+wasm}} 

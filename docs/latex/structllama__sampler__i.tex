@@ -1,0 +1,40 @@
+\doxysection{llama\+\_\+sampler\+\_\+i Struct Reference}
+\hypertarget{structllama__sampler__i}{}\label{structllama__sampler__i}\index{llama\_sampler\_i@{llama\_sampler\_i}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__sampler__i_a7ecec280d4a99d64c39f7ccda131edb8}\label{structllama__sampler__i_a7ecec280d4a99d64c39f7ccda131edb8} 
+const char \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} {\bfseries name} )(const struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl)
+\item 
+\Hypertarget{structllama__sampler__i_a7b058075372ccaf29416661c0f23cca7}\label{structllama__sampler__i_a7b058075372ccaf29416661c0f23cca7} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries accept} )(struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl, llama\+\_\+token token)
+\item 
+\Hypertarget{structllama__sampler__i_aa66880c1e8cebd6f1d06ea62a30ec7f2}\label{structllama__sampler__i_aa66880c1e8cebd6f1d06ea62a30ec7f2} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries apply} )(struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl, \doxymbox{\hyperlink{structllama__token__data__array}{llama\+\_\+token\+\_\+data\+\_\+array}} \texorpdfstring{$\ast$}{*}cur\+\_\+p)
+\item 
+\Hypertarget{structllama__sampler__i_ad156397a4c0d9ea5482d7cccbf9c09e5}\label{structllama__sampler__i_ad156397a4c0d9ea5482d7cccbf9c09e5} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries reset} )(struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl)
+\item 
+\Hypertarget{structllama__sampler__i_a0dac009334eb85a79ed26fa61066d105}\label{structllama__sampler__i_a0dac009334eb85a79ed26fa61066d105} 
+struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} {\bfseries clone} )(const struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl)
+\item 
+\Hypertarget{structllama__sampler__i_a943084bb868ff17d8bbe818486091979}\label{structllama__sampler__i_a943084bb868ff17d8bbe818486091979} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries free} )(struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl)
+\item 
+\Hypertarget{structllama__sampler__i_a5bb8780850deec1e9b927e2a0f9360a9}\label{structllama__sampler__i_a5bb8780850deec1e9b927e2a0f9360a9} 
+bool(\texorpdfstring{$\ast$}{*} {\bfseries backend\+\_\+init} )(struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl, ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t buft)
+\item 
+\Hypertarget{structllama__sampler__i_a6ad39f8fd2547cab80f1a9ef9b304d82}\label{structllama__sampler__i_a6ad39f8fd2547cab80f1a9ef9b304d82} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries backend\+\_\+accept} )(struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl, struct \doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, struct \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}gf, struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}selected\+\_\+token)
+\item 
+\Hypertarget{structllama__sampler__i_a9f7ef4bfb4985e2fc54c546594b029a5}\label{structllama__sampler__i_a9f7ef4bfb4985e2fc54c546594b029a5} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries backend\+\_\+apply} )(struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl, struct \doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, struct \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}gf, struct \doxymbox{\hyperlink{structllama__sampler__data}{llama\+\_\+sampler\+\_\+data}} \texorpdfstring{$\ast$}{*}data)
+\item 
+\Hypertarget{structllama__sampler__i_a867ab835d67da9274ccbf6c30748df0c}\label{structllama__sampler__i_a867ab835d67da9274ccbf6c30748df0c} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries backend\+\_\+set\+\_\+input} )(struct \doxymbox{\hyperlink{structllama__sampler}{llama\+\_\+sampler}} \texorpdfstring{$\ast$}{*}smpl)
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama.\+h\end{DoxyCompactItemize}

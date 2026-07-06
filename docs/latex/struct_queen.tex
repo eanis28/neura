@@ -1,0 +1,114 @@
+\doxysection{Queen Struct Reference}
+\hypertarget{struct_queen}{}\label{struct_queen}\index{Queen@{Queen}}
+Inheritance diagram for Queen:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{struct_queen}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_queen_ae8faaa90e943b738c11c2d949f0d6d4c}\label{struct_queen_ae8faaa90e943b738c11c2d949f0d6d4c} 
+{\bfseries Queen} (Colors color, char pos)
+\item 
+virtual bool \doxymbox{\hyperlink{struct_queen_a8f803a5198386e2ebcaa0d1a1985202b}{move\+Pattern}} (char pos) const override
+\item 
+virtual void \doxymbox{\hyperlink{struct_queen_af5aee26f99e58b50788438c1b8c0c0f5}{reinit}} (const \doxymbox{\hyperlink{struct_state}{State}} \&state) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_piece}{Piece}}}
+\begin{DoxyCompactItemize}
+\item 
+const char \texorpdfstring{$\ast$}{*} {\bfseries name} () const
+\item 
+char {\bfseries initial} () const
+\item 
+Types {\bfseries type} () const
+\item 
+Colors {\bfseries color} () const
+\item 
+char {\bfseries pos} () const
+\item 
+void {\bfseries set\+Pos} (char pos)
+\item 
+const char \texorpdfstring{$\ast$}{*} {\bfseries coord} () const
+\item 
+const std::\+set$<$ char $>$ \& {\bfseries allowed} () const
+\item 
+bool {\bfseries can\+Reach} (char pos) const
+\item 
+void {\bfseries take} ()
+\item 
+void {\bfseries invalidate} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \doxymbox{\hyperlink{class_piece}{Piece}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_piece_a2886b1f61013eb8a536e36267b78c088}\label{class_piece_a2886b1f61013eb8a536e36267b78c088} 
+enum {\bfseries Types} :\+ char \{ \newline
+{\bfseries Pawn}
+, {\bfseries Knight}
+, {\bfseries Bishop}
+, {\bfseries Rook}
+, \newline
+{\bfseries Queen}
+, {\bfseries King}
+, {\bfseries NUM\+\_\+\+PIECES}
+ \}
+\item 
+\Hypertarget{class_piece_a819862ec664be11f2e3bca4e612742cf}\label{class_piece_a819862ec664be11f2e3bca4e612742cf} 
+enum {\bfseries Colors} :\+ char \{ {\bfseries White}
+, {\bfseries Black}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \doxymbox{\hyperlink{class_piece}{Piece}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Piece} (Types type, Colors color, char pos, std::\+set$<$ char $>$ allowed)
+\item 
+{\bfseries Piece} (const \doxymbox{\hyperlink{class_piece}{Piece}} \&)=delete
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{class_piece}{Piece}}}
+\begin{DoxyCompactItemize}
+\item 
+const Types {\bfseries m\+\_\+type}
+\item 
+const Colors {\bfseries m\+\_\+color}
+\item 
+char {\bfseries m\+\_\+pos}
+\item 
+std::\+set$<$ char $>$ {\bfseries m\+\_\+allowed}
+\item 
+bool {\bfseries m\+\_\+update} = false
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{struct_queen_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_queen_a8f803a5198386e2ebcaa0d1a1985202b}\index{Queen@{Queen}!movePattern@{movePattern}}
+\index{movePattern@{movePattern}!Queen@{Queen}}
+\doxysubsubsection{\texorpdfstring{movePattern()}{movePattern()}}
+{\footnotesize\ttfamily \label{struct_queen_a8f803a5198386e2ebcaa0d1a1985202b} 
+virtual bool Queen::\+move\+Pattern (\begin{DoxyParamCaption}\item[{char}]{pos}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_piece}{Piece}}.
+
+\Hypertarget{struct_queen_af5aee26f99e58b50788438c1b8c0c0f5}\index{Queen@{Queen}!reinit@{reinit}}
+\index{reinit@{reinit}!Queen@{Queen}}
+\doxysubsubsection{\texorpdfstring{reinit()}{reinit()}}
+{\footnotesize\ttfamily \label{struct_queen_af5aee26f99e58b50788438c1b8c0c0f5} 
+void Queen::\+reinit (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{struct_state}{State}} \&}]{state}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_piece}{Piece}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+wchess/\+libwchess/\+Chessboard.\+cpp\end{DoxyCompactItemize}

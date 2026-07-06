@@ -1,0 +1,4 @@
+var interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_encoder_begin_callback =
+[
+    [ "callback", "interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_whisper_encoder_begin_callback.html#acbc5007f2046092489c2fcf859f3450b", null ]
+];

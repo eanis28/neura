@@ -1,0 +1,847 @@
+\doxysection{dequantize.\+hpp}
+\hypertarget{dequantize_8hpp_source}{}\label{dequantize_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/dequantize.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/dequantize.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2024\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_DEQUANTIZE\_HPP}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_DEQUANTIZE\_HPP}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}common.hpp"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{typedef}\ void\ (*dequantize\_kernel\_t)(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ vx,\ \textcolor{keyword}{const}\ int64\_t\ ib,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ iqs,\ dfloat2\ \&\ v);}
+\DoxyCodeLine{00019\ \textcolor{keyword}{typedef}\ void\ (*dequantize\_kernel\_t\_reorder)(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *d,\ \textcolor{keyword}{const}\ int64\_t\ ib,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *qs,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ iqs,\ dfloat2\ \&v);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ dequantize\_q4\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *vx,\ \textcolor{keyword}{const}\ int64\_t\ ib,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ iqs,\ dfloat2\ \&v)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{const}\ block\_q4\_0\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q4\_0\ *)\ vx;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{const}\ dfloat\ d\ =\ x[ib].d;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vui\ =\ x[ib].qs[iqs];}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ v.x()\ =\ vui\ \&\ 0xF;}
+\DoxyCodeLine{00031\ \ \ \ \ v.y()\ =\ vui\ >>\ 4;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ -\/\ \{8.0f,\ 8.0f\};}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ *\ \{d,\ d\};}}
+\DoxyCodeLine{00036\ \ \ \ \ v.s0()\ =\ (v.s0()\ -\/\ 8.0f)\ *\ d;}
+\DoxyCodeLine{00037\ \ \ \ \ v.s1()\ =\ (v.s1()\ -\/\ 8.0f)\ *\ d;}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00040\ \ \ \ \ v.x()\ =\ (v.x()\ -\/\ 8.0f)\ *\ d;}
+\DoxyCodeLine{00041\ \ \ \ \ v.y()\ =\ (v.y()\ -\/\ 8.0f)\ *\ d;}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00043\ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ dequantize\_q4\_0\_reorder(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *d\_ptr,\ \textcolor{keyword}{const}\ int64\_t\ ib,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *qs,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ iqs,\ dfloat2\ \&v)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ const\ block\_q4\_0\ *\ x\ =\ (const\ block\_q4\_0\ *)\ vx;}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{const}\ dfloat\ d\ =\ (\textcolor{keyword}{const}\ dfloat)*((\textcolor{keyword}{const}\ sycl::half*)d\_ptr+ib);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vui\ =\ *((\textcolor{keyword}{const}\ uint8\_t\ *)qs+iqs);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ v.x()\ =\ vui\ \&\ 0xF;}
+\DoxyCodeLine{00054\ \ \ \ \ v.y()\ =\ vui\ >>\ 4;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ -\/\ \{8.0f,\ 8.0f\};}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ *\ \{d,\ d\};}}
+\DoxyCodeLine{00059\ \ \ \ \ v.s0()\ =\ (v.s0()\ -\/\ 8.0f)\ *\ d;}
+\DoxyCodeLine{00060\ \ \ \ \ v.s1()\ =\ (v.s1()\ -\/\ 8.0f)\ *\ d;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00063\ \ \ \ \ v.x()\ =\ (v.x()\ -\/\ 8.0f)\ *\ d;}
+\DoxyCodeLine{00064\ \ \ \ \ v.y()\ =\ (v.y()\ -\/\ 8.0f)\ *\ d;}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00066\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ dequantize\_q4\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *vx,\ \textcolor{keyword}{const}\ int64\_t\ ib,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ iqs,\ dfloat2\ \&v)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{const}\ block\_q4\_1\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q4\_1\ *)\ vx;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{const}\ dfloat\ d\ =\ x[ib].dm[0];}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{const}\ dfloat\ m\ =\ x[ib].dm[1];}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ vui\ =\ x[ib].qs[iqs];}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ v.x()\ =\ vui\ \&\ 0xF;}
+\DoxyCodeLine{00078\ \ \ \ \ v.y()\ =\ vui\ >>\ 4;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ *\ \{d,\ d\};}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ +\ \{m,\ m\};}}
+\DoxyCodeLine{00083\ \ \ \ \ v.s0()\ =\ sycl::fma(v.s0(),\ d,\ m);}
+\DoxyCodeLine{00084\ \ \ \ \ v.s1()\ =\ sycl::fma(v.s1(),\ d,\ m);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00087\ \ \ \ \ v.x()\ =\ sycl::fma(v.x(),\ d,\ m);}
+\DoxyCodeLine{00088\ \ \ \ \ v.y()\ =\ sycl::fma(v.y(),\ d,\ m);}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ dequantize\_q5\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *vx,\ \textcolor{keyword}{const}\ int64\_t\ ib,}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ iqs,\ dfloat2\ \&v)\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{const}\ block\_q5\_0\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q5\_0\ *)\ vx;}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{const}\ dfloat\ d\ =\ x[ib].d;}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ uint32\_t\ qh;}
+\DoxyCodeLine{00099\ \ \ \ \ memcpy(\&qh,\ x[ib].qh,\ \textcolor{keyword}{sizeof}(qh));}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ xh\_0\ =\ ((qh\ >>\ (iqs\ +\ \ 0))\ <<\ 4)\ \&\ 0x10;}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ xh\_1\ =\ ((qh\ >>\ (iqs\ +\ 12))\ \ \ \ \ )\ \&\ 0x10;}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ v.x()\ =\ ((x[ib].qs[iqs]\ \&\ 0xf)\ |\ xh\_0);}
+\DoxyCodeLine{00105\ \ \ \ \ v.y()\ =\ ((x[ib].qs[iqs]\ >>\ 4)\ |\ xh\_1);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ -\/\ \{16.0f,\ 16.0f\};}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ *\ \{d,\ d\};}}
+\DoxyCodeLine{00110\ \ \ \ \ v.s0()\ =\ (v.s0()\ -\/\ 16.0f)\ *\ d;}
+\DoxyCodeLine{00111\ \ \ \ \ v.s1()\ =\ (v.s1()\ -\/\ 16.0f)\ *\ d;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00114\ \ \ \ \ v.x()\ =\ (v.x()\ -\/\ 16.0f)\ *\ d;}
+\DoxyCodeLine{00115\ \ \ \ \ v.y()\ =\ (v.y()\ -\/\ 16.0f)\ *\ d;}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00117\ \}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ dequantize\_q5\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *vx,\ \textcolor{keyword}{const}\ int64\_t\ ib,}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ iqs,\ dfloat2\ \&v)\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{const}\ block\_q5\_1\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q5\_1\ *)\ vx;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{const}\ dfloat\ d\ =\ x[ib].dm[0];}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{const}\ dfloat\ m\ =\ x[ib].dm[1];}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ uint32\_t\ qh;}
+\DoxyCodeLine{00127\ \ \ \ \ memcpy(\&qh,\ x[ib].qh,\ \textcolor{keyword}{sizeof}(qh));}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ xh\_0\ =\ ((qh\ >>\ (iqs\ +\ \ 0))\ <<\ 4)\ \&\ 0x10;}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ xh\_1\ =\ ((qh\ >>\ (iqs\ +\ 12))\ \ \ \ \ )\ \&\ 0x10;}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ v.x()\ =\ ((x[ib].qs[iqs]\ \&\ 0xf)\ |\ xh\_0);}
+\DoxyCodeLine{00133\ \ \ \ \ v.y()\ =\ ((x[ib].qs[iqs]\ >>\ 4)\ |\ xh\_1);}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ *\ \{d,\ d\};}}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ +\ \{m,\ m\};}}
+\DoxyCodeLine{00138\ \ \ \ \ v.s0()\ =\ sycl::fma(v.s0(),\ d,\ m);}
+\DoxyCodeLine{00139\ \ \ \ \ v.s1()\ =\ sycl::fma(v.s1(),\ d,\ m);}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00141\ \ \ \ \ v.x()\ =\ sycl::fma(v.x(),\ d,\ m);}
+\DoxyCodeLine{00142\ \ \ \ \ v.y()\ =\ sycl::fma(v.y(),\ d,\ m);}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00144\ \}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ dequantize\_q8\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *vx,\ \textcolor{keyword}{const}\ int64\_t\ ib,}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ iqs,\ dfloat2\ \&v)\ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{const}\ block\_q8\_0\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q8\_0\ *)\ vx;}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{const}\ dfloat\ d\ =\ x[ib].d;}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ v.x()\ =\ x[ib].qs[iqs\ +\ 0];}
+\DoxyCodeLine{00153\ \ \ \ \ v.y()\ =\ x[ib].qs[iqs\ +\ 1];}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{comment}{//\ v\ =\ v\ *\ \{d,\ d\};}}
+\DoxyCodeLine{00157\ \ \ \ \ v.s0()\ *=\ d;}
+\DoxyCodeLine{00158\ \ \ \ \ v.s1()\ *=\ d;}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00160\ \ \ \ \ v.x()\ *=\ d;}
+\DoxyCodeLine{00161\ \ \ \ \ v.y()\ *=\ d;}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00163\ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00166\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q4\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,\ int64\_t\ nb32,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{//\ assume\ 32\ threads}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ \ =\ tid/8;}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ir\ \ =\ tid\%8;}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ 8*i\ +\ ir;}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keywordflow}{if}\ (ib\ >=\ nb32)\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00178\ \ \ \ \ \}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ 256*i\ +\ 32*ir\ +\ 4*il;}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{const}\ block\_q4\_0\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q4\_0\ *)vx\ +\ ib;}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ sycl::vec<sycl::half,\ 1>(x-\/>d)}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .convert<float,\ sycl::rounding\_mode::automatic>()[0];}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dm\ =\ -\/8*d;}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ q\ =\ x-\/>qs\ +\ 4*il;}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ 4;\ ++l)\ \{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ y[l+\ 0]\ =\ d\ *\ (q[l]\ \&\ 0xF)\ +\ dm;}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ y[l+16]\ =\ d\ *\ (q[l]\ >>\ \ 4)\ +\ dm;}
+\DoxyCodeLine{00192\ \ \ \ \ \}}
+\DoxyCodeLine{00193\ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00196\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q4\_0\_reorder(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,\ int64\_t\ nb32,}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{auto}\ k=nb32;}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{comment}{//\ assume\ 32\ threads}}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ lane\_ib\ =\ i\ *\ WARP\_SIZE\ +\ tid;}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordflow}{if}\ (lane\_ib\ >=\ k\ /\ QK4\_0)\ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00207\ \ \ \ \ \}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ dst\_t\ *\ y\_ptr\ =\ yy\ +\ lane\_ib\ *\ QK4\_0;}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keyword}{auto}\ qs\ =\ (\textcolor{keyword}{const}\ uint8\_t*)vx\ +\ lane\_ib\ *\ QK4\_0\ /\ 2;}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keyword}{auto}\ s\_ptr\ =\ (\textcolor{keyword}{const}\ sycl::half*)((\textcolor{keyword}{const}\ uint8\_t*)vx\ +\ k\ /\ 2)\ +\ lane\_ib;}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ float(*s\_ptr);}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ QK4\_0\ /\ 2;\ ++l)\ \{}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vq\ =\ qs[l];}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ y\_ptr[l\ +\ 0]\ =\ d\ *\ ((vq\ \&\ 0xF)\ -\/\ 8);}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ y\_ptr[l\ +\ 16]\ =\ d\ *\ ((vq\ >>\ 4)\ -\/\ 8);}
+\DoxyCodeLine{00221\ \ \ \ \ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00226\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q4\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,\ int64\_t\ nb32,}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{//\ assume\ 32\ threads}}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ \ =\ tid/8;}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ir\ \ =\ tid\%8;}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ 8*i\ +\ ir;}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keywordflow}{if}\ (ib\ >=\ nb32)\ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00238\ \ \ \ \ \}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ 256*i\ +\ 32*ir\ +\ 4*il;}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{const}\ block\_q4\_1\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q4\_1\ *)vx\ +\ ib;}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ d\ =}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ x-\/>dm.convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ q\ =\ x-\/>qs\ +\ 4*il;}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ 4;\ ++l)\ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ y[l\ +\ 0]\ =\ d.x()\ *\ (q[l]\ \&\ 0xF)\ +\ d.y();}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ y[l\ +\ 16]\ =\ d.x()\ *\ (q[l]\ >>\ 4)\ +\ d.y();}
+\DoxyCodeLine{00251\ \ \ \ \ \}}
+\DoxyCodeLine{00252\ \}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{comment}{//==================================\ k-\/quants}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00258\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q2\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keyword}{const}\ block\_q2\_K\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q2\_K\ *)\ vx;}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\ \ \ =\ tid/32;}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ l\ \ \ =\ tid\ -\/\ 32*n;}
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ is\ \ =\ 8*n\ +\ l/16;}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ q\ =\ x[i].qs[32*n\ +\ l];}
+\DoxyCodeLine{00271\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 128*n;}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keywordtype}{float}\ dall\ =\ x[i].dm[0];}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keywordtype}{float}\ dmin\ =\ x[i].dm[1];}
+\DoxyCodeLine{00275\ \ \ \ \ y[l+\ 0]\ =\ dall\ *\ (x[i].scales[is+0]\ \&\ 0xF)\ *\ ((q\ >>\ 0)\ \&\ 3)\ -\/\ dmin\ *\ (x[i].scales[is+0]\ >>\ 4);}
+\DoxyCodeLine{00276\ \ \ \ \ y[l+32]\ =\ dall\ *\ (x[i].scales[is+2]\ \&\ 0xF)\ *\ ((q\ >>\ 2)\ \&\ 3)\ -\/\ dmin\ *\ (x[i].scales[is+2]\ >>\ 4);}
+\DoxyCodeLine{00277\ \ \ \ \ y[l+64]\ =\ dall\ *\ (x[i].scales[is+4]\ \&\ 0xF)\ *\ ((q\ >>\ 4)\ \&\ 3)\ -\/\ dmin\ *\ (x[i].scales[is+4]\ >>\ 4);}
+\DoxyCodeLine{00278\ \ \ \ \ y[l+96]\ =\ dall\ *\ (x[i].scales[is+6]\ \&\ 0xF)\ *\ ((q\ >>\ 6)\ \&\ 3)\ -\/\ dmin\ *\ (x[i].scales[is+6]\ >>\ 4);}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ is\ =\ tid/16;\ \ \textcolor{comment}{//\ 0\ or\ 1}}
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid\%16;\ \ \textcolor{comment}{//\ 0...15}}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ q\ =\ x[i].qs[il]\ >>\ (2*is);}
+\DoxyCodeLine{00283\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 16*is\ +\ il;}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keywordtype}{float}\ dall\ =\ x[i].dm[0];}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keywordtype}{float}\ dmin\ =\ x[i].dm[1];}
+\DoxyCodeLine{00287\ \ \ \ \ y[\ 0]\ =\ dall\ *\ (x[i].scales[is+0]\ \&\ 0xF)\ *\ ((q\ >>\ 0)\ \&\ 3)\ -\/\ dmin\ *\ (x[i].scales[is+0]\ >>\ 4);}
+\DoxyCodeLine{00288\ \ \ \ \ y[32]\ =\ dall\ *\ (x[i].scales[is+2]\ \&\ 0xF)\ *\ ((q\ >>\ 4)\ \&\ 3)\ -\/\ dmin\ *\ (x[i].scales[is+2]\ >>\ 4);}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \}}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00294\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q3\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{keyword}{const}\ block\_q3\_K\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q3\_K\ *)\ vx;}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ r\ =\ item\_ct1.get\_local\_id(2)\ /\ 4;}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ r/2;}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ is0\ =\ r\%2;}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ l0\ =\ 16\ *\ is0\ +\ 4\ *\ (item\_ct1.get\_local\_id(2)\ \%\ 4);}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\ =\ tid\ /\ 4;}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ j\ =\ tid\ -\/\ 4*n;}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \ \ uint8\_t\ m\ =\ 1\ <<\ (4*n\ +\ j);}
+\DoxyCodeLine{00309\ \ \ \ \ int64\_t\ is\ =\ 8*n\ +\ 2*j\ +\ is0;}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keywordtype}{int}\ shift\ =\ 2*j;}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ int8\_t\ us\ =\ is\ <\ \ 4\ ?\ (x[i].scales[is-\/0]\ \&\ 0xF)\ |\ (((x[i].scales[is+8]\ >>\ 0)\ \&\ 3)\ <<\ 4)\ :}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\ <\ \ 8\ ?\ (x[i].scales[is-\/0]\ \&\ 0xF)\ |\ (((x[i].scales[is+4]\ >>\ 2)\ \&\ 3)\ <<\ 4)\ :}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\ <\ 12\ ?\ (x[i].scales[is-\/8]\ >>\ \ 4)\ |\ (((x[i].scales[is+0]\ >>\ 4)\ \&\ 3)\ <<\ 4)\ :}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (x[i].scales[is-\/8]\ >>\ \ 4)\ |\ (((x[i].scales[is-\/4]\ >>\ 6)\ \&\ 3)\ <<\ 4);}
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keywordtype}{float}\ d\_all\ =\ x[i].d;}
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keywordtype}{float}\ dl\ =\ d\_all\ *\ (us\ -\/\ 32);}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 128*n\ +\ 32*j;}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ q\ =\ x[i].qs\ +\ 32*n;}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ hm\ =\ x[i].hmask;}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ l0;\ l\ <\ l0+4;\ ++l)\ y[l]\ =\ dl\ *\ ((int8\_t)((q[l]\ >>\ shift)\ \&\ 3)\ -\/\ ((hm[l]\ \&\ m)\ ?\ 0\ :\ 4));}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ is\ \ =\ tid/16;\ \ \textcolor{comment}{//\ 0\ or\ 1}}
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ \ =\ tid\%16;\ \ \textcolor{comment}{//\ 0...15}}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ im\ \ =\ il/8;\ \ \ \ \textcolor{comment}{//\ 0...1}}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ in\ \ =\ il\%8;\ \ \ \ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 16*is\ +\ il;}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ q\ =\ x[i].qs[il]\ >>\ (2*is);}
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ h\ =\ x[i].hmask[in]\ >>\ (2*is\ +\ im);}
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ d\ =\ (float)x[i].d;}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \textcolor{keywordflow}{if}\ (is\ ==\ 0)\ \{}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ y[\ 0]\ =\ d\ *\ ((x[i].scales[0]\ \&\ 0xF)\ -\/\ 8)\ *\ ((int8\_t)((q\ >>\ 0)\ \&\ 3)\ -\/\ ((h\ >>\ 0)\ \&\ 1\ ?\ 0\ :\ 4));}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ y[32]\ =\ d\ *\ ((x[i].scales[1]\ \&\ 0xF)\ -\/\ 8)\ *\ ((int8\_t)((q\ >>\ 4)\ \&\ 3)\ -\/\ ((h\ >>\ 4)\ \&\ 1\ ?\ 0\ :\ 4));}
+\DoxyCodeLine{00340\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ y[\ 0]\ =\ d\ *\ ((x[i].scales[0]\ >>\ \ 4)\ -\/\ 8)\ *\ ((int8\_t)((q\ >>\ 0)\ \&\ 3)\ -\/\ ((h\ >>\ 0)\ \&\ 1\ ?\ 0\ :\ 4));}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ y[32]\ =\ d\ *\ ((x[i].scales[1]\ >>\ \ 4)\ -\/\ 8)\ *\ ((int8\_t)((q\ >>\ 4)\ \&\ 3)\ -\/\ ((h\ >>\ 4)\ \&\ 1\ ?\ 0\ :\ 4));}
+\DoxyCodeLine{00343\ \ \ \ \ \}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \}}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00349\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ get\_scale\_min\_k4(\textcolor{keywordtype}{int}\ j,\ \textcolor{keyword}{const}\ uint8\_t\ *\ q,\ uint8\_t\ \&\ d,\ uint8\_t\ \&\ m)\ \{}
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keywordflow}{if}\ (j\ <\ 4)\ \{}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ d\ =\ q[j]\ \&\ 63;}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ m\ =\ q[j\ +\ 4]\ \&\ 63;}
+\DoxyCodeLine{00353\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ d\ =\ (q[j+4]\ \&\ 0xF)\ |\ ((q[j-\/4]\ >>\ 6)\ <<\ 4);}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ m\ =\ (q[j+4]\ >>\ \ 4)\ |\ ((q[j-\/0]\ >>\ 6)\ <<\ 4);}
+\DoxyCodeLine{00356\ \ \ \ \ \}}
+\DoxyCodeLine{00357\ \}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00361\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ dequantize\_q4\_K\_common(dst\_t\ *\ \_\_restrict\_\_\ y,\ \textcolor{keyword}{const}\ uint8\_t\ *\ \_\_restrict\_\_\ qs\_ptr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dall,}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dmin,\ uint8\_t\ *\ \_\_restrict\_\_\ scales\_local,\ \textcolor{keywordtype}{int}\ il,\ \textcolor{keywordtype}{int}\ ir)\ \{}
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ is\ =\ 2\ *\ il;}
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ n\ \ =\ 4;}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ uint8\_t\ sc,\ m;}
+\DoxyCodeLine{00367\ \ \ \ \ get\_scale\_min\_k4(is\ +\ 0,\ scales\_local,\ sc,\ m);}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d1\ =\ dall\ *\ sc;}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m1\ =\ dmin\ *\ m;}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \ \ \ \ get\_scale\_min\_k4(is\ +\ 1,\ scales\_local,\ sc,\ m);}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d2\ =\ dall\ *\ sc;}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m2\ =\ dmin\ *\ m;}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ sycl::vec<uint8\_t,\ n>\ q\_vec\ =\ vec\_aligned\_load<uint8\_t,\ n>(qs\_ptr\ +\ 32\ *\ il\ +\ n\ *\ ir);}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ n;\ ++l)\ \{}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ y[l\ +\ 0]\ \ =\ d1\ *\ (q\_vec[l]\ \&\ 0xF)\ -\/\ m1;}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ y[l\ +\ 32]\ =\ d2\ *\ (q\_vec[l]\ >>\ 4)\ -\/\ m2;}
+\DoxyCodeLine{00379\ \ \ \ \ \}}
+\DoxyCodeLine{00380\ \}}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00383\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q4\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t*\ scales\_local,\ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00385\ \ \ \ \ \textcolor{keyword}{const}\ block\_q4\_K\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q4\_K\ *)\ vx;}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ \ =\ tid\ /\ 8;}
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ir\ \ =\ tid\ \%\ 8;}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i\ *\ QK\_K\ +\ 64\ *\ il\ +\ 4\ *\ ir;}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ dm\ =\ x[i].dm;}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dall\ =\ dm[0];}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dmin\ =\ dm[1];}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keywordflow}{if}\ (tid\ <\ 12)\ \{}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ scales\_local[tid]\ =\ x[i].scales[tid];}
+\DoxyCodeLine{00402\ \ \ \ \ \}}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \ \ \ \ item\_ct1.barrier(sycl::access::fence\_space::local\_space);}
+\DoxyCodeLine{00405\ \ \ \ \ dequantize\_q4\_K\_common(y,\ x[i].qs,\ dall,\ dmin,\ scales\_local,\ il,\ ir);}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ q\ =\ x[i].qs;}
+\DoxyCodeLine{00409\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K;}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)x[i].dm[0];}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m\ =\ (float)x[i].dm[1];}
+\DoxyCodeLine{00412\ \ \ \ \ y[tid+\ 0]\ =\ d\ *\ (x[i].scales[0]\ \&\ 0xF)\ *\ (q[tid]\ \&\ 0xF)\ -\/\ m\ *\ (x[i].scales[0]\ >>\ 4);}
+\DoxyCodeLine{00413\ \ \ \ \ y[tid+32]\ =\ d\ *\ (x[i].scales[1]\ \&\ 0xF)\ *\ (q[tid]\ >>\ \ 4)\ -\/\ m\ *\ (x[i].scales[1]\ >>\ 4);}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00415\ \}}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00417\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00418\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q4\_K\_reorder(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,\ uint8\_t\ *\ scales\_local,}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<1>\ \&\ item\_ct1,\ int64\_t\ nb)\ \{}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ \ \ =\ item\_ct1.get\_group(0);\ \ \ \ \ \textcolor{comment}{//\ block\ index}}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(0);\ \ \textcolor{comment}{//\ thread\ index\ within\ block}}
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ \ =\ tid\ /\ 8;}
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ir\ \ =\ tid\ \%\ 8;}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i\ *\ QK\_K\ +\ 64\ *\ il\ +\ 4\ *\ ir;}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ base\ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }uint8\_t\ *\textcolor{keyword}{>}(vx);}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ \ \ \ qs\_offset\ \ \ \ \ =\ i\ *\ (QK\_K\ /\ 2);}
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ \ \ \ scales\_offset\ =\ nb\ *\ (QK\_K\ /\ 2)\ +\ i\ *\ K\_SCALE\_SIZE;}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ \ \ \ dm\_offset\ \ \ \ \ =\ nb\ *\ (QK\_K\ /\ 2)\ +\ nb\ *\ K\_SCALE\_SIZE\ +\ i\ *\ \textcolor{keyword}{sizeof}(ggml\_half2);}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ \ qs\_ptr\ \ \ \ \ =\ base\ +\ qs\_offset;}
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ \ scales\_ptr\ =\ base\ +\ scales\_offset;}
+\DoxyCodeLine{00434\ \ \ \ \ ggml\_half2\ \ \ \ \ \ \ \ \ dm\_values\ \ =\ *\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }ggml\_half2\ *\textcolor{keyword}{>}(base\ +\ dm\_offset);}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dall\ =\ dm\_values.x();}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dmin\ =\ dm\_values.y();}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \ \ \ \ \textcolor{keywordflow}{if}\ (tid\ <\ 12)\ \{}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ scales\_local[tid]\ =\ scales\_ptr[tid];}
+\DoxyCodeLine{00441\ \ \ \ \ \}}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ item\_ct1.barrier(sycl::access::fence\_space::local\_space);}
+\DoxyCodeLine{00444\ \ \ \ \ dequantize\_q4\_K\_common(y,\ qs\_ptr,\ dall,\ dmin,\ scales\_local,\ il,\ ir);}
+\DoxyCodeLine{00445\ \}}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00447\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00448\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q5\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keyword}{const}\ block\_q5\_K\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q5\_K\ *)\ vx;}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{comment}{//\ assume\ 64\ threads\ -\/\ this\ is\ very\ slightly\ better\ than\ the\ one\ below}}
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00457\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ \ =\ tid/16;\ \ \ \textcolor{comment}{//\ il\ is\ in\ 0...3}}
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ir\ \ =\ tid\%16;\ \ \ \textcolor{comment}{//\ ir\ is\ in\ 0...15}}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ is\ \ =\ 2*il;\ \ \ \ \ \textcolor{comment}{//\ is\ is\ in\ 0...6}}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 64*il\ +\ 2*ir;}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dall\ =\ x[i].dm[0];}
+\DoxyCodeLine{00464\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ dmin\ =\ x[i].dm[1];}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ ql\ =\ x[i].qs\ +\ 32*il\ +\ 2*ir;}
+\DoxyCodeLine{00467\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ qh\ =\ x[i].qh\ +\ 2*ir;}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \ \ \ \ uint8\_t\ sc,\ m;}
+\DoxyCodeLine{00470\ \ \ \ \ get\_scale\_min\_k4(is\ +\ 0,\ x[i].scales,\ sc,\ m);}
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d1\ =\ dall\ *\ sc;\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m1\ =\ dmin\ *\ m;}
+\DoxyCodeLine{00472\ \ \ \ \ get\_scale\_min\_k4(is\ +\ 1,\ x[i].scales,\ sc,\ m);}
+\DoxyCodeLine{00473\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d2\ =\ dall\ *\ sc;\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ m2\ =\ dmin\ *\ m;}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \ \ \ \ uint8\_t\ \ \ hm\ \ =\ 1\ <<\ (2*il);}
+\DoxyCodeLine{00476\ \ \ \ \ y[\ 0]\ =\ d1\ *\ ((ql[\ 0]\ \&\ 0xF)\ +\ (qh[\ 0]\ \&\ hm\ ?\ 16\ :\ 0))\ -\/\ m1;}
+\DoxyCodeLine{00477\ \ \ \ \ y[\ 1]\ =\ d1\ *\ ((ql[\ 1]\ \&\ 0xF)\ +\ (qh[\ 1]\ \&\ hm\ ?\ 16\ :\ 0))\ -\/\ m1;}
+\DoxyCodeLine{00478\ \ \ \ \ hm\ <<=\ 1;}
+\DoxyCodeLine{00479\ \ \ \ \ y[32]\ =\ d2\ *\ ((ql[\ 0]\ >>\ \ 4)\ +\ (qh[\ 0]\ \&\ hm\ ?\ 16\ :\ 0))\ -\/\ m2;}
+\DoxyCodeLine{00480\ \ \ \ \ y[33]\ =\ d2\ *\ ((ql[\ 1]\ >>\ \ 4)\ +\ (qh[\ 1]\ \&\ hm\ ?\ 16\ :\ 0))\ -\/\ m2;}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00482\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ q\ =\ x[i].qs[tid];}
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ im\ =\ tid/8;\ \ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ in\ =\ tid\%8;\ \ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00486\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ is\ =\ tid/16;\ \textcolor{comment}{//\ 0\ or\ 1}}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ h\ =\ x[i].qh[in]\ >>\ im;}
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ x[i].d;}
+\DoxyCodeLine{00489\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ tid;}
+\DoxyCodeLine{00490\ \ \ \ \ y[\ 0]\ =\ d\ *\ x[i].scales[is+0]\ *\ ((q\ \&\ 0xF)\ -\/\ ((h\ >>\ 0)\ \&\ 1\ ?\ 0\ :\ 16));}
+\DoxyCodeLine{00491\ \ \ \ \ y[32]\ =\ d\ *\ x[i].scales[is+2]\ *\ ((q\ >>\ \ 4)\ -\/\ ((h\ >>\ 4)\ \&\ 1\ ?\ 0\ :\ 16));}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00493\ \}}
+\DoxyCodeLine{00494\ }
+\DoxyCodeLine{00495\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00496\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q6\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{keyword}{const}\ block\_q6\_K\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_q6\_K\ *)\ vx;}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{comment}{//\ assume\ 64\ threads\ -\/\ this\ is\ very\ slightly\ better\ than\ the\ one\ below}}
+\DoxyCodeLine{00504\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ip\ \ =\ tid/32;\ \ \ \textcolor{comment}{//\ ip\ is\ 0\ or\ 1}}
+\DoxyCodeLine{00506\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ \ =\ tid\ -\/\ 32*ip;\ \textcolor{comment}{//\ 0...32}}
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ is\ \ =\ 8*ip\ +\ il/16;}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 128*ip\ +\ il;}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ x[i].d;}
+\DoxyCodeLine{00512\ }
+\DoxyCodeLine{00513\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ ql\ =\ x[i].ql\ +\ 64*ip\ +\ il;}
+\DoxyCodeLine{00514\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ \ qh\ =\ x[i].qh[32*ip\ +\ il];}
+\DoxyCodeLine{00515\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ \ *\ sc\ =\ x[i].scales\ +\ is;}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ \ \ \ \ y[\ 0]\ =\ d\ *\ sc[0]\ *\ ((int8\_t)((ql[\ 0]\ \&\ 0xF)\ |\ (((qh\ >>\ 0)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00518\ \ \ \ \ y[32]\ =\ d\ *\ sc[2]\ *\ ((int8\_t)((ql[32]\ \&\ 0xF)\ |\ (((qh\ >>\ 2)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00519\ \ \ \ \ y[64]\ =\ d\ *\ sc[4]\ *\ ((int8\_t)((ql[\ 0]\ \ >>\ 4)\ |\ (((qh\ >>\ 4)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00520\ \ \ \ \ y[96]\ =\ d\ *\ sc[6]\ *\ ((int8\_t)((ql[32]\ \ >>\ 4)\ |\ (((qh\ >>\ 6)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00521\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{comment}{//\ assume\ 32\ threads}}
+\DoxyCodeLine{00524\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00525\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ip\ \ =\ tid/16;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0\ or\ 1}}
+\DoxyCodeLine{00526\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ \ =\ tid\ -\/\ 16*ip;\ \ \ \ \textcolor{comment}{//\ 0...15}}
+\DoxyCodeLine{00527\ }
+\DoxyCodeLine{00528\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 16*ip\ +\ il;}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ x[i].d;}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ \ ql\ =\ x[i].ql[16*ip\ +\ il];}
+\DoxyCodeLine{00533\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ \ qh\ =\ x[i].qh[il]\ >>\ (2*ip);}
+\DoxyCodeLine{00534\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ \ *\ sc\ =\ x[i].scales;}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \ \ \ \ y[\ 0]\ =\ d\ *\ sc[ip+0]\ *\ ((int8\_t)((ql\ \&\ 0xF)\ |\ (((qh\ >>\ 0)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00537\ \ \ \ \ y[32]\ =\ d\ *\ sc[ip+2]\ *\ ((int8\_t)((ql\ \ >>\ 4)\ |\ (((qh\ >>\ 4)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00539\ \}}
+\DoxyCodeLine{00540\ }
+\DoxyCodeLine{00541\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00542\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_q6\_K\_reorder(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&\ item\_ct1,\ int64\_t\ n\_blocks)\ \{}
+\DoxyCodeLine{00544\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00547\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ip\ \ =\ tid\ /\ 32;\ \ \ \ \ \ \ \textcolor{comment}{//\ ip\ is\ 0\ or\ 1}}
+\DoxyCodeLine{00548\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ \ =\ tid\ -\/\ 32\ *\ ip;\ \ \textcolor{comment}{//\ 0...32}}
+\DoxyCodeLine{00549\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ is\ \ =\ 8\ *\ ip\ +\ il\ /\ 16;}
+\DoxyCodeLine{00550\ }
+\DoxyCodeLine{00551\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ base\_ptr\ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }uint8\_t\ *\textcolor{keyword}{>}(vx);}
+\DoxyCodeLine{00552\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ ql\_offset\ \ \ \ \ \ \ \ \ \ =\ ib\ *\ (QK\_K\ /\ 2);}
+\DoxyCodeLine{00553\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ qh\_offset\ \ \ \ \ \ \ \ \ \ =\ (QK\_K\ /\ 2)\ *\ n\_blocks\ +\ (QK\_K\ /\ 4)\ *\ ib;}
+\DoxyCodeLine{00554\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ base\_scales\_offset\ =\ (QK\_K\ /\ 2)\ *\ n\_blocks\ +\ (QK\_K\ /\ 4)\ *\ n\_blocks\ +\ (QK\_K\ /\ 16)\ *\ ib;}
+\DoxyCodeLine{00555\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ base\_d\_offset\ \ \ \ \ \ =\ ((QK\_K\ /\ 2)\ +\ (QK\_K\ /\ 4)\ +\ (QK\_K\ /\ 16))\ *\ n\_blocks;}
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ ql\_ptr\ \ \ \ \ \ \ \ \ \ \ \ \ =\ base\_ptr\ +\ ql\_offset;}
+\DoxyCodeLine{00557\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ qh\_ptr\ \ \ \ \ \ \ \ \ \ \ \ \ =\ base\_ptr\ +\ qh\_offset;}
+\DoxyCodeLine{00558\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ \ \ scales\_ptr\ \ \ \ \ \ \ \ \ =\ base\_ptr\ +\ base\_scales\_offset;}
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{keyword}{const}\ ggml\_half\ *\ d\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ (\textcolor{keyword}{const}\ ggml\_half\ *)\ (base\_ptr\ +\ base\_d\_offset)\ +\ ib;}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00561\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ ib\ *\ QK\_K\ +\ 128\ *\ ip\ +\ il;}
+\DoxyCodeLine{00562\ }
+\DoxyCodeLine{00563\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ ql\ =\ ql\_ptr\ +\ 64\ *\ ip\ +\ il;}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ \ qh\ =\ *(qh\_ptr\ +\ 32\ *\ ip\ +\ il);}
+\DoxyCodeLine{00565\ \ \ \ \ \textcolor{keyword}{const}\ int8\_t\ *\ \ sc\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }int8\_t\ *\textcolor{keyword}{>}(scales\_ptr\ +\ is);}
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00567\ \ \ \ \ y[0]\ \ =\ *d\ *\ sc[0]\ *\ ((int8\_t)\ ((ql[0]\ \&\ 0xF)\ |\ (((qh\ >>\ 0)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00568\ \ \ \ \ y[32]\ =\ *d\ *\ sc[2]\ *\ ((int8\_t)\ ((ql[32]\ \&\ 0xF)\ |\ (((qh\ >>\ 2)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00569\ \ \ \ \ y[64]\ =\ *d\ *\ sc[4]\ *\ ((int8\_t)\ ((ql[0]\ >>\ 4)\ |\ (((qh\ >>\ 4)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00570\ \ \ \ \ y[96]\ =\ *d\ *\ sc[6]\ *\ ((int8\_t)\ ((ql[32]\ >>\ 4)\ |\ (((qh\ >>\ 6)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00571\ \}}
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00574\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_iq2\_xxs(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1,}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ *iq2xxs\_grid\_ptr,}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *ksigns\_iq2xs\_ptr,}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *kmask\_iq2xs\_ptr)\ \{}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00581\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq2\_xxs\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_iq2\_xxs\ \ *)\ vx;}
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00583\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00585\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00587\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 8*il;}
+\DoxyCodeLine{00588\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ q2\ =\ x[i].qs\ +\ 4*ib;}
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ aux8\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)q2;}
+\DoxyCodeLine{00590\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ grid\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)(iq2xxs\_grid\_ptr\ +\ aux8[il]);}
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ aux32\ =\ q2[2]\ |\ (q2[3]\ <<\ 16);}
+\DoxyCodeLine{00592\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)x[i].d\ *\ (0.5f\ +\ (aux32\ >>\ 28))\ *\ 0.25f;}
+\DoxyCodeLine{00593\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ signs\ =\ ksigns\_iq2xs\_ptr[(aux32\ >>\ 7*il)\ \&\ 127];}
+\DoxyCodeLine{00594\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 8;\ ++j)\ y[j]\ =\ d\ *\ grid[j]\ *\ (signs\ \&\ kmask\_iq2xs\_ptr[j]\ ?\ -\/1.f\ :\ 1.f);}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00596\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00599\ \}}
+\DoxyCodeLine{00600\ }
+\DoxyCodeLine{00601\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00602\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_iq2\_xs(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1,}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ *iq2xs\_grid,}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *ksigns\_iq2xs,}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *kmask\_iq2xs)\ \{}
+\DoxyCodeLine{00607\ }
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00609\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq2\_xs\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_iq2\_xs\ *)\ vx;}
+\DoxyCodeLine{00610\ }
+\DoxyCodeLine{00611\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00613\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00614\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00615\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 8*il;}
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ q2\ =\ x[i].qs\ +\ 4*ib;}
+\DoxyCodeLine{00617\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ grid\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)(iq2xs\_grid\ +\ (q2[il]\ \&\ 511));}
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)x[i].d\ *\ (0.5f\ +\ ((x[i].scales[ib]\ >>\ 4*(il/2))\ \&\ 0xf))\ *\ 0.25f;}
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ signs\ =\ ksigns\_iq2xs[q2[il]\ >>\ 9];}
+\DoxyCodeLine{00620\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 8;\ ++j)\ y[j]\ =\ d\ *\ grid[j]\ *\ (signs\ \&\ kmask\_iq2xs[j]\ ?\ -\/1.f\ :\ 1.f);}
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00622\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00624\ }
+\DoxyCodeLine{00625\ \}}
+\DoxyCodeLine{00626\ }
+\DoxyCodeLine{00627\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00628\ \_\_dpct\_inline\_\_\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00629\ dequantize\_block\_iq2\_s(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vx,\ dst\_t\ *\_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00633\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq2\_s\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_iq2\_s\ *)\ vx;}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00637\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00638\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00639\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 8*il;}
+\DoxyCodeLine{00640\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ grid\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)(iq2s\_grid\ +\ (x[i].qs[4*ib+il]\ |\ ((x[i].qh[ib]\ <<\ (8-\/2*il))\ \&\ 0x300)));}
+\DoxyCodeLine{00641\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)x[i].d\ *\ (0.5f\ +\ ((x[i].scales[ib]\ >>\ 4*(il/2))\ \&\ 0xf))\ *\ 0.25f;}
+\DoxyCodeLine{00642\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ signs\ =\ x[i].qs[QK\_K/8+4*ib+il];}
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 8;\ ++j)}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ y[j]\ =\ d\ *\ grid[j]\ *\ (signs\ \&\ kmask\_iq2xs[j]\ ?\ -\/1.f\ :\ 1.f);}
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00647\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{00648\ }
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00650\ }
+\DoxyCodeLine{00651\ \}}
+\DoxyCodeLine{00652\ }
+\DoxyCodeLine{00653\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00654\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_iq3\_xxs(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1,}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *iq3xxs\_grid,}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *ksigns\_iq2xs,}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *kmask\_iq2xs)\ \{}
+\DoxyCodeLine{00659\ }
+\DoxyCodeLine{00660\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00661\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq3\_xxs\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_iq3\_xxs\ \ *)\ vx;}
+\DoxyCodeLine{00662\ }
+\DoxyCodeLine{00663\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00665\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00666\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00667\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 8*il;}
+\DoxyCodeLine{00668\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ q3\ =\ x[i].qs\ +\ 8*ib;}
+\DoxyCodeLine{00669\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ gas\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)(x[i].qs\ +\ QK\_K/4)\ +\ 2*ib;}
+\DoxyCodeLine{00670\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ grid1\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)(iq3xxs\_grid\ +\ q3[2*il+0]);}
+\DoxyCodeLine{00671\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ grid2\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)(iq3xxs\_grid\ +\ q3[2*il+1]);}
+\DoxyCodeLine{00672\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ aux32\ =\ gas[0]\ |\ (gas[1]\ <<\ 16);}
+\DoxyCodeLine{00673\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)x[i].d\ *\ (0.5f\ +\ (aux32\ >>\ 28))\ *\ 0.5f;}
+\DoxyCodeLine{00674\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ signs\ =\ ksigns\_iq2xs[(aux32\ >>\ 7*il)\ \&\ 127];}
+\DoxyCodeLine{00675\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 4;\ ++j)\ \{}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ y[j+0]\ =\ d\ *\ grid1[j]\ *\ (signs\ \&\ kmask\_iq2xs[j+0]\ ?\ -\/1.f\ :\ 1.f);}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ y[j+4]\ =\ d\ *\ grid2[j]\ *\ (signs\ \&\ kmask\_iq2xs[j+4]\ ?\ -\/1.f\ :\ 1.f);}
+\DoxyCodeLine{00678\ \ \ \ \ \}}
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00680\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{00681\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00683\ \}}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00685\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00686\ \_\_dpct\_inline\_\_\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00687\ dequantize\_block\_iq3\_s(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vx,\ dst\_t\ *\_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1,}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *kmask\_iq2xs,\ \textcolor{keyword}{const}\ uint32\_t\ *iq3s\_grid)\ \{}
+\DoxyCodeLine{00690\ }
+\DoxyCodeLine{00691\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00692\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq3\_s\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_iq3\_s\ *)\ vx;}
+\DoxyCodeLine{00693\ }
+\DoxyCodeLine{00694\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00696\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00697\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00698\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 8*il;}
+\DoxyCodeLine{00699\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ qs\ =\ x[i].qs\ +\ 8*ib;}
+\DoxyCodeLine{00700\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ grid1\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)(iq3s\_grid\ +\ (qs[2*il+0]\ |\ ((x[i].qh[ib]\ <<\ (8-\/2*il))\ \&\ 256)));}
+\DoxyCodeLine{00701\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ grid2\ =\ (\textcolor{keyword}{const}\ uint8\_t\ *)(iq3s\_grid\ +\ (qs[2*il+1]\ |\ ((x[i].qh[ib]\ <<\ (7-\/2*il))\ \&\ 256)));}
+\DoxyCodeLine{00702\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)x[i].d\ *\ (1\ +\ 2*((x[i].scales[ib/2]\ >>\ 4*(ib\%2))\ \&\ 0xf));}
+\DoxyCodeLine{00703\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ signs\ =\ x[i].signs[4*ib\ +\ il];}
+\DoxyCodeLine{00704\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00705\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 4;\ ++j)\ \{}
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ y[j+0]\ =\ d\ *\ grid1[j]\ *\ (signs\ \&\ kmask\_iq2xs[j+0]\ ?\ -\/1.f\ :\ 1.f);}
+\DoxyCodeLine{00707\ \ \ \ \ \ \ \ \ y[j+4]\ =\ d\ *\ grid2[j]\ *\ (signs\ \&\ kmask\_iq2xs[j+4]\ ?\ -\/1.f\ :\ 1.f);}
+\DoxyCodeLine{00708\ \ \ \ \ \}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00710\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00712\ }
+\DoxyCodeLine{00713\ \}}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00715\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00716\ \_\_dpct\_inline\_\_\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00717\ dequantize\_block\_iq1\_s(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vx,\ dst\_t\ *\_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00718\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1,}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *iq1s\_grid\_gpu)\ \{}
+\DoxyCodeLine{00720\ }
+\DoxyCodeLine{00721\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00722\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq1\_s\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_iq1\_s\ \ *)\ vx;}
+\DoxyCodeLine{00723\ }
+\DoxyCodeLine{00724\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00725\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00726\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00727\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00728\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 8*il;}
+\DoxyCodeLine{00729\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ delta\ =\ x[i].qh[ib]\ \&\ 0x8000\ ?\ -\/1\ -\/\ IQ1S\_DELTA\ :\ -\/1\ +\ IQ1S\_DELTA;}
+\DoxyCodeLine{00730\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)x[i].d\ *\ (2*((x[i].qh[ib]\ >>\ 12)\ \&\ 7)\ +\ 1);}
+\DoxyCodeLine{00731\ \ \ \ \ uint32\_t\ grid32[2];\ \textcolor{keyword}{const}\ int8\_t\ *\ q\ =\ (\textcolor{keyword}{const}\ int8\_t\ *)grid32;}
+\DoxyCodeLine{00732\ \ \ \ \ grid32[0]\ =\ iq1s\_grid\_gpu[x[i].qs[4*ib+il]\ |\ (((x[i].qh[ib]\ >>\ 3*il)\ \&\ 7)\ <<\ 8)];}
+\DoxyCodeLine{00733\ \ \ \ \ grid32[1]\ =\ (grid32[0]\ >>\ 4)\ \&\ 0x0f0f0f0f;}
+\DoxyCodeLine{00734\ \ \ \ \ grid32[0]\ \&=\ 0x0f0f0f0f;}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00736\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 8;\ ++j)\ \{}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ y[j]\ =\ d\ *\ (q[j]\ +\ delta);}
+\DoxyCodeLine{00738\ \ \ \ \ \}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00740\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00742\ }
+\DoxyCodeLine{00743\ \}}
+\DoxyCodeLine{00744\ }
+\DoxyCodeLine{00745\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00746\ \_\_dpct\_inline\_\_\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00747\ dequantize\_block\_iq1\_m(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vx,\ dst\_t\ *\_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1,}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ *iq1s\_grid\_gpu)\ \{}
+\DoxyCodeLine{00750\ }
+\DoxyCodeLine{00751\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00752\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq1\_m\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_iq1\_m\ \ *)\ vx;}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\#if\ QK\_K\ ==\ 256}}
+\DoxyCodeLine{00756\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00757\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00758\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 8*il;}
+\DoxyCodeLine{00759\ \ \ \ \ \textcolor{keyword}{const}\ uint16\_t\ *\ sc\ =\ (\textcolor{keyword}{const}\ uint16\_t\ *)x[i].scales;}
+\DoxyCodeLine{00760\ \ \ \ \ iq1m\_scale\_t\ scale;}
+\DoxyCodeLine{00761\ \ \ \ \ scale.u16\ =\ (sc[0]\ >>\ 12)\ |\ ((sc[1]\ >>\ 8)\ \&\ 0x00f0)\ |\ ((sc[2]\ >>\ 4)\ \&\ 0x0f00)\ |\ (sc[3]\ \&\ 0xf000);}
+\DoxyCodeLine{00762\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ib16\ =\ 2*ib\ +\ il/2;\ \textcolor{comment}{//\ sc[ib16/4]\ >>\ 3*(ib16\%4)\ -\/>\ sc[ib/2]\ >>\ 3*((2*ib+il/2)\%4);}}
+\DoxyCodeLine{00763\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)scale.f16\ *\ (2*((sc[ib16/4]\ >>\ 3*(ib16\%4))\ \&\ 0x7)\ +\ 1);}
+\DoxyCodeLine{00764\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ delta\ =\ x[i].qh[2*ib+il/2]\ \&\ (0x08\ <<\ 4*(il\%2))\ ?\ -\/1\ -\/\ IQ1M\_DELTA\ :\ -\/1\ +\ IQ1M\_DELTA;}
+\DoxyCodeLine{00765\ \ \ \ \ uint32\_t\ grid32[2];\ \textcolor{keyword}{const}\ int8\_t\ *\ q\ =\ (\textcolor{keyword}{const}\ int8\_t\ *)grid32;}
+\DoxyCodeLine{00766\ \ \ \ \ grid32[0]\ =\ iq1s\_grid\_gpu[x[i].qs[4*ib+il]\ |\ (((x[i].qh[2*ib+il/2]\ >>\ 4*(il\%2))\ \&\ 7)\ <<\ 8)];}
+\DoxyCodeLine{00767\ \ \ \ \ grid32[1]\ =\ (grid32[0]\ >>\ 4)\ \&\ 0x0f0f0f0f;}
+\DoxyCodeLine{00768\ \ \ \ \ grid32[0]\ \&=\ 0x0f0f0f0f;}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00770\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 8;\ ++j)\ \{}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ y[j]\ =\ d\ *\ (q[j]\ +\ delta);}
+\DoxyCodeLine{00772\ \ \ \ \ \}}
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00774\ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{00775\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00776\ }
+\DoxyCodeLine{00777\ \}}
+\DoxyCodeLine{00778\ }
+\DoxyCodeLine{00779\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00780\ \_\_dpct\_inline\_\_\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00781\ dequantize\_block\_iq4\_nl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vx,\ dst\_t\ *\_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00785\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq4\_nl\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_iq4\_nl\ *)\ vx\ +\ i*(QK\_K/QK4\_NL);}
+\DoxyCodeLine{00786\ }
+\DoxyCodeLine{00787\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00788\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00789\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00790\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 4*il;}
+\DoxyCodeLine{00791\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ q4\ =\ x[ib].qs\ +\ 4*il;}
+\DoxyCodeLine{00792\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)x[ib].d;}
+\DoxyCodeLine{00793\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00794\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 4;\ ++j)\ \{}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ y[j+\ 0]\ =\ d\ *\ kvalues\_iq4nl[q4[j]\ \&\ 0xf];}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ y[j+16]\ =\ d\ *\ kvalues\_iq4nl[q4[j]\ >>\ \ 4];}
+\DoxyCodeLine{00797\ \ \ \ \ \}}
+\DoxyCodeLine{00798\ }
+\DoxyCodeLine{00799\ \}}
+\DoxyCodeLine{00800\ }
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00803\ \_\_dpct\_inline\_\_\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00804\ dequantize\_block\_iq4\_xs(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\_\_restrict\_\_\ vx,\ dst\_t\ *\_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00806\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ i\ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00807\ \ \ \ \ \textcolor{keyword}{const}\ block\_iq4\_xs\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_iq4\_xs\ *)vx;}
+\DoxyCodeLine{00808\ }
+\DoxyCodeLine{00809\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00810\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00811\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00812\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 4*il;}
+\DoxyCodeLine{00813\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ q4\ =\ x[i].qs\ +\ 16*ib\ +\ 4*il;}
+\DoxyCodeLine{00814\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ (float)x[i].d\ *\ ((((x[i].scales\_l[ib/2]\ >>\ 4*(ib\%2))\ \&\ 0xf)\ |\ (((x[i].scales\_h\ >>\ 2*ib)\ \&\ 3)\ <<\ 4))\ -\/\ 32);}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00816\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 4;\ ++j)\ \{}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ y[j+\ 0]\ =\ d\ *\ kvalues\_iq4nl[q4[j]\ \&\ 0xf];}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ y[j+16]\ =\ d\ *\ kvalues\_iq4nl[q4[j]\ >>\ \ 4];}
+\DoxyCodeLine{00819\ \ \ \ \ \}}
+\DoxyCodeLine{00820\ \}}
+\DoxyCodeLine{00821\ }
+\DoxyCodeLine{00822\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t>}
+\DoxyCodeLine{00823\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ dequantize\_block\_mxfp4(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ vx,\ dst\_t\ *\ \_\_restrict\_\_\ yy,}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\ \&item\_ct1)\ \{}
+\DoxyCodeLine{00825\ \ \ \ \ \textcolor{comment}{//\ auto\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\_ct1\ =\ sycl::ext::oneapi::this\_work\_item::get\_nd\_item<3>();}}
+\DoxyCodeLine{00826\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ \ \ \ \ \ \ i\ \ \ \ \ \ \ \ =\ item\_ct1.get\_group(2);}
+\DoxyCodeLine{00827\ \ \ \ \ \textcolor{keyword}{const}\ block\_mxfp4\ *\ x\ =\ (\textcolor{keyword}{const}\ block\_mxfp4\ *)\ vx\ +\ i*(QK\_K/QK\_MXFP4);}
+\DoxyCodeLine{00828\ }
+\DoxyCodeLine{00829\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ \ \ \ tid\ =\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00830\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ il\ =\ tid/8;\ \textcolor{comment}{//\ 0...3}}
+\DoxyCodeLine{00831\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ib\ =\ tid\%8;\ \textcolor{comment}{//\ 0...7}}
+\DoxyCodeLine{00832\ \ \ \ \ dst\_t\ *\ y\ =\ yy\ +\ i*QK\_K\ +\ 32*ib\ +\ 4*il;}
+\DoxyCodeLine{00833\ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ \ *\ q4\ =\ x[ib].qs\ +\ 4*il;}
+\DoxyCodeLine{00834\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ =\ ggml\_sycl\_e8m0\_to\_fp32(x[ib].e);}
+\DoxyCodeLine{00835\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 4;\ ++j)\ \{}
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ y[j+\ 0]\ =\ d\ *\ kvalues\_mxfp4[q4[j]\ \&\ 0xf]*0.5f;}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ y[j+16]\ =\ d\ *\ kvalues\_mxfp4[q4[j]\ >>\ \ 4]*0.5f;}
+\DoxyCodeLine{00838\ \ \ \ \ \}}
+\DoxyCodeLine{00839\ \}}
+\DoxyCodeLine{00840\ }
+\DoxyCodeLine{00841\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_DEQUANTIZE\_HPP}}
+
+\end{DoxyCode}

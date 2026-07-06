@@ -1,0 +1,287 @@
+\doxysection{llama\+\_\+memory\+\_\+recurrent Class Reference}
+\hypertarget{classllama__memory__recurrent}{}\label{classllama__memory__recurrent}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+Inheritance diagram for llama\+\_\+memory\+\_\+recurrent:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllama__memory__recurrent}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structllama__memory__recurrent_1_1mem__cell}{mem\+\_\+cell}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__memory__recurrent_aea1f66a31a8f2f0b69e80e3dfc8b86a1}\label{classllama__memory__recurrent_aea1f66a31a8f2f0b69e80e3dfc8b86a1} 
+{\bfseries llama\+\_\+memory\+\_\+recurrent} (const \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \&model, ggml\+\_\+type type\+\_\+r, ggml\+\_\+type type\+\_\+s, bool offload, uint32\+\_\+t mem\+\_\+size, uint32\+\_\+t n\+\_\+seq\+\_\+max, const layer\+\_\+filter\+\_\+cb \&filter)
+\item 
+llama\+\_\+memory\+\_\+context\+\_\+ptr \doxymbox{\hyperlink{classllama__memory__recurrent_a9ac6e2042f18e40712db31bc872a0533}{init\+\_\+batch}} (\doxymbox{\hyperlink{classllama__batch__allocr}{llama\+\_\+batch\+\_\+allocr}} \&balloc, uint32\+\_\+t n\+\_\+ubatch, bool embd\+\_\+all) override
+\item 
+llama\+\_\+memory\+\_\+context\+\_\+ptr \doxymbox{\hyperlink{classllama__memory__recurrent_ae0d78fe7c4e9f22835522f13269bc2fb}{init\+\_\+full}} () override
+\item 
+llama\+\_\+memory\+\_\+context\+\_\+ptr \doxymbox{\hyperlink{classllama__memory__recurrent_a16b2aa189f9130295167caf570d3986e}{init\+\_\+update}} (\doxymbox{\hyperlink{structllama__context}{llama\+\_\+context}} \texorpdfstring{$\ast$}{*}lctx, bool optimize) override
+\item 
+void \doxymbox{\hyperlink{classllama__memory__recurrent_a5c2ae1d35d4b3b6de74d7ff503c96943}{clear}} (bool data) override
+\item 
+bool \doxymbox{\hyperlink{classllama__memory__recurrent_a7ea730a28f27bfc42d997d2354493cc8}{seq\+\_\+rm}} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+pos p0, llama\+\_\+pos p1) override
+\item 
+void \doxymbox{\hyperlink{classllama__memory__recurrent_a55ca878b5a060b37ad1dabedff66e0ca}{seq\+\_\+cp}} (llama\+\_\+seq\+\_\+id seq\+\_\+id\+\_\+src, llama\+\_\+seq\+\_\+id seq\+\_\+id\+\_\+dst, llama\+\_\+pos p0, llama\+\_\+pos p1) override
+\item 
+void \doxymbox{\hyperlink{classllama__memory__recurrent_a02b5c8df902bab766c64281260737171}{seq\+\_\+keep}} (llama\+\_\+seq\+\_\+id seq\+\_\+id) override
+\item 
+void \doxymbox{\hyperlink{classllama__memory__recurrent_ac94c71dba7c543e9b299c134cc38acbb}{seq\+\_\+add}} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+pos p0, llama\+\_\+pos p1, llama\+\_\+pos shift) override
+\item 
+void \doxymbox{\hyperlink{classllama__memory__recurrent_ac34e008e172163d001d011bbd9750ac1}{seq\+\_\+div}} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+pos p0, llama\+\_\+pos p1, int d) override
+\item 
+llama\+\_\+pos \doxymbox{\hyperlink{classllama__memory__recurrent_abdfc7f7d9ab8cd86e850c47e12511220}{seq\+\_\+pos\+\_\+min}} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const override
+\item 
+llama\+\_\+pos \doxymbox{\hyperlink{classllama__memory__recurrent_a1e22bf6512fd184c8c05c7a3de740b96}{seq\+\_\+pos\+\_\+max}} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const override
+\item 
+std::\+map$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t, size\+\_\+t $>$ \doxymbox{\hyperlink{classllama__memory__recurrent_aaa7e4cdb3c6ea36a62b19a985d924153}{memory\+\_\+breakdown}} () const override
+\item 
+\Hypertarget{classllama__memory__recurrent_a423ddef51fb5453a4a122233af7392f7}\label{classllama__memory__recurrent_a423ddef51fb5453a4a122233af7392f7} 
+bool {\bfseries prepare} (const std::\+vector$<$ \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} $>$ \&ubatches)
+\item 
+\Hypertarget{classllama__memory__recurrent_ab22625aa2b541e8d78f10372b6900985}\label{classllama__memory__recurrent_ab22625aa2b541e8d78f10372b6900985} 
+bool {\bfseries find\+\_\+slot} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \&ubatch)
+\item 
+bool \doxymbox{\hyperlink{classllama__memory__recurrent_a0cebd4e5987527dfe746f483f46ea39c}{get\+\_\+can\+\_\+shift}} () const override
+\item 
+void \doxymbox{\hyperlink{classllama__memory__recurrent_af7fa3af18b056a4b6a52eaffe0bbca5c}{state\+\_\+write}} (\doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}} \&io, llama\+\_\+seq\+\_\+id seq\+\_\+id=-\/1, llama\+\_\+state\+\_\+seq\+\_\+flags flags=0) const override
+\item 
+void \doxymbox{\hyperlink{classllama__memory__recurrent_aa49120503adbed6e491f46e6e711ad8e}{state\+\_\+read}} (\doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}} \&io, llama\+\_\+seq\+\_\+id seq\+\_\+id=-\/1, llama\+\_\+state\+\_\+seq\+\_\+flags flags=0) override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__memory__recurrent_ab274b6a6a3ce2d643d7ab550adf50632}\label{classllama__memory__recurrent_ab274b6a6a3ce2d643d7ab550adf50632} 
+uint32\+\_\+t {\bfseries head} = 0
+\item 
+\Hypertarget{classllama__memory__recurrent_a4b6150e08f6f70782fde533714dff1d9}\label{classllama__memory__recurrent_a4b6150e08f6f70782fde533714dff1d9} 
+uint32\+\_\+t {\bfseries size} = 0
+\item 
+\Hypertarget{classllama__memory__recurrent_adc52313f12cc3cc9822c71343fe24cb4}\label{classllama__memory__recurrent_adc52313f12cc3cc9822c71343fe24cb4} 
+uint32\+\_\+t {\bfseries used} = 0
+\item 
+\Hypertarget{classllama__memory__recurrent_a1ed643f3d165436f29a66eddcead5cbe}\label{classllama__memory__recurrent_a1ed643f3d165436f29a66eddcead5cbe} 
+uint32\+\_\+t {\bfseries n} = 0
+\item 
+\Hypertarget{classllama__memory__recurrent_a45b8598118d05a8109dd287fe674ea5b}\label{classllama__memory__recurrent_a45b8598118d05a8109dd287fe674ea5b} 
+int32\+\_\+t {\bfseries rs\+\_\+z} = -\/1
+\item 
+\Hypertarget{classllama__memory__recurrent_a994d363486f9434734e44d9d7429810a}\label{classllama__memory__recurrent_a994d363486f9434734e44d9d7429810a} 
+std::\+vector$<$ \doxymbox{\hyperlink{structllama__memory__recurrent_1_1mem__cell}{mem\+\_\+cell}} $>$ {\bfseries cells}
+\item 
+\Hypertarget{classllama__memory__recurrent_a6f5011a15613faf2f481b7f1ddb0d9c8}\label{classllama__memory__recurrent_a6f5011a15613faf2f481b7f1ddb0d9c8} 
+std::\+vector$<$ \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries r\+\_\+l}
+\item 
+\Hypertarget{classllama__memory__recurrent_a167d314cac817016b1ffb6d7a61cbabd}\label{classllama__memory__recurrent_a167d314cac817016b1ffb6d7a61cbabd} 
+std::\+vector$<$ \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries s\+\_\+l}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__memory__recurrent_a2b507378474d5a59545b3e0cfe39e7ae}\label{classllama__memory__recurrent_a2b507378474d5a59545b3e0cfe39e7ae} 
+size\+\_\+t {\bfseries total\+\_\+size} () const
+\item 
+\Hypertarget{classllama__memory__recurrent_a35e887961776a9d2f2aa76ebe8034a0c}\label{classllama__memory__recurrent_a35e887961776a9d2f2aa76ebe8034a0c} 
+size\+\_\+t {\bfseries size\+\_\+r\+\_\+bytes} () const
+\item 
+\Hypertarget{classllama__memory__recurrent_ab091a85d16ce9911e9474129498eb2c0}\label{classllama__memory__recurrent_ab091a85d16ce9911e9474129498eb2c0} 
+size\+\_\+t {\bfseries size\+\_\+s\+\_\+bytes} () const
+\item 
+\Hypertarget{classllama__memory__recurrent_acc6cd362b1a24d660e15d4cbc883a098}\label{classllama__memory__recurrent_acc6cd362b1a24d660e15d4cbc883a098} 
+void {\bfseries state\+\_\+write\+\_\+meta} (\doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}} \&io, const std::\+vector$<$ std::\+pair$<$ uint32\+\_\+t, uint32\+\_\+t $>$ $>$ \&cell\+\_\+ranges, llama\+\_\+seq\+\_\+id seq\+\_\+id=-\/1) const
+\item 
+\Hypertarget{classllama__memory__recurrent_ac761057f8c79626f4c72b49abd6e2252}\label{classllama__memory__recurrent_ac761057f8c79626f4c72b49abd6e2252} 
+void {\bfseries state\+\_\+write\+\_\+data} (\doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}} \&io, const std::\+vector$<$ std::\+pair$<$ uint32\+\_\+t, uint32\+\_\+t $>$ $>$ \&cell\+\_\+ranges) const
+\item 
+\Hypertarget{classllama__memory__recurrent_ac55e549abd641d5be77ca9af05a85a86}\label{classllama__memory__recurrent_ac55e549abd641d5be77ca9af05a85a86} 
+bool {\bfseries state\+\_\+read\+\_\+meta} (\doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}} \&io, uint32\+\_\+t cell\+\_\+count, llama\+\_\+seq\+\_\+id dest\+\_\+seq\+\_\+id=-\/1)
+\item 
+\Hypertarget{classllama__memory__recurrent_a3da8d8a01027dbe8c4098b4678761d32}\label{classllama__memory__recurrent_a3da8d8a01027dbe8c4098b4678761d32} 
+bool {\bfseries state\+\_\+read\+\_\+data} (\doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}} \&io, uint32\+\_\+t cell\+\_\+count)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__memory__recurrent_a3253d9994c370a2e396e9f12d2eb00d8}\label{classllama__memory__recurrent_a3253d9994c370a2e396e9f12d2eb00d8} 
+const \doxymbox{\hyperlink{structllama__hparams}{llama\+\_\+hparams}} \& {\bfseries hparams}
+\item 
+\Hypertarget{classllama__memory__recurrent_a063af056ae957cc46b216fa9732a316c}\label{classllama__memory__recurrent_a063af056ae957cc46b216fa9732a316c} 
+const uint32\+\_\+t {\bfseries n\+\_\+seq\+\_\+max} = 1
+\item 
+\Hypertarget{classllama__memory__recurrent_ac77e110e43068c576283e73c7202f6c8}\label{classllama__memory__recurrent_ac77e110e43068c576283e73c7202f6c8} 
+std::\+vector$<$ std::\+pair$<$ ggml\+\_\+context\+\_\+ptr, ggml\+\_\+backend\+\_\+buffer\+\_\+ptr $>$ $>$ {\bfseries ctxs\+\_\+bufs}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+using {\bfseries layer\+\_\+filter\+\_\+cb} = std::\+function$<$bool(int32\+\_\+t il)$>$
+\item 
+using {\bfseries layer\+\_\+reuse\+\_\+cb} = std::\+function$<$int32\+\_\+t(int32\+\_\+t il)$>$
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllama__memory__recurrent_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllama__memory__recurrent_a5c2ae1d35d4b3b6de74d7ff503c96943}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!clear@{clear}}
+\index{clear@{clear}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_a5c2ae1d35d4b3b6de74d7ff503c96943} 
+void llama\+\_\+memory\+\_\+recurrent::\+clear (\begin{DoxyParamCaption}\item[{bool}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_a0cebd4e5987527dfe746f483f46ea39c}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!get\_can\_shift@{get\_can\_shift}}
+\index{get\_can\_shift@{get\_can\_shift}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{get\_can\_shift()}{get\_can\_shift()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_a0cebd4e5987527dfe746f483f46ea39c} 
+bool llama\+\_\+memory\+\_\+recurrent::\+get\+\_\+can\+\_\+shift (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_a9ac6e2042f18e40712db31bc872a0533}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!init\_batch@{init\_batch}}
+\index{init\_batch@{init\_batch}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{init\_batch()}{init\_batch()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_a9ac6e2042f18e40712db31bc872a0533} 
+llama\+\_\+memory\+\_\+context\+\_\+ptr llama\+\_\+memory\+\_\+recurrent::\+init\+\_\+batch (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classllama__batch__allocr}{llama\+\_\+batch\+\_\+allocr}} \&}]{balloc}{, }\item[{uint32\+\_\+t}]{n\+\_\+ubatch}{, }\item[{bool}]{embd\+\_\+all}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_ae0d78fe7c4e9f22835522f13269bc2fb}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!init\_full@{init\_full}}
+\index{init\_full@{init\_full}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{init\_full()}{init\_full()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_ae0d78fe7c4e9f22835522f13269bc2fb} 
+llama\+\_\+memory\+\_\+context\+\_\+ptr llama\+\_\+memory\+\_\+recurrent::\+init\+\_\+full (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_a16b2aa189f9130295167caf570d3986e}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!init\_update@{init\_update}}
+\index{init\_update@{init\_update}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{init\_update()}{init\_update()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_a16b2aa189f9130295167caf570d3986e} 
+llama\+\_\+memory\+\_\+context\+\_\+ptr llama\+\_\+memory\+\_\+recurrent::\+init\+\_\+update (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structllama__context}{llama\+\_\+context}} \texorpdfstring{$\ast$}{*}}]{lctx}{, }\item[{bool}]{optimize}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_aaa7e4cdb3c6ea36a62b19a985d924153}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!memory\_breakdown@{memory\_breakdown}}
+\index{memory\_breakdown@{memory\_breakdown}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{memory\_breakdown()}{memory\_breakdown()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_aaa7e4cdb3c6ea36a62b19a985d924153} 
+std::\+map$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t, size\+\_\+t $>$ llama\+\_\+memory\+\_\+recurrent::\+memory\+\_\+breakdown (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_ac94c71dba7c543e9b299c134cc38acbb}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!seq\_add@{seq\_add}}
+\index{seq\_add@{seq\_add}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{seq\_add()}{seq\_add()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_ac94c71dba7c543e9b299c134cc38acbb} 
+void llama\+\_\+memory\+\_\+recurrent::\+seq\+\_\+add (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{, }\item[{llama\+\_\+pos}]{p0}{, }\item[{llama\+\_\+pos}]{p1}{, }\item[{llama\+\_\+pos}]{shift}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_a55ca878b5a060b37ad1dabedff66e0ca}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!seq\_cp@{seq\_cp}}
+\index{seq\_cp@{seq\_cp}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{seq\_cp()}{seq\_cp()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_a55ca878b5a060b37ad1dabedff66e0ca} 
+void llama\+\_\+memory\+\_\+recurrent::\+seq\+\_\+cp (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id\+\_\+src}{, }\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id\+\_\+dst}{, }\item[{llama\+\_\+pos}]{p0}{, }\item[{llama\+\_\+pos}]{p1}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_ac34e008e172163d001d011bbd9750ac1}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!seq\_div@{seq\_div}}
+\index{seq\_div@{seq\_div}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{seq\_div()}{seq\_div()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_ac34e008e172163d001d011bbd9750ac1} 
+void llama\+\_\+memory\+\_\+recurrent::\+seq\+\_\+div (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{, }\item[{llama\+\_\+pos}]{p0}{, }\item[{llama\+\_\+pos}]{p1}{, }\item[{int}]{d}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_a02b5c8df902bab766c64281260737171}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!seq\_keep@{seq\_keep}}
+\index{seq\_keep@{seq\_keep}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{seq\_keep()}{seq\_keep()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_a02b5c8df902bab766c64281260737171} 
+void llama\+\_\+memory\+\_\+recurrent::\+seq\+\_\+keep (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_a1e22bf6512fd184c8c05c7a3de740b96}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!seq\_pos\_max@{seq\_pos\_max}}
+\index{seq\_pos\_max@{seq\_pos\_max}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{seq\_pos\_max()}{seq\_pos\_max()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_a1e22bf6512fd184c8c05c7a3de740b96} 
+llama\+\_\+pos llama\+\_\+memory\+\_\+recurrent::\+seq\+\_\+pos\+\_\+max (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_abdfc7f7d9ab8cd86e850c47e12511220}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!seq\_pos\_min@{seq\_pos\_min}}
+\index{seq\_pos\_min@{seq\_pos\_min}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{seq\_pos\_min()}{seq\_pos\_min()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_abdfc7f7d9ab8cd86e850c47e12511220} 
+llama\+\_\+pos llama\+\_\+memory\+\_\+recurrent::\+seq\+\_\+pos\+\_\+min (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_a7ea730a28f27bfc42d997d2354493cc8}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!seq\_rm@{seq\_rm}}
+\index{seq\_rm@{seq\_rm}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{seq\_rm()}{seq\_rm()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_a7ea730a28f27bfc42d997d2354493cc8} 
+bool llama\+\_\+memory\+\_\+recurrent::\+seq\+\_\+rm (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{, }\item[{llama\+\_\+pos}]{p0}{, }\item[{llama\+\_\+pos}]{p1}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_aa49120503adbed6e491f46e6e711ad8e}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!state\_read@{state\_read}}
+\index{state\_read@{state\_read}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{state\_read()}{state\_read()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_aa49120503adbed6e491f46e6e711ad8e} 
+void llama\+\_\+memory\+\_\+recurrent::\+state\+\_\+read (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}} \&}]{io}{, }\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{ = {\ttfamily -\/1}, }\item[{llama\+\_\+state\+\_\+seq\+\_\+flags}]{flags}{ = {\ttfamily 0}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__memory__recurrent_af7fa3af18b056a4b6a52eaffe0bbca5c}\index{llama\_memory\_recurrent@{llama\_memory\_recurrent}!state\_write@{state\_write}}
+\index{state\_write@{state\_write}!llama\_memory\_recurrent@{llama\_memory\_recurrent}}
+\doxysubsubsection{\texorpdfstring{state\_write()}{state\_write()}}
+{\footnotesize\ttfamily \label{classllama__memory__recurrent_af7fa3af18b056a4b6a52eaffe0bbca5c} 
+void llama\+\_\+memory\+\_\+recurrent::\+state\+\_\+write (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}} \&}]{io}{, }\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{ = {\ttfamily -\/1}, }\item[{llama\+\_\+state\+\_\+seq\+\_\+flags}]{flags}{ = {\ttfamily 0}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/memory-\/recurrent.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/memory-\/recurrent.\+cpp\end{DoxyCompactItemize}

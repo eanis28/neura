@@ -1,0 +1,577 @@
+\doxysection{httplib::\+Client\+Impl Class Reference}
+\hypertarget{classhttplib_1_1_client_impl}{}\label{classhttplib_1_1_client_impl}\index{httplib::ClientImpl@{httplib::ClientImpl}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structhttplib_1_1_client_impl_1_1_socket}{Socket}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a75afa27616d9da2be3c419cf72d46705}\label{classhttplib_1_1_client_impl_a75afa27616d9da2be3c419cf72d46705} 
+{\bfseries Client\+Impl} (const std::\+string \&host)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a9b6d3fad3735f4f0c5a58c6278f0207d}\label{classhttplib_1_1_client_impl_a9b6d3fad3735f4f0c5a58c6278f0207d} 
+{\bfseries Client\+Impl} (const std::\+string \&host, int port)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a66bcde5b0703c7f07ddc8dd1182b98b0}\label{classhttplib_1_1_client_impl_a66bcde5b0703c7f07ddc8dd1182b98b0} 
+{\bfseries Client\+Impl} (const std::\+string \&host, int port, const std::\+string \&client\+\_\+cert\+\_\+path, const std::\+string \&client\+\_\+key\+\_\+path)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_afbe91bdb3eb3b30f37aad3c49ae3285d}\label{classhttplib_1_1_client_impl_afbe91bdb3eb3b30f37aad3c49ae3285d} 
+virtual bool {\bfseries is\+\_\+valid} () const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a7c3402a1b405804efe9f6a4894eceeb1}\label{classhttplib_1_1_client_impl_a7c3402a1b405804efe9f6a4894eceeb1} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a256560fa05b0d6d721e32d89a5ad9b6a}\label{classhttplib_1_1_client_impl_a256560fa05b0d6d721e32d89a5ad9b6a} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, const Headers \&headers)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ad18433f1fb8adee86224b389285cc08e}\label{classhttplib_1_1_client_impl_ad18433f1fb8adee86224b389285cc08e} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ad073f1945ddc13fc4778449739430889}\label{classhttplib_1_1_client_impl_ad073f1945ddc13fc4778449739430889} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, const Headers \&headers, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa55a16abd6bd183b56da3306c99d3672}\label{classhttplib_1_1_client_impl_aa55a16abd6bd183b56da3306c99d3672} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, Content\+Receiver content\+\_\+receiver)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a42fecd8400ff4de208df43937554cb28}\label{classhttplib_1_1_client_impl_a42fecd8400ff4de208df43937554cb28} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, const Headers \&headers, Content\+Receiver content\+\_\+receiver)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_abd5ac01004c877d885228b4beb08eaa0}\label{classhttplib_1_1_client_impl_abd5ac01004c877d885228b4beb08eaa0} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, Content\+Receiver content\+\_\+receiver, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a818471580b0004a3845973b6302afc79}\label{classhttplib_1_1_client_impl_a818471580b0004a3845973b6302afc79} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, const Headers \&headers, Content\+Receiver content\+\_\+receiver, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a7e1b9434221705528acf0071628bdde8}\label{classhttplib_1_1_client_impl_a7e1b9434221705528acf0071628bdde8} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, Response\+Handler response\+\_\+handler, Content\+Receiver content\+\_\+receiver)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a899a6c71ecff28e4b0c0ffb2c1cbb378}\label{classhttplib_1_1_client_impl_a899a6c71ecff28e4b0c0ffb2c1cbb378} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, const Headers \&headers, Response\+Handler response\+\_\+handler, Content\+Receiver content\+\_\+receiver)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_acb1864752d8114c8e10bc6a22ae2ee63}\label{classhttplib_1_1_client_impl_acb1864752d8114c8e10bc6a22ae2ee63} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, Response\+Handler response\+\_\+handler, Content\+Receiver content\+\_\+receiver, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a2eb78c268580eb935d1838f9dec8da26}\label{classhttplib_1_1_client_impl_a2eb78c268580eb935d1838f9dec8da26} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, const Headers \&headers, Response\+Handler response\+\_\+handler, Content\+Receiver content\+\_\+receiver, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a8fa5a27c16af44687cab7840ff49a7d2}\label{classhttplib_1_1_client_impl_a8fa5a27c16af44687cab7840ff49a7d2} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, const Params \&params, const Headers \&headers, Progress progress=nullptr)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a86a85cbf2ea1e1cb6e5e5b4d68078d70}\label{classhttplib_1_1_client_impl_a86a85cbf2ea1e1cb6e5e5b4d68078d70} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, const Params \&params, const Headers \&headers, Content\+Receiver content\+\_\+receiver, Progress progress=nullptr)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a4fb0e2dae8b783912398840f981c3529}\label{classhttplib_1_1_client_impl_a4fb0e2dae8b783912398840f981c3529} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Get} (const std::\+string \&path, const Params \&params, const Headers \&headers, Response\+Handler response\+\_\+handler, Content\+Receiver content\+\_\+receiver, Progress progress=nullptr)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_af00bd31363e9961253af4d8fa95f387c}\label{classhttplib_1_1_client_impl_af00bd31363e9961253af4d8fa95f387c} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Head} (const std::\+string \&path)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_adf64c589c0334ccd516905484140e0d1}\label{classhttplib_1_1_client_impl_adf64c589c0334ccd516905484140e0d1} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Head} (const std::\+string \&path, const Headers \&headers)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa42912401c5bc3f2da3c7e0543f9637c}\label{classhttplib_1_1_client_impl_aa42912401c5bc3f2da3c7e0543f9637c} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a7d29772e67ba6f612cf4830fe402faf4}\label{classhttplib_1_1_client_impl_a7d29772e67ba6f612cf4830fe402faf4} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa7d72a26533c967e7cad44ff5e6f7c57}\label{classhttplib_1_1_client_impl_aa7d72a26533c967e7cad44ff5e6f7c57} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a31fe4e8466d44dc45e28d3e68db05e01}\label{classhttplib_1_1_client_impl_a31fe4e8466d44dc45e28d3e68db05e01} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_afb6cb09da8bb121c386a76a724f1eba0}\label{classhttplib_1_1_client_impl_afb6cb09da8bb121c386a76a724f1eba0} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a7741f4a89fcc2d76f8c7ab2d462a57eb}\label{classhttplib_1_1_client_impl_a7741f4a89fcc2d76f8c7ab2d462a57eb} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const std::\+string \&body, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a21e67fac9febe2ea7e946266245d9efc}\label{classhttplib_1_1_client_impl_a21e67fac9febe2ea7e946266245d9efc} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const std::\+string \&body, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_acfdba48d8c3823cd5747eb164ccb27d7}\label{classhttplib_1_1_client_impl_acfdba48d8c3823cd5747eb164ccb27d7} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, const std::\+string \&body, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a42c4dd272b76b69ea8619c19c51bfb67}\label{classhttplib_1_1_client_impl_a42c4dd272b76b69ea8619c19c51bfb67} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, const std::\+string \&body, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ae2b2c0a8d67e7198a34ce4f87e60d491}\label{classhttplib_1_1_client_impl_ae2b2c0a8d67e7198a34ce4f87e60d491} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, size\+\_\+t content\+\_\+length, Content\+Provider content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_abbe54a39d39da978c20fa4de131b066f}\label{classhttplib_1_1_client_impl_abbe54a39d39da978c20fa4de131b066f} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, Content\+Provider\+Without\+Length content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_acb7b89ca2a0bf14a03acb847a809cd56}\label{classhttplib_1_1_client_impl_acb7b89ca2a0bf14a03acb847a809cd56} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, size\+\_\+t content\+\_\+length, Content\+Provider content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a776d71a348c94d8c83d021a0794fc8ab}\label{classhttplib_1_1_client_impl_a776d71a348c94d8c83d021a0794fc8ab} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, Content\+Provider\+Without\+Length content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ab1167f26e9d8c888c60ed1d89859629f}\label{classhttplib_1_1_client_impl_ab1167f26e9d8c888c60ed1d89859629f} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Params \&params)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a5efaf09b90f39f065746f368932a0567}\label{classhttplib_1_1_client_impl_a5efaf09b90f39f065746f368932a0567} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, const Params \&params)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_acc7c4021e22159a62c487385e1bbe4f7}\label{classhttplib_1_1_client_impl_acc7c4021e22159a62c487385e1bbe4f7} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, const Params \&params, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa55cdb920fa69b13fa70aae15a3eef7d}\label{classhttplib_1_1_client_impl_aa55cdb920fa69b13fa70aae15a3eef7d} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Multipart\+Form\+Data\+Items \&items)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a2273f2235e5f3004768d2792fc765f75}\label{classhttplib_1_1_client_impl_a2273f2235e5f3004768d2792fc765f75} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, const Multipart\+Form\+Data\+Items \&items)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a8b5eaae609fe03106f3c45112c8098b1}\label{classhttplib_1_1_client_impl_a8b5eaae609fe03106f3c45112c8098b1} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, const Multipart\+Form\+Data\+Items \&items, const std::\+string \&boundary)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a659593ef9e45e597bf91682e9263147d}\label{classhttplib_1_1_client_impl_a659593ef9e45e597bf91682e9263147d} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Post} (const std::\+string \&path, const Headers \&headers, const Multipart\+Form\+Data\+Items \&items, const Multipart\+Form\+Data\+Provider\+Items \&provider\+\_\+items)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a91fbdb15be8769002cae0df25dd892bd}\label{classhttplib_1_1_client_impl_a91fbdb15be8769002cae0df25dd892bd} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a050c16c9be461ff7c3bc1ac2a11840dc}\label{classhttplib_1_1_client_impl_a050c16c9be461ff7c3bc1ac2a11840dc} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a048987c16a2f45382c1bb0d2102e4873}\label{classhttplib_1_1_client_impl_a048987c16a2f45382c1bb0d2102e4873} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a2373a4b4fe27d2f9ed7556b600751d32}\label{classhttplib_1_1_client_impl_a2373a4b4fe27d2f9ed7556b600751d32} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ab00a128337bd09990a47357b9f35237a}\label{classhttplib_1_1_client_impl_ab00a128337bd09990a47357b9f35237a} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const std::\+string \&body, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a967b7f0701014b51050bd7d9ebe9af29}\label{classhttplib_1_1_client_impl_a967b7f0701014b51050bd7d9ebe9af29} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const std::\+string \&body, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_afc856e49fe23f8781a59282c1e9a61e0}\label{classhttplib_1_1_client_impl_afc856e49fe23f8781a59282c1e9a61e0} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, const std::\+string \&body, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a4f892cd985c38e01103d49d836530745}\label{classhttplib_1_1_client_impl_a4f892cd985c38e01103d49d836530745} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, const std::\+string \&body, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a9be885fb648a2fd7de94dd7dbd742be4}\label{classhttplib_1_1_client_impl_a9be885fb648a2fd7de94dd7dbd742be4} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, size\+\_\+t content\+\_\+length, Content\+Provider content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ae7dc9b9bd84896bf4812d400a1143749}\label{classhttplib_1_1_client_impl_ae7dc9b9bd84896bf4812d400a1143749} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, Content\+Provider\+Without\+Length content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_afd4564f8524c55c30b3c0e67873d6b59}\label{classhttplib_1_1_client_impl_afd4564f8524c55c30b3c0e67873d6b59} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, size\+\_\+t content\+\_\+length, Content\+Provider content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a155f165529e6e78325616715c4e60623}\label{classhttplib_1_1_client_impl_a155f165529e6e78325616715c4e60623} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, Content\+Provider\+Without\+Length content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aaa7c0bdd80aff787eb6c1ea359dd6514}\label{classhttplib_1_1_client_impl_aaa7c0bdd80aff787eb6c1ea359dd6514} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Params \&params)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_afe39b5f647cbdfde54b219635f500916}\label{classhttplib_1_1_client_impl_afe39b5f647cbdfde54b219635f500916} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, const Params \&params)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a3d4255fa70cc59eff6f10a794e42f432}\label{classhttplib_1_1_client_impl_a3d4255fa70cc59eff6f10a794e42f432} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, const Params \&params, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a4944d0c3245629d01af8b09d68d682f3}\label{classhttplib_1_1_client_impl_a4944d0c3245629d01af8b09d68d682f3} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Multipart\+Form\+Data\+Items \&items)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa44b2dd8bc2c26d9e5cd1d9a8387bd06}\label{classhttplib_1_1_client_impl_aa44b2dd8bc2c26d9e5cd1d9a8387bd06} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, const Multipart\+Form\+Data\+Items \&items)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a5615867b3101af3df012eb48e280465e}\label{classhttplib_1_1_client_impl_a5615867b3101af3df012eb48e280465e} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, const Multipart\+Form\+Data\+Items \&items, const std::\+string \&boundary)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ae8384ff50ea730dd77e979c71fd268d6}\label{classhttplib_1_1_client_impl_ae8384ff50ea730dd77e979c71fd268d6} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Put} (const std::\+string \&path, const Headers \&headers, const Multipart\+Form\+Data\+Items \&items, const Multipart\+Form\+Data\+Provider\+Items \&provider\+\_\+items)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a426b46753a5e1752e36ca2dc7f6e6372}\label{classhttplib_1_1_client_impl_a426b46753a5e1752e36ca2dc7f6e6372} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a747131b1fdeb941d65ae0cb04979583c}\label{classhttplib_1_1_client_impl_a747131b1fdeb941d65ae0cb04979583c} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ab24e0de750ad5b3a76403a46176e8d95}\label{classhttplib_1_1_client_impl_ab24e0de750ad5b3a76403a46176e8d95} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ad454e536598fa610080587d8516b5c80}\label{classhttplib_1_1_client_impl_ad454e536598fa610080587d8516b5c80} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const Headers \&headers, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a91f1717e87f8e89964acbaa2f2c29cfb}\label{classhttplib_1_1_client_impl_a91f1717e87f8e89964acbaa2f2c29cfb} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const Headers \&headers, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa794d8f5676da9286d10aed4c2902533}\label{classhttplib_1_1_client_impl_aa794d8f5676da9286d10aed4c2902533} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const std::\+string \&body, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_af96571c8480120dbae4f1a0794334409}\label{classhttplib_1_1_client_impl_af96571c8480120dbae4f1a0794334409} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const std::\+string \&body, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a53e3dda2d3cd5680416d4aca77ad8fa1}\label{classhttplib_1_1_client_impl_a53e3dda2d3cd5680416d4aca77ad8fa1} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const Headers \&headers, const std::\+string \&body, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a5c2d73fe85f56f4389885bfe5af25a21}\label{classhttplib_1_1_client_impl_a5c2d73fe85f56f4389885bfe5af25a21} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const Headers \&headers, const std::\+string \&body, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ada3850032331379b3a1330635360f5a7}\label{classhttplib_1_1_client_impl_ada3850032331379b3a1330635360f5a7} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, size\+\_\+t content\+\_\+length, Content\+Provider content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a4f95eea5fc8fb9bd13aa3c041891d651}\label{classhttplib_1_1_client_impl_a4f95eea5fc8fb9bd13aa3c041891d651} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, Content\+Provider\+Without\+Length content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a000fbfa924af8d9971204aa9c7d33dc2}\label{classhttplib_1_1_client_impl_a000fbfa924af8d9971204aa9c7d33dc2} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const Headers \&headers, size\+\_\+t content\+\_\+length, Content\+Provider content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a8df570ddfdbbe4c5fac8b9c70103ebf5}\label{classhttplib_1_1_client_impl_a8df570ddfdbbe4c5fac8b9c70103ebf5} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Patch} (const std::\+string \&path, const Headers \&headers, Content\+Provider\+Without\+Length content\+\_\+provider, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a13a851b1506d9bdca5bcc42ed5f981ed}\label{classhttplib_1_1_client_impl_a13a851b1506d9bdca5bcc42ed5f981ed} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aacf775b15965ee501936d332fac062b7}\label{classhttplib_1_1_client_impl_aacf775b15965ee501936d332fac062b7} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path, const Headers \&headers)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ad3274cb0de0c84f0a81935b5908bfdf1}\label{classhttplib_1_1_client_impl_ad3274cb0de0c84f0a81935b5908bfdf1} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a9c60963ad4fae94ef166ee5c60afae32}\label{classhttplib_1_1_client_impl_a9c60963ad4fae94ef166ee5c60afae32} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a5973f9c3afa13416417fd7a317eb811b}\label{classhttplib_1_1_client_impl_a5973f9c3afa13416417fd7a317eb811b} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path, const Headers \&headers, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aff3cfe50d153ab43d94815b35d68d67c}\label{classhttplib_1_1_client_impl_aff3cfe50d153ab43d94815b35d68d67c} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path, const Headers \&headers, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a008168db3943c2169084fd69a843a7e9}\label{classhttplib_1_1_client_impl_a008168db3943c2169084fd69a843a7e9} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path, const std::\+string \&body, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_abd0cdac9b6cac535edc2011a22cb4171}\label{classhttplib_1_1_client_impl_abd0cdac9b6cac535edc2011a22cb4171} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path, const std::\+string \&body, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a54e93033e82073372a33bf4faeb4c77f}\label{classhttplib_1_1_client_impl_a54e93033e82073372a33bf4faeb4c77f} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path, const Headers \&headers, const std::\+string \&body, const std::\+string \&content\+\_\+type)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a00fb2dc28d0340100b567f07933809b7}\label{classhttplib_1_1_client_impl_a00fb2dc28d0340100b567f07933809b7} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Delete} (const std::\+string \&path, const Headers \&headers, const std::\+string \&body, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_adab614fe02a411ea9069e7c47510c95a}\label{classhttplib_1_1_client_impl_adab614fe02a411ea9069e7c47510c95a} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Options} (const std::\+string \&path)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a0de10ef5e77b7c6cc83674bd86bc2e8a}\label{classhttplib_1_1_client_impl_a0de10ef5e77b7c6cc83674bd86bc2e8a} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries Options} (const std::\+string \&path, const Headers \&headers)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a618895e4b137663691fdc41fd998b843}\label{classhttplib_1_1_client_impl_a618895e4b137663691fdc41fd998b843} 
+bool {\bfseries send} (\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, Error \&error)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa1995d934c9d883aff1d8d37bcf67f85}\label{classhttplib_1_1_client_impl_aa1995d934c9d883aff1d8d37bcf67f85} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries send} (const \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a4612a28562001509a2bf104eae2857fd}\label{classhttplib_1_1_client_impl_a4612a28562001509a2bf104eae2857fd} 
+void {\bfseries stop} ()
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a10dd4794339f3beae8113957b9c3423a}\label{classhttplib_1_1_client_impl_a10dd4794339f3beae8113957b9c3423a} 
+std::\+string {\bfseries host} () const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a8041af17abfd36d67bcdfb72b6b41ab6}\label{classhttplib_1_1_client_impl_a8041af17abfd36d67bcdfb72b6b41ab6} 
+int {\bfseries port} () const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_adb81f18287fc15afae42574b8964ae6f}\label{classhttplib_1_1_client_impl_adb81f18287fc15afae42574b8964ae6f} 
+size\+\_\+t {\bfseries is\+\_\+socket\+\_\+open} () const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a36ec3ed23214942712631436c8e02062}\label{classhttplib_1_1_client_impl_a36ec3ed23214942712631436c8e02062} 
+\doxymbox{\hyperlink{structsocket__t}{socket\+\_\+t}} {\bfseries socket} () const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a6ddc1314b8506d5808335fbd86576890}\label{classhttplib_1_1_client_impl_a6ddc1314b8506d5808335fbd86576890} 
+void {\bfseries set\+\_\+hostname\+\_\+addr\+\_\+map} (std::\+map$<$ std::\+string, std::\+string $>$ addr\+\_\+map)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_addeb1f64c38e4cda19e5451c272ca1be}\label{classhttplib_1_1_client_impl_addeb1f64c38e4cda19e5451c272ca1be} 
+void {\bfseries set\+\_\+default\+\_\+headers} (Headers headers)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ace963b3e529bdd51d2194d6713bb31e5}\label{classhttplib_1_1_client_impl_ace963b3e529bdd51d2194d6713bb31e5} 
+void {\bfseries set\+\_\+header\+\_\+writer} (std::\+function$<$ ssize\+\_\+t(\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&, Headers \&)$>$ const \&writer)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a8333b8bca664232956cfe56bcd65db35}\label{classhttplib_1_1_client_impl_a8333b8bca664232956cfe56bcd65db35} 
+void {\bfseries set\+\_\+address\+\_\+family} (int family)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a591aea4aada21b8218834413d7813041}\label{classhttplib_1_1_client_impl_a591aea4aada21b8218834413d7813041} 
+void {\bfseries set\+\_\+tcp\+\_\+nodelay} (bool on)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa2a3b84916d97dde7079299af2009b60}\label{classhttplib_1_1_client_impl_aa2a3b84916d97dde7079299af2009b60} 
+void {\bfseries set\+\_\+ipv6\+\_\+v6only} (bool on)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a0a087b6cd44581d336e57437d41e873a}\label{classhttplib_1_1_client_impl_a0a087b6cd44581d336e57437d41e873a} 
+void {\bfseries set\+\_\+socket\+\_\+options} (Socket\+Options socket\+\_\+options)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a6b30b21c8fca1b0e754e6b036caa209e}\label{classhttplib_1_1_client_impl_a6b30b21c8fca1b0e754e6b036caa209e} 
+void {\bfseries set\+\_\+connection\+\_\+timeout} (time\+\_\+t sec, time\+\_\+t usec=0)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ad9ae73f9f3f4a20c9bde149a2a8f9dc2}\label{classhttplib_1_1_client_impl_ad9ae73f9f3f4a20c9bde149a2a8f9dc2} 
+{\footnotesize template$<$class Rep, class Period$>$ }\\void {\bfseries set\+\_\+connection\+\_\+timeout} (const std::\+chrono::\+duration$<$ Rep, Period $>$ \&duration)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_afd34346aeef526240cb74d03d2aec94d}\label{classhttplib_1_1_client_impl_afd34346aeef526240cb74d03d2aec94d} 
+void {\bfseries set\+\_\+read\+\_\+timeout} (time\+\_\+t sec, time\+\_\+t usec=0)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a34cfd4e4eeb749abc75a2237b881c8db}\label{classhttplib_1_1_client_impl_a34cfd4e4eeb749abc75a2237b881c8db} 
+{\footnotesize template$<$class Rep, class Period$>$ }\\void {\bfseries set\+\_\+read\+\_\+timeout} (const std::\+chrono::\+duration$<$ Rep, Period $>$ \&duration)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ac9f654584555b68002d9a0f2a33ffb3a}\label{classhttplib_1_1_client_impl_ac9f654584555b68002d9a0f2a33ffb3a} 
+void {\bfseries set\+\_\+write\+\_\+timeout} (time\+\_\+t sec, time\+\_\+t usec=0)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a5eacdbf79b7503593035a1490a48d389}\label{classhttplib_1_1_client_impl_a5eacdbf79b7503593035a1490a48d389} 
+{\footnotesize template$<$class Rep, class Period$>$ }\\void {\bfseries set\+\_\+write\+\_\+timeout} (const std::\+chrono::\+duration$<$ Rep, Period $>$ \&duration)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_acc00d78c0a38afb96594df330a62ad31}\label{classhttplib_1_1_client_impl_acc00d78c0a38afb96594df330a62ad31} 
+void {\bfseries set\+\_\+max\+\_\+timeout} (time\+\_\+t msec)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a1c22aea8113ff0416d853fb099304bd9}\label{classhttplib_1_1_client_impl_a1c22aea8113ff0416d853fb099304bd9} 
+{\footnotesize template$<$class Rep, class Period$>$ }\\void {\bfseries set\+\_\+max\+\_\+timeout} (const std::\+chrono::\+duration$<$ Rep, Period $>$ \&duration)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a1d5b0053c0488d754d06fc20656c732e}\label{classhttplib_1_1_client_impl_a1d5b0053c0488d754d06fc20656c732e} 
+void {\bfseries set\+\_\+basic\+\_\+auth} (const std::\+string \&username, const std::\+string \&password)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_afff1a54104973284a000eb1ae901ad4a}\label{classhttplib_1_1_client_impl_afff1a54104973284a000eb1ae901ad4a} 
+void {\bfseries set\+\_\+bearer\+\_\+token\+\_\+auth} (const std::\+string \&token)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ae77e3fe3a8e4b58b3b1ef9edb23725db}\label{classhttplib_1_1_client_impl_ae77e3fe3a8e4b58b3b1ef9edb23725db} 
+void {\bfseries set\+\_\+keep\+\_\+alive} (bool on)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ae546b72b358ade787eafa8c269fd4336}\label{classhttplib_1_1_client_impl_ae546b72b358ade787eafa8c269fd4336} 
+void {\bfseries set\+\_\+follow\+\_\+location} (bool on)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a41f5b941677fad857d0bc4b4201f6392}\label{classhttplib_1_1_client_impl_a41f5b941677fad857d0bc4b4201f6392} 
+void {\bfseries set\+\_\+url\+\_\+encode} (bool on)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a780c337d2d68b12c24622e8ad52d62e0}\label{classhttplib_1_1_client_impl_a780c337d2d68b12c24622e8ad52d62e0} 
+void {\bfseries set\+\_\+compress} (bool on)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a353b840ec57d6d6cad61c732999148d9}\label{classhttplib_1_1_client_impl_a353b840ec57d6d6cad61c732999148d9} 
+void {\bfseries set\+\_\+decompress} (bool on)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a3d7cfedcc98840e529f0907e3aa54597}\label{classhttplib_1_1_client_impl_a3d7cfedcc98840e529f0907e3aa54597} 
+void {\bfseries set\+\_\+interface} (const std::\+string \&intf)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a3aca2ec26d2977c800aba200f190824e}\label{classhttplib_1_1_client_impl_a3aca2ec26d2977c800aba200f190824e} 
+void {\bfseries set\+\_\+proxy} (const std::\+string \&host, int port)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a01cbb795a59e5d124ca39671023e1121}\label{classhttplib_1_1_client_impl_a01cbb795a59e5d124ca39671023e1121} 
+void {\bfseries set\+\_\+proxy\+\_\+basic\+\_\+auth} (const std::\+string \&username, const std::\+string \&password)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a5a0c2ebcfe49ffcc8f6e5a82cd90cd23}\label{classhttplib_1_1_client_impl_a5a0c2ebcfe49ffcc8f6e5a82cd90cd23} 
+void {\bfseries set\+\_\+proxy\+\_\+bearer\+\_\+token\+\_\+auth} (const std::\+string \&token)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a74dbba2ec7e7b269b76bdcf02e8b6010}\label{classhttplib_1_1_client_impl_a74dbba2ec7e7b269b76bdcf02e8b6010} 
+void {\bfseries set\+\_\+logger} (Logger logger)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_af913333c2fa8a53332f96574e113dc8f}\label{classhttplib_1_1_client_impl_af913333c2fa8a53332f96574e113dc8f} 
+virtual bool {\bfseries create\+\_\+and\+\_\+connect\+\_\+socket} (\doxymbox{\hyperlink{structhttplib_1_1_client_impl_1_1_socket}{Socket}} \&socket, Error \&error)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a6a20a9e9d9336b81373b8f6c5dd9f827}\label{classhttplib_1_1_client_impl_a6a20a9e9d9336b81373b8f6c5dd9f827} 
+virtual void {\bfseries shutdown\+\_\+ssl} (\doxymbox{\hyperlink{structhttplib_1_1_client_impl_1_1_socket}{Socket}} \&socket, bool shutdown\+\_\+gracefully)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa8e97f51d6a0bd80b69ba0367f16bd7c}\label{classhttplib_1_1_client_impl_aa8e97f51d6a0bd80b69ba0367f16bd7c} 
+void {\bfseries shutdown\+\_\+socket} (\doxymbox{\hyperlink{structhttplib_1_1_client_impl_1_1_socket}{Socket}} \&socket) const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a30ceda93ba451534d2bcd06d1952881b}\label{classhttplib_1_1_client_impl_a30ceda93ba451534d2bcd06d1952881b} 
+void {\bfseries close\+\_\+socket} (\doxymbox{\hyperlink{structhttplib_1_1_client_impl_1_1_socket}{Socket}} \&socket)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aaf87765187adb847b44c102643704f3a}\label{classhttplib_1_1_client_impl_aaf87765187adb847b44c102643704f3a} 
+bool {\bfseries process\+\_\+request} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, bool close\+\_\+connection, Error \&error)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a32a67b25f6fbd37756192d7b840fc53f}\label{classhttplib_1_1_client_impl_a32a67b25f6fbd37756192d7b840fc53f} 
+bool {\bfseries write\+\_\+content\+\_\+with\+\_\+provider} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, const \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, Error \&error) const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_acb828963469210a9a533cb5f22ca6a4e}\label{classhttplib_1_1_client_impl_acb828963469210a9a533cb5f22ca6a4e} 
+void {\bfseries copy\+\_\+settings} (const Client\+Impl \&rhs)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a49e213217f1d417f5db8e2a6eab15ed2}\label{classhttplib_1_1_client_impl_a49e213217f1d417f5db8e2a6eab15ed2} 
+const std::\+string {\bfseries host\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ad64c12a51237a6ad849c044b6ccede90}\label{classhttplib_1_1_client_impl_ad64c12a51237a6ad849c044b6ccede90} 
+const int {\bfseries port\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a868454acc688c095b410f7fa8c936d53}\label{classhttplib_1_1_client_impl_a868454acc688c095b410f7fa8c936d53} 
+const std::\+string {\bfseries host\+\_\+and\+\_\+port\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a3c38080a076013321438247bbdc0e29c}\label{classhttplib_1_1_client_impl_a3c38080a076013321438247bbdc0e29c} 
+\doxymbox{\hyperlink{structhttplib_1_1_client_impl_1_1_socket}{Socket}} {\bfseries socket\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_af16a89e681c3cccc96a499a7a3bcd010}\label{classhttplib_1_1_client_impl_af16a89e681c3cccc96a499a7a3bcd010} 
+std::\+mutex {\bfseries socket\+\_\+mutex\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_acfed65641de736dbebb70573fa001512}\label{classhttplib_1_1_client_impl_acfed65641de736dbebb70573fa001512} 
+std::\+recursive\+\_\+mutex {\bfseries request\+\_\+mutex\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a28371096fe802c65674290c2c2c63356}\label{classhttplib_1_1_client_impl_a28371096fe802c65674290c2c2c63356} 
+size\+\_\+t {\bfseries socket\+\_\+requests\+\_\+in\+\_\+flight\+\_\+} = 0
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ab1ab8b437a242078ad41a2fbdbcda3c8}\label{classhttplib_1_1_client_impl_ab1ab8b437a242078ad41a2fbdbcda3c8} 
+std::\+thread::\+id {\bfseries socket\+\_\+requests\+\_\+are\+\_\+from\+\_\+thread\+\_\+} = std::\+thread::\+id()
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ae8421cb5d2e38a8c39d90ce65af4603e}\label{classhttplib_1_1_client_impl_ae8421cb5d2e38a8c39d90ce65af4603e} 
+bool {\bfseries socket\+\_\+should\+\_\+be\+\_\+closed\+\_\+when\+\_\+request\+\_\+is\+\_\+done\+\_\+} = false
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ac02f0e3fed7fa37cfa8b3f577c689fbf}\label{classhttplib_1_1_client_impl_ac02f0e3fed7fa37cfa8b3f577c689fbf} 
+std::\+map$<$ std::\+string, std::\+string $>$ {\bfseries addr\+\_\+map\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a951113dcfd3b68cb8638e9c33ce064e4}\label{classhttplib_1_1_client_impl_a951113dcfd3b68cb8638e9c33ce064e4} 
+Headers {\bfseries default\+\_\+headers\+\_\+}
+\item 
+std::\+function$<$ ssize\+\_\+t(\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&, Headers \&)$>$ \doxymbox{\hyperlink{classhttplib_1_1_client_impl_aab66b172a434a1672dfa8d06c38ff06a}{header\+\_\+writer\+\_\+}}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a9d67458e6d33ec592f996ffec5291629}\label{classhttplib_1_1_client_impl_a9d67458e6d33ec592f996ffec5291629} 
+std::\+string {\bfseries client\+\_\+cert\+\_\+path\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a8a4db55e2774ee93a0d75b333a811551}\label{classhttplib_1_1_client_impl_a8a4db55e2774ee93a0d75b333a811551} 
+std::\+string {\bfseries client\+\_\+key\+\_\+path\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a3e718f0fb785538cc9524116cb766c5e}\label{classhttplib_1_1_client_impl_a3e718f0fb785538cc9524116cb766c5e} 
+time\+\_\+t {\bfseries connection\+\_\+timeout\+\_\+sec\+\_\+} = CPPHTTPLIB\+\_\+\+CONNECTION\+\_\+\+TIMEOUT\+\_\+\+SECOND
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa43cc6674115bf211d4d4ba6f37ef237}\label{classhttplib_1_1_client_impl_aa43cc6674115bf211d4d4ba6f37ef237} 
+time\+\_\+t {\bfseries connection\+\_\+timeout\+\_\+usec\+\_\+} = CPPHTTPLIB\+\_\+\+CONNECTION\+\_\+\+TIMEOUT\+\_\+\+USECOND
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a26342fa5c5c2ef0372904a4e7c0314b2}\label{classhttplib_1_1_client_impl_a26342fa5c5c2ef0372904a4e7c0314b2} 
+time\+\_\+t {\bfseries read\+\_\+timeout\+\_\+sec\+\_\+} = CPPHTTPLIB\+\_\+\+CLIENT\+\_\+\+READ\+\_\+\+TIMEOUT\+\_\+\+SECOND
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a505650f012e277b9cd50631de01acaa5}\label{classhttplib_1_1_client_impl_a505650f012e277b9cd50631de01acaa5} 
+time\+\_\+t {\bfseries read\+\_\+timeout\+\_\+usec\+\_\+} = CPPHTTPLIB\+\_\+\+CLIENT\+\_\+\+READ\+\_\+\+TIMEOUT\+\_\+\+USECOND
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a0d7f571cceaf34271b94b381b3872706}\label{classhttplib_1_1_client_impl_a0d7f571cceaf34271b94b381b3872706} 
+time\+\_\+t {\bfseries write\+\_\+timeout\+\_\+sec\+\_\+} = CPPHTTPLIB\+\_\+\+CLIENT\+\_\+\+WRITE\+\_\+\+TIMEOUT\+\_\+\+SECOND
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ac7f8e4488a040d51cbfe0d62a766b2dd}\label{classhttplib_1_1_client_impl_ac7f8e4488a040d51cbfe0d62a766b2dd} 
+time\+\_\+t {\bfseries write\+\_\+timeout\+\_\+usec\+\_\+} = CPPHTTPLIB\+\_\+\+CLIENT\+\_\+\+WRITE\+\_\+\+TIMEOUT\+\_\+\+USECOND
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a4a8c0f300c2310660c0be7585237cce6}\label{classhttplib_1_1_client_impl_a4a8c0f300c2310660c0be7585237cce6} 
+time\+\_\+t {\bfseries max\+\_\+timeout\+\_\+msec\+\_\+} = CPPHTTPLIB\+\_\+\+CLIENT\+\_\+\+MAX\+\_\+\+TIMEOUT\+\_\+\+MSECOND
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_af5a16149e2b0e9e004de9d652844d0be}\label{classhttplib_1_1_client_impl_af5a16149e2b0e9e004de9d652844d0be} 
+std::\+string {\bfseries basic\+\_\+auth\+\_\+username\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a5da67860d3127963342200e6bb46b6f7}\label{classhttplib_1_1_client_impl_a5da67860d3127963342200e6bb46b6f7} 
+std::\+string {\bfseries basic\+\_\+auth\+\_\+password\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a6b87babec803c7cf41a5615a83d263e0}\label{classhttplib_1_1_client_impl_a6b87babec803c7cf41a5615a83d263e0} 
+std::\+string {\bfseries bearer\+\_\+token\+\_\+auth\+\_\+token\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aec0bcabcd572a6bebb13cf160f61ac34}\label{classhttplib_1_1_client_impl_aec0bcabcd572a6bebb13cf160f61ac34} 
+bool {\bfseries keep\+\_\+alive\+\_\+} = false
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a4005b35112db92b2f62fc603cc13e8eb}\label{classhttplib_1_1_client_impl_a4005b35112db92b2f62fc603cc13e8eb} 
+bool {\bfseries follow\+\_\+location\+\_\+} = false
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a37a2975dbfceea82bb56a66621765c5d}\label{classhttplib_1_1_client_impl_a37a2975dbfceea82bb56a66621765c5d} 
+bool {\bfseries url\+\_\+encode\+\_\+} = true
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a805436a7b63850ca3b6c7f0258bb273e}\label{classhttplib_1_1_client_impl_a805436a7b63850ca3b6c7f0258bb273e} 
+int {\bfseries address\+\_\+family\+\_\+} = AF\+\_\+\+UNSPEC
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a493f0b3244303aac28f833906ae7e3d5}\label{classhttplib_1_1_client_impl_a493f0b3244303aac28f833906ae7e3d5} 
+bool {\bfseries tcp\+\_\+nodelay\+\_\+} = CPPHTTPLIB\+\_\+\+TCP\+\_\+\+NODELAY
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa3e79070655286a96c2e094c4b3bb652}\label{classhttplib_1_1_client_impl_aa3e79070655286a96c2e094c4b3bb652} 
+bool {\bfseries ipv6\+\_\+v6only\+\_\+} = CPPHTTPLIB\+\_\+\+IPV6\+\_\+\+V6\+ONLY
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ae67fe9eb4d0e01126921525f2184af4a}\label{classhttplib_1_1_client_impl_ae67fe9eb4d0e01126921525f2184af4a} 
+Socket\+Options {\bfseries socket\+\_\+options\+\_\+} = nullptr
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ab5c7b0e1e66b8a3d6cce285cb3d4a7ea}\label{classhttplib_1_1_client_impl_ab5c7b0e1e66b8a3d6cce285cb3d4a7ea} 
+bool {\bfseries compress\+\_\+} = false
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a1bcef3b2e3a5cbf620fd8448fee4bbbd}\label{classhttplib_1_1_client_impl_a1bcef3b2e3a5cbf620fd8448fee4bbbd} 
+bool {\bfseries decompress\+\_\+} = true
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a8e8b99a68512b46c46aa99307f8978d7}\label{classhttplib_1_1_client_impl_a8e8b99a68512b46c46aa99307f8978d7} 
+std::\+string {\bfseries interface\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a51c59b7a4d65cbaa023de65a3495e76b}\label{classhttplib_1_1_client_impl_a51c59b7a4d65cbaa023de65a3495e76b} 
+std::\+string {\bfseries proxy\+\_\+host\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a73c0b0668210e1a7671a6c8a02a9dc46}\label{classhttplib_1_1_client_impl_a73c0b0668210e1a7671a6c8a02a9dc46} 
+int {\bfseries proxy\+\_\+port\+\_\+} = -\/1
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa4d412f05411638d9b4136ad25bc9339}\label{classhttplib_1_1_client_impl_aa4d412f05411638d9b4136ad25bc9339} 
+std::\+string {\bfseries proxy\+\_\+basic\+\_\+auth\+\_\+username\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ac9eea291a60877a7e2b6bfee51606b58}\label{classhttplib_1_1_client_impl_ac9eea291a60877a7e2b6bfee51606b58} 
+std::\+string {\bfseries proxy\+\_\+basic\+\_\+auth\+\_\+password\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a316b3c3502a1b78cf73b01e4aee81798}\label{classhttplib_1_1_client_impl_a316b3c3502a1b78cf73b01e4aee81798} 
+std::\+string {\bfseries proxy\+\_\+bearer\+\_\+token\+\_\+auth\+\_\+token\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aaafda13c6544379ac485ae4639877fab}\label{classhttplib_1_1_client_impl_aaafda13c6544379ac485ae4639877fab} 
+Logger {\bfseries logger\+\_\+}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ab783868da89488b0bf734e8d83b5e569}\label{classhttplib_1_1_client_impl_ab783868da89488b0bf734e8d83b5e569} 
+bool {\bfseries send\+\_\+} (\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, Error \&error)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ab81f0f3ff5031d8bb231928318cd95ff}\label{classhttplib_1_1_client_impl_ab81f0f3ff5031d8bb231928318cd95ff} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries send\+\_\+} (\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&\&req)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a2235b51fb0ca763c902fe8b7a8669f67}\label{classhttplib_1_1_client_impl_a2235b51fb0ca763c902fe8b7a8669f67} 
+\doxymbox{\hyperlink{structsocket__t}{socket\+\_\+t}} {\bfseries create\+\_\+client\+\_\+socket} (Error \&error) const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a2d64f046067e118ef13afd593bbe1a07}\label{classhttplib_1_1_client_impl_a2d64f046067e118ef13afd593bbe1a07} 
+bool {\bfseries read\+\_\+response\+\_\+line} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, const \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res) const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ae7d812295ccea2c875e2d97328446fa6}\label{classhttplib_1_1_client_impl_ae7d812295ccea2c875e2d97328446fa6} 
+bool {\bfseries write\+\_\+request} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, bool close\+\_\+connection, Error \&error)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_abb62c3620df77b2acedc94ae161b21f5}\label{classhttplib_1_1_client_impl_abb62c3620df77b2acedc94ae161b21f5} 
+bool {\bfseries redirect} (\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, Error \&error)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ac4e30af906067369892520eccd85c038}\label{classhttplib_1_1_client_impl_ac4e30af906067369892520eccd85c038} 
+bool {\bfseries handle\+\_\+request} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, \doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} \&res, bool close\+\_\+connection, Error \&error)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_ab3169b93b50fca58a21f2db0a2bdea88}\label{classhttplib_1_1_client_impl_ab3169b93b50fca58a21f2db0a2bdea88} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structhttplib_1_1_response}{Response}} $>$ {\bfseries send\+\_\+with\+\_\+content\+\_\+provider} (\doxymbox{\hyperlink{structhttplib_1_1_request}{Request}} \&req, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, Content\+Provider content\+\_\+provider, Content\+Provider\+Without\+Length content\+\_\+provider\+\_\+without\+\_\+length, const std::\+string \&content\+\_\+type, Error \&error)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_aa42e9d7b3411473cf67b6df86a6ad209}\label{classhttplib_1_1_client_impl_aa42e9d7b3411473cf67b6df86a6ad209} 
+\doxymbox{\hyperlink{classhttplib_1_1_result}{Result}} {\bfseries send\+\_\+with\+\_\+content\+\_\+provider} (const std::\+string \&method, const std::\+string \&path, const Headers \&headers, const char \texorpdfstring{$\ast$}{*}body, size\+\_\+t content\+\_\+length, Content\+Provider content\+\_\+provider, Content\+Provider\+Without\+Length content\+\_\+provider\+\_\+without\+\_\+length, const std::\+string \&content\+\_\+type, Progress progress)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_af3c14326e088096d3ff650acbb7eae3f}\label{classhttplib_1_1_client_impl_af3c14326e088096d3ff650acbb7eae3f} 
+Content\+Provider\+Without\+Length {\bfseries get\+\_\+multipart\+\_\+content\+\_\+provider} (const std::\+string \&boundary, const Multipart\+Form\+Data\+Items \&items, const Multipart\+Form\+Data\+Provider\+Items \&provider\+\_\+items) const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_abba8dba1f5c931413fdb62e0e7163252}\label{classhttplib_1_1_client_impl_abba8dba1f5c931413fdb62e0e7163252} 
+std::\+string {\bfseries adjust\+\_\+host\+\_\+string} (const std::\+string \&host) const
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a20945f85162d8b58e3ce64ad0c620889}\label{classhttplib_1_1_client_impl_a20945f85162d8b58e3ce64ad0c620889} 
+virtual bool {\bfseries process\+\_\+socket} (const \doxymbox{\hyperlink{structhttplib_1_1_client_impl_1_1_socket}{Socket}} \&socket, std::\+chrono::\+time\+\_\+point$<$ std::\+chrono::\+steady\+\_\+clock $>$ start\+\_\+time, std::\+function$<$ bool(\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm)$>$ callback)
+\item 
+\Hypertarget{classhttplib_1_1_client_impl_a97baaca9b83724052db0897f306ca8a9}\label{classhttplib_1_1_client_impl_a97baaca9b83724052db0897f306ca8a9} 
+virtual bool {\bfseries is\+\_\+ssl} () const
+\end{DoxyCompactItemize}
+
+
+\label{doc-variable-members}
+\Hypertarget{classhttplib_1_1_client_impl_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classhttplib_1_1_client_impl_aab66b172a434a1672dfa8d06c38ff06a}\index{httplib::ClientImpl@{httplib::ClientImpl}!header\_writer\_@{header\_writer\_}}
+\index{header\_writer\_@{header\_writer\_}!httplib::ClientImpl@{httplib::ClientImpl}}
+\doxysubsubsection{\texorpdfstring{header\_writer\_}{header\_writer\_}}
+{\footnotesize\ttfamily \label{classhttplib_1_1_client_impl_aab66b172a434a1672dfa8d06c38ff06a} 
+std::\+function$<$ssize\+\_\+t(\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&, Headers \&)$>$ httplib::\+\+Client\+Impl::\+header\+\_\+writer\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =}
+\DoxyCodeLine{detail::write\_headers}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+server/\+httplib.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,136 @@
+\doxysection{Configuration Class Reference}
+\hypertarget{class_configuration}{}\label{class_configuration}\index{Configuration@{Configuration}}
+
+
+Top-\/level configuration object; owns \doxylink{class_a_p_i_settings}{APISettings} and \doxylink{class_permissions}{Permissions}.  
+
+
+
+
+{\ttfamily \+\#include $<$config.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_configuration_aabdc48217656d7995a62b1f9ab34ae39}{Configuration}} (const std::\+string \&\doxymbox{\hyperlink{class_configuration_ad3f429a629bd628080bbb44325aa13a4}{config\+File\+Path}}="{}config.\+ini"{})
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{class_configuration}{Configuration} bound to the given file path. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_configuration_adf2992468f43f18aa8acb7b4b9c9cf98}{load}} ()
+\begin{DoxyCompactList}\small\item\em Parses the config file and populates all settings fields. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_configuration_a7be34e96bb4bedaac932857e2e4622cf}{save}} () const
+\begin{DoxyCompactList}\small\item\em Writes the current settings back to the config file. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_configuration_af7c5a269ab8c61d77216f1a6457715a1}{print}} (bool show\+Secrets=false) const
+\begin{DoxyCompactList}\small\item\em Prints all configuration fields to stdout. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_configuration_a228eba6d8f5fb450d0a052f4b255ef03}\label{class_configuration_a228eba6d8f5fb450d0a052f4b255ef03} 
+\doxymbox{\hyperlink{class_a_p_i_settings}{APISettings}} {\bfseries api\+Settings}
+\begin{DoxyCompactList}\small\item\em All third-\/party API credentials and base URLs. \end{DoxyCompactList}\item 
+\Hypertarget{class_configuration_a77f82f53bcc2b383b25122848dc0c2e5}\label{class_configuration_a77f82f53bcc2b383b25122848dc0c2e5} 
+\doxymbox{\hyperlink{class_permissions}{Permissions}} {\bfseries permissions}
+\begin{DoxyCompactList}\small\item\em Feature-\/level permission flags. \end{DoxyCompactList}\item 
+\Hypertarget{class_configuration_af140111a604721d3c1345208c841809e}\label{class_configuration_af140111a604721d3c1345208c841809e} 
+std::\+string {\bfseries default\+Location}
+\begin{DoxyCompactList}\small\item\em Default location string used by the weather action. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_configuration_ad3f429a629bd628080bbb44325aa13a4}\label{class_configuration_ad3f429a629bd628080bbb44325aa13a4} 
+std::\+string {\bfseries config\+File\+Path}
+\begin{DoxyCompactList}\small\item\em Path to the INI file; set at construction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Top-\/level configuration object; owns \doxylink{class_a_p_i_settings}{APISettings} and \doxylink{class_permissions}{Permissions}. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Reads from and writes to an INI-\/style file (default:\+ config.\+ini). Construct with the path to the config file, then call \doxylink{class_configuration_adf2992468f43f18aa8acb7b4b9c9cf98}{load()} before accessing any settings. 
+
+\label{doc-constructors}
+\Hypertarget{class_configuration_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_configuration_aabdc48217656d7995a62b1f9ab34ae39}\index{Configuration@{Configuration}!Configuration@{Configuration}}
+\index{Configuration@{Configuration}!Configuration@{Configuration}}
+\doxysubsubsection{\texorpdfstring{Configuration()}{Configuration()}}
+{\footnotesize\ttfamily \label{class_configuration_aabdc48217656d7995a62b1f9ab34ae39} 
+Configuration::\+\+Configuration (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{config\+File\+Path}{ = {\ttfamily "{}config.ini"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructs a \doxylink{class_configuration}{Configuration} bound to the given file path. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Does not read the file — call \doxylink{class_configuration_adf2992468f43f18aa8acb7b4b9c9cf98}{load()} explicitly after construction.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{class_configuration_ad3f429a629bd628080bbb44325aa13a4}{config\+File\+Path}} & Path to the INI config file. Defaults to "{}config.\+ini"{} in the working directory. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_configuration_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_configuration_adf2992468f43f18aa8acb7b4b9c9cf98}\index{Configuration@{Configuration}!load@{load}}
+\index{load@{load}!Configuration@{Configuration}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily \label{class_configuration_adf2992468f43f18aa8acb7b4b9c9cf98} 
+bool Configuration::\+load (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Parses the config file and populates all settings fields. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+true if the file was found and parsed without error; false if the file is missing, unreadable, or malformed. 
+\end{DoxyReturn}
+\Hypertarget{class_configuration_af7c5a269ab8c61d77216f1a6457715a1}\index{Configuration@{Configuration}!print@{print}}
+\index{print@{print}!Configuration@{Configuration}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily \label{class_configuration_af7c5a269ab8c61d77216f1a6457715a1} 
+void Configuration::\+print (\begin{DoxyParamCaption}\item[{bool}]{show\+Secrets}{ = {\ttfamily false}}\end{DoxyParamCaption}) const}
+
+
+
+Prints all configuration fields to stdout. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em show\+Secrets} & When false (default), sensitive values such as google\+Client\+Secret and google\+Refresh\+Token are masked with "{}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}"{}. Pass true only in trusted debug contexts. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_configuration_a7be34e96bb4bedaac932857e2e4622cf}\index{Configuration@{Configuration}!save@{save}}
+\index{save@{save}!Configuration@{Configuration}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily \label{class_configuration_a7be34e96bb4bedaac932857e2e4622cf} 
+bool Configuration::\+save (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Writes the current settings back to the config file. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Overwrites the file at config\+File\+Path. Useful after \doxylink{class_permissions_af1de5079834ea2198f81f444cf050f7c}{Permissions::\+request\+Permission()} updates a flag that should persist across sessions.
+
+\begin{DoxyReturn}{Returns}
+true if the file was written successfully; false on I/\+O error. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{config_8h}{config.\+h}}\item 
+config.\+cpp\end{DoxyCompactItemize}

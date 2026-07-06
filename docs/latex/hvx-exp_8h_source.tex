@@ -1,0 +1,222 @@
+\doxysection{hvx-\/exp.h}
+\hypertarget{hvx-exp_8h_source}{}\label{hvx-exp_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/exp.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/exp.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HVX\_EXP\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HVX\_EXP\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}hvx-\/base.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}hvx-\/floor.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ EXP\_COEFF\_5\ (0x39506967)\ \ }\textcolor{comment}{//\ 0.000198757\ =\ 1/(7!)}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ EXP\_COEFF\_4\ (0x3AB743CE)\ \ }\textcolor{comment}{//\ 0.0013982\ \ \ =\ 1/(6!)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ EXP\_COEFF\_3\ (0x3C088908)\ \ }\textcolor{comment}{//\ 0.00833345\ \ =\ 1/(5!)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ EXP\_COEFF\_2\ (0x3D2AA9C1)\ \ }\textcolor{comment}{//\ 0.416658\ \ \ \ =\ 1/(4!)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ EXP\_COEFF\_1\ (0x3E2AAAAA)\ \ }\textcolor{comment}{//\ 0.16666667\ \ =\ 1/(3!)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ EXP\_COEFF\_0\ (0x3F000000)\ \ }\textcolor{comment}{//\ 0.5\ \ \ \ \ \ \ \ \ =\ 1/(2!)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ EXP\_LOGN2\ \ \ (0x3F317218)\ \ }\textcolor{comment}{//\ ln(2)\ \ \ =\ 0.6931471805}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ EXP\_LOG2E\ \ \ (0x3FB8AA3B)\ \ }\textcolor{comment}{//\ log2(e)\ =\ 1/ln(2)\ =\ 1.4426950408}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ EXP\_ONE\ \ \ \ \ (0x3f800000)\ \ }\textcolor{comment}{//\ 1.0}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ EXP\_RANGE\_R\ (0x42B16666)\ \ }\textcolor{comment}{//\ 88.7}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ EXP\_RANGE\_L\ (0xC2B00000)\ \ }\textcolor{comment}{//\ -\/88.0\ (approx\ log(FLT\_MIN))}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_exp\_f32(HVX\_Vector\ in\_vec)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ HVX\_Vector\ z\_qf32\_v;}
+\DoxyCodeLine{00025\ \ \ \ \ HVX\_Vector\ x\_v;}
+\DoxyCodeLine{00026\ \ \ \ \ HVX\_Vector\ x\_qf32\_v;}
+\DoxyCodeLine{00027\ \ \ \ \ HVX\_Vector\ y\_v;}
+\DoxyCodeLine{00028\ \ \ \ \ HVX\_Vector\ k\_v;}
+\DoxyCodeLine{00029\ \ \ \ \ HVX\_Vector\ f\_v;}
+\DoxyCodeLine{00030\ \ \ \ \ HVX\_Vector\ epsilon\_v;}
+\DoxyCodeLine{00031\ \ \ \ \ HVX\_Vector\ log2e\ =\ Q6\_V\_vsplat\_R(EXP\_LOG2E);}
+\DoxyCodeLine{00032\ \ \ \ \ HVX\_Vector\ logn2\ =\ Q6\_V\_vsplat\_R(EXP\_LOGN2);}
+\DoxyCodeLine{00033\ \ \ \ \ HVX\_Vector\ E\_const;}
+\DoxyCodeLine{00034\ \ \ \ \ HVX\_Vector\ zero\_v\ =\ Q6\_V\_vzero();}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ exp(x)\ is\ approximated\ as\ follows:}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ \ \ f\ =\ floor(x/ln(2))\ =\ floor(x*log2(e))}}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ \ \ epsilon\ =\ x\ -\/\ f*ln(2)}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ \ \ exp(x)\ =\ exp(epsilon+f*ln(2))}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ =\ exp(epsilon)*exp(f*ln(2))}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ =\ exp(epsilon)*2\string^f}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ \ \ Since\ epsilon\ is\ close\ to\ zero,\ it\ can\ be\ approximated\ with\ its\ Taylor\ series:}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ exp(x)\ \string~=\ 1+x+x\string^2/2!+x\string^3/3!+...+x\string^n/n!+...}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ \ \ Preserving\ the\ first\ eight\ elements,\ we\ get:}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ exp(x)\ \string~=\ 1+x+e0*x\string^2+e1*x\string^3+e2*x\string^4+e3*x\string^5+e4*x\string^6+e5*x\string^7}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \ 1+x+(E0+(E1+(E2+(E3+(E4+E5*x)*x)*x)*x)*x)*x\string^2}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ HVX\_Vector\ temp\_v\ =\ in\_vec;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{//\ Clamp\ inputs\ to\ (-\/88.0,\ 88.0)\ to\ avoid\ overflow/underflow}}
+\DoxyCodeLine{00052\ \ \ \ \ HVX\_VectorPred\ pred\_cap\_right\ =\ Q6\_Q\_vcmp\_gt\_VsfVsf(in\_vec,\ Q6\_V\_vsplat\_R(EXP\_RANGE\_R));}
+\DoxyCodeLine{00053\ \ \ \ \ HVX\_VectorPred\ pred\_cap\_left\ \ =\ Q6\_Q\_vcmp\_gt\_VsfVsf(Q6\_V\_vsplat\_R(EXP\_RANGE\_L),\ in\_vec);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ in\_vec\ =\ Q6\_V\_vmux\_QVV(pred\_cap\_right,\ Q6\_V\_vsplat\_R(EXP\_RANGE\_R),\ temp\_v);}
+\DoxyCodeLine{00056\ \ \ \ \ in\_vec\ =\ Q6\_V\_vmux\_QVV(pred\_cap\_left,\ Q6\_V\_vsplat\_R(EXP\_RANGE\_L),\ in\_vec);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ epsilon\_v\ =\ Q6\_Vqf32\_vmpy\_VsfVsf(log2e,\ in\_vec);}
+\DoxyCodeLine{00059\ \ \ \ \ epsilon\_v\ =\ Q6\_Vsf\_equals\_Vqf32(epsilon\_v);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ \ \ \ f\_v\ is\ the\ floating\ point\ result\ and\ k\_v\ is\ the\ integer\ result}}
+\DoxyCodeLine{00062\ \ \ \ \ f\_v\ =\ hvx\_vec\_floor\_f32(epsilon\_v);}
+\DoxyCodeLine{00063\ \ \ \ \ k\_v\ =\ hvx\_vec\_truncate\_f32(f\_v);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ x\_qf32\_v\ =\ Q6\_Vqf32\_vadd\_VsfVsf(in\_vec,\ zero\_v);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ \ x\ =\ x\ -\/\ f\_v\ *\ logn2;}}
+\DoxyCodeLine{00068\ \ \ \ \ epsilon\_v\ =\ Q6\_Vqf32\_vmpy\_VsfVsf(f\_v,\ logn2);}
+\DoxyCodeLine{00069\ \ \ \ \ x\_qf32\_v\ \ =\ Q6\_Vqf32\_vsub\_Vqf32Vqf32(x\_qf32\_v,\ epsilon\_v);}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ normalize\ before\ every\ QFloat's\ vmpy}}
+\DoxyCodeLine{00071\ \ \ \ \ x\_qf32\_v\ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(x\_qf32\_v,\ zero\_v);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ x\_v\ =\ Q6\_Vsf\_equals\_Vqf32(x\_qf32\_v);}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ z\ =\ x\ *\ x;}}
+\DoxyCodeLine{00076\ \ \ \ \ z\_qf32\_v\ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(x\_qf32\_v,\ x\_qf32\_v);}
+\DoxyCodeLine{00077\ \ \ \ \ z\_qf32\_v\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(z\_qf32\_v,\ zero\_v);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{//\ y\ =\ E4\ +\ E5\ *\ x;}}
+\DoxyCodeLine{00080\ \ \ \ \ E\_const\ =\ Q6\_V\_vsplat\_R(EXP\_COEFF\_5);}
+\DoxyCodeLine{00081\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vmpy\_VsfVsf(E\_const,\ x\_v);}
+\DoxyCodeLine{00082\ \ \ \ \ E\_const\ =\ Q6\_V\_vsplat\_R(EXP\_COEFF\_4);}
+\DoxyCodeLine{00083\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ E\_const);}
+\DoxyCodeLine{00084\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ zero\_v);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//\ y\ =\ E3\ +\ y\ *\ x;}}
+\DoxyCodeLine{00087\ \ \ \ \ E\_const\ =\ Q6\_V\_vsplat\_R(EXP\_COEFF\_3);}
+\DoxyCodeLine{00088\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(y\_v,\ x\_qf32\_v);}
+\DoxyCodeLine{00089\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ E\_const);}
+\DoxyCodeLine{00090\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ zero\_v);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ y\ =\ E2\ +\ y\ *\ x;}}
+\DoxyCodeLine{00093\ \ \ \ \ E\_const\ =\ Q6\_V\_vsplat\_R(EXP\_COEFF\_2);}
+\DoxyCodeLine{00094\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(y\_v,\ x\_qf32\_v);}
+\DoxyCodeLine{00095\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ E\_const);}
+\DoxyCodeLine{00096\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ zero\_v);}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{comment}{//\ y\ =\ E1\ +\ y\ *\ x;}}
+\DoxyCodeLine{00099\ \ \ \ \ E\_const\ =\ Q6\_V\_vsplat\_R(EXP\_COEFF\_1);}
+\DoxyCodeLine{00100\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(y\_v,\ x\_qf32\_v);}
+\DoxyCodeLine{00101\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ E\_const);}
+\DoxyCodeLine{00102\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ zero\_v);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{comment}{//\ y\ =\ E0\ +\ y\ *\ x;}}
+\DoxyCodeLine{00105\ \ \ \ \ E\_const\ =\ Q6\_V\_vsplat\_R(EXP\_COEFF\_0);}
+\DoxyCodeLine{00106\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(y\_v,\ x\_qf32\_v);}
+\DoxyCodeLine{00107\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ E\_const);}
+\DoxyCodeLine{00108\ \ \ \ \ y\_v\ \ \ \ \ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ zero\_v);}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{//\ y\ =\ x\ +\ y\ *\ z;}}
+\DoxyCodeLine{00111\ \ \ \ \ y\_v\ =\ Q6\_Vqf32\_vmpy\_Vqf32Vqf32(y\_v,\ z\_qf32\_v);}
+\DoxyCodeLine{00112\ \ \ \ \ y\_v\ =\ Q6\_Vqf32\_vadd\_Vqf32Vqf32(y\_v,\ x\_qf32\_v);}
+\DoxyCodeLine{00113\ \ \ \ \ y\_v\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ zero\_v);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ y\ =\ y\ +\ 1.0;}}
+\DoxyCodeLine{00116\ \ \ \ \ y\_v\ =\ Q6\_Vqf32\_vadd\_Vqf32Vsf(y\_v,\ Q6\_V\_vsplat\_R(EXP\_ONE));}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{comment}{//\ insert\ exponents}}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ y\ =\ ldexpf(y,\ k);}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//\ \ \ \ y\_v\ +=\ k\_v;\ //\ qf32}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{comment}{//\ modify\ exponent}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ y\_v\ =\ Q6\_Vsf\_equals\_Vqf32(y\_v);}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{comment}{//\ add\ k\_v\ to\ the\ exponent\ of\ y\_v}}
+\DoxyCodeLine{00126\ \ \ \ \ HVX\_Vector\ y\_v\_exponent\ =\ Q6\_Vw\_vasl\_VwR(y\_v,\ 1);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ y\_v\_exponent\ =\ Q6\_Vuw\_vlsr\_VuwR(y\_v\_exponent,\ IEEE\_VSF\_MANTLEN\ +\ 1);}
+\DoxyCodeLine{00129\ \ \ \ \ y\_v\_exponent\ =\ Q6\_Vw\_vadd\_VwVw(k\_v,\ y\_v\_exponent);}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{comment}{//\ exponent\ cannot\ be\ negative;\ if\ overflow\ is\ detected,\ result\ is\ set\ to\ zero}}
+\DoxyCodeLine{00132\ \ \ \ \ HVX\_VectorPred\ qy\_v\_negative\_exponent\ =\ Q6\_Q\_vcmp\_gt\_VwVw(zero\_v,\ y\_v\_exponent);}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ y\_v\ =\ Q6\_Vw\_vaslacc\_VwVwR(y\_v,\ k\_v,\ IEEE\_VSF\_MANTLEN);}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ y\_v\ =\ Q6\_V\_vmux\_QVV(qy\_v\_negative\_exponent,\ zero\_v,\ y\_v);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordflow}{return}\ y\_v;}
+\DoxyCodeLine{00139\ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_exp\_f32\_guard(HVX\_Vector\ in\_vec,\ HVX\_Vector\ max\_exp,\ HVX\_Vector\ inf)\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_VectorPred\ pred0\ =\ Q6\_Q\_vcmp\_gt\_VsfVsf(in\_vec,\ max\_exp);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ HVX\_Vector\ out\ =\ hvx\_vec\_exp\_f32(in\_vec);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_V\_vmux\_QVV(pred0,\ inf,\ out);}
+\DoxyCodeLine{00147\ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hvx\_exp\_f32(uint8\_t\ *\ restrict\ dst,\ \textcolor{keyword}{const}\ uint8\_t\ *\ restrict\ src,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ num\_elems,\ \textcolor{keywordtype}{bool}\ negate)\ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{int}\ left\_over\ \ \ \ \ \ \ =\ num\_elems\ \&\ (VLEN\_FP32\ -\/\ 1);}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_elems\_whole\ =\ num\_elems\ -\/\ left\_over;}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{int}\ unaligned\_addr\ =\ 0;}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordtype}{int}\ unaligned\_loop\ =\ 0;}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordflow}{if}\ ((0\ ==\ hex\_is\_aligned((\textcolor{keywordtype}{void}\ *)\ src,\ VLEN))\ ||\ (0\ ==\ hex\_is\_aligned((\textcolor{keywordtype}{void}\ *)\ dst,\ VLEN)))\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ unaligned\_addr\ =\ 1;}
+\DoxyCodeLine{00157\ \ \ \ \ \}}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{comment}{//\ assert((0\ ==\ unaligned\_addr)\ ||\ (0\ ==\ num\_elems\_whole));}}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordflow}{if}\ ((1\ ==\ unaligned\_addr)\ \&\&\ (num\_elems\_whole\ !=\ 0))\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ unaligned\_loop\ =\ 1;}
+\DoxyCodeLine{00161\ \ \ \ \ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ HVX\_Vector\ vec\_out\ =\ Q6\_V\_vzero();}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ kInf\ \ \ \ =\ INFINITY;}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ kMaxExp\ =\ 88.7f;}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ max\_exp\ =\ hvx\_vec\_splat\_f32(kMaxExp);}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ inf\ \ \ \ \ =\ hvx\_vec\_splat\_f32(kInf);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordflow}{if}\ (0\ ==\ unaligned\_loop)\ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ HVX\_Vector\ *\ p\_vec\_in1\ =\ (HVX\_Vector\ *)\ src;}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ HVX\_Vector\ *\ p\_vec\_out\ =\ (HVX\_Vector\ *)\ dst;}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ unroll(4)}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ num\_elems\_whole;\ i\ +=\ VLEN\_FP32)\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{true}\ ==\ negate)\ \{}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ neg\_vec\_in\ =\ hvx\_vec\_neg\_f32(*p\_vec\_in1++);}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *p\_vec\_out++\ \ \ \ \ \ \ \ \ \ =\ hvx\_vec\_exp\_f32\_guard(neg\_vec\_in,\ max\_exp,\ inf);}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *p\_vec\_out++\ =\ hvx\_vec\_exp\_f32\_guard(*p\_vec\_in1++,\ max\_exp,\ inf);}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00184\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ unroll(4)}}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ num\_elems\_whole;\ i\ +=\ VLEN\_FP32)\ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ in\ =\ *(HVX\_UVector\ *)\ (src\ +\ i\ *\ SIZEOF\_FP32);}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{true}\ ==\ negate)\ \{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ neg\_vec\_in\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ hvx\_vec\_neg\_f32(in);}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *(HVX\_UVector\ *)\ (dst\ +\ i\ *\ SIZEOF\_FP32)\ =\ hvx\_vec\_exp\_f32\_guard(neg\_vec\_in,\ max\_exp,\ inf);}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *(HVX\_UVector\ *)\ (dst\ +\ i\ *\ SIZEOF\_FP32)\ =\ hvx\_vec\_exp\_f32\_guard(in,\ max\_exp,\ inf);}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00196\ \ \ \ \ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordflow}{if}\ (left\_over\ >\ 0)\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ srcf\ =\ (\textcolor{keywordtype}{float}\ *)\ src\ +\ num\_elems\_whole;}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ \ \ \ \ \ \ dstf\ =\ (\textcolor{keywordtype}{float}\ *)\ dst\ +\ num\_elems\_whole;}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ HVX\_Vector\ in\ =\ *(HVX\_UVector\ *)\ srcf;}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{true}\ ==\ negate)\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ HVX\_Vector\ neg\_vec\_in\ =\ hvx\_vec\_neg\_f32(in);}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ vec\_out\ =\ hvx\_vec\_exp\_f32\_guard(neg\_vec\_in,\ max\_exp,\ inf);}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ vec\_out\ =\ hvx\_vec\_exp\_f32\_guard(in,\ max\_exp,\ inf);}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ hvx\_vec\_store\_u((\textcolor{keywordtype}{void}\ *)\ dstf,\ left\_over\ *\ SIZEOF\_FP32,\ vec\_out);}
+\DoxyCodeLine{00213\ \ \ \ \ \}}
+\DoxyCodeLine{00214\ \}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HVX\_EXP\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,34 @@
+\doxysection{vk\+\_\+memory\+\_\+logger Class Reference}
+\hypertarget{classvk__memory__logger}{}\label{classvk__memory__logger}\index{vk\_memory\_logger@{vk\_memory\_logger}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classvk__memory__logger_a714eb5b08dde5c345f41207c546c4726}\label{classvk__memory__logger_a714eb5b08dde5c345f41207c546c4726} 
+void {\bfseries log\+\_\+allocation} (vk\+\_\+buffer\+\_\+ref buf\+\_\+ref, size\+\_\+t size)
+\item 
+\Hypertarget{classvk__memory__logger_a38ee351c95f48e93885b2474d4a5de12}\label{classvk__memory__logger_a38ee351c95f48e93885b2474d4a5de12} 
+void {\bfseries log\+\_\+deallocation} (vk\+\_\+buffer\+\_\+ref buf\+\_\+ref)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classvk__memory__logger_aec9acf98db48d38d6cb1bbbfdf94fa5f}\label{classvk__memory__logger_aec9acf98db48d38d6cb1bbbfdf94fa5f} 
+std::\+map$<$ vk::\+\+Buffer, size\+\_\+t $>$ {\bfseries allocations}
+\item 
+\Hypertarget{classvk__memory__logger_ae168fb33116cf7d6f436c0a2e38edd2d}\label{classvk__memory__logger_ae168fb33116cf7d6f436c0a2e38edd2d} 
+size\+\_\+t {\bfseries total\+\_\+device}
+\item 
+\Hypertarget{classvk__memory__logger_aad9fd59da58fff314caf04fa64e80588}\label{classvk__memory__logger_aad9fd59da58fff314caf04fa64e80588} 
+size\+\_\+t {\bfseries total\+\_\+host}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classvk__memory__logger_a9e6e6430d662310d6869bf84544e0333}\label{classvk__memory__logger_a9e6e6430d662310d6869bf84544e0333} 
+static std::\+mutex {\bfseries log\+\_\+mutex}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/vulkan/\+ggml-\/vulkan.\+cpp\end{DoxyCompactItemize}

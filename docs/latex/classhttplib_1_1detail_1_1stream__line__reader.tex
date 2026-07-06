@@ -1,0 +1,49 @@
+\doxysection{httplib::\+detail::\+stream\+\_\+line\+\_\+reader Class Reference}
+\hypertarget{classhttplib_1_1detail_1_1stream__line__reader}{}\label{classhttplib_1_1detail_1_1stream__line__reader}\index{httplib::detail::stream\_line\_reader@{httplib::detail::stream\_line\_reader}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_a0dc4483bce6fd367b08a2ed96e3f048b}\label{classhttplib_1_1detail_1_1stream__line__reader_a0dc4483bce6fd367b08a2ed96e3f048b} 
+{\bfseries stream\+\_\+line\+\_\+reader} (\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \&strm, char \texorpdfstring{$\ast$}{*}fixed\+\_\+buffer, size\+\_\+t fixed\+\_\+buffer\+\_\+size)
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_ac1ea873b6559ff411cb777d2bbdba4cc}\label{classhttplib_1_1detail_1_1stream__line__reader_ac1ea873b6559ff411cb777d2bbdba4cc} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries ptr} () const
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_abf2e2d85e7411c8af6e84109029b4d6e}\label{classhttplib_1_1detail_1_1stream__line__reader_abf2e2d85e7411c8af6e84109029b4d6e} 
+size\+\_\+t {\bfseries size} () const
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_aa0776295bbb7bd734a00dd6ffc281c31}\label{classhttplib_1_1detail_1_1stream__line__reader_aa0776295bbb7bd734a00dd6ffc281c31} 
+bool {\bfseries end\+\_\+with\+\_\+crlf} () const
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_a39b395742e14cc015a448f6ea4143d44}\label{classhttplib_1_1detail_1_1stream__line__reader_a39b395742e14cc015a448f6ea4143d44} 
+bool {\bfseries getline} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_a983947ba51e1523ddd195dddfdd9bd26}\label{classhttplib_1_1detail_1_1stream__line__reader_a983947ba51e1523ddd195dddfdd9bd26} 
+void {\bfseries append} (char c)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_a9bac9c2e59ee5c4db690f0248d998fc5}\label{classhttplib_1_1detail_1_1stream__line__reader_a9bac9c2e59ee5c4db690f0248d998fc5} 
+\doxymbox{\hyperlink{classhttplib_1_1_stream}{Stream}} \& {\bfseries strm\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_ac2ff09c3c3e15f9011692f9a6477fc61}\label{classhttplib_1_1detail_1_1stream__line__reader_ac2ff09c3c3e15f9011692f9a6477fc61} 
+char \texorpdfstring{$\ast$}{*} {\bfseries fixed\+\_\+buffer\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_ab8b323d46de054a35d90fbe8eece7d99}\label{classhttplib_1_1detail_1_1stream__line__reader_ab8b323d46de054a35d90fbe8eece7d99} 
+const size\+\_\+t {\bfseries fixed\+\_\+buffer\+\_\+size\+\_\+}
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_afd79cba0f27f60c555779b2213e63fd4}\label{classhttplib_1_1detail_1_1stream__line__reader_afd79cba0f27f60c555779b2213e63fd4} 
+size\+\_\+t {\bfseries fixed\+\_\+buffer\+\_\+used\+\_\+size\+\_\+} = 0
+\item 
+\Hypertarget{classhttplib_1_1detail_1_1stream__line__reader_a47a031e0f2cfebee388e8cdc4ee84b53}\label{classhttplib_1_1detail_1_1stream__line__reader_a47a031e0f2cfebee388e8cdc4ee84b53} 
+std::\+string {\bfseries growable\+\_\+buffer\+\_\+}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+server/\+httplib.\+h\end{DoxyCompactItemize}

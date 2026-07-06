@@ -1,0 +1,1498 @@
+\doxysection{llama.\+h}
+\hypertarget{llama_8h_source}{}\label{llama_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama.h@{whisper.cpp/examples/talk-\/llama/llama.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ LLAMA\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ LLAMA\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/cpu.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}ggml-\/opt.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}gguf.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifdef\ LLAMA\_SHARED}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#\ \ \ \ if\ defined(\_WIN32)\ \&\&\ !defined(\_\_MINGW32\_\_)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ ifdef\ LLAMA\_BUILD}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ define\ LLAMA\_API\ \_\_declspec(dllexport)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ define\ LLAMA\_API\ \_\_declspec(dllimport)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ LLAMA\_API\ \_\_attribute\_\_\ ((visibility\ ("{}default"{})))}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#\ \ \ \ define\ LLAMA\_API}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#ifdef\ \_\_GNUC\_\_}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ \ \ \ define\ DEPRECATED(func,\ hint)\ func\ \_\_attribute\_\_((deprecated(hint)))}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#elif\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#\ \ \ \ define\ DEPRECATED(func,\ hint)\ \_\_declspec(deprecated(hint))\ func}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#\ \ \ \ define\ DEPRECATED(func,\ hint)\ func}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ LLAMA\_DEFAULT\_SEED\ 0xFFFFFFFF}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ LLAMA\_TOKEN\_NULL\ -\/1}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ LLAMA\_FILE\_MAGIC\_GGLA\ 0x67676c61u\ }\textcolor{comment}{//\ 'ggla'}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ LLAMA\_FILE\_MAGIC\_GGSN\ 0x6767736eu\ }\textcolor{comment}{//\ 'ggsn'}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ LLAMA\_FILE\_MAGIC\_GGSQ\ 0x67677371u\ }\textcolor{comment}{//\ 'ggsq'}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ LLAMA\_SESSION\_MAGIC\ \ \ LLAMA\_FILE\_MAGIC\_GGSN}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ LLAMA\_SESSION\_VERSION\ 9}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ LLAMA\_STATE\_SEQ\_MAGIC\ \ \ LLAMA\_FILE\_MAGIC\_GGSQ}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ LLAMA\_STATE\_SEQ\_VERSION\ 2}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00052\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ C\ interface}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ TODO:\ show\ sample\ usage}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}};}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model}{llama\_model}};}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__context}{llama\_context}};}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__memory__i}{llama\_memory\_i}}\ *\ llama\_memory\_t;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{typedef}\ int32\_t\ llama\_pos;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{typedef}\ int32\_t\ llama\_token;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{typedef}\ int32\_t\ llama\_seq\_id;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_vocab\_type\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ LLAMA\_VOCAB\_TYPE\_NONE\ \ \ =\ 0,\ \textcolor{comment}{//\ For\ models\ without\ vocab}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ LLAMA\_VOCAB\_TYPE\_SPM\ \ \ \ =\ 1,\ \textcolor{comment}{//\ LLaMA\ tokenizer\ based\ on\ byte-\/level\ BPE\ with\ byte\ fallback}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ LLAMA\_VOCAB\_TYPE\_BPE\ \ \ \ =\ 2,\ \textcolor{comment}{//\ GPT-\/2\ tokenizer\ based\ on\ byte-\/level\ BPE}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ LLAMA\_VOCAB\_TYPE\_WPM\ \ \ \ =\ 3,\ \textcolor{comment}{//\ BERT\ tokenizer\ based\ on\ WordPiece}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ LLAMA\_VOCAB\_TYPE\_UGM\ \ \ \ =\ 4,\ \textcolor{comment}{//\ T5\ tokenizer\ based\ on\ Unigram}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ LLAMA\_VOCAB\_TYPE\_RWKV\ \ \ =\ 5,\ \textcolor{comment}{//\ RWKV\ tokenizer\ based\ on\ greedy\ tokenization}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ LLAMA\_VOCAB\_TYPE\_PLAMO2\ =\ 6,\ \textcolor{comment}{//\ PLaMo-\/2\ tokenizer\ based\ on\ Aho-\/Corasick\ with\ dynamic\ programming}}
+\DoxyCodeLine{00080\ \ \ \ \ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_rope\_type\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_TYPE\_NONE\ \ \ =\ -\/1,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_TYPE\_NORM\ \ \ =\ 0,}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_TYPE\_NEOX\ \ \ =\ GGML\_ROPE\_TYPE\_NEOX,}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_TYPE\_MROPE\ \ =\ GGML\_ROPE\_TYPE\_MROPE,}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_TYPE\_IMROPE\ =\ GGML\_ROPE\_TYPE\_IMROPE,}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_TYPE\_VISION\ =\ GGML\_ROPE\_TYPE\_VISION,}
+\DoxyCodeLine{00089\ \ \ \ \ \};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_token\_type\ \{\ \textcolor{comment}{//TODO:\ remove,\ required\ until\ per\ token\ attributes\ are\ available\ from\ GGUF\ file}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_TYPE\_UNDEFINED\ \ \ \ =\ 0,}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_TYPE\_NORMAL\ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_TYPE\_UNKNOWN\ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_TYPE\_CONTROL\ \ \ \ \ \ =\ 3,}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_TYPE\_USER\_DEFINED\ =\ 4,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_TYPE\_UNUSED\ \ \ \ \ \ \ =\ 5,}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_TYPE\_BYTE\ \ \ \ \ \ \ \ \ =\ 6,}
+\DoxyCodeLine{00099\ \ \ \ \ \};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_token\_attr\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_UNDEFINED\ \ \ \ =\ 0,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_UNKNOWN\ \ \ \ \ \ =\ 1\ <<\ 0,}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_UNUSED\ \ \ \ \ \ \ =\ 1\ <<\ 1,}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_NORMAL\ \ \ \ \ \ \ =\ 1\ <<\ 2,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_CONTROL\ \ \ \ \ \ =\ 1\ <<\ 3,\ \ \textcolor{comment}{//\ SPECIAL?}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_USER\_DEFINED\ =\ 1\ <<\ 4,}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_BYTE\ \ \ \ \ \ \ \ \ =\ 1\ <<\ 5,}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_NORMALIZED\ \ \ =\ 1\ <<\ 6,}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_LSTRIP\ \ \ \ \ \ \ =\ 1\ <<\ 7,}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_RSTRIP\ \ \ \ \ \ \ =\ 1\ <<\ 8,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ LLAMA\_TOKEN\_ATTR\_SINGLE\_WORD\ \ =\ 1\ <<\ 9,}
+\DoxyCodeLine{00113\ \ \ \ \ \};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ model\ file\ types}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_ftype\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_ALL\_F32\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_F16\ \ \ \ \ \ \ \ \ \ \ =\ 1,\ \ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q4\_0\ \ \ \ \ \ \ \ \ \ =\ 2,\ \ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q4\_1\ \ \ \ \ \ \ \ \ \ =\ 3,\ \ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ LLAMA\_FTYPE\_MOSTLY\_Q4\_1\_SOME\_F16\ =\ 4,\ \ //\ tok\_embeddings.weight\ and\ output.weight\ are\ F16}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ LLAMA\_FTYPE\_MOSTLY\_Q4\_2\ \ \ \ \ \ \ =\ 5,\ \ //\ support\ has\ been\ removed}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ LLAMA\_FTYPE\_MOSTLY\_Q4\_3\ \ \ \ \ \ \ =\ 6,\ \ //\ support\ has\ been\ removed}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q8\_0\ \ \ \ \ \ \ \ \ \ =\ 7,\ \ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q5\_0\ \ \ \ \ \ \ \ \ \ =\ 8,\ \ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q5\_1\ \ \ \ \ \ \ \ \ \ =\ 9,\ \ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q2\_K\ \ \ \ \ \ \ \ \ \ =\ 10,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q3\_K\_S\ \ \ \ \ \ \ \ =\ 11,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q3\_K\_M\ \ \ \ \ \ \ \ =\ 12,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q3\_K\_L\ \ \ \ \ \ \ \ =\ 13,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q4\_K\_S\ \ \ \ \ \ \ \ =\ 14,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q4\_K\_M\ \ \ \ \ \ \ \ =\ 15,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q5\_K\_S\ \ \ \ \ \ \ \ =\ 16,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q5\_K\_M\ \ \ \ \ \ \ \ =\ 17,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q6\_K\ \ \ \ \ \ \ \ \ \ =\ 18,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ2\_XXS\ \ \ \ \ \ \ =\ 19,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ2\_XS\ \ \ \ \ \ \ \ =\ 20,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_Q2\_K\_S\ \ \ \ \ \ \ \ =\ 21,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ3\_XS\ \ \ \ \ \ \ \ =\ 22,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ3\_XXS\ \ \ \ \ \ \ =\ 23,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ1\_S\ \ \ \ \ \ \ \ \ =\ 24,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ4\_NL\ \ \ \ \ \ \ \ =\ 25,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ3\_S\ \ \ \ \ \ \ \ \ =\ 26,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ3\_M\ \ \ \ \ \ \ \ \ =\ 27,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ2\_S\ \ \ \ \ \ \ \ \ =\ 28,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ2\_M\ \ \ \ \ \ \ \ \ =\ 29,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ4\_XS\ \ \ \ \ \ \ \ =\ 30,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_IQ1\_M\ \ \ \ \ \ \ \ \ =\ 31,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_BF16\ \ \ \ \ \ \ \ \ \ =\ 32,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{comment}{//LLAMA\_FTYPE\_MOSTLY\_Q4\_0\_4\_4\ \ \ \ \ \ =\ 33,\ //\ removed\ from\ gguf\ files,\ use\ Q4\_0\ and\ runtime\ repack}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{comment}{//LLAMA\_FTYPE\_MOSTLY\_Q4\_0\_4\_8\ \ \ \ \ \ =\ 34,\ //\ removed\ from\ gguf\ files,\ use\ Q4\_0\ and\ runtime\ repack}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{comment}{//LLAMA\_FTYPE\_MOSTLY\_Q4\_0\_8\_8\ \ \ \ \ \ =\ 35,\ //\ removed\ from\ gguf\ files,\ use\ Q4\_0\ and\ runtime\ repack}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_TQ1\_0\ \ \ \ \ \ \ \ \ =\ 36,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_TQ2\_0\ \ \ \ \ \ \ \ \ =\ 37,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_MXFP4\_MOE\ \ \ \ \ =\ 38,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_MOSTLY\_NVFP4\ \ \ \ \ \ \ \ \ =\ 39,\ \textcolor{comment}{//\ except\ 1d\ tensors}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ LLAMA\_FTYPE\_GUESSED\ =\ 1024,\ \textcolor{comment}{//\ not\ specified\ in\ the\ model\ file}}
+\DoxyCodeLine{00159\ \ \ \ \ \};}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_rope\_scaling\_type\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_SCALING\_TYPE\_UNSPECIFIED\ =\ -\/1,}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_SCALING\_TYPE\_NONE\ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_SCALING\_TYPE\_LINEAR\ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_SCALING\_TYPE\_YARN\ \ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_SCALING\_TYPE\_LONGROPE\ \ \ \ =\ 3,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ LLAMA\_ROPE\_SCALING\_TYPE\_MAX\_VALUE\ \ \ =\ LLAMA\_ROPE\_SCALING\_TYPE\_LONGROPE,}
+\DoxyCodeLine{00168\ \ \ \ \ \};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_pooling\_type\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ LLAMA\_POOLING\_TYPE\_UNSPECIFIED\ =\ -\/1,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ LLAMA\_POOLING\_TYPE\_NONE\ =\ 0,}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ LLAMA\_POOLING\_TYPE\_MEAN\ =\ 1,}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ LLAMA\_POOLING\_TYPE\_CLS\ \ =\ 2,}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ LLAMA\_POOLING\_TYPE\_LAST\ =\ 3,}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ LLAMA\_POOLING\_TYPE\_RANK\ =\ 4,\ \textcolor{comment}{//\ used\ by\ reranking\ models\ to\ attach\ the\ classification\ head\ to\ the\ graph}}
+\DoxyCodeLine{00177\ \ \ \ \ \};}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_attention\_type\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ LLAMA\_ATTENTION\_TYPE\_UNSPECIFIED\ =\ -\/1,}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ LLAMA\_ATTENTION\_TYPE\_CAUSAL\ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ LLAMA\_ATTENTION\_TYPE\_NON\_CAUSAL\ \ =\ 1,}
+\DoxyCodeLine{00183\ \ \ \ \ \};}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_flash\_attn\_type\ \{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ LLAMA\_FLASH\_ATTN\_TYPE\_AUTO\ \ \ \ \ =\ -\/1,}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ LLAMA\_FLASH\_ATTN\_TYPE\_DISABLED\ =\ 0,}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ LLAMA\_FLASH\_ATTN\_TYPE\_ENABLED\ \ =\ 1,}
+\DoxyCodeLine{00189\ \ \ \ \ \};}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ llama\_flash\_attn\_type\_name(\textcolor{keyword}{enum}\ llama\_flash\_attn\_type\ flash\_attn\_type);}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_split\_mode\ \{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ LLAMA\_SPLIT\_MODE\_NONE\ \ =\ 0,\ \textcolor{comment}{//\ single\ GPU}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ LLAMA\_SPLIT\_MODE\_LAYER\ =\ 1,\ \textcolor{comment}{//\ split\ layers\ and\ KV\ across\ GPUs}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ LLAMA\_SPLIT\_MODE\_ROW\ \ \ =\ 2,\ \textcolor{comment}{//\ split\ layers\ and\ KV\ across\ GPUs,\ use\ tensor\ parallelism\ if\ supported}}
+\DoxyCodeLine{00197\ \ \ \ \ \};}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{comment}{//\ TODO:\ simplify\ (https://github.com/ggml-\/org/llama.cpp/pull/9294\#pullrequestreview-\/2286561979)}}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__token__data}{llama\_token\_data}}\ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ llama\_token\ id;\ \textcolor{comment}{//\ token\ id}}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ logit;\ \ \ \ \textcolor{comment}{//\ log-\/odds\ of\ the\ token}}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ p;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ probability\ of\ the\ token}}
+\DoxyCodeLine{00204\ \ \ \ \ \}\ \doxymbox{\hyperlink{structllama__token__data}{llama\_token\_data}};}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__token__data__array}{llama\_token\_data\_array}}\ \{}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ consider\ SoA}}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ pointer\ can\ be\ modified\ by\ the\ samplers}}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structllama__token__data}{llama\_token\_data}}\ *\ data;}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size;}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ int64\_t\ selected;\ \textcolor{comment}{//\ this\ is\ the\ index\ in\ the\ data\ array\ (i.e.\ not\ the\ token\ id)}}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ sorted;\ \ \ \ \ \ \textcolor{comment}{//\ note:\ do\ not\ assume\ the\ data\ is\ sorted\ -\/\ always\ check\ this\ flag}}
+\DoxyCodeLine{00213\ \ \ \ \ \}\ \doxymbox{\hyperlink{structllama__token__data__array}{llama\_token\_data\_array}};}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{typedef}\ bool\ (*llama\_progress\_callback)(\textcolor{keywordtype}{float}\ progress,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{comment}{//\ Input\ data\ for\ llama\_encode/llama\_decode}}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{comment}{//\ A\ llama\_batch\ object\ can\ contain\ input\ about\ one\ or\ many\ sequences}}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{comment}{//\ The\ provided\ arrays\ (i.e.\ token,\ embd,\ pos,\ etc.)\ must\ have\ size\ of\ n\_tokens}}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{comment}{//\ -\/\ token\ \ :\ the\ token\ ids\ of\ the\ input\ (used\ when\ embd\ is\ NULL)}}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{comment}{//\ -\/\ embd\ \ \ :\ token\ embeddings\ (i.e.\ float\ vector\ of\ size\ n\_embd)\ (used\ when\ token\ is\ NULL)}}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{comment}{//\ -\/\ pos\ \ \ \ :\ the\ positions\ of\ the\ respective\ token\ in\ the\ sequence}}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ (if\ set\ to\ NULL,\ the\ token\ position\ will\ be\ tracked\ automatically\ by\ llama\_encode/llama\_decode)}}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{comment}{//\ -\/\ seq\_id\ :\ the\ sequence\ to\ which\ the\ respective\ token\ belongs}}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ (if\ set\ to\ NULL,\ the\ sequence\ ID\ will\ be\ assumed\ to\ be\ 0)}}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{comment}{//\ -\/\ logits\ :\ if\ zero,\ the\ logits\ (and/or\ the\ embeddings)\ for\ the\ respective\ token\ will\ not\ be\ output}}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ (if\ set\ to\ NULL:}}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ if\ embeddings:\ all\ tokens\ are\ output}}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ if\ not:\ \ \ \ \ \ \ \ only\ the\ last\ token\ is\ output}}
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ )}}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ int32\_t\ n\_tokens;}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ llama\_token\ \ *\ \ token;}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ *\ \ embd;}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ llama\_pos\ \ \ \ *\ \ pos;}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ int32\_t\ \ \ \ \ \ *\ \ n\_seq\_id;}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ llama\_seq\_id\ **\ seq\_id;}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ int8\_t\ \ \ \ \ \ \ *\ \ logits;\ \ \ \textcolor{comment}{//\ TODO:\ rename\ this\ to\ "{}output"{}}}
+\DoxyCodeLine{00242\ \ \ \ \ \}\ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}};}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_model\_kv\_override\_type\ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ LLAMA\_KV\_OVERRIDE\_TYPE\_INT,}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ LLAMA\_KV\_OVERRIDE\_TYPE\_FLOAT,}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ LLAMA\_KV\_OVERRIDE\_TYPE\_BOOL,}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ LLAMA\_KV\_OVERRIDE\_TYPE\_STR,}
+\DoxyCodeLine{00249\ \ \ \ \ \};}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_model\_meta\_key\ \{}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_SEQUENCE,}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_TOP\_K,}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_TOP\_P,}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_MIN\_P,}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_XTC\_PROBABILITY,}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_XTC\_THRESHOLD,}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_TEMP,}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_PENALTY\_LAST\_N,}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_PENALTY\_REPEAT,}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_MIROSTAT,}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_MIROSTAT\_TAU,}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ LLAMA\_MODEL\_META\_KEY\_SAMPLING\_MIROSTAT\_ETA,}
+\DoxyCodeLine{00264\ \ \ \ \ \};}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__kv__override}{llama\_model\_kv\_override}}\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ llama\_model\_kv\_override\_type\ tag;}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ key[128];}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ val\_i64;}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \ val\_f64;}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ val\_bool;}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ val\_str[128];}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00277\ \ \ \ \ \};}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__tensor__buft__override}{llama\_model\_tensor\_buft\_override}}\ \{}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ pattern;}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_type\_t\ buft;}
+\DoxyCodeLine{00282\ \ \ \ \ \};}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__params}{llama\_model\_params}}\ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NULL-\/terminated\ list\ of\ devices\ to\ use\ for\ offloading\ (if\ NULL,\ all\ available\ devices\ are\ used)}}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_t\ *\ devices;}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NULL-\/terminated\ list\ of\ buffer\ types\ to\ use\ for\ tensors\ that\ match\ a\ pattern}}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__tensor__buft__override}{llama\_model\_tensor\_buft\_override}}\ *\ tensor\_buft\_overrides;}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ int32\_t\ n\_gpu\_layers;\ \textcolor{comment}{//\ number\ of\ layers\ to\ store\ in\ VRAM,\ a\ negative\ value\ means\ all\ layers}}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ llama\_split\_mode\ split\_mode;\ \textcolor{comment}{//\ how\ to\ split\ the\ model\ across\ multiple\ GPUs}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ GPU\ that\ is\ used\ for\ the\ entire\ model\ when\ split\_mode\ is\ LLAMA\_SPLIT\_MODE\_NONE}}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ int32\_t\ main\_gpu;}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ proportion\ of\ the\ model\ (layers\ or\ rows)\ to\ offload\ to\ each\ GPU,\ size:\ llama\_max\_devices()}}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ tensor\_split;}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Called\ with\ a\ progress\ value\ between\ 0.0\ and\ 1.0.\ Pass\ NULL\ to\ disable.}}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ the\ provided\ progress\_callback\ returns\ true,\ model\ loading\ continues.}}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ it\ returns\ false,\ model\ loading\ is\ immediately\ aborted.}}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ llama\_progress\_callback\ progress\_callback;}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ context\ pointer\ passed\ to\ the\ progress\ callback}}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ progress\_callback\_user\_data;}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ override\ key-\/value\ pairs\ of\ the\ model\ meta\ data}}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__kv__override}{llama\_model\_kv\_override}}\ *\ kv\_overrides;}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Keep\ the\ booleans\ together\ to\ avoid\ misalignment\ during\ copy-\/by-\/value.}}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ vocab\_only;\ \ \ \ \ \ \textcolor{comment}{//\ only\ load\ the\ vocabulary,\ no\ weights}}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_mmap;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ use\ mmap\ if\ possible}}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_direct\_io;\ \ \ \textcolor{comment}{//\ use\ direct\ io,\ takes\ precedence\ over\ use\_mmap\ when\ supported}}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_mlock;\ \ \ \ \ \ \ \textcolor{comment}{//\ force\ system\ to\ keep\ model\ in\ RAM}}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ check\_tensors;\ \ \ \textcolor{comment}{//\ validate\ model\ tensor\ data}}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_extra\_bufts;\ \textcolor{comment}{//\ use\ extra\ buffer\ types\ (used\ for\ weight\ repacking)}}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ no\_host;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bypass\ host\ buffer\ allowing\ extra\ buffers\ to\ be\ used}}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ no\_alloc;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ only\ load\ metadata\ and\ simulate\ memory\ allocations}}
+\DoxyCodeLine{00320\ \ \ \ \ \};}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__seq__config}{llama\_sampler\_seq\_config}}\ \{}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ \ \ \ \ \ \ \ \ seq\_id;}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ sampler;}
+\DoxyCodeLine{00325\ \ \ \ \ \};}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ changing\ the\ default\ values\ of\ parameters\ marked\ as\ [EXPERIMENTAL]\ may\ cause\ crashes\ or\ incorrect\ results\ in\ certain\ configurations}}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ https://github.com/ggml-\/org/llama.cpp/pull/7544}}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__context__params}{llama\_context\_params}}\ \{}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ uint32\_t\ n\_ctx;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ text\ context,\ 0\ =\ from\ model}}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ uint32\_t\ n\_batch;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ logical\ maximum\ batch\ size\ that\ can\ be\ submitted\ to\ llama\_decode}}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ uint32\_t\ n\_ubatch;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ physical\ maximum\ batch\ size}}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ uint32\_t\ n\_seq\_max;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ max\ number\ of\ sequences\ (i.e.\ distinct\ states\ for\ recurrent\ models)}}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ int32\_t\ \ n\_threads;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ number\ of\ threads\ to\ use\ for\ generation}}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ int32\_t\ \ n\_threads\_batch;\ \ \ \textcolor{comment}{//\ number\ of\ threads\ to\ use\ for\ batch\ processing}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ llama\_rope\_scaling\_type\ rope\_scaling\_type;\ \textcolor{comment}{//\ RoPE\ scaling\ type,\ from\ \`{}enum\ llama\_rope\_scaling\_type`}}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ llama\_pooling\_type\ \ \ \ \ \ pooling\_type;\ \ \ \ \ \ \textcolor{comment}{//\ whether\ to\ pool\ (sum)\ embedding\ results\ by\ sequence\ id}}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ llama\_attention\_type\ \ \ \ attention\_type;\ \ \ \ \textcolor{comment}{//\ attention\ type\ to\ use\ for\ embeddings}}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ llama\_flash\_attn\_type\ \ \ flash\_attn\_type;\ \ \ \textcolor{comment}{//\ when\ to\ enable\ Flash\ Attention}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ref:\ https://github.com/ggml-\/org/llama.cpp/pull/2054}}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ rope\_freq\_base;\ \ \ \textcolor{comment}{//\ RoPE\ base\ frequency,\ 0\ =\ from\ model}}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ rope\_freq\_scale;\ \ \textcolor{comment}{//\ RoPE\ frequency\ scaling\ factor,\ 0\ =\ from\ model}}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ yarn\_ext\_factor;\ \ \textcolor{comment}{//\ YaRN\ extrapolation\ mix\ factor,\ negative\ =\ from\ model}}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ yarn\_attn\_factor;\ \textcolor{comment}{//\ YaRN\ magnitude\ scaling\ factor}}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ yarn\_beta\_fast;\ \ \ \textcolor{comment}{//\ YaRN\ low\ correction\ dim}}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ yarn\_beta\_slow;\ \ \ \textcolor{comment}{//\ YaRN\ high\ correction\ dim}}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ uint32\_t\ yarn\_orig\_ctx;\ \ \ \ \textcolor{comment}{//\ YaRN\ original\ context\ size}}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ defrag\_thold;\ \ \ \ \ \textcolor{comment}{//\ [DEPRECATED]\ defragment\ the\ KV\ cache\ if\ holes/size\ >\ thold,\ <=\ 0\ disabled\ (default)}}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_eval\_callback\ cb\_eval;}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ cb\_eval\_user\_data;}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_type\ type\_k;\ \textcolor{comment}{//\ data\ type\ for\ K\ cache\ [EXPERIMENTAL]}}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_type\ type\_v;\ \textcolor{comment}{//\ data\ type\ for\ V\ cache\ [EXPERIMENTAL]}}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Abort\ callback}}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ it\ returns\ true,\ execution\ of\ llama\_decode()\ will\ be\ aborted}}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ currently\ works\ only\ with\ CPU\ execution}}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ ggml\_abort\_callback\ abort\_callback;}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ abort\_callback\_data;}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Keep\ the\ booleans\ together\ and\ at\ the\ end\ of\ the\ struct\ to\ avoid\ misalignment\ during\ copy-\/by-\/value.}}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ embeddings;\ \ \textcolor{comment}{//\ if\ true,\ extract\ embeddings\ (together\ with\ logits)}}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ offload\_kqv;\ \textcolor{comment}{//\ offload\ the\ KQV\ ops\ (including\ the\ KV\ cache)\ to\ GPU}}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ no\_perf;\ \ \ \ \ \textcolor{comment}{//\ measure\ performance\ timings}}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ op\_offload;\ \ \textcolor{comment}{//\ offload\ host\ tensor\ operations\ to\ device}}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ swa\_full;\ \ \ \ \textcolor{comment}{//\ use\ full-\/size\ SWA\ cache\ (https://github.com/ggml-\/org/llama.cpp/pull/13194\#issuecomment-\/2868343055)}}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ setting\ to\ false\ when\ n\_seq\_max\ >\ 1\ can\ cause\ bad\ performance\ in\ some\ cases}}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ ref:\ https://github.com/ggml-\/org/llama.cpp/pull/13845\#issuecomment-\/2924800573}}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ kv\_unified;\ \ \textcolor{comment}{//\ use\ a\ unified\ buffer\ across\ the\ input\ sequences\ when\ computing\ the\ attention}}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ try\ to\ disable\ when\ n\_seq\_max\ >\ 1\ for\ improved\ performance\ when\ the\ sequences\ do\ not\ share\ a\ large\ prefix}}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ref:\ https://github.com/ggml-\/org/llama.cpp/pull/14363}}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [EXPERIMENTAL]}}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ backend\ sampler\ chain\ configuration\ (make\ sure\ the\ caller\ keeps\ the\ sampler\ chains\ alive)}}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ note:\ the\ samplers\ must\ be\ sampler\ chains\ (i.e.\ use\ llama\_sampler\_chain\_init)}}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__seq__config}{llama\_sampler\_seq\_config}}\ *\ samplers;}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_samplers;}
+\DoxyCodeLine{00381\ \ \ \ \ \};}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{comment}{//\ model\ quantization\ parameters}}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__quantize__params}{llama\_model\_quantize\_params}}\ \{}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ int32\_t\ nthread;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ number\ of\ threads\ to\ use\ for\ quantizing,\ if\ <=0\ will\ use\ std::thread::hardware\_concurrency()}}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ llama\_ftype\ ftype;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ quantize\ to\ this\ llama\_ftype}}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_type\ output\_tensor\_type;\ \ \ \ \textcolor{comment}{//\ output\ tensor\ type}}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_type\ token\_embedding\_type;\ \ \textcolor{comment}{//\ token\ embeddings\ tensor\ type}}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ allow\_requantize;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ allow\ quantizing\ non-\/f32/f16\ tensors}}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ quantize\_output\_tensor;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ quantize\ output.weight}}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ only\_copy;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ only\ copy\ tensors\ -\/\ ftype,\ allow\_requantize\ and\ quantize\_output\_tensor\ are\ ignored}}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ pure;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ quantize\ all\ tensors\ to\ the\ default\ type}}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ keep\_split;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ quantize\ to\ the\ same\ number\ of\ shards}}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ dry\_run;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ calculate\ and\ show\ the\ final\ quantization\ size\ without\ performing\ quantization}}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ imatrix;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pointer\ to\ importance\ matrix\ data}}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ kv\_overrides;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pointer\ to\ vector\ containing\ overrides}}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ tensor\_types;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pointer\ to\ vector\ containing\ tensor\ types}}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ prune\_layers;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pointer\ to\ vector\ containing\ layer\ indices\ to\ prune}}
+\DoxyCodeLine{00399\ \ \ \ \ \}\ \doxymbox{\hyperlink{structllama__model__quantize__params}{llama\_model\_quantize\_params}};}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__logit__bias}{llama\_logit\_bias}}\ \{}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ llama\_token\ token;}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ bias;}
+\DoxyCodeLine{00404\ \ \ \ \ \}\ \doxymbox{\hyperlink{structllama__logit__bias}{llama\_logit\_bias}};}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__chain__params}{llama\_sampler\_chain\_params}}\ \{}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ no\_perf;\ \textcolor{comment}{//\ whether\ to\ measure\ performance\ timings}}
+\DoxyCodeLine{00408\ \ \ \ \ \}\ \doxymbox{\hyperlink{structllama__sampler__chain__params}{llama\_sampler\_chain\_params}};}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{comment}{//\ used\ in\ chat\ template}}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__chat__message}{llama\_chat\_message}}\ \{}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ role;}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ content;}
+\DoxyCodeLine{00414\ \ \ \ \ \}\ \doxymbox{\hyperlink{structllama__chat__message}{llama\_chat\_message}};}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{comment}{//\ lora\ adapter}}
+\DoxyCodeLine{00417\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}};}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{comment}{//\ Helpers\ for\ getting\ default\ parameters}}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{comment}{//\ TODO:\ update\ API\ to\ start\ accepting\ pointers\ to\ params\ structs\ (https://github.com/ggml-\/org/llama.cpp/discussions/9172)}}
+\DoxyCodeLine{00421\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__params}{llama\_model\_params}}\ \ \ \ \ \ \ \ \ \ llama\_model\_default\_params(void);}
+\DoxyCodeLine{00422\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__context__params}{llama\_context\_params}}\ \ \ \ \ \ \ \ llama\_context\_default\_params(void);}
+\DoxyCodeLine{00423\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__chain__params}{llama\_sampler\_chain\_params}}\ \ llama\_sampler\_chain\_default\_params(void);}
+\DoxyCodeLine{00424\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__quantize__params}{llama\_model\_quantize\_params}}\ llama\_model\_quantize\_default\_params(void);}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{comment}{//\ Initialize\ the\ llama\ +\ ggml\ backend}}
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{comment}{//\ If\ numa\ is\ true,\ use\ NUMA\ optimizations}}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{comment}{//\ Call\ once\ at\ the\ start\ of\ the\ program}}
+\DoxyCodeLine{00429\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_backend\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \ \ \ \ \textcolor{comment}{//\ Call\ once\ at\ the\ end\ of\ the\ program\ -\/\ currently\ only\ used\ for\ MPI}}
+\DoxyCodeLine{00432\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_backend\_free(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{comment}{//optional:}}
+\DoxyCodeLine{00435\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_numa\_init(\textcolor{keyword}{enum}\ ggml\_numa\_strategy\ numa);}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{comment}{//\ Optional:\ an\ auto\ threadpool\ gets\ created\ in\ ggml\ if\ not\ passed\ explicitly}}
+\DoxyCodeLine{00438\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_attach\_threadpool(}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_threadpool\_t\ \ \ threadpool,}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_threadpool\_t\ \ \ threadpool\_batch);}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_detach\_threadpool(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00444\ }
+\DoxyCodeLine{00445\ \ \ \ \ \textcolor{keyword}{typedef}\ void\ (*llama\_model\_set\_tensor\_data\_t)(\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{void}\ *\ userdata);}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{comment}{//\ Create\ a\ new\ model\ from\ GGUF\ metadata\ as\ well\ as\ a\ function\ to\ set\ the\ tensor\ data}}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ tensors\ are\ created\ as\ GGML\_TYPE\_F32\ by\ default,}}
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ override\ by\ adding\ a\ tensor\ with\ the\ same\ name\ but\ a\ different\ name\ to\ the\ context}}
+\DoxyCodeLine{00450\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ llama\_model\_init\_from\_user(}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ metadata,}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ llama\_model\_set\_tensor\_data\_t\ \ \ set\_tensor\_data,\ \ \ \ \textcolor{comment}{//\ function\ to\ initialize\ tensor\ data\ with}}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ set\_tensor\_data\_ud,\ \textcolor{comment}{//\ userdata\ for\ function}}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model__params}{llama\_model\_params}}\ \ \ params);}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ llama\_load\_model\_from\_file(}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model,}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model__params}{llama\_model\_params}}\ \ \ params),}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_model\_load\_from\_file\ instead"{}});}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{comment}{//\ Load\ a\ model\ from\ a\ file}}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{comment}{//\ If\ the\ file\ is\ split\ into\ multiple\ parts,\ the\ file\ name\ must\ follow\ this\ pattern:\ <name>-\/\%05d-\/of-\/\%05d.gguf}}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{comment}{//\ If\ the\ split\ file\ name\ does\ not\ follow\ this\ pattern,\ use\ llama\_model\_load\_from\_splits}}
+\DoxyCodeLine{00464\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ llama\_model\_load\_from\_file(}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model,}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model__params}{llama\_model\_params}}\ \ \ params);}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{comment}{//\ Load\ a\ model\ from\ multiple\ splits\ (support\ custom\ naming\ scheme)}}
+\DoxyCodeLine{00469\ \ \ \ \ \textcolor{comment}{//\ The\ paths\ must\ be\ in\ the\ correct\ order}}
+\DoxyCodeLine{00470\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ llama\_model\_load\_from\_splits(}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **\ paths,}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ n\_paths,}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model__params}{llama\_model\_params}}\ \ \ \ params);}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_model\_save\_to\_file(}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model);}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_free\_model(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model),}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_model\_free\ instead"{}});}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00482\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_model\_free(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ llama\_init\_from\_model(}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context__params}{llama\_context\_params}}\ \ \ params);}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ llama\_new\_context\_with\_model(}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context__params}{llama\_context\_params}}\ \ \ params),}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_init\_from\_model\ instead"{}});}
+\DoxyCodeLine{00492\ }
+\DoxyCodeLine{00493\ \ \ \ \ \textcolor{comment}{//\ Frees\ all\ allocated\ memory}}
+\DoxyCodeLine{00494\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_free(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00495\ }
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keyword}{enum}\ llama\_params\_fit\_status\ \{}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ LLAMA\_PARAMS\_FIT\_STATUS\_SUCCESS\ =\ 0,\ \textcolor{comment}{//\ found\ allocations\ that\ are\ projected\ to\ fit}}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ LLAMA\_PARAMS\_FIT\_STATUS\_FAILURE\ =\ 1,\ \textcolor{comment}{//\ could\ not\ find\ allocations\ that\ are\ projected\ to\ fit}}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ LLAMA\_PARAMS\_FIT\_STATUS\_ERROR\ \ \ =\ 2,\ \textcolor{comment}{//\ a\ hard\ error\ occurred,\ e.g.\ because\ no\ model\ could\ be\ found\ at\ the\ specified\ path}}
+\DoxyCodeLine{00500\ \ \ \ \ \};}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00502\ \ \ \ \ \textcolor{comment}{//\ fits\ mparams\ and\ cparams\ to\ free\ device\ memory\ (assumes\ system\ memory\ is\ unlimited)}}
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ returns\ true\ if\ the\ parameters\ could\ be\ successfully\ modified\ to\ fit\ device\ memory}}
+\DoxyCodeLine{00504\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ this\ function\ is\ NOT\ thread\ safe\ because\ it\ modifies\ the\ global\ llama\ logger\ state}}
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ only\ parameters\ that\ have\ the\ same\ value\ as\ in\ llama\_default\_model\_params\ are\ modified}}
+\DoxyCodeLine{00506\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ with\ the\ exception\ of\ the\ context\ size\ which\ is\ modified\ if\ and\ only\ if\ equal\ to\ 0}}
+\DoxyCodeLine{00507\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{enum}\ llama\_params\_fit\_status\ llama\_params\_fit(}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ \ \ *\ path\_model,}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model__params}{llama\_model\_params}}\ \ \ *\ mparams,}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context__params}{llama\_context\_params}}\ *\ cparams,}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ tensor\_split,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ writable\ buffer\ for\ tensor\ split,\ needs\ at\ least\ llama\_max\_devices\ elements}}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model__tensor__buft__override}{llama\_model\_tensor\_buft\_override}}\ *\ tensor\_buft\_overrides,\ \textcolor{comment}{//\ writable\ buffer\ for\ overrides,\ needs\ at\ least\ llama\_max\_tensor\_buft\_overrides\ elements}}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ margins,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ margins\ of\ memory\ to\ leave\ per\ device\ in\ bytes}}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ n\_ctx\_min,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ minimum\ context\ size\ to\ set\ when\ trying\ to\ reduce\ memory\ use}}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_log\_level\ \ \ log\_level);\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ minimum\ log\ level\ to\ print\ during\ fitting,\ lower\ levels\ go\ to\ debug\ log}}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ \ \ \ \ LLAMA\_API\ int64\_t\ llama\_time\_us(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00518\ }
+\DoxyCodeLine{00519\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_max\_devices(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00520\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_max\_parallel\_sequences(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00521\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_max\_tensor\_buft\_overrides(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_supports\_mmap\ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00524\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_supports\_mlock\ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00525\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_supports\_gpu\_offload(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00526\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_supports\_rpc\ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00527\ }
+\DoxyCodeLine{00528\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ After\ creating\ a\ llama\_context,\ it\ is\ recommended\ to\ query\ the\ actual\ values\ using\ these\ functions}}
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ In\ some\ cases\ the\ requested\ values\ via\ llama\_context\_params\ may\ differ\ from\ the\ actual\ values\ used\ by\ the\ context}}
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ ref:\ https://github.com/ggml-\/org/llama.cpp/pull/17046\#discussion\_r2503085732}}
+\DoxyCodeLine{00531\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_n\_ctx\ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00532\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_n\_ctx\_seq\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00533\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_n\_batch\ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00534\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_n\_ubatch\ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00535\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_n\_seq\_max\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \ \ \ \ DEPRECATED(LLAMA\_API\ int32\_t\ llama\_n\_ctx\_train(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model),\ \textcolor{stringliteral}{"{}use\ llama\_model\_n\_ctx\_train\ instead"{}});}
+\DoxyCodeLine{00538\ \ \ \ \ DEPRECATED(LLAMA\_API\ int32\_t\ llama\_n\_embd\ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model),\ \textcolor{stringliteral}{"{}use\ llama\_model\_n\_embd\ instead"{}});}
+\DoxyCodeLine{00539\ \ \ \ \ DEPRECATED(LLAMA\_API\ int32\_t\ llama\_n\_layer\ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model),\ \textcolor{stringliteral}{"{}use\ llama\_model\_n\_layer\ instead"{}});}
+\DoxyCodeLine{00540\ \ \ \ \ DEPRECATED(LLAMA\_API\ int32\_t\ llama\_n\_head\ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model),\ \textcolor{stringliteral}{"{}use\ llama\_model\_n\_head\ instead"{}});}
+\DoxyCodeLine{00541\ }
+\DoxyCodeLine{00542\ \ \ \ \ DEPRECATED(LLAMA\_API\ int32\_t\ llama\_n\_vocab\ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_n\_tokens\ instead"{}});}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ llama\_get\_model\ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00545\ \ \ \ \ LLAMA\_API\ \ \ \ \ \ \ \ \ \ \ llama\_memory\_t\ \ \ llama\_get\_memory\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00546\ \ \ \ \ LLAMA\_API\ \ \textcolor{keyword}{enum}\ llama\_pooling\_type\ \ \ llama\_pooling\_type(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);\ \textcolor{comment}{//\ TODO:\ rename\ to\ llama\_get\_pooling\_type}}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00548\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ llama\_model\_get\_vocab(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00549\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{enum}\ llama\_rope\_type\ \ \ \ \ \ \ llama\_model\_rope\_type(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00550\ }
+\DoxyCodeLine{00551\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_n\_ctx\_train(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00552\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_n\_embd\ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00553\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_n\_embd\_inp\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00554\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_n\_embd\_out\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00555\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_n\_layer\ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00556\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_n\_head\ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00557\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_n\_head\_kv\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00558\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_n\_swa\ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ model's\ RoPE\ frequency\ scaling\ factor}}
+\DoxyCodeLine{00561\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{float}\ llama\_model\_rope\_freq\_scale\_train(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00562\ }
+\DoxyCodeLine{00563\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ number\ of\ classifier\ outputs\ (only\ valid\ for\ classifier\ models)}}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{comment}{//\ Undefined\ behavior\ for\ non-\/classifier\ models}}
+\DoxyCodeLine{00565\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_model\_n\_cls\_out(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00567\ \ \ \ \ \textcolor{comment}{//\ Returns\ label\ of\ classifier\ output\ by\ index\ (<n\_cls\_out).\ Returns\ nullptr\ if\ no\ label\ provided}}
+\DoxyCodeLine{00568\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ llama\_model\_cls\_label(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,\ uint32\_t\ i);}
+\DoxyCodeLine{00569\ }
+\DoxyCodeLine{00570\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{enum}\ llama\_vocab\_type\ llama\_vocab\_type(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_vocab\_n\_tokens(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \ \ \ \ \textcolor{comment}{//\ Functions\ to\ access\ the\ model's\ GGUF\ metadata\ scalar\ values}}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{comment}{//\ -\/\ The\ functions\ return\ the\ length\ of\ the\ string\ on\ success,\ or\ -\/1\ on\ failure}}
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{comment}{//\ -\/\ The\ output\ string\ is\ always\ null-\/terminated\ and\ cleared\ on\ failure}}
+\DoxyCodeLine{00577\ \ \ \ \ \textcolor{comment}{//\ -\/\ When\ retrieving\ a\ string,\ an\ extra\ byte\ must\ be\ allocated\ to\ account\ for\ the\ null\ terminator}}
+\DoxyCodeLine{00578\ \ \ \ \ \textcolor{comment}{//\ -\/\ GGUF\ array\ values\ are\ not\ supported\ by\ these\ functions}}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \ \ \ \ \textcolor{comment}{//\ Get\ metadata\ value\ as\ a\ string\ by\ key\ name}}
+\DoxyCodeLine{00581\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_meta\_val\_str(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ \textcolor{keywordtype}{char}\ *\ buf,\ \textcolor{keywordtype}{size\_t}\ buf\_size);}
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00583\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ number\ of\ metadata\ key/value\ pairs}}
+\DoxyCodeLine{00584\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_meta\_count(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{comment}{//\ Get\ sampling\ metadata\ key\ name.\ Returns\ nullptr\ if\ the\ key\ is\ invalid}}
+\DoxyCodeLine{00587\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ llama\_model\_meta\_key\_str(\textcolor{keyword}{enum}\ llama\_model\_meta\_key\ key);}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{comment}{//\ Get\ metadata\ key\ name\ by\ index}}
+\DoxyCodeLine{00590\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_meta\_key\_by\_index(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,\ int32\_t\ i,\ \textcolor{keywordtype}{char}\ *\ buf,\ \textcolor{keywordtype}{size\_t}\ buf\_size);}
+\DoxyCodeLine{00591\ }
+\DoxyCodeLine{00592\ \ \ \ \ \textcolor{comment}{//\ Get\ metadata\ value\ as\ a\ string\ by\ index}}
+\DoxyCodeLine{00593\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_meta\_val\_str\_by\_index(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,\ int32\_t\ i,\ \textcolor{keywordtype}{char}\ *\ buf,\ \textcolor{keywordtype}{size\_t}\ buf\_size);}
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00595\ \ \ \ \ \textcolor{comment}{//\ Get\ a\ string\ describing\ the\ model\ type}}
+\DoxyCodeLine{00596\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_model\_desc(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,\ \textcolor{keywordtype}{char}\ *\ buf,\ \textcolor{keywordtype}{size\_t}\ buf\_size);}
+\DoxyCodeLine{00597\ }
+\DoxyCodeLine{00598\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ total\ size\ of\ all\ the\ tensors\ in\ the\ model\ in\ bytes}}
+\DoxyCodeLine{00599\ \ \ \ \ LLAMA\_API\ uint64\_t\ llama\_model\_size(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00600\ }
+\DoxyCodeLine{00601\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ default\ chat\ template.\ Returns\ nullptr\ if\ not\ available}}
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{comment}{//\ If\ name\ is\ NULL,\ returns\ the\ default\ chat\ template}}
+\DoxyCodeLine{00603\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ llama\_model\_chat\_template(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name);}
+\DoxyCodeLine{00604\ }
+\DoxyCodeLine{00605\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ total\ number\ of\ parameters\ in\ the\ model}}
+\DoxyCodeLine{00606\ \ \ \ \ LLAMA\_API\ uint64\_t\ llama\_model\_n\_params(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00607\ }
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{comment}{//\ Returns\ true\ if\ the\ model\ contains\ an\ encoder\ that\ requires\ llama\_encode()\ call}}
+\DoxyCodeLine{00609\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_model\_has\_encoder(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00610\ }
+\DoxyCodeLine{00611\ \ \ \ \ \textcolor{comment}{//\ Returns\ true\ if\ the\ model\ contains\ a\ decoder\ that\ requires\ llama\_decode()\ call}}
+\DoxyCodeLine{00612\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_model\_has\_decoder(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00614\ \ \ \ \ \textcolor{comment}{//\ For\ encoder-\/decoder\ models,\ this\ function\ returns\ id\ of\ the\ token\ that\ must\ be\ provided}}
+\DoxyCodeLine{00615\ \ \ \ \ \textcolor{comment}{//\ to\ the\ decoder\ to\ start\ generating\ output\ sequence.\ For\ other\ models,\ it\ returns\ -\/1.}}
+\DoxyCodeLine{00616\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_model\_decoder\_start\_token(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00617\ }
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{comment}{//\ Returns\ true\ if\ the\ model\ is\ recurrent\ (like\ Mamba,\ RWKV,\ etc.)}}
+\DoxyCodeLine{00619\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_model\_is\_recurrent(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ \ \ \ \ \textcolor{comment}{//\ Returns\ true\ if\ the\ model\ is\ hybrid\ (like\ Jamba,\ Granite,\ etc.)}}
+\DoxyCodeLine{00622\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_model\_is\_hybrid(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00623\ }
+\DoxyCodeLine{00624\ \ \ \ \ \textcolor{comment}{//\ Returns\ true\ if\ the\ model\ is\ diffusion-\/based\ (like\ LLaDA,\ Dream,\ etc.)}}
+\DoxyCodeLine{00625\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_model\_is\_diffusion(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+\DoxyCodeLine{00626\ }
+\DoxyCodeLine{00627\ \ \ \ \ \textcolor{comment}{//\ Returns\ 0\ on\ success}}
+\DoxyCodeLine{00628\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_model\_quantize(}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ fname\_inp,}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ fname\_out,}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__model__quantize__params}{llama\_model\_quantize\_params}}\ *\ params);}
+\DoxyCodeLine{00632\ }
+\DoxyCodeLine{00633\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00634\ \ \ \ \ \textcolor{comment}{//\ Adapters}}
+\DoxyCodeLine{00635\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \ \ \ \ \textcolor{comment}{//\ Load\ a\ LoRA\ adapter\ from\ file}}
+\DoxyCodeLine{00638\ \ \ \ \ \textcolor{comment}{//\ The\ adapter\ is\ valid\ as\ long\ as\ the\ associated\ model\ is\ not\ freed}}
+\DoxyCodeLine{00639\ \ \ \ \ \textcolor{comment}{//\ All\ adapters\ must\ be\ loaded\ before\ context\ creation}}
+\DoxyCodeLine{00640\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ *\ llama\_adapter\_lora\_init(}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_lora);}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{comment}{//\ Functions\ to\ access\ the\ adapter's\ GGUF\ metadata\ scalar\ values}}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{comment}{//\ -\/\ The\ functions\ return\ the\ length\ of\ the\ string\ on\ success,\ or\ -\/1\ on\ failure}}
+\DoxyCodeLine{00646\ \ \ \ \ \textcolor{comment}{//\ -\/\ The\ output\ string\ is\ always\ null-\/terminated\ and\ cleared\ on\ failure}}
+\DoxyCodeLine{00647\ \ \ \ \ \textcolor{comment}{//\ -\/\ When\ retrieving\ a\ string,\ an\ extra\ byte\ must\ be\ allocated\ to\ account\ for\ the\ null\ terminator}}
+\DoxyCodeLine{00648\ \ \ \ \ \textcolor{comment}{//\ -\/\ GGUF\ array\ values\ are\ not\ supported\ by\ these\ functions}}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{comment}{//\ Get\ metadata\ value\ as\ a\ string\ by\ key\ name}}
+\DoxyCodeLine{00651\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_adapter\_meta\_val\_str(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ *\ adapter,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ \textcolor{keywordtype}{char}\ *\ buf,\ \textcolor{keywordtype}{size\_t}\ buf\_size);}
+\DoxyCodeLine{00652\ }
+\DoxyCodeLine{00653\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ number\ of\ metadata\ key/value\ pairs}}
+\DoxyCodeLine{00654\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_adapter\_meta\_count(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ *\ adapter);}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00656\ \ \ \ \ \textcolor{comment}{//\ Get\ metadata\ key\ name\ by\ index}}
+\DoxyCodeLine{00657\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_adapter\_meta\_key\_by\_index(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ *\ adapter,\ int32\_t\ i,\ \textcolor{keywordtype}{char}\ *\ buf,\ \textcolor{keywordtype}{size\_t}\ buf\_size);}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00659\ \ \ \ \ \textcolor{comment}{//\ Get\ metadata\ value\ as\ a\ string\ by\ index}}
+\DoxyCodeLine{00660\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_adapter\_meta\_val\_str\_by\_index(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ *\ adapter,\ int32\_t\ i,\ \textcolor{keywordtype}{char}\ *\ buf,\ \textcolor{keywordtype}{size\_t}\ buf\_size);}
+\DoxyCodeLine{00661\ }
+\DoxyCodeLine{00662\ \ \ \ \ \textcolor{comment}{//\ Manually\ free\ a\ LoRA\ adapter}}
+\DoxyCodeLine{00663\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ loaded\ adapters\ will\ be\ free\ when\ the\ associated\ model\ is\ deleted}}
+\DoxyCodeLine{00664\ \ \ \ \ LLAMA\_API\ DEPRECATED(\textcolor{keywordtype}{void}\ llama\_adapter\_lora\_free(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ *\ adapter),}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}adapters\ are\ now\ freed\ together\ with\ the\ associated\ model"{}});}
+\DoxyCodeLine{00666\ }
+\DoxyCodeLine{00667\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ invocation\ tokens\ if\ the\ current\ lora\ is\ an\ alora}}
+\DoxyCodeLine{00668\ \ \ \ \ LLAMA\_API\ uint64\_t\ \ \ \ \ \ \ \ \ \ \ \ llama\_adapter\_get\_alora\_n\_invocation\_tokens(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ *\ adapter);}
+\DoxyCodeLine{00669\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ llama\_token\ *\ llama\_adapter\_get\_alora\_invocation\_tokens\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ *\ adapter);}
+\DoxyCodeLine{00670\ }
+\DoxyCodeLine{00671\ \ \ \ \ \textcolor{comment}{//\ The\ following\ functions\ operate\ on\ a\ llama\_context,\ hence\ the\ naming:\ llama\_verb\_...}}
+\DoxyCodeLine{00672\ }
+\DoxyCodeLine{00673\ \ \ \ \ \textcolor{comment}{//\ Set\ LoRa\ adapters\ on\ the\ context.\ Will\ only\ modify\ if\ the\ adapters\ currently\ in\ context\ are\ different.}}
+\DoxyCodeLine{00674\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_set\_adapters\_lora(}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__adapter__lora}{llama\_adapter\_lora}}\ **\ adapters,}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ n\_adapters,}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ scales);}
+\DoxyCodeLine{00679\ }
+\DoxyCodeLine{00680\ \ \ \ \ \textcolor{comment}{//\ Apply\ a\ loaded\ control\ vector\ to\ a\ llama\_context,\ or\ if\ data\ is\ NULL,\ clear}}
+\DoxyCodeLine{00681\ \ \ \ \ \textcolor{comment}{//\ the\ currently\ loaded\ vector.}}
+\DoxyCodeLine{00682\ \ \ \ \ \textcolor{comment}{//\ n\_embd\ should\ be\ the\ size\ of\ a\ single\ layer's\ control,\ and\ data\ should\ point}}
+\DoxyCodeLine{00683\ \ \ \ \ \textcolor{comment}{//\ to\ an\ n\_embd\ x\ n\_layers\ buffer\ starting\ from\ layer\ 1.}}
+\DoxyCodeLine{00684\ \ \ \ \ \textcolor{comment}{//\ il\_start\ and\ il\_end\ are\ the\ layer\ range\ the\ vector\ should\ apply\ to\ (both\ inclusive)}}
+\DoxyCodeLine{00685\ \ \ \ \ \textcolor{comment}{//\ See\ llama\_control\_vector\_load\ in\ common\ to\ load\ a\ control\ vector.}}
+\DoxyCodeLine{00686\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_set\_adapter\_cvec(}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ data,}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ len,}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_embd,}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ il\_start,}
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ il\_end);}
+\DoxyCodeLine{00693\ }
+\DoxyCodeLine{00694\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00695\ \ \ \ \ \textcolor{comment}{//\ Memory}}
+\DoxyCodeLine{00696\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00697\ }
+\DoxyCodeLine{00698\ \ \ \ \ \textcolor{comment}{//\ Clear\ the\ memory\ contents}}
+\DoxyCodeLine{00699\ \ \ \ \ \textcolor{comment}{//\ If\ data\ ==\ true,\ the\ data\ buffers\ will\ also\ be\ cleared\ together\ with\ the\ metadata}}
+\DoxyCodeLine{00700\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_memory\_clear(}
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_memory\_t\ mem,}
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ data);}
+\DoxyCodeLine{00703\ }
+\DoxyCodeLine{00704\ \ \ \ \ \textcolor{comment}{//\ Removes\ all\ tokens\ that\ belong\ to\ the\ specified\ sequence\ and\ have\ positions\ in\ [p0,\ p1)}}
+\DoxyCodeLine{00705\ \ \ \ \ \textcolor{comment}{//\ Returns\ false\ if\ a\ partial\ sequence\ cannot\ be\ removed.\ Removing\ a\ whole\ sequence\ never\ fails}}
+\DoxyCodeLine{00706\ \ \ \ \ \textcolor{comment}{//\ seq\_id\ <\ 0\ :\ match\ any\ sequence}}
+\DoxyCodeLine{00707\ \ \ \ \ \textcolor{comment}{//\ p0\ <\ 0\ \ \ \ \ :\ [0,\ \ p1]}}
+\DoxyCodeLine{00708\ \ \ \ \ \textcolor{comment}{//\ p1\ <\ 0\ \ \ \ \ :\ [p0,\ inf)}}
+\DoxyCodeLine{00709\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_memory\_seq\_rm(}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_memory\_t\ mem,}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ seq\_id,}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p0,}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p1);}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00715\ \ \ \ \ \textcolor{comment}{//\ Copy\ all\ tokens\ that\ belong\ to\ the\ specified\ sequence\ to\ another\ sequence}}
+\DoxyCodeLine{00716\ \ \ \ \ \textcolor{comment}{//\ p0\ <\ 0\ :\ [0,\ \ p1]}}
+\DoxyCodeLine{00717\ \ \ \ \ \textcolor{comment}{//\ p1\ <\ 0\ :\ [p0,\ inf)}}
+\DoxyCodeLine{00718\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_memory\_seq\_cp(}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_memory\_t\ mem,}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ seq\_id\_src,}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ seq\_id\_dst,}
+\DoxyCodeLine{00722\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p0,}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p1);}
+\DoxyCodeLine{00724\ }
+\DoxyCodeLine{00725\ \ \ \ \ \textcolor{comment}{//\ Removes\ all\ tokens\ that\ do\ not\ belong\ to\ the\ specified\ sequence}}
+\DoxyCodeLine{00726\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_memory\_seq\_keep(}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_memory\_t\ mem,}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ seq\_id);}
+\DoxyCodeLine{00729\ }
+\DoxyCodeLine{00730\ \ \ \ \ \textcolor{comment}{//\ Adds\ relative\ position\ "{}delta"{}\ to\ all\ tokens\ that\ belong\ to\ the\ specified\ sequence\ and\ have\ positions\ in\ [p0,\ p1)}}
+\DoxyCodeLine{00731\ \ \ \ \ \textcolor{comment}{//\ p0\ <\ 0\ :\ [0,\ \ p1]}}
+\DoxyCodeLine{00732\ \ \ \ \ \textcolor{comment}{//\ p1\ <\ 0\ :\ [p0,\ inf)}}
+\DoxyCodeLine{00733\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_memory\_seq\_add(}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_memory\_t\ mem,}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ seq\_id,}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p0,}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p1,}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ delta);}
+\DoxyCodeLine{00739\ }
+\DoxyCodeLine{00740\ \ \ \ \ \textcolor{comment}{//\ Integer\ division\ of\ the\ positions\ by\ factor\ of\ \`{}d\ >\ 1`}}
+\DoxyCodeLine{00741\ \ \ \ \ \textcolor{comment}{//\ p0\ <\ 0\ :\ [0,\ \ p1]}}
+\DoxyCodeLine{00742\ \ \ \ \ \textcolor{comment}{//\ p1\ <\ 0\ :\ [p0,\ inf)}}
+\DoxyCodeLine{00743\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_memory\_seq\_div(}
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_memory\_t\ mem,}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ seq\_id,}
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p0,}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_pos\ p1,}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ d);}
+\DoxyCodeLine{00749\ }
+\DoxyCodeLine{00750\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ smallest\ position\ present\ in\ the\ memory\ for\ the\ specified\ sequence}}
+\DoxyCodeLine{00751\ \ \ \ \ \textcolor{comment}{//\ This\ is\ typically\ non-\/zero\ only\ for\ SWA\ caches}}
+\DoxyCodeLine{00752\ \ \ \ \ \textcolor{comment}{//\ Note\ that\ all\ positions\ in\ the\ range\ [pos\_min,\ pos\_max]\ are\ guaranteed\ to\ be\ present\ in\ the\ memory}}
+\DoxyCodeLine{00753\ \ \ \ \ \textcolor{comment}{//\ Return\ -\/1\ if\ the\ sequence\ is\ empty}}
+\DoxyCodeLine{00754\ \ \ \ \ LLAMA\_API\ llama\_pos\ llama\_memory\_seq\_pos\_min(}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_memory\_t\ mem,}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ seq\_id);}
+\DoxyCodeLine{00757\ }
+\DoxyCodeLine{00758\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ largest\ position\ present\ in\ the\ memory\ for\ the\ specified\ sequence}}
+\DoxyCodeLine{00759\ \ \ \ \ \textcolor{comment}{//\ Note\ that\ all\ positions\ in\ the\ range\ [pos\_min,\ pos\_max]\ are\ guaranteed\ to\ be\ present\ in\ the\ memory}}
+\DoxyCodeLine{00760\ \ \ \ \ \textcolor{comment}{//\ Return\ -\/1\ if\ the\ sequence\ is\ empty}}
+\DoxyCodeLine{00761\ \ \ \ \ LLAMA\_API\ llama\_pos\ llama\_memory\_seq\_pos\_max(}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_memory\_t\ mem,}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ seq\_id);}
+\DoxyCodeLine{00764\ }
+\DoxyCodeLine{00765\ \ \ \ \ \textcolor{comment}{//\ Check\ if\ the\ memory\ supports\ shifting}}
+\DoxyCodeLine{00766\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_memory\_can\_shift(llama\_memory\_t\ mem);}
+\DoxyCodeLine{00767\ }
+\DoxyCodeLine{00768\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00769\ \ \ \ \ \textcolor{comment}{//\ State\ /\ sessions}}
+\DoxyCodeLine{00770\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00771\ }
+\DoxyCodeLine{00772\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ *actual*\ size\ in\ bytes\ of\ the\ state}}
+\DoxyCodeLine{00773\ \ \ \ \ \textcolor{comment}{//\ (logits,\ embedding\ and\ memory)}}
+\DoxyCodeLine{00774\ \ \ \ \ \textcolor{comment}{//\ Only\ use\ when\ saving\ the\ state,\ not\ when\ restoring\ it,\ otherwise\ the\ size\ may\ be\ too\ small.}}
+\DoxyCodeLine{00775\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_get\_size(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00776\ \ \ \ \ LLAMA\_API\ DEPRECATED(\textcolor{keywordtype}{size\_t}\ llama\_get\_state\_size(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx),}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_state\_get\_size\ instead"{}});}
+\DoxyCodeLine{00778\ }
+\DoxyCodeLine{00779\ \ \ \ \ \textcolor{comment}{//\ Copies\ the\ state\ to\ the\ specified\ destination\ address.}}
+\DoxyCodeLine{00780\ \ \ \ \ \textcolor{comment}{//\ Destination\ needs\ to\ have\ allocated\ enough\ memory.}}
+\DoxyCodeLine{00781\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ number\ of\ bytes\ copied}}
+\DoxyCodeLine{00782\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_get\_data(}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ *\ dst,}
+\DoxyCodeLine{00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ size);}
+\DoxyCodeLine{00786\ \ \ \ \ LLAMA\_API\ DEPRECATED(\textcolor{keywordtype}{size\_t}\ llama\_copy\_state\_data(}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ *\ dst),}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_state\_get\_data\ instead"{}});}
+\DoxyCodeLine{00790\ }
+\DoxyCodeLine{00791\ \ \ \ \ \textcolor{comment}{//\ Set\ the\ state\ reading\ from\ the\ specified\ address}}
+\DoxyCodeLine{00792\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ number\ of\ bytes\ read}}
+\DoxyCodeLine{00793\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_set\_data(}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ src,}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ size);}
+\DoxyCodeLine{00797\ \ \ \ \ LLAMA\_API\ DEPRECATED(\textcolor{keywordtype}{size\_t}\ llama\_set\_state\_data(}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ src),}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_state\_set\_data\ instead"{}});}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \ \ \ \ \textcolor{comment}{//\ Save/load\ session\ file}}
+\DoxyCodeLine{00803\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_state\_load\_file(}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_session,}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ *\ tokens\_out,}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_capacity,}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ n\_token\_count\_out);}
+\DoxyCodeLine{00809\ \ \ \ \ LLAMA\_API\ DEPRECATED(\textcolor{keywordtype}{bool}\ llama\_load\_session\_file(}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_session,}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ *\ tokens\_out,}
+\DoxyCodeLine{00813\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_capacity,}
+\DoxyCodeLine{00814\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ n\_token\_count\_out),}
+\DoxyCodeLine{00815\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_state\_load\_file\ instead"{}});}
+\DoxyCodeLine{00816\ }
+\DoxyCodeLine{00817\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_state\_save\_file(}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_session,}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ tokens,}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_count);}
+\DoxyCodeLine{00822\ \ \ \ \ LLAMA\_API\ DEPRECATED(\textcolor{keywordtype}{bool}\ llama\_save\_session\_file(}
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_session,}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ tokens,}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_count),}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_state\_save\_file\ instead"{}});}
+\DoxyCodeLine{00828\ }
+\DoxyCodeLine{00829\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ exact\ size\ needed\ to\ copy\ the\ state\ of\ a\ single\ sequence}}
+\DoxyCodeLine{00830\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_seq\_get\_size(}
+\DoxyCodeLine{00831\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ seq\_id);}
+\DoxyCodeLine{00833\ }
+\DoxyCodeLine{00834\ \ \ \ \ \textcolor{comment}{//\ Copy\ the\ state\ of\ a\ single\ sequence\ into\ the\ specified\ buffer}}
+\DoxyCodeLine{00835\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_seq\_get\_data(}
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ *\ dst,}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ size,}
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ seq\_id);}
+\DoxyCodeLine{00840\ }
+\DoxyCodeLine{00841\ \ \ \ \ \textcolor{comment}{//\ Copy\ the\ sequence\ data\ (originally\ copied\ with\ \`{}llama\_state\_seq\_get\_data`)\ into\ the\ specified\ sequence}}
+\DoxyCodeLine{00842\ \ \ \ \ \textcolor{comment}{//\ Returns:}}
+\DoxyCodeLine{00843\ \ \ \ \ \textcolor{comment}{//\ \ -\/\ Positive:\ Ok}}
+\DoxyCodeLine{00844\ \ \ \ \ \textcolor{comment}{//\ \ -\/\ Zero:\ Failed\ to\ load}}
+\DoxyCodeLine{00845\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_seq\_set\_data(}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ src,}
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ size,}
+\DoxyCodeLine{00849\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ dest\_seq\_id);}
+\DoxyCodeLine{00850\ }
+\DoxyCodeLine{00851\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_seq\_save\_file(}
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filepath,}
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ seq\_id,}
+\DoxyCodeLine{00855\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ tokens,}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_count);}
+\DoxyCodeLine{00857\ }
+\DoxyCodeLine{00858\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_seq\_load\_file(}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00860\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filepath,}
+\DoxyCodeLine{00861\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ dest\_seq\_id,}
+\DoxyCodeLine{00862\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ *\ tokens\_out,}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_token\_capacity,}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ n\_token\_count\_out);}
+\DoxyCodeLine{00865\ }
+\DoxyCodeLine{00866\ \textcolor{comment}{//\ for\ backwards-\/compat}}
+\DoxyCodeLine{00867\ \textcolor{preprocessor}{\#define\ LLAMA\_STATE\_SEQ\_FLAGS\_SWA\_ONLY\ 1}}
+\DoxyCodeLine{00868\ }
+\DoxyCodeLine{00869\ \textcolor{comment}{//\ work\ only\ with\ partial\ states,\ such\ as\ SWA\ KV\ cache\ or\ recurrent\ cache\ (e.g.\ Mamba)}}
+\DoxyCodeLine{00870\ \textcolor{preprocessor}{\#define\ LLAMA\_STATE\_SEQ\_FLAGS\_PARTIAL\_ONLY\ 1}}
+\DoxyCodeLine{00871\ }
+\DoxyCodeLine{00872\ \ \ \ \ \textcolor{keyword}{typedef}\ uint32\_t\ llama\_state\_seq\_flags;}
+\DoxyCodeLine{00873\ }
+\DoxyCodeLine{00874\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_seq\_get\_size\_ext(}
+\DoxyCodeLine{00875\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ seq\_id,}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \ \ \ llama\_state\_seq\_flags\ \ \ flags);}
+\DoxyCodeLine{00878\ }
+\DoxyCodeLine{00879\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_seq\_get\_data\_ext(}
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00881\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ *\ dst,}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ size,}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ seq\_id,}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \ \ \ llama\_state\_seq\_flags\ \ \ flags);}
+\DoxyCodeLine{00885\ }
+\DoxyCodeLine{00886\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{size\_t}\ llama\_state\_seq\_set\_data\_ext(}
+\DoxyCodeLine{00887\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\ src,}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ size,}
+\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_seq\_id\ \ \ dest\_seq\_id,}
+\DoxyCodeLine{00891\ \ \ \ \ \ \ \ \ \ \ \ llama\_state\_seq\_flags\ \ \ flags);}
+\DoxyCodeLine{00892\ }
+\DoxyCodeLine{00893\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00894\ \ \ \ \ \textcolor{comment}{//\ Decoding}}
+\DoxyCodeLine{00895\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00896\ }
+\DoxyCodeLine{00897\ \ \ \ \ \textcolor{comment}{//\ Return\ batch\ for\ single\ sequence\ of\ tokens}}
+\DoxyCodeLine{00898\ \ \ \ \ \textcolor{comment}{//\ The\ sequence\ ID\ will\ be\ fixed\ to\ 0}}
+\DoxyCodeLine{00899\ \ \ \ \ \textcolor{comment}{//\ The\ position\ of\ the\ tokens\ will\ be\ tracked\ automatically\ by\ llama\_decode}}
+\DoxyCodeLine{00900\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00901\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ is\ a\ helper\ function\ to\ facilitate\ transition\ to\ the\ new\ batch\ API\ -\/\ avoid\ using\ it}}
+\DoxyCodeLine{00902\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00903\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ llama\_batch\_get\_one(}
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ *\ tokens,}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_tokens);}
+\DoxyCodeLine{00906\ }
+\DoxyCodeLine{00907\ \ \ \ \ \textcolor{comment}{//\ Allocates\ a\ batch\ of\ tokens\ on\ the\ heap\ that\ can\ hold\ a\ maximum\ of\ n\_tokens}}
+\DoxyCodeLine{00908\ \ \ \ \ \textcolor{comment}{//\ Each\ token\ can\ be\ assigned\ up\ to\ n\_seq\_max\ sequence\ ids}}
+\DoxyCodeLine{00909\ \ \ \ \ \textcolor{comment}{//\ The\ batch\ has\ to\ be\ freed\ with\ llama\_batch\_free()}}
+\DoxyCodeLine{00910\ \ \ \ \ \textcolor{comment}{//\ If\ embd\ !=\ 0,\ llama\_batch.embd\ will\ be\ allocated\ with\ size\ of\ n\_tokens\ *\ embd\ *\ sizeof(float)}}
+\DoxyCodeLine{00911\ \ \ \ \ \textcolor{comment}{//\ Otherwise,\ llama\_batch.token\ will\ be\ allocated\ to\ store\ n\_tokens\ llama\_token}}
+\DoxyCodeLine{00912\ \ \ \ \ \textcolor{comment}{//\ The\ rest\ of\ the\ llama\_batch\ members\ are\ allocated\ with\ size\ n\_tokens}}
+\DoxyCodeLine{00913\ \ \ \ \ \textcolor{comment}{//\ All\ members\ are\ left\ uninitialized}}
+\DoxyCodeLine{00914\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ llama\_batch\_init(}
+\DoxyCodeLine{00915\ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ n\_tokens,}
+\DoxyCodeLine{00916\ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ embd,}
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ n\_seq\_max);}
+\DoxyCodeLine{00918\ }
+\DoxyCodeLine{00919\ \ \ \ \ \textcolor{comment}{//\ Frees\ a\ batch\ of\ tokens\ allocated\ with\ llama\_batch\_init()}}
+\DoxyCodeLine{00920\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_batch\_free(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ batch);}
+\DoxyCodeLine{00921\ }
+\DoxyCodeLine{00922\ \ \ \ \ \textcolor{comment}{//\ Process\ a\ batch\ of\ tokens.}}
+\DoxyCodeLine{00923\ \ \ \ \ \textcolor{comment}{//\ In\ contrast\ to\ llama\_decode()\ -\/\ this\ call\ does\ not\ use\ KV\ cache.}}
+\DoxyCodeLine{00924\ \ \ \ \ \textcolor{comment}{//\ For\ encode-\/decoder\ contexts,\ processes\ the\ batch\ using\ the\ encoder.}}
+\DoxyCodeLine{00925\ \ \ \ \ \textcolor{comment}{//\ Can\ store\ the\ encoder\ output\ internally\ for\ later\ use\ by\ the\ decoder's\ cross-\/attention\ layers.}}
+\DoxyCodeLine{00926\ \ \ \ \ \textcolor{comment}{//\ \ \ 0\ -\/\ success}}
+\DoxyCodeLine{00927\ \ \ \ \ \textcolor{comment}{//\ <\ 0\ -\/\ error.\ the\ memory\ state\ is\ restored\ to\ the\ state\ before\ this\ call}}
+\DoxyCodeLine{00928\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_encode(}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ \ \ batch);}
+\DoxyCodeLine{00931\ }
+\DoxyCodeLine{00932\ \ \ \ \ \textcolor{comment}{//\ Process\ a\ batch\ of\ tokens.}}
+\DoxyCodeLine{00933\ \ \ \ \ \textcolor{comment}{//\ Requires\ the\ context\ to\ have\ a\ memory.}}
+\DoxyCodeLine{00934\ \ \ \ \ \textcolor{comment}{//\ For\ encode-\/decoder\ contexts,\ processes\ the\ batch\ using\ the\ decoder.}}
+\DoxyCodeLine{00935\ \ \ \ \ \textcolor{comment}{//\ Positive\ return\ values\ does\ not\ mean\ a\ fatal\ error,\ but\ rather\ a\ warning.}}
+\DoxyCodeLine{00936\ \ \ \ \ \textcolor{comment}{//\ Upon\ fatal-\/error\ or\ abort,\ the\ ubatches\ that\ managed\ to\ be\ been\ processed\ will\ remain\ in\ the\ memory\ state\ of\ the\ context}}
+\DoxyCodeLine{00937\ \ \ \ \ \textcolor{comment}{//\ \ \ To\ handle\ this\ correctly,\ query\ the\ memory\ state\ using\ llama\_memory\_seq\_pos\_min()\ and\ llama\_memory\_seq\_pos\_max()}}
+\DoxyCodeLine{00938\ \ \ \ \ \textcolor{comment}{//\ Upon\ other\ return\ values,\ the\ memory\ state\ is\ restored\ to\ the\ state\ before\ this\ call}}
+\DoxyCodeLine{00939\ \ \ \ \ \textcolor{comment}{//\ \ \ \ 0\ -\/\ success}}
+\DoxyCodeLine{00940\ \ \ \ \ \textcolor{comment}{//\ \ \ \ 1\ -\/\ could\ not\ find\ a\ KV\ slot\ for\ the\ batch\ (try\ reducing\ the\ size\ of\ the\ batch\ or\ increase\ the\ context)}}
+\DoxyCodeLine{00941\ \ \ \ \ \textcolor{comment}{//\ \ \ \ 2\ -\/\ aborted\ \ \ \ \ (processed\ ubatches\ will\ remain\ in\ the\ context's\ memory)}}
+\DoxyCodeLine{00942\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/1\ -\/\ invalid\ input\ batch}}
+\DoxyCodeLine{00943\ \ \ \ \ \textcolor{comment}{//\ <\ -\/1\ -\/\ fatal\ error\ (processed\ ubatches\ will\ remain\ in\ the\ context's\ memory)}}
+\DoxyCodeLine{00944\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_decode(}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ \ \ batch);}
+\DoxyCodeLine{00947\ }
+\DoxyCodeLine{00948\ \ \ \ \ \textcolor{comment}{//\ Set\ the\ number\ of\ threads\ used\ for\ decoding}}
+\DoxyCodeLine{00949\ \ \ \ \ \textcolor{comment}{//\ n\_threads\ is\ the\ number\ of\ threads\ used\ for\ generation\ (single\ token)}}
+\DoxyCodeLine{00950\ \ \ \ \ \textcolor{comment}{//\ n\_threads\_batch\ is\ the\ number\ of\ threads\ used\ for\ prompt\ and\ batch\ processing\ (multiple\ tokens)}}
+\DoxyCodeLine{00951\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_set\_n\_threads(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ n\_threads,\ int32\_t\ n\_threads\_batch);}
+\DoxyCodeLine{00952\ }
+\DoxyCodeLine{00953\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ number\ of\ threads\ used\ for\ generation\ of\ a\ single\ token.}}
+\DoxyCodeLine{00954\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_n\_threads(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00955\ }
+\DoxyCodeLine{00956\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ number\ of\ threads\ used\ for\ prompt\ and\ batch\ processing\ (multiple\ token).}}
+\DoxyCodeLine{00957\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_n\_threads\_batch(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00958\ }
+\DoxyCodeLine{00959\ \ \ \ \ \textcolor{comment}{//\ Set\ whether\ the\ context\ outputs\ embeddings\ or\ not}}
+\DoxyCodeLine{00960\ \ \ \ \ \textcolor{comment}{//\ TODO:\ rename\ to\ avoid\ confusion\ with\ llama\_get\_embeddings()}}
+\DoxyCodeLine{00961\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_set\_embeddings(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ \textcolor{keywordtype}{bool}\ embeddings);}
+\DoxyCodeLine{00962\ }
+\DoxyCodeLine{00963\ \ \ \ \ \textcolor{comment}{//\ Set\ whether\ to\ use\ causal\ attention\ or\ not}}
+\DoxyCodeLine{00964\ \ \ \ \ \textcolor{comment}{//\ If\ set\ to\ true,\ the\ model\ will\ only\ attend\ to\ the\ past\ tokens}}
+\DoxyCodeLine{00965\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_set\_causal\_attn(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ \textcolor{keywordtype}{bool}\ causal\_attn);}
+\DoxyCodeLine{00966\ }
+\DoxyCodeLine{00967\ \ \ \ \ \textcolor{comment}{//\ Set\ whether\ the\ model\ is\ in\ warmup\ mode\ or\ not}}
+\DoxyCodeLine{00968\ \ \ \ \ \textcolor{comment}{//\ If\ true,\ all\ model\ tensors\ are\ activated\ during\ llama\_decode()\ to\ load\ and\ cache\ their\ weights.}}
+\DoxyCodeLine{00969\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_set\_warmup(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ \textcolor{keywordtype}{bool}\ warmup);}
+\DoxyCodeLine{00970\ }
+\DoxyCodeLine{00971\ \ \ \ \ \textcolor{comment}{//\ Set\ abort\ callback}}
+\DoxyCodeLine{00972\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_set\_abort\_callback(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ ggml\_abort\_callback\ abort\_callback,\ \textcolor{keywordtype}{void}\ *\ abort\_callback\_data);}
+\DoxyCodeLine{00973\ }
+\DoxyCodeLine{00974\ \ \ \ \ \textcolor{comment}{//\ Wait\ until\ all\ computations\ are\ finished}}
+\DoxyCodeLine{00975\ \ \ \ \ \textcolor{comment}{//\ This\ is\ automatically\ done\ when\ using\ one\ of\ the\ functions\ below\ to\ obtain\ the\ computation\ results}}
+\DoxyCodeLine{00976\ \ \ \ \ \textcolor{comment}{//\ and\ is\ not\ necessary\ to\ call\ it\ explicitly\ in\ most\ cases}}
+\DoxyCodeLine{00977\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_synchronize(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00978\ }
+\DoxyCodeLine{00979\ \ \ \ \ \textcolor{comment}{//\ Token\ logits\ obtained\ from\ the\ last\ call\ to\ llama\_decode()}}
+\DoxyCodeLine{00980\ \ \ \ \ \textcolor{comment}{//\ The\ logits\ for\ which\ llama\_batch.logits[i]\ !=\ 0\ are\ stored\ contiguously}}
+\DoxyCodeLine{00981\ \ \ \ \ \textcolor{comment}{//\ in\ the\ order\ they\ have\ appeared\ in\ the\ batch.}}
+\DoxyCodeLine{00982\ \ \ \ \ \textcolor{comment}{//\ Rows:\ number\ of\ tokens\ for\ which\ llama\_batch.logits[i]\ !=\ 0}}
+\DoxyCodeLine{00983\ \ \ \ \ \textcolor{comment}{//\ Cols:\ n\_vocab}}
+\DoxyCodeLine{00984\ \ \ \ \ \textcolor{comment}{//\ TODO:\ deprecate\ in\ favor\ of\ llama\_get\_logits\_ith()\ (ref:\ https://github.com/ggml-\/org/llama.cpp/pull/14853\#issuecomment-\/3113143522)}}
+\DoxyCodeLine{00985\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{float}\ *\ llama\_get\_logits(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{00986\ }
+\DoxyCodeLine{00987\ \ \ \ \ \textcolor{comment}{//\ Logits\ for\ the\ ith\ token.\ For\ positive\ indices,\ Equivalent\ to:}}
+\DoxyCodeLine{00988\ \ \ \ \ \textcolor{comment}{//\ llama\_get\_logits(ctx)\ +\ ctx-\/>output\_ids[i]*n\_vocab}}
+\DoxyCodeLine{00989\ \ \ \ \ \textcolor{comment}{//\ Negative\ indices\ can\ be\ used\ to\ access\ logits\ in\ reverse\ order,\ -\/1\ is\ the\ last\ logit.}}
+\DoxyCodeLine{00990\ \ \ \ \ \textcolor{comment}{//\ returns\ NULL\ for\ invalid\ ids.}}
+\DoxyCodeLine{00991\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{float}\ *\ llama\_get\_logits\_ith(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ i);}
+\DoxyCodeLine{00992\ }
+\DoxyCodeLine{00993\ \ \ \ \ \textcolor{comment}{//\ Get\ all\ output\ token\ embeddings.}}
+\DoxyCodeLine{00994\ \ \ \ \ \textcolor{comment}{//\ when\ pooling\_type\ ==\ LLAMA\_POOLING\_TYPE\_NONE\ or\ when\ using\ a\ generative\ model,}}
+\DoxyCodeLine{00995\ \ \ \ \ \textcolor{comment}{//\ the\ embeddings\ for\ which\ llama\_batch.logits[i]\ !=\ 0\ are\ stored\ contiguously}}
+\DoxyCodeLine{00996\ \ \ \ \ \textcolor{comment}{//\ in\ the\ order\ they\ have\ appeared\ in\ the\ batch.}}
+\DoxyCodeLine{00997\ \ \ \ \ \textcolor{comment}{//\ shape:\ [n\_outputs*n\_embd]}}
+\DoxyCodeLine{00998\ \ \ \ \ \textcolor{comment}{//\ Otherwise,\ returns\ NULL.}}
+\DoxyCodeLine{00999\ \ \ \ \ \textcolor{comment}{//\ TODO:\ deprecate\ in\ favor\ of\ llama\_get\_embeddings\_ith()\ (ref:\ https://github.com/ggml-\/org/llama.cpp/pull/14853\#issuecomment-\/3113143522)}}
+\DoxyCodeLine{01000\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{float}\ *\ llama\_get\_embeddings(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{01001\ }
+\DoxyCodeLine{01002\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ embeddings\ for\ the\ ith\ token.\ For\ positive\ indices,\ Equivalent\ to:}}
+\DoxyCodeLine{01003\ \ \ \ \ \textcolor{comment}{//\ llama\_get\_embeddings(ctx)\ +\ ctx-\/>output\_ids[i]*n\_embd}}
+\DoxyCodeLine{01004\ \ \ \ \ \textcolor{comment}{//\ Negative\ indices\ can\ be\ used\ to\ access\ embeddings\ in\ reverse\ order,\ -\/1\ is\ the\ last\ embedding.}}
+\DoxyCodeLine{01005\ \ \ \ \ \textcolor{comment}{//\ shape:\ [n\_embd]\ (1-\/dimensional)}}
+\DoxyCodeLine{01006\ \ \ \ \ \textcolor{comment}{//\ returns\ NULL\ for\ invalid\ ids.}}
+\DoxyCodeLine{01007\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{float}\ *\ llama\_get\_embeddings\_ith(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ i);}
+\DoxyCodeLine{01008\ }
+\DoxyCodeLine{01009\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ embeddings\ for\ a\ sequence\ id}}
+\DoxyCodeLine{01010\ \ \ \ \ \textcolor{comment}{//\ Returns\ NULL\ if\ pooling\_type\ is\ LLAMA\_POOLING\_TYPE\_NONE}}
+\DoxyCodeLine{01011\ \ \ \ \ \textcolor{comment}{//\ when\ pooling\_type\ ==\ LLAMA\_POOLING\_TYPE\_RANK,\ returns\ float[n\_cls\_out]\ with\ the\ rank(s)\ of\ the\ sequence}}
+\DoxyCodeLine{01012\ \ \ \ \ \textcolor{comment}{//\ otherwise:\ float[n\_embd]\ (1-\/dimensional)}}
+\DoxyCodeLine{01013\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{float}\ *\ llama\_get\_embeddings\_seq(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ llama\_seq\_id\ seq\_id);}
+\DoxyCodeLine{01014\ }
+\DoxyCodeLine{01015\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01016\ \ \ \ \ \textcolor{comment}{//\ backend\ sampling\ API\ [EXPERIMENTAL]}}
+\DoxyCodeLine{01017\ \ \ \ \ \textcolor{comment}{//\ note:\ use\ only\ if\ the\ llama\_context\ was\ created\ with\ at\ least\ one\ llama\_sampler\_seq\_config}}
+\DoxyCodeLine{01018\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01019\ }
+\DoxyCodeLine{01020\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ backend\ sampled\ token\ for\ the\ ith\ token.}}
+\DoxyCodeLine{01021\ \ \ \ \ \textcolor{comment}{//\ Returns\ LLAMA\_TOKEN\_NULL\ if\ no\ token\ was\ sampled.}}
+\DoxyCodeLine{01022\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_get\_sampled\_token\_ith(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ i);}
+\DoxyCodeLine{01023\ }
+\DoxyCodeLine{01024\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ backend\ sampled\ probabilities\ for\ the\ ith\ token}}
+\DoxyCodeLine{01025\ \ \ \ \ \textcolor{comment}{//\ The\ index\ matches\ llama\_get\_sampled\_token\_ith().}}
+\DoxyCodeLine{01026\ \ \ \ \ \textcolor{comment}{//\ Returns\ NULL\ if\ no\ probabilities\ were\ generated.}}
+\DoxyCodeLine{01027\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{float}\ *\ \ llama\_get\_sampled\_probs\_ith\ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ i);}
+\DoxyCodeLine{01028\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_get\_sampled\_probs\_count\_ith(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ i);}
+\DoxyCodeLine{01029\ }
+\DoxyCodeLine{01030\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ backend\ sampled\ logits\ for\ the\ ith\ token}}
+\DoxyCodeLine{01031\ \ \ \ \ \textcolor{comment}{//\ Returns\ NULL\ if\ no\ logits\ were\ sampled.}}
+\DoxyCodeLine{01032\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{float}\ *\ \ llama\_get\_sampled\_logits\_ith\ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ i);}
+\DoxyCodeLine{01033\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_get\_sampled\_logits\_count\_ith(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ i);}
+\DoxyCodeLine{01034\ }
+\DoxyCodeLine{01035\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ backend\ sampled\ candidates\ (token\ ids)\ for\ the\ ith\ token}}
+\DoxyCodeLine{01036\ \ \ \ \ \textcolor{comment}{//\ These\ are\ needed\ to\ map\ probability/logit\ indices\ to\ vocab\ token\ ids.}}
+\DoxyCodeLine{01037\ \ \ \ \ \textcolor{comment}{//\ Returns\ NULL\ if\ no\ candidates\ were\ sampled.}}
+\DoxyCodeLine{01038\ \ \ \ \ LLAMA\_API\ llama\_token\ *\ llama\_get\_sampled\_candidates\_ith\ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ i);}
+\DoxyCodeLine{01039\ \ \ \ \ LLAMA\_API\ uint32\_t\ \ \ \ \ \ llama\_get\_sampled\_candidates\_count\_ith(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ i);}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01041\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01042\ \ \ \ \ \textcolor{comment}{//\ Vocab}}
+\DoxyCodeLine{01043\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01044\ }
+\DoxyCodeLine{01045\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ llama\_vocab\_get\_text(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token);}
+\DoxyCodeLine{01046\ }
+\DoxyCodeLine{01047\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{float}\ llama\_vocab\_get\_score(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token);}
+\DoxyCodeLine{01048\ }
+\DoxyCodeLine{01049\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{enum}\ llama\_token\_attr\ llama\_vocab\_get\_attr(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token);}
+\DoxyCodeLine{01050\ }
+\DoxyCodeLine{01051\ \ \ \ \ \textcolor{comment}{//\ Check\ if\ the\ token\ is\ supposed\ to\ end\ generation\ (end-\/of-\/generation,\ eg.\ EOS,\ EOT,\ etc.)}}
+\DoxyCodeLine{01052\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_vocab\_is\_eog(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token);}
+\DoxyCodeLine{01053\ }
+\DoxyCodeLine{01054\ \ \ \ \ \textcolor{comment}{//\ Identify\ if\ Token\ Id\ is\ a\ control\ token\ or\ a\ render-\/able\ token}}
+\DoxyCodeLine{01055\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_vocab\_is\_control(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token);}
+\DoxyCodeLine{01056\ }
+\DoxyCodeLine{01057\ \ \ \ \ \textcolor{comment}{//\ Special\ tokens}}
+\DoxyCodeLine{01058\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_bos(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);\ \textcolor{comment}{//\ beginning-\/of-\/sentence}}
+\DoxyCodeLine{01059\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_eos(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);\ \textcolor{comment}{//\ end-\/of-\/sentence}}
+\DoxyCodeLine{01060\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_eot(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);\ \textcolor{comment}{//\ end-\/of-\/turn}}
+\DoxyCodeLine{01061\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_sep(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);\ \textcolor{comment}{//\ sentence\ separator}}
+\DoxyCodeLine{01062\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_nl\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);\ \textcolor{comment}{//\ next-\/line}}
+\DoxyCodeLine{01063\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_pad(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);\ \textcolor{comment}{//\ padding}}
+\DoxyCodeLine{01064\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_mask(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);\ \textcolor{comment}{//\ mask}}
+\DoxyCodeLine{01065\ }
+\DoxyCodeLine{01066\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_vocab\_get\_add\_bos(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01067\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_vocab\_get\_add\_eos(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01068\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_vocab\_get\_add\_sep(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01069\ }
+\DoxyCodeLine{01070\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_fim\_pre(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01071\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_fim\_suf(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01072\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_fim\_mid(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01073\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_fim\_pad(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01074\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_fim\_rep(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01075\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_vocab\_fim\_sep(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01076\ }
+\DoxyCodeLine{01077\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ llama\_token\_get\_text(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_get\_text\ instead"{}});}
+\DoxyCodeLine{01078\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keywordtype}{float}\ llama\_token\_get\_score(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_get\_score\ instead"{}});}
+\DoxyCodeLine{01079\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keyword}{enum}\ llama\_token\_attr\ llama\_token\_get\_attr(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_get\_attr\ instead"{}});}
+\DoxyCodeLine{01080\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_token\_is\_eog(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_is\_eog\ instead"{}});}
+\DoxyCodeLine{01081\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_token\_is\_control(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,\ llama\_token\ token),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_is\_control\ instead"{}});}
+\DoxyCodeLine{01082\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_bos(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_bos\ instead"{}});}
+\DoxyCodeLine{01083\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_eos(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_eos\ instead"{}});}
+\DoxyCodeLine{01084\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_eot(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_eot\ instead"{}});}
+\DoxyCodeLine{01085\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_cls(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_cls\ instead"{}});}
+\DoxyCodeLine{01086\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_sep(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_sep\ instead"{}});}
+\DoxyCodeLine{01087\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_nl\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_nl\ instead"{}});}
+\DoxyCodeLine{01088\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_pad(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_pad\ instead"{}});}
+\DoxyCodeLine{01089\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_add\_bos\_token(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_get\_add\_bos\ instead"{}});}
+\DoxyCodeLine{01090\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_add\_eos\_token(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_get\_add\_eos\ instead"{}});}
+\DoxyCodeLine{01091\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_fim\_pre(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_fim\_pre\ instead"{}});}
+\DoxyCodeLine{01092\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_fim\_suf(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_fim\_suf\ instead"{}});}
+\DoxyCodeLine{01093\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_fim\_mid(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_fim\_mid\ instead"{}});}
+\DoxyCodeLine{01094\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_fim\_pad(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_fim\_pad\ instead"{}});}
+\DoxyCodeLine{01095\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_fim\_rep(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_fim\_rep\ instead"{}});}
+\DoxyCodeLine{01096\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_token\_fim\_sep(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{stringliteral}{"{}use\ llama\_vocab\_fim\_sep\ instead"{}});}
+\DoxyCodeLine{01097\ }
+\DoxyCodeLine{01098\ \ \ \ \ \textcolor{comment}{//\ CLS\ is\ equivalent\ to\ BOS}}
+\DoxyCodeLine{01099\ \ \ \ \ DEPRECATED(LLAMA\_API\ llama\_token\ llama\_vocab\_cls(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab),\ \textcolor{comment}{//\ classification}}
+\DoxyCodeLine{01100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_vocab\_bos\ instead"{}});}
+\DoxyCodeLine{01101\ }
+\DoxyCodeLine{01102\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01103\ \ \ \ \ \textcolor{comment}{//\ Tokenization}}
+\DoxyCodeLine{01104\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01105\ \ \ \ \ \textcolor{comment}{//\ The\ API\ is\ thread-\/safe.}}
+\DoxyCodeLine{01106\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01107\ }
+\DoxyCodeLine{01116\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_tokenize(}
+\DoxyCodeLine{01117\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,}
+\DoxyCodeLine{01118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ text,}
+\DoxyCodeLine{01119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ text\_len,}
+\DoxyCodeLine{01120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ *\ tokens,}
+\DoxyCodeLine{01121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_tokens\_max,}
+\DoxyCodeLine{01122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ add\_special,}
+\DoxyCodeLine{01123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ parse\_special);}
+\DoxyCodeLine{01124\ }
+\DoxyCodeLine{01125\ \ \ \ \ \textcolor{comment}{//\ Token\ Id\ -\/>\ Piece.}}
+\DoxyCodeLine{01126\ \ \ \ \ \textcolor{comment}{//\ Uses\ the\ vocabulary\ in\ the\ provided\ context.}}
+\DoxyCodeLine{01127\ \ \ \ \ \textcolor{comment}{//\ Does\ not\ write\ null\ terminator\ to\ the\ buffer.}}
+\DoxyCodeLine{01128\ \ \ \ \ \textcolor{comment}{//\ User\ can\ skip\ up\ to\ 'lstrip'\ leading\ spaces\ before\ copying\ (useful\ when\ encoding/decoding\ multiple\ tokens\ with\ 'add\_space\_prefix')}}
+\DoxyCodeLine{01129\ \ \ \ \ \textcolor{comment}{//\ @param\ special\ If\ true,\ special\ tokens\ are\ rendered\ in\ the\ output.}}
+\DoxyCodeLine{01130\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_token\_to\_piece(}
+\DoxyCodeLine{01131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,}
+\DoxyCodeLine{01132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_token\ \ \ token,}
+\DoxyCodeLine{01133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ buf,}
+\DoxyCodeLine{01134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ length,}
+\DoxyCodeLine{01135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ lstrip,}
+\DoxyCodeLine{01136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ special);}
+\DoxyCodeLine{01137\ }
+\DoxyCodeLine{01144\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_detokenize(}
+\DoxyCodeLine{01145\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,}
+\DoxyCodeLine{01146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ tokens,}
+\DoxyCodeLine{01147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_tokens,}
+\DoxyCodeLine{01148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ text,}
+\DoxyCodeLine{01149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ text\_len\_max,}
+\DoxyCodeLine{01150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ remove\_special,}
+\DoxyCodeLine{01151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ unparse\_special);}
+\DoxyCodeLine{01152\ }
+\DoxyCodeLine{01153\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01154\ \ \ \ \ \textcolor{comment}{//\ Chat\ templates}}
+\DoxyCodeLine{01155\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01156\ }
+\DoxyCodeLine{01167\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_chat\_apply\_template(}
+\DoxyCodeLine{01168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ tmpl,}
+\DoxyCodeLine{01169\ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__chat__message}{llama\_chat\_message}}\ *\ chat,}
+\DoxyCodeLine{01170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ n\_msg,}
+\DoxyCodeLine{01171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ add\_ass,}
+\DoxyCodeLine{01172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ buf,}
+\DoxyCodeLine{01173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ length);}
+\DoxyCodeLine{01174\ }
+\DoxyCodeLine{01175\ \ \ \ \ \textcolor{comment}{//\ Get\ list\ of\ built-\/in\ chat\ templates}}
+\DoxyCodeLine{01176\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_chat\_builtin\_templates(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **\ output,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{01177\ }
+\DoxyCodeLine{01178\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01179\ \ \ \ \ \textcolor{comment}{//\ Sampling\ API}}
+\DoxyCodeLine{01180\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01181\ \ \ \ \ \textcolor{comment}{//\ Sample\ usage:}}
+\DoxyCodeLine{01182\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01183\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ prepare\ the\ sampling\ chain\ at\ the\ start}}
+\DoxyCodeLine{01184\ \ \ \ \ \textcolor{comment}{//\ \ \ \ auto\ sparams\ =\ llama\_sampler\_chain\_default\_params();}}
+\DoxyCodeLine{01185\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01186\ \ \ \ \ \textcolor{comment}{//\ \ \ \ llama\_sampler\ *\ smpl\ =\ llama\_sampler\_chain\_init(sparams);}}
+\DoxyCodeLine{01187\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01188\ \ \ \ \ \textcolor{comment}{//\ \ \ \ llama\_sampler\_chain\_add(smpl,\ llama\_sampler\_init\_top\_k(50));}}
+\DoxyCodeLine{01189\ \ \ \ \ \textcolor{comment}{//\ \ \ \ llama\_sampler\_chain\_add(smpl,\ llama\_sampler\_init\_top\_p(0.9,\ 1));}}
+\DoxyCodeLine{01190\ \ \ \ \ \textcolor{comment}{//\ \ \ \ llama\_sampler\_chain\_add(smpl,\ llama\_sampler\_init\_temp\ (0.8));}}
+\DoxyCodeLine{01191\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01192\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ typically,\ the\ chain\ should\ end\ with\ a\ sampler\ such\ as\ "{}greedy"{},\ "{}dist"{}\ or\ "{}mirostat"{}}}
+\DoxyCodeLine{01193\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ this\ sampler\ will\ be\ responsible\ to\ select\ the\ actual\ token}}
+\DoxyCodeLine{01194\ \ \ \ \ \textcolor{comment}{//\ \ \ \ llama\_sampler\_chain\_add(smpl,\ llama\_sampler\_init\_dist(seed));}}
+\DoxyCodeLine{01195\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01196\ \ \ \ \ \textcolor{comment}{//\ \ \ \ ...}}
+\DoxyCodeLine{01197\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01198\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ decoding\ loop:}}
+\DoxyCodeLine{01199\ \ \ \ \ \textcolor{comment}{//\ \ \ \ while\ (...)\ \{}}
+\DoxyCodeLine{01200\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ ...}}
+\DoxyCodeLine{01201\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01202\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ llama\_decode(ctx,\ batch);}}
+\DoxyCodeLine{01203\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01204\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ //\ sample\ from\ the\ logits\ of\ the\ last\ token\ in\ the\ batch}}
+\DoxyCodeLine{01205\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ const\ llama\_token\ id\ =\ llama\_sampler\_sample(smpl,\ ctx,\ -\/1);}}
+\DoxyCodeLine{01206\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01207\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ ...}}
+\DoxyCodeLine{01208\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \}}}
+\DoxyCodeLine{01209\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01210\ \ \ \ \ \textcolor{comment}{//\ \ \ \ llama\_sampler\_free(smpl);}}
+\DoxyCodeLine{01211\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01212\ }
+\DoxyCodeLine{01213\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *\ llama\_sampler\_context\_t;}
+\DoxyCodeLine{01214\ }
+\DoxyCodeLine{01215\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__data}{llama\_sampler\_data}}\ \{}
+\DoxyCodeLine{01216\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ logits;}
+\DoxyCodeLine{01217\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ probs;}
+\DoxyCodeLine{01218\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ sampled;}
+\DoxyCodeLine{01219\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ candidates;}
+\DoxyCodeLine{01220\ \ \ \ \ \};}
+\DoxyCodeLine{01221\ }
+\DoxyCodeLine{01222\ \ \ \ \ \textcolor{comment}{//\ user\ code\ can\ implement\ the\ interface\ below\ in\ order\ to\ create\ custom\ llama\_sampler}}
+\DoxyCodeLine{01223\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__i}{llama\_sampler\_i}}\ \{}
+\DoxyCodeLine{01224\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ (*name)\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ can\ be\ NULL}}
+\DoxyCodeLine{01225\ \ \ \ \ \ \ \ \ void\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*accept)(\ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl,\ llama\_token\ token);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ can\ be\ NULL}}
+\DoxyCodeLine{01226\ \ \ \ \ \ \ \ \ void\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*apply)\ (\ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl,\ \doxymbox{\hyperlink{structllama__token__data__array}{llama\_token\_data\_array}}\ *\ cur\_p);\ \textcolor{comment}{//\ required}}
+\DoxyCodeLine{01227\ \ \ \ \ \ \ \ \ void\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*reset)\ (\ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ can\ be\ NULL}}
+\DoxyCodeLine{01228\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ (*clone)\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ can\ be\ NULL\ if\ ctx\ is\ NULL}}
+\DoxyCodeLine{01229\ \ \ \ \ \ \ \ \ void\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*free)\ \ (\ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ can\ be\ NULL\ if\ ctx\ is\ NULL}}
+\DoxyCodeLine{01230\ }
+\DoxyCodeLine{01231\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [EXPERIMENTAL]}}
+\DoxyCodeLine{01232\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ backend\ sampling\ interface:}}
+\DoxyCodeLine{01233\ }
+\DoxyCodeLine{01234\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ return\ true\ if\ the\ backend\ supports\ all\ ops\ needed\ by\ the\ sampler}}
+\DoxyCodeLine{01235\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ note:\ call\ once\ per\ sampler}}
+\DoxyCodeLine{01236\ \ \ \ \ \ \ \ \ bool\ (*backend\_init)(\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl,\ ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{01237\ }
+\DoxyCodeLine{01238\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ call\ after\ .backend\_apply()}}
+\DoxyCodeLine{01239\ \ \ \ \ \ \ \ \ void\ (*backend\_accept)(}
+\DoxyCodeLine{01240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl,}
+\DoxyCodeLine{01241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ \ *\ ctx,}
+\DoxyCodeLine{01242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ \ \ *\ gf,}
+\DoxyCodeLine{01243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ \ \ *\ selected\_token);}
+\DoxyCodeLine{01244\ }
+\DoxyCodeLine{01245\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ call\ after\ .backend\_init()}}
+\DoxyCodeLine{01246\ \ \ \ \ \ \ \ \ void\ (*backend\_apply)(}
+\DoxyCodeLine{01247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ \ \ \ \ \ *\ smpl,}
+\DoxyCodeLine{01248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ \ \ \ \ \ \ *\ ctx,}
+\DoxyCodeLine{01249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ \ \ \ \ \ \ \ *\ gf,}
+\DoxyCodeLine{01250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__data}{llama\_sampler\_data}}\ *\ data);}
+\DoxyCodeLine{01251\ }
+\DoxyCodeLine{01252\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ called\ before\ graph\ execution\ to\ set\ inputs\ for\ the\ current\ ubatch}}
+\DoxyCodeLine{01253\ \ \ \ \ \ \ \ \ void\ (*backend\_set\_input)(\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);}
+\DoxyCodeLine{01254\ \ \ \ \ \};}
+\DoxyCodeLine{01255\ }
+\DoxyCodeLine{01256\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ \{}
+\DoxyCodeLine{01257\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__i}{llama\_sampler\_i}}\ *\ iface;}
+\DoxyCodeLine{01258\ }
+\DoxyCodeLine{01259\ \ \ \ \ \ \ \ \ llama\_sampler\_context\_t\ ctx;}
+\DoxyCodeLine{01260\ \ \ \ \ \};}
+\DoxyCodeLine{01261\ }
+\DoxyCodeLine{01262\ \ \ \ \ \textcolor{comment}{//\ [EXPERIMENTAL]}}
+\DoxyCodeLine{01263\ \ \ \ \ \textcolor{comment}{//\ attach\ a\ sampler\ to\ the\ context}}
+\DoxyCodeLine{01264\ \ \ \ \ \textcolor{comment}{//\ note:\ prefer\ initializing\ the\ context\ with\ llama\_context\_params.samplers\ when\ possible}}
+\DoxyCodeLine{01265\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_set\_sampler(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ llama\_seq\_id\ seq\_id,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);}
+\DoxyCodeLine{01266\ }
+\DoxyCodeLine{01267\ \ \ \ \ \textcolor{comment}{//\ mirror\ of\ llama\_sampler\_i:}}
+\DoxyCodeLine{01268\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\ \ (\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler__i}{llama\_sampler\_i}}\ *\ iface,\ llama\_sampler\_context\_t\ ctx);}
+\DoxyCodeLine{01269\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ llama\_sampler\_name\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);}
+\DoxyCodeLine{01270\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_sampler\_accept(\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl,\ llama\_token\ token);}
+\DoxyCodeLine{01271\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_sampler\_apply\ (\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl,\ \doxymbox{\hyperlink{structllama__token__data__array}{llama\_token\_data\_array}}\ *\ cur\_p);}
+\DoxyCodeLine{01272\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_sampler\_reset\ (\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);}
+\DoxyCodeLine{01273\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_clone\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);}
+\DoxyCodeLine{01274\ \ \ \ \ \textcolor{comment}{//\ important:\ do\ not\ free\ if\ the\ sampler\ has\ been\ added\ to\ a\ llama\_sampler\_chain\ (via\ llama\_sampler\_chain\_add)}}
+\DoxyCodeLine{01275\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_sampler\_free\ \ (\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);}
+\DoxyCodeLine{01276\ }
+\DoxyCodeLine{01277\ \ \ \ \ \textcolor{comment}{//\ llama\_sampler\_chain}}
+\DoxyCodeLine{01278\ \ \ \ \ \textcolor{comment}{//\ a\ type\ of\ llama\_sampler\ that\ can\ chain\ multiple\ samplers\ one\ after\ another}}
+\DoxyCodeLine{01279\ }
+\DoxyCodeLine{01280\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_chain\_init(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler__chain__params}{llama\_sampler\_chain\_params}}\ params);}
+\DoxyCodeLine{01281\ }
+\DoxyCodeLine{01282\ \ \ \ \ \textcolor{comment}{//\ important:\ takes\ ownership\ of\ the\ sampler\ object\ and\ will\ free\ it\ when\ llama\_sampler\_free\ is\ called}}
+\DoxyCodeLine{01283\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_sampler\_chain\_add(\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ chain,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);}
+\DoxyCodeLine{01284\ }
+\DoxyCodeLine{01285\ \ \ \ \ \textcolor{comment}{//\ return\ NULL\ if:}}
+\DoxyCodeLine{01286\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ the\ sampler\ is\ NULL}}
+\DoxyCodeLine{01287\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ the\ sampler\ is\ not\ a\ llama\_sampler\_chain}}
+\DoxyCodeLine{01288\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ the\ index\ is\ out\ of\ bounds,\ unless\ i\ ==\ -\/1}}
+\DoxyCodeLine{01289\ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ if\ i\ ==\ -\/1,\ returns\ the\ chain\ itself\ (can\ be\ used\ to\ check\ if\ the\ sampler\ is\ a\ chain)}}
+\DoxyCodeLine{01290\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_chain\_get(\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ chain,\ int32\_t\ i);}
+\DoxyCodeLine{01291\ }
+\DoxyCodeLine{01292\ \ \ \ \ \textcolor{comment}{//\ the\ total\ number\ of\ samplers\ in\ the\ chain}}
+\DoxyCodeLine{01293\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_sampler\_chain\_n\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ chain);}
+\DoxyCodeLine{01294\ }
+\DoxyCodeLine{01295\ \ \ \ \ \textcolor{comment}{//\ after\ removing\ a\ sampler,\ the\ chain\ will\ no\ longer\ own\ it,\ and\ it\ will\ not\ be\ freed\ when\ the\ chain\ is\ freed}}
+\DoxyCodeLine{01296\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_chain\_remove(\ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ chain,\ int32\_t\ i);}
+\DoxyCodeLine{01297\ }
+\DoxyCodeLine{01298\ \ \ \ \ \textcolor{comment}{//\ available\ samplers:}}
+\DoxyCodeLine{01299\ }
+\DoxyCodeLine{01300\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_greedy(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01301\ }
+\DoxyCodeLine{01303\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_dist(uint32\_t\ seed);}
+\DoxyCodeLine{01304\ }
+\DoxyCodeLine{01307\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_top\_k\ \ \ \ \ \ (int32\_t\ k);}
+\DoxyCodeLine{01308\ }
+\DoxyCodeLine{01310\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_top\_p\ \ \ \ \ \ (\textcolor{keywordtype}{float}\ \ \ p,\ \textcolor{keywordtype}{size\_t}\ min\_keep);}
+\DoxyCodeLine{01311\ }
+\DoxyCodeLine{01313\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_min\_p\ \ \ \ \ \ (\textcolor{keywordtype}{float}\ \ \ p,\ \textcolor{keywordtype}{size\_t}\ min\_keep);}
+\DoxyCodeLine{01314\ }
+\DoxyCodeLine{01316\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_typical\ \ \ \ (\textcolor{keywordtype}{float}\ \ \ p,\ \textcolor{keywordtype}{size\_t}\ min\_keep);}
+\DoxyCodeLine{01317\ }
+\DoxyCodeLine{01319\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_temp\ \ \ \ \ \ \ (\textcolor{keywordtype}{float}\ \ \ t);}
+\DoxyCodeLine{01320\ }
+\DoxyCodeLine{01322\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_temp\_ext\ \ \ (\textcolor{keywordtype}{float}\ \ \ t,\ \textcolor{keywordtype}{float}\ \ \ delta,\ \textcolor{keywordtype}{float}\ exponent);}
+\DoxyCodeLine{01323\ }
+\DoxyCodeLine{01325\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_xtc\ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float}\ \ \ p,\ \textcolor{keywordtype}{float}\ \ \ t,\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ min\_keep,\ uint32\_t\ seed);}
+\DoxyCodeLine{01326\ }
+\DoxyCodeLine{01328\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_top\_n\_sigma(\textcolor{keywordtype}{float}\ \ \ n);}
+\DoxyCodeLine{01329\ }
+\DoxyCodeLine{01336\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_mirostat(}
+\DoxyCodeLine{01337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_vocab,}
+\DoxyCodeLine{01338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ seed,}
+\DoxyCodeLine{01339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ tau,}
+\DoxyCodeLine{01340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ eta,}
+\DoxyCodeLine{01341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ m);}
+\DoxyCodeLine{01342\ }
+\DoxyCodeLine{01348\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_mirostat\_v2(}
+\DoxyCodeLine{01349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ seed,}
+\DoxyCodeLine{01350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ tau,}
+\DoxyCodeLine{01351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ eta);}
+\DoxyCodeLine{01352\ }
+\DoxyCodeLine{01357\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_grammar(}
+\DoxyCodeLine{01358\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,}
+\DoxyCodeLine{01359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ grammar\_str,}
+\DoxyCodeLine{01360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ grammar\_root);}
+\DoxyCodeLine{01361\ }
+\DoxyCodeLine{01362\ \ \ \ \ DEPRECATED(LLAMA\_API\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_grammar\_lazy(}
+\DoxyCodeLine{01363\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,}
+\DoxyCodeLine{01364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ grammar\_str,}
+\DoxyCodeLine{01365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ grammar\_root,}
+\DoxyCodeLine{01366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **\ trigger\_words,}
+\DoxyCodeLine{01367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ num\_trigger\_words,}
+\DoxyCodeLine{01368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ trigger\_tokens,}
+\DoxyCodeLine{01369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ num\_trigger\_tokens),}
+\DoxyCodeLine{01370\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ llama\_sampler\_init\_grammar\_lazy\_patterns\ instead"{}});}
+\DoxyCodeLine{01371\ }
+\DoxyCodeLine{01372\ }
+\DoxyCodeLine{01376\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_grammar\_lazy\_patterns(}
+\DoxyCodeLine{01377\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab,}
+\DoxyCodeLine{01378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ grammar\_str,}
+\DoxyCodeLine{01379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ grammar\_root,}
+\DoxyCodeLine{01380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **\ trigger\_patterns,}
+\DoxyCodeLine{01381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ num\_trigger\_patterns,}
+\DoxyCodeLine{01382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llama\_token\ *\ trigger\_tokens,}
+\DoxyCodeLine{01383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ num\_trigger\_tokens);}
+\DoxyCodeLine{01384\ }
+\DoxyCodeLine{01385\ }
+\DoxyCodeLine{01387\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_penalties(}
+\DoxyCodeLine{01388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ penalty\_last\_n,\ \ \ \textcolor{comment}{//\ last\ n\ tokens\ to\ penalize\ (0\ =\ disable\ penalty,\ -\/1\ =\ context\ size)}}
+\DoxyCodeLine{01389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ penalty\_repeat,\ \ \ \textcolor{comment}{//\ 1.0\ =\ disabled}}
+\DoxyCodeLine{01390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ penalty\_freq,\ \ \ \ \ \textcolor{comment}{//\ 0.0\ =\ disabled}}
+\DoxyCodeLine{01391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ penalty\_present);\ \textcolor{comment}{//\ 0.0\ =\ disabled}}
+\DoxyCodeLine{01392\ }
+\DoxyCodeLine{01394\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_dry(}
+\DoxyCodeLine{01395\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ \ vocab,}
+\DoxyCodeLine{01396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ \ n\_ctx\_train,}
+\DoxyCodeLine{01397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ dry\_multiplier,}
+\DoxyCodeLine{01398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ dry\_base,}
+\DoxyCodeLine{01399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ \ dry\_allowed\_length,}
+\DoxyCodeLine{01400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ \ dry\_penalty\_last\_n,}
+\DoxyCodeLine{01401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **\ seq\_breakers,}
+\DoxyCodeLine{01402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ num\_breakers);}
+\DoxyCodeLine{01403\ }
+\DoxyCodeLine{01426\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_adaptive\_p(}
+\DoxyCodeLine{01427\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ target,}
+\DoxyCodeLine{01428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ decay,}
+\DoxyCodeLine{01429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ seed);}
+\DoxyCodeLine{01430\ }
+\DoxyCodeLine{01431\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_logit\_bias(}
+\DoxyCodeLine{01432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_vocab,}
+\DoxyCodeLine{01433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_logit\_bias,}
+\DoxyCodeLine{01434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__logit__bias}{llama\_logit\_bias}}\ *\ logit\_bias);}
+\DoxyCodeLine{01435\ }
+\DoxyCodeLine{01436\ \ \ \ \ \textcolor{comment}{//\ this\ sampler\ is\ meant\ to\ be\ used\ for\ fill-\/in-\/the-\/middle\ infilling}}
+\DoxyCodeLine{01437\ \ \ \ \ \textcolor{comment}{//\ it's\ supposed\ to\ be\ used\ after\ top\_k\ +\ top\_p\ sampling}}
+\DoxyCodeLine{01438\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01439\ \ \ \ \ \textcolor{comment}{//\ 1.\ if\ the\ sum\ of\ the\ EOG\ probs\ times\ the\ number\ of\ candidates\ is\ higher\ than\ the\ sum\ of\ the\ other\ probs\ -\/>\ pick\ EOG}}
+\DoxyCodeLine{01440\ \ \ \ \ \textcolor{comment}{//\ 2.\ combine\ probs\ of\ tokens\ that\ have\ the\ same\ prefix}}
+\DoxyCodeLine{01441\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01442\ \ \ \ \ \textcolor{comment}{//\ example:}}
+\DoxyCodeLine{01443\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01444\ \ \ \ \ \textcolor{comment}{//\ -\/\ before:}}
+\DoxyCodeLine{01445\ \ \ \ \ \textcolor{comment}{//\ \ \ "{}hel"{}:\ \ \ 0.5}}
+\DoxyCodeLine{01446\ \ \ \ \ \textcolor{comment}{//\ \ \ "{}hell"{}:\ \ 0.2}}
+\DoxyCodeLine{01447\ \ \ \ \ \textcolor{comment}{//\ \ \ "{}hello"{}:\ 0.1}}
+\DoxyCodeLine{01448\ \ \ \ \ \textcolor{comment}{//\ \ \ "{}dummy"{}:\ 0.1}}
+\DoxyCodeLine{01449\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01450\ \ \ \ \ \textcolor{comment}{//\ -\/\ after:}}
+\DoxyCodeLine{01451\ \ \ \ \ \textcolor{comment}{//\ \ \ "{}hel"{}:\ \ \ 0.8}}
+\DoxyCodeLine{01452\ \ \ \ \ \textcolor{comment}{//\ \ \ "{}dummy"{}:\ 0.1}}
+\DoxyCodeLine{01453\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01454\ \ \ \ \ \textcolor{comment}{//\ 3.\ discard\ non-\/EOG\ tokens\ with\ low\ prob}}
+\DoxyCodeLine{01455\ \ \ \ \ \textcolor{comment}{//\ 4.\ if\ no\ tokens\ are\ left\ -\/>\ pick\ EOT}}
+\DoxyCodeLine{01456\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01457\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_infill(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab);}
+\DoxyCodeLine{01458\ }
+\DoxyCodeLine{01459\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ seed\ used\ by\ the\ sampler\ if\ applicable,\ LLAMA\_DEFAULT\_SEED\ otherwise}}
+\DoxyCodeLine{01460\ \ \ \ \ LLAMA\_API\ uint32\_t\ llama\_sampler\_get\_seed(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl);}
+\DoxyCodeLine{01461\ }
+\DoxyCodeLine{01463\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01464\ \ \ \ \ \textcolor{comment}{//\ Shorthand\ for:}}
+\DoxyCodeLine{01465\ \ \ \ \ \textcolor{comment}{//\ \ \ \ const\ auto\ *\ logits\ =\ llama\_get\_logits\_ith(ctx,\ idx);}}
+\DoxyCodeLine{01466\ \ \ \ \ \textcolor{comment}{//\ \ \ \ llama\_token\_data\_array\ cur\_p\ =\ \{\ ...\ init\ from\ logits\ ...\ \};}}
+\DoxyCodeLine{01467\ \ \ \ \ \textcolor{comment}{//\ \ \ \ llama\_sampler\_apply(smpl,\ \&cur\_p);}}
+\DoxyCodeLine{01468\ \ \ \ \ \textcolor{comment}{//\ \ \ \ auto\ token\ =\ cur\_p.data[cur\_p.selected].id;}}
+\DoxyCodeLine{01469\ \ \ \ \ \textcolor{comment}{//\ \ \ \ llama\_sampler\_accept(smpl,\ token);}}
+\DoxyCodeLine{01470\ \ \ \ \ \textcolor{comment}{//\ \ \ \ return\ token;}}
+\DoxyCodeLine{01471\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ sampled\ token}}
+\DoxyCodeLine{01472\ \ \ \ \ LLAMA\_API\ llama\_token\ llama\_sampler\_sample(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ smpl,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,\ int32\_t\ idx);}
+\DoxyCodeLine{01473\ }
+\DoxyCodeLine{01474\ \ \ \ \ \textcolor{comment}{//\ TODO:\ extend\ in\ the\ future}}
+\DoxyCodeLine{01475\ \ \ \ \ \textcolor{comment}{//LLAMA\_API\ void\ llama\_decode\_with\_sampler(struct\ llama\_context\ *\ ctx,\ struct\ llama\_sampler\ *\ smpl,\ struct\ llama\_batch\ batch,\ ...);}}
+\DoxyCodeLine{01476\ }
+\DoxyCodeLine{01477\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01478\ \ \ \ \ \textcolor{comment}{//\ Model\ split}}
+\DoxyCodeLine{01479\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01480\ }
+\DoxyCodeLine{01483\ \ \ \ \ \textcolor{comment}{//\ \ Returns\ the\ split\_path\ length.}}
+\DoxyCodeLine{01484\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_split\_path(\textcolor{keywordtype}{char}\ *\ split\_path,\ \textcolor{keywordtype}{size\_t}\ maxlen,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_prefix,\ int32\_t\ split\_no,\ int32\_t\ split\_count);}
+\DoxyCodeLine{01485\ }
+\DoxyCodeLine{01488\ \ \ \ \ \textcolor{comment}{//\ \ Returns\ the\ split\_prefix\ length.}}
+\DoxyCodeLine{01489\ \ \ \ \ LLAMA\_API\ int32\_t\ llama\_split\_prefix(\textcolor{keywordtype}{char}\ *\ split\_prefix,\ \textcolor{keywordtype}{size\_t}\ maxlen,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ split\_path,\ int32\_t\ split\_no,\ int32\_t\ split\_count);}
+\DoxyCodeLine{01490\ }
+\DoxyCodeLine{01491\ \ \ \ \ \textcolor{comment}{//\ Print\ system\ information}}
+\DoxyCodeLine{01492\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ llama\_print\_system\_info(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01493\ }
+\DoxyCodeLine{01494\ \ \ \ \ \textcolor{comment}{//\ Set\ callback\ for\ all\ future\ logging\ events.}}
+\DoxyCodeLine{01495\ \ \ \ \ \textcolor{comment}{//\ If\ this\ is\ not\ called,\ or\ NULL\ is\ supplied,\ everything\ is\ output\ on\ stderr.}}
+\DoxyCodeLine{01496\ \ \ \ \ \textcolor{comment}{//\ The\ logger\ state\ is\ global\ so\ these\ functions\ are\ NOT\ thread\ safe.}}
+\DoxyCodeLine{01497\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_log\_get(ggml\_log\_callback\ *\ log\_callback,\ \textcolor{keywordtype}{void}\ **\ user\_data);}
+\DoxyCodeLine{01498\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_log\_set(ggml\_log\_callback\ \ \ log\_callback,\ \textcolor{keywordtype}{void}\ *\ \ user\_data);}
+\DoxyCodeLine{01499\ }
+\DoxyCodeLine{01500\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01501\ \ \ \ \ \textcolor{comment}{//\ Performance\ utils}}
+\DoxyCodeLine{01502\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01503\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ Used\ by\ llama.cpp\ examples/tools,\ avoid\ using\ in\ third-\/party\ apps.\ Instead,\ do\ your\ own\ performance\ measurements.}}
+\DoxyCodeLine{01504\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01505\ }
+\DoxyCodeLine{01506\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__perf__context__data}{llama\_perf\_context\_data}}\ \{}
+\DoxyCodeLine{01507\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ms\ ==\ milliseconds}}
+\DoxyCodeLine{01508\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ t\_start\_ms;\ \ \textcolor{comment}{//\ absolute\ start\ time}}
+\DoxyCodeLine{01509\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ t\_load\_ms;\ \ \ \textcolor{comment}{//\ time\ needed\ for\ loading\ the\ model}}
+\DoxyCodeLine{01510\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ t\_p\_eval\_ms;\ \textcolor{comment}{//\ time\ needed\ for\ processing\ the\ prompt}}
+\DoxyCodeLine{01511\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ t\_eval\_ms;\ \ \ \textcolor{comment}{//\ time\ needed\ for\ generating\ tokens}}
+\DoxyCodeLine{01512\ }
+\DoxyCodeLine{01513\ \ \ \ \ \ \ \ \ int32\_t\ n\_p\_eval;\ \ \ \textcolor{comment}{//\ number\ of\ prompt\ tokens}}
+\DoxyCodeLine{01514\ \ \ \ \ \ \ \ \ int32\_t\ n\_eval;\ \ \ \ \ \textcolor{comment}{//\ number\ of\ generated\ tokens}}
+\DoxyCodeLine{01515\ \ \ \ \ \ \ \ \ int32\_t\ n\_reused;\ \ \ \textcolor{comment}{//\ number\ of\ times\ a\ ggml\ compute\ graph\ had\ been\ reused}}
+\DoxyCodeLine{01516\ \ \ \ \ \};}
+\DoxyCodeLine{01517\ }
+\DoxyCodeLine{01518\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__perf__sampler__data}{llama\_perf\_sampler\_data}}\ \{}
+\DoxyCodeLine{01519\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ t\_sample\_ms;\ \textcolor{comment}{//\ time\ needed\ for\ sampling\ in\ ms}}
+\DoxyCodeLine{01520\ }
+\DoxyCodeLine{01521\ \ \ \ \ \ \ \ \ int32\_t\ n\_sample;\ \ \ \textcolor{comment}{//\ number\ of\ sampled\ tokens}}
+\DoxyCodeLine{01522\ \ \ \ \ \};}
+\DoxyCodeLine{01523\ }
+\DoxyCodeLine{01524\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__perf__context__data}{llama\_perf\_context\_data}}\ llama\_perf\_context\ \ \ \ \ \ (const\ struct\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{01525\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_perf\_context\_print(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{01526\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_perf\_context\_reset(\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{01527\ }
+\DoxyCodeLine{01528\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ the\ following\ work\ only\ with\ samplers\ constructed\ via\ llama\_sampler\_chain\_init}}
+\DoxyCodeLine{01529\ \ \ \ \ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__perf__sampler__data}{llama\_perf\_sampler\_data}}\ llama\_perf\_sampler\ \ \ \ \ \ (const\ struct\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ chain);}
+\DoxyCodeLine{01530\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_perf\_sampler\_print(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ chain);}
+\DoxyCodeLine{01531\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ llama\_perf\_sampler\_reset(\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ chain);}
+\DoxyCodeLine{01532\ }
+\DoxyCodeLine{01533\ \ \ \ \ \textcolor{comment}{//\ print\ a\ breakdown\ of\ per-\/device\ memory\ use\ via\ LLAMA\_LOG:}}
+\DoxyCodeLine{01534\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_memory\_breakdown\_print(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx);}
+\DoxyCodeLine{01535\ }
+\DoxyCodeLine{01536\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01537\ \ \ \ \ \textcolor{comment}{//\ training}}
+\DoxyCodeLine{01538\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01539\ }
+\DoxyCodeLine{01540\ \ \ \ \ \textcolor{comment}{//\ function\ that\ returns\ whether\ or\ not\ a\ given\ tensor\ contains\ trainable\ parameters}}
+\DoxyCodeLine{01541\ \ \ \ \ \textcolor{keyword}{typedef}\ bool\ (*llama\_opt\_param\_filter)(\textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{void}\ *\ userdata);}
+\DoxyCodeLine{01542\ }
+\DoxyCodeLine{01543\ \ \ \ \ \textcolor{comment}{//\ always\ returns\ true}}
+\DoxyCodeLine{01544\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{bool}\ llama\_opt\_param\_filter\_all(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{void}\ *\ userdata);}
+\DoxyCodeLine{01545\ }
+\DoxyCodeLine{01546\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__opt__params}{llama\_opt\_params}}\ \{}
+\DoxyCodeLine{01547\ \ \ \ \ \ \ \ \ uint32\_t\ n\_ctx\_train;\ \textcolor{comment}{//\ assumed\ context\ size\ post\ training,\ use\ context\ size\ specified\ in\ llama\_context\ if\ 0}}
+\DoxyCodeLine{01548\ }
+\DoxyCodeLine{01549\ \ \ \ \ \ \ \ \ llama\_opt\_param\_filter\ param\_filter;\ \textcolor{comment}{//\ callback\ for\ determining\ which\ tensors\ contain\ trainable\ parameters}}
+\DoxyCodeLine{01550\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ param\_filter\_ud;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ userdata\ for\ determining\ which\ tensors\ contain\ trainable\ parameters}}
+\DoxyCodeLine{01551\ }
+\DoxyCodeLine{01552\ \ \ \ \ \ \ \ \ ggml\_opt\_get\_optimizer\_params\ get\_opt\_pars;\ \textcolor{comment}{//\ callback\ for\ calculating\ optimizer\ parameters}}
+\DoxyCodeLine{01553\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ get\_opt\_pars\_ud;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ userdata\ for\ calculating\ optimizer\ parameters}}
+\DoxyCodeLine{01554\ }
+\DoxyCodeLine{01555\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_opt\_optimizer\_type\ optimizer\_type;}
+\DoxyCodeLine{01556\ \ \ \ \ \};}
+\DoxyCodeLine{01557\ }
+\DoxyCodeLine{01558\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_opt\_init(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ lctx,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__opt__params}{llama\_opt\_params}}\ lopt\_params);}
+\DoxyCodeLine{01559\ }
+\DoxyCodeLine{01560\ \ \ \ \ LLAMA\_API\ \textcolor{keywordtype}{void}\ llama\_opt\_epoch(}
+\DoxyCodeLine{01561\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ \ \ \ *\ lctx,}
+\DoxyCodeLine{01562\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_t\ \ \ \ \ \ \ \ dataset,}
+\DoxyCodeLine{01563\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_result\_t\ \ \ \ \ \ \ \ \ result\_train,}
+\DoxyCodeLine{01564\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_result\_t\ \ \ \ \ \ \ \ \ result\_eval,}
+\DoxyCodeLine{01565\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ idata\_split,}
+\DoxyCodeLine{01566\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_epoch\_callback\ \ \ callback\_train,}
+\DoxyCodeLine{01567\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_epoch\_callback\ \ \ callback\_eval);}
+\DoxyCodeLine{01568\ }
+\DoxyCodeLine{01569\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{01570\ \}}
+\DoxyCodeLine{01571\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01572\ }
+\DoxyCodeLine{01573\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ LLAMA\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,111 @@
+\doxysection{Settings.\+cpp File Reference}
+\hypertarget{_settings_8cpp}{}\label{_settings_8cpp}\index{Settings.cpp@{Settings.cpp}}
+
+
+Implementation of settings management and settings UI.  
+
+
+{\ttfamily \+\#include "{}Settings.\+h"{}}\newline
+{\ttfamily \+\#include "{}config.\+h"{}}\newline
+{\ttfamily \+\#include "{}UIHelpers.\+h"{}}\newline
+{\ttfamily \+\#include "{}UIWidgets.\+h"{}}\newline
+{\ttfamily \+\#include $<$SFML/\+\+Graphics.\+hpp$>$}\newline
+{\ttfamily \+\#include $<$portaudio.\+h$>$}\newline
+{\ttfamily \+\#include $<$opencv2/\+videoio.\+hpp$>$}\newline
+{\ttfamily \+\#include $<$fstream$>$}\newline
+{\ttfamily \+\#include $<$sstream$>$}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include $<$algorithm$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{_settings_8cpp_a3a3ae429eaee72eafd35bc91b919f2fa}{run\+Settings\+Page}} ()
+\begin{DoxyCompactList}\small\item\em Displays the settings page and handles user interaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{_settings_8cpp_a7b62273527067a31b5b4075e6090c688}\label{_settings_8cpp_a7b62273527067a31b5b4075e6090c688} 
+\doxymbox{\hyperlink{struct_app_settings}{App\+Settings}} {\bfseries g\+\_\+settings}
+\begin{DoxyCompactList}\small\item\em Global settings instance shared across the application. \end{DoxyCompactList}\item 
+const \doxymbox{\hyperlink{struct_colour_preset}{Colour\+Preset}} \doxymbox{\hyperlink{_settings_8cpp_a30eeba9a0b3ad7ac20fa26047ad578d6}{UI\+\_\+\+COLOUR\+\_\+\+PRESETS}} \+[$\,$]\+
+\begin{DoxyCompactList}\small\item\em All available accent colors. \end{DoxyCompactList}\item 
+\Hypertarget{_settings_8cpp_a58d6e542d8269de9b4f46daa5e9c78b0}\label{_settings_8cpp_a58d6e542d8269de9b4f46daa5e9c78b0} 
+const int {\bfseries UI\+\_\+\+COLOUR\+\_\+\+COUNT} = 5
+\begin{DoxyCompactList}\small\item\em Number of color presets. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{_settings_8cpp_a504d249df3ad01d7d07db09f911ba891}{ACCENT\+\_\+\+NAMES}} \+[$\,$]\+
+\begin{DoxyCompactList}\small\item\em Display names for each TTS accent. \end{DoxyCompactList}\item 
+\Hypertarget{_settings_8cpp_aac07b44dcbcaad15ffb836d778b18d1f}\label{_settings_8cpp_aac07b44dcbcaad15ffb836d778b18d1f} 
+const int {\bfseries ACCENT\+\_\+\+COUNT} = 4
+\begin{DoxyCompactList}\small\item\em Number of available accents. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementation of settings management and settings UI. 
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{_settings_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_settings_8cpp_a3a3ae429eaee72eafd35bc91b919f2fa}\index{Settings.cpp@{Settings.cpp}!runSettingsPage@{runSettingsPage}}
+\index{runSettingsPage@{runSettingsPage}!Settings.cpp@{Settings.cpp}}
+\doxysubsubsection{\texorpdfstring{runSettingsPage()}{runSettingsPage()}}
+{\footnotesize\ttfamily \label{_settings_8cpp_a3a3ae429eaee72eafd35bc91b919f2fa} 
+bool run\+Settings\+Page (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Displays the settings page and handles user interaction. 
+
+Opens a modal window showing all configurable settings including volume, voice accent, UI color, microphone selection, and Google OAuth tokens. \doxylink{requirements_The}{The} window blocks until the user closes it. Changes are only persisted if the user clicks Save or Save \& Exit.
+
+\begin{DoxyReturn}{Returns}
+true if the user saved changes, false if they cancelled or closed 
+\end{DoxyReturn}
+
+
+\label{doc-var-members}
+\Hypertarget{_settings_8cpp_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{_settings_8cpp_a504d249df3ad01d7d07db09f911ba891}\index{Settings.cpp@{Settings.cpp}!ACCENT\_NAMES@{ACCENT\_NAMES}}
+\index{ACCENT\_NAMES@{ACCENT\_NAMES}!Settings.cpp@{Settings.cpp}}
+\doxysubsubsection{\texorpdfstring{ACCENT\_NAMES}{ACCENT\_NAMES}}
+{\footnotesize\ttfamily \label{_settings_8cpp_a504d249df3ad01d7d07db09f911ba891} 
+const char\texorpdfstring{$\ast$}{*} ACCENT\+\_\+\+NAMES\+[$\,$]\+}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}American"{}},\ \textcolor{stringliteral}{"{}British"{}},\ \textcolor{stringliteral}{"{}Australian"{}},\ \textcolor{stringliteral}{"{}Canadian"{}}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Display names for each TTS accent. 
+
+\Hypertarget{_settings_8cpp_a30eeba9a0b3ad7ac20fa26047ad578d6}\index{Settings.cpp@{Settings.cpp}!UI\_COLOUR\_PRESETS@{UI\_COLOUR\_PRESETS}}
+\index{UI\_COLOUR\_PRESETS@{UI\_COLOUR\_PRESETS}!Settings.cpp@{Settings.cpp}}
+\doxysubsubsection{\texorpdfstring{UI\_COLOUR\_PRESETS}{UI\_COLOUR\_PRESETS}}
+{\footnotesize\ttfamily \label{_settings_8cpp_a30eeba9a0b3ad7ac20fa26047ad578d6} 
+const \doxymbox{\hyperlink{struct_colour_preset}{Colour\+Preset}} UI\+\_\+\+COLOUR\+\_\+\+PRESETS\+[$\,$]\+}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \{}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}Pink"{}},\ \ \ 255,\ \ 20,\ 147\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}Purple"{}},\ 180,\ \ \ 0,\ 255\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}Blue"{}},\ \ \ \ \ 0,\ \ 80,\ 255\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}Cyan"{}},\ \ \ \ \ 0,\ 200,\ 220\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}Green"{}},\ \ \ \ 0,\ 210,\ \ 80\},}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+All available accent colors. 
+

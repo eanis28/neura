@@ -1,0 +1,99 @@
+\doxysection{UIWidgets.\+h}
+\hypertarget{_u_i_widgets_8h_source}{}\label{_u_i_widgets_8h_source}\doxymbox{\hyperlink{_u_i_widgets_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <SFML/Graphics.hpp>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_helpers_8h}{UIHelpers.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_pill_dropdown}{PillDropdown}}\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{float}\ cx,\ cy,\ w,\ h;}
+\DoxyCodeLine{00024\ \ \ \ \ std::vector<std::string>\ options;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{int}\ \ index\ =\ 0,\ scrollOffset\ =\ 0;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{bool}\ open\ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \ \ MAX\_VIS\ =\ 5;}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{float}\ ITEM\_H\ \ =\ 36.f;}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_dropdown_a23945557b639f33af9c68c0a66ef64e3}{init}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ width,\ \textcolor{keywordtype}{float}\ height,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ opts,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_pill_dropdown_aff05348451e2e31264dab77017380689}{hitHeader}}(sf::Vector2f\ p)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_pill_dropdown_a812690aa406dca41df947c11627ed9e0}{onRelease}}(sf::Vector2f\ p);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_dropdown_ace2e23997387b505254ecafae9e2d6c8}{onScroll}}(sf::Vector2f\ p,\ \textcolor{keywordtype}{float}\ delta);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_dropdown_a05079fbf048c7c67e25d902f200ba78d}{drawHeader}}(sf::RenderWindow\&\ win,\ \textcolor{keyword}{const}\ sf::Font\&\ font)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_dropdown_a7547d992fb96c125d4dd2a24d3814131}{drawList}}(sf::RenderWindow\&\ win,\ \textcolor{keyword}{const}\ sf::Font\&\ font)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00088\ \};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_pill_text_field}{PillTextField}}\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{float}\ cx,\ cy,\ w,\ h;}
+\DoxyCodeLine{00100\ \ \ \ \ std::string\ text,\ placeholder;}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{bool}\ focused\ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{int}\ \ cursorPos\ =\ 0;}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{comment}{//\ selection:\ selStart\ ==\ selEnd\ means\ no\ selection}}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{int}\ \ selStart\ \ =\ 0;}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{int}\ \ selEnd\ \ \ \ =\ 0;}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ sf::Clock\ blinkClock;}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{//\ double-\/click\ detection}}
+\DoxyCodeLine{00111\ \ \ \ \ sf::Clock\ lastClickClock;}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ clickArmed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_text_field_a204debe6b2ceadc3f0732a5ff5870882}{init}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ width,\ \textcolor{keywordtype}{float}\ height,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ initial,\ \textcolor{keyword}{const}\ std::string\&\ ph\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_pill_text_field_a8d33df70d43a646e594ebde014235023}{hit}}(sf::Vector2f\ p)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_text_field_ac2d894a650898250d2dcae3961df93cb}{setFocus}}(\textcolor{keywordtype}{bool}\ f);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_text_field_aebca3a0a74dc066b488abc7a0455e25b}{onClick}}();}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_text_field_aa9d44f0000d04510c5e58a569258bd74}{deleteSelection}}();}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_pill_text_field_a3f05c918d34bb99ed1cf9e28829b0b6e}{hasSelection}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ selStart\ !=\ selEnd;\ \}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_text_field_abeb6ed3eb8f933a2b7e7f7e8334b9a98}{selectAll}}()\ \ \ \ \ \ \ \ \ \ \{\ selStart\ =\ 0;\ selEnd\ =\ (int)text.size();\ cursorPos\ =\ selEnd;\ \}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_text_field_a36450bac0d5e4a2991c0a7dafb671224}{clearSelection}}()\ \ \ \ \ \{\ selStart\ =\ selEnd\ =\ cursorPos;\ \}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_text_field_ab324d2277b7de59f77095539874dce63}{onTextEntered}}(uint32\_t\ u);}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_text_field_ae8fc30fd80298c19e165baec6334ff73}{onKeyPressed}}(sf::Keyboard::Key\ key,\ \textcolor{keywordtype}{bool}\ modifier);}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_pill_text_field_a63d2c30d31005f3731bd2bd09ce6d583}{draw}}(sf::RenderWindow\&\ win,\ \textcolor{keyword}{const}\ sf::Font\&\ font,\ sf::Color\ accent);}
+\DoxyCodeLine{00209\ \};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00218\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_slider}{Slider}}\ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keywordtype}{float}\ cx,\ cy,\ w;}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ value\ \ \ \ =\ 0;}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ dragging\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_slider_ae26b8a588be53c7eab4e9dd73c4b4b28}{init}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ width,\ \textcolor{keywordtype}{int}\ v);}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_slider_ac1515b1164f741b9c17fabac7d668f66}{thumbX}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \doxymbox{\hyperlink{struct_slider_a7c5b20536f4ef22708a577c189c4c036}{hitArea}}(sf::Vector2f\ p)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keywordtype}{void}\ \ \doxymbox{\hyperlink{struct_slider_ad704ec898ffb1f58475479b64c85a48a}{applyX}}(\textcolor{keywordtype}{float}\ px);}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keywordtype}{void}\ \ \doxymbox{\hyperlink{struct_slider_aaa76bd46a9c6009b64e031ae997374fa}{draw}}(sf::RenderWindow\&\ win)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00264\ \};}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00273\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_circle_button}{CircleButton}}\ \{}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keywordtype}{float}\ cx,\ cy,\ r;}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_circle_button_aaa5a241f8b0bfeead502a75084e2871b}{hit}}(sf::Vector2f\ p)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_circle_button_a8a38278721d47f59121d750aaa9dcd44}{draw}}(sf::RenderWindow\&\ win,\ \textcolor{keyword}{const}\ sf::Font\&\ font,\ sf::Vector2f\ mouse)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00293\ \};}
+
+\end{DoxyCode}

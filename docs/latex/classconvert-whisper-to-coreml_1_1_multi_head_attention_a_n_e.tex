@@ -1,0 +1,43 @@
+\doxysection{convert-\/whisper-\/to-\/coreml.Multi\+Head\+Attention\+ANE Class Reference}
+\hypertarget{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e}{}\label{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e}\index{convert-\/whisper-\/to-\/coreml.MultiHeadAttentionANE@{convert-\/whisper-\/to-\/coreml.MultiHeadAttentionANE}}
+Inheritance diagram for convert-\/whisper-\/to-\/coreml.Multi\+Head\+Attention\+ANE:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_adce039478e123d5e308f1e1ccd2601cc}\label{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_adce039478e123d5e308f1e1ccd2601cc} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, int n\+\_\+state, int n\+\_\+head)
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_a349ca8f6f6b99cf86d219ff6f593d83e}\label{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_a349ca8f6f6b99cf86d219ff6f593d83e} 
+{\bfseries forward} (self, Tensor x, Optional\+[Tensor]\+ xa=None, Optional\+[Tensor]\+ mask=None, Optional\+[dict]\+ kv\+\_\+cache=None)
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_a2d8a53a1552ef6137f3f963fb272b469}\label{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_a2d8a53a1552ef6137f3f963fb272b469} 
+{\bfseries qkv\+\_\+attention\+\_\+ane} (self, Tensor q, Tensor k, Tensor v, Optional\+[Tensor]\+ mask=None)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_af4e25b7bc47e6d53eeda9b51dc58ca62}\label{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_af4e25b7bc47e6d53eeda9b51dc58ca62} 
+{\bfseries query} = nn.\+Conv2d(n\+\_\+state, n\+\_\+state, kernel\+\_\+size=1)
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_a0a48e45c9ef2ceb40cbd7f5a275e04bc}\label{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_a0a48e45c9ef2ceb40cbd7f5a275e04bc} 
+{\bfseries key} = nn.\+Conv2d(n\+\_\+state, n\+\_\+state, kernel\+\_\+size=1, bias=False)
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_aec88120907740b8e1fc3d22721e918c9}\label{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_aec88120907740b8e1fc3d22721e918c9} 
+{\bfseries value} = nn.\+Conv2d(n\+\_\+state, n\+\_\+state, kernel\+\_\+size=1)
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_ae8794b333b9eb931e86875fe42da7aca}\label{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_ae8794b333b9eb931e86875fe42da7aca} 
+{\bfseries out} = nn.\+Conv2d(n\+\_\+state, n\+\_\+state, kernel\+\_\+size=1)
+\item 
+\Hypertarget{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_a911ccc5c2eedf97f7a83012f4762967e}\label{classconvert-whisper-to-coreml_1_1_multi_head_attention_a_n_e_a911ccc5c2eedf97f7a83012f4762967e} 
+{\bfseries n\+\_\+head}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+models/\+convert-\/whisper-\/to-\/coreml.\+py\end{DoxyCompactItemize}

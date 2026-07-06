@@ -1,0 +1,258 @@
+\doxysection{APIAction Class Reference}
+\hypertarget{class_a_p_i_action}{}\label{class_a_p_i_action}\index{APIAction@{APIAction}}
+
+
+\doxylink{class_action}{Action} that creates a Google Calendar event via the Calendar REST API.  
+
+
+
+
+{\ttfamily \+\#include $<$APIAction.\+h$>$}
+
+Inheritance diagram for APIAction:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_a_p_i_action}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_a_p_i_action_a5a61ad2d90143dff596b6df599b88f55}{APIAction}} (const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&cfg, \doxymbox{\hyperlink{struct_calendar_event}{Calendar\+Event}} \doxymbox{\hyperlink{class_a_p_i_action_a2c85976b238058bb2e56d5db8102f03f}{event}})
+\begin{DoxyCompactList}\small\item\em Constructs an \doxylink{class_a_p_i_action}{APIAction} with a configuration and an event to create. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90}{execute}} () override
+\begin{DoxyCompactList}\small\item\em Authenticates, validates, and POSTs the event to Google Calendar. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_a_p_i_action_a5f0877e38a578a46d9c757491c072d99}{describe}} () const override
+\begin{DoxyCompactList}\small\item\em Returns a human-\/readable summary of the action. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_a_p_i_action_a10551664da21fab58fe02d9eecfc5b68}{get\+Created\+Event\+Id}} () const
+\begin{DoxyCompactList}\small\item\em Returns the Google Calendar event ID assigned after a successful \doxylink{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90}{execute()}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_action_adf6d17666645657d71bee9f12386db6b}{Action}} (const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&cfg)
+\begin{DoxyCompactList}\small\item\em Constructs an \doxylink{class_action}{Action} with the application-\/wide configuration. \end{DoxyCompactList}\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+Action} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor — ensures correct cleanup of derived classes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string \doxymbox{\hyperlink{class_a_p_i_action_affdb27f841388fca4b0b2805b3f2b6a7}{refresh\+Access\+Token}} () const
+\begin{DoxyCompactList}\small\item\em Exchanges the stored OAuth refresh token for a fresh access token. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_a_p_i_action_a77248e3fe4d07f7dc399f822b540032a}{build\+Event\+Json}} () const
+\begin{DoxyCompactList}\small\item\em Serialises the stored \doxylink{struct_calendar_event}{Calendar\+Event} into Google Calendar API JSON. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_a_p_i_action_a0c9a0e7eb5a698630fcaaae6a38c10df}{validate\+Event}} () const
+\begin{DoxyCompactList}\small\item\em Validates that all required \doxylink{struct_calendar_event}{Calendar\+Event} fields are populated. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+string \doxymbox{\hyperlink{class_a_p_i_action_ab8d6f1dfe439dc954cbb3245cc8d1ba4}{build\+RRule}} (\doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5aca}{Recurrence}} r)
+\begin{DoxyCompactList}\small\item\em Converts a \doxylink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5aca}{Recurrence} value to a Google Calendar RRULE string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_a_p_i_action_a2c85976b238058bb2e56d5db8102f03f}\label{class_a_p_i_action_a2c85976b238058bb2e56d5db8102f03f} 
+\doxymbox{\hyperlink{struct_calendar_event}{Calendar\+Event}} {\bfseries event}
+\begin{DoxyCompactList}\small\item\em \doxylink{requirements_The}{The} event payload to be sent to the API. \end{DoxyCompactList}\item 
+\Hypertarget{class_a_p_i_action_a27db62675200a32d7a2987a1223da217}\label{class_a_p_i_action_a27db62675200a32d7a2987a1223da217} 
+std::\+string {\bfseries created\+Event\+Id}
+\begin{DoxyCompactList}\small\item\em Populated with the server-\/assigned ID after creation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_action_a13c6ee9594194b04786b10850402f6d3}{log}} (const std::\+string \&message) const
+\begin{DoxyCompactList}\small\item\em Writes a timestamped log line to {\ttfamily stdout}. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_action_a31a34834f233fc45a14b944d48c1971d}{http\+Get}} (const std::\+string \&url) const
+\begin{DoxyCompactList}\small\item\em Performs a synchronous HTTP GET request via libcurl. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_action_a005ac4b700f13661b881a7df5d40b6a2}{http\+Post}} (const std::\+string \&url, const std::\+string \&bearer\+Token, const std::\+string \&body, const std::\+string \&content\+Type="{}application/\+json"{}) const
+\begin{DoxyCompactList}\small\item\em Performs a synchronous HTTP POST request via libcurl. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+string \doxymbox{\hyperlink{class_action_aea26611d135c5a8a585cfcfd4cf963fe}{url\+Encode}} (const std::\+string \&raw)
+\begin{DoxyCompactList}\small\item\em Percent-\/encodes a raw string according to RFC 3986. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+const \doxymbox{\hyperlink{class_configuration}{Configuration}} \& {\bfseries config}
+\begin{DoxyCompactList}\small\item\em Shared, read-\/only application configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_action}{Action} that creates a Google Calendar event via the Calendar REST API. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Inherits from \doxylink{class_action}{Action} and implements \doxylink{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90}{execute()} to POST the event to Google Calendar. OAuth 2.\+0 authentication is handled transparently:\+ the stored refresh token is exchanged for a short-\/lived access token on every call to \doxylink{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90}{execute()}. 
+
+\label{doc-constructors}
+\Hypertarget{class_a_p_i_action_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_a_p_i_action_a5a61ad2d90143dff596b6df599b88f55}\index{APIAction@{APIAction}!APIAction@{APIAction}}
+\index{APIAction@{APIAction}!APIAction@{APIAction}}
+\doxysubsubsection{\texorpdfstring{APIAction()}{APIAction()}}
+{\footnotesize\ttfamily \label{class_a_p_i_action_a5a61ad2d90143dff596b6df599b88f55} 
+APIAction::\+\+APIAction (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&}]{cfg}{, }\item[{\doxymbox{\hyperlink{struct_calendar_event}{Calendar\+Event}}}]{event}{}\end{DoxyParamCaption})}
+
+
+
+Constructs an \doxylink{class_a_p_i_action}{APIAction} with a configuration and an event to create. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em cfg} & Application configuration (must contain google\+Refresh\+Token and related OAuth credentials). \\
+\hline
+{\em \doxylink{class_a_p_i_action_a2c85976b238058bb2e56d5db8102f03f}{event}} & \doxylink{requirements_The}{The} calendar event to be created on \doxylink{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90}{execute()}. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_a_p_i_action_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_a_p_i_action_a77248e3fe4d07f7dc399f822b540032a}\index{APIAction@{APIAction}!buildEventJson@{buildEventJson}}
+\index{buildEventJson@{buildEventJson}!APIAction@{APIAction}}
+\doxysubsubsection{\texorpdfstring{buildEventJson()}{buildEventJson()}}
+{\footnotesize\ttfamily \label{class_a_p_i_action_a77248e3fe4d07f7dc399f822b540032a} 
+std::\+string APIAction::\+build\+Event\+Json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Serialises the stored \doxylink{struct_calendar_event}{Calendar\+Event} into Google Calendar API JSON. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Includes start/\+end times, time zone, optional location and notes, and the RRULE produced by \doxylink{class_a_p_i_action_ab8d6f1dfe439dc954cbb3245cc8d1ba4}{build\+RRule()} when recurrence is set.
+
+\begin{DoxyReturn}{Returns}
+A JSON string ready to be used as the HTTP request body. 
+\end{DoxyReturn}
+\Hypertarget{class_a_p_i_action_ab8d6f1dfe439dc954cbb3245cc8d1ba4}\index{APIAction@{APIAction}!buildRRule@{buildRRule}}
+\index{buildRRule@{buildRRule}!APIAction@{APIAction}}
+\doxysubsubsection{\texorpdfstring{buildRRule()}{buildRRule()}}
+{\footnotesize\ttfamily \label{class_a_p_i_action_ab8d6f1dfe439dc954cbb3245cc8d1ba4} 
+std::\+string APIAction::\+build\+RRule (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5aca}{Recurrence}}}]{r}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+Converts a \doxylink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5aca}{Recurrence} value to a Google Calendar RRULE string. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em r} & \doxylink{requirements_The}{The} recurrence frequency to convert. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} corresponding RRULE string (e.\+g. "{}\+RRULE:\+\+FREQ=\+WEEKLY"{}), or an empty string when r is \doxylink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaab50339a10e1de285ac99d4c3990b8693}{Recurrence::\+\+NONE}. 
+\end{DoxyReturn}
+\Hypertarget{class_a_p_i_action_a5f0877e38a578a46d9c757491c072d99}\index{APIAction@{APIAction}!describe@{describe}}
+\index{describe@{describe}!APIAction@{APIAction}}
+\doxysubsubsection{\texorpdfstring{describe()}{describe()}}
+{\footnotesize\ttfamily \label{class_a_p_i_action_a5f0877e38a578a46d9c757491c072d99} 
+std::\+string APIAction::\+describe (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Returns a human-\/readable summary of the action. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+A string describing the event title, time, and recurrence. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{class_action_a564b8be4c69e16668ba4f41ec7dd6cbf}{Action}}.
+
+\Hypertarget{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90}\index{APIAction@{APIAction}!execute@{execute}}
+\index{execute@{execute}!APIAction@{APIAction}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90} 
+bool APIAction::\+execute (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Authenticates, validates, and POSTs the event to Google Calendar. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Internally calls \doxylink{class_a_p_i_action_affdb27f841388fca4b0b2805b3f2b6a7}{refresh\+Access\+Token()}, \doxylink{class_a_p_i_action_a0c9a0e7eb5a698630fcaaae6a38c10df}{validate\+Event()}, \doxylink{class_a_p_i_action_a77248e3fe4d07f7dc399f822b540032a}{build\+Event\+Json()}, and \doxylink{class_a_p_i_action_ab8d6f1dfe439dc954cbb3245cc8d1ba4}{build\+RRule()}. On success, stores the newly created event\textquotesingle{}s ID (retrievable via \doxylink{class_a_p_i_action_a10551664da21fab58fe02d9eecfc5b68}{get\+Created\+Event\+Id()}).
+
+\begin{DoxyReturn}{Returns}
+true if the event was created successfully; false otherwise. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{class_action_a018c91fe89cff73911c5862df0cd8f63}{Action}}.
+
+\Hypertarget{class_a_p_i_action_a10551664da21fab58fe02d9eecfc5b68}\index{APIAction@{APIAction}!getCreatedEventId@{getCreatedEventId}}
+\index{getCreatedEventId@{getCreatedEventId}!APIAction@{APIAction}}
+\doxysubsubsection{\texorpdfstring{getCreatedEventId()}{getCreatedEventId()}}
+{\footnotesize\ttfamily \label{class_a_p_i_action_a10551664da21fab58fe02d9eecfc5b68} 
+std::\+string APIAction::\+get\+Created\+Event\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the Google Calendar event ID assigned after a successful \doxylink{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90}{execute()}. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} created event ID string, or an empty string if \doxylink{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90}{execute()} has not been called or failed. 
+\end{DoxyReturn}
+\Hypertarget{class_a_p_i_action_affdb27f841388fca4b0b2805b3f2b6a7}\index{APIAction@{APIAction}!refreshAccessToken@{refreshAccessToken}}
+\index{refreshAccessToken@{refreshAccessToken}!APIAction@{APIAction}}
+\doxysubsubsection{\texorpdfstring{refreshAccessToken()}{refreshAccessToken()}}
+{\footnotesize\ttfamily \label{class_a_p_i_action_affdb27f841388fca4b0b2805b3f2b6a7} 
+std::\+string APIAction::\+refresh\+Access\+Token (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Exchanges the stored OAuth refresh token for a fresh access token. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+A valid Bearer access token string. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std::\+runtime\+\_\+error} & if the token exchange request fails. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{class_a_p_i_action_a0c9a0e7eb5a698630fcaaae6a38c10df}\index{APIAction@{APIAction}!validateEvent@{validateEvent}}
+\index{validateEvent@{validateEvent}!APIAction@{APIAction}}
+\doxysubsubsection{\texorpdfstring{validateEvent()}{validateEvent()}}
+{\footnotesize\ttfamily \label{class_a_p_i_action_a0c9a0e7eb5a698630fcaaae6a38c10df} 
+bool APIAction::\+validate\+Event (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Validates that all required \doxylink{struct_calendar_event}{Calendar\+Event} fields are populated. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Checks that title, start\+Date\+Time\+ISO, end\+Date\+Time\+ISO, and time\+Zone are non-\/empty, and that the end time is after the start time.
+
+\begin{DoxyReturn}{Returns}
+true if the event passes all validation checks; false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_a_p_i_action_8h}{APIAction.\+h}}\item 
+APIAction.\+cpp\end{DoxyCompactItemize}

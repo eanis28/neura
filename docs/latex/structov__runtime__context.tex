@@ -1,0 +1,40 @@
+\doxysection{ov\+\_\+runtime\+\_\+context Struct Reference}
+\hypertarget{structov__runtime__context}{}\label{structov__runtime__context}\index{ov\_runtime\_context@{ov\_runtime\_context}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structov__runtime__context_a5474085f4af2a58786e07198cef09671}\label{structov__runtime__context_a5474085f4af2a58786e07198cef09671} 
+std::\+mutex {\bfseries ov\+\_\+compute\+\_\+mutex}
+\item 
+\Hypertarget{structov__runtime__context_aa397878105d1da8c4eb6dc2695997cba}\label{structov__runtime__context_aa397878105d1da8c4eb6dc2695997cba} 
+std::\+string {\bfseries device}
+\item 
+\Hypertarget{structov__runtime__context_adc35b863d064297a1455cdb43ebd41be}\label{structov__runtime__context_adc35b863d064297a1455cdb43ebd41be} 
+bool {\bfseries stateful}
+\item 
+\Hypertarget{structov__runtime__context_a57435db00173677b5f97ef50115fdb14}\label{structov__runtime__context_a57435db00173677b5f97ef50115fdb14} 
+std::\+unordered\+\_\+map$<$ \doxymbox{\hyperlink{structgraph__key}{graph\+\_\+key}}, std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{class_ggml_ov_decoder}{Ggml\+Ov\+Decoder}} $>$, \doxymbox{\hyperlink{structgraph__key__hash}{graph\+\_\+key\+\_\+hash}} $>$ {\bfseries decoder\+\_\+cache}
+\item 
+\Hypertarget{structov__runtime__context_aebb7d770cfb82d473033f4d809b8d21f}\label{structov__runtime__context_aebb7d770cfb82d473033f4d809b8d21f} 
+std::\+unordered\+\_\+map$<$ \doxymbox{\hyperlink{structgraph__key}{graph\+\_\+key}}, std::\+shared\+\_\+ptr$<$ ov::\+\+Infer\+Request $>$, \doxymbox{\hyperlink{structgraph__key__hash}{graph\+\_\+key\+\_\+hash}} $>$ {\bfseries infer\+\_\+request\+\_\+cache}
+\item 
+\Hypertarget{structov__runtime__context_aa1f1bbfb8c447a3d7047733894a03be4}\label{structov__runtime__context_aa1f1bbfb8c447a3d7047733894a03be4} 
+std::\+unordered\+\_\+map$<$ \doxymbox{\hyperlink{structgraph__key}{graph\+\_\+key}}, std::\+shared\+\_\+ptr$<$ ov::\+\+Infer\+Request $>$, \doxymbox{\hyperlink{structgraph__key__hash}{graph\+\_\+key\+\_\+hash}} $>$ {\bfseries infer\+\_\+request\+\_\+cache\+\_\+prefill}
+\item 
+\Hypertarget{structov__runtime__context_a03e8ef3764df0499f8e5aa79f69046e7}\label{structov__runtime__context_a03e8ef3764df0499f8e5aa79f69046e7} 
+std::\+unordered\+\_\+map$<$ \doxymbox{\hyperlink{structgraph__key}{graph\+\_\+key}}, std::\+vector$<$ std::\+string $>$, \doxymbox{\hyperlink{structgraph__key__hash}{graph\+\_\+key\+\_\+hash}} $>$ {\bfseries ov\+\_\+input\+\_\+names\+\_\+cache}
+\item 
+\Hypertarget{structov__runtime__context_ac908eeb194817604b585b3be8f69899f}\label{structov__runtime__context_ac908eeb194817604b585b3be8f69899f} 
+std::\+unordered\+\_\+map$<$ \doxymbox{\hyperlink{structgraph__key}{graph\+\_\+key}}, std::\+vector$<$ std::\+string $>$, \doxymbox{\hyperlink{structgraph__key__hash}{graph\+\_\+key\+\_\+hash}} $>$ {\bfseries ov\+\_\+output\+\_\+names\+\_\+cache}
+\item 
+\Hypertarget{structov__runtime__context_ae6f1b5b9ca8d6765f6b51b17fc9cc867}\label{structov__runtime__context_ae6f1b5b9ca8d6765f6b51b17fc9cc867} 
+size\+\_\+t {\bfseries stateful\+\_\+kv\+\_\+size}
+\item 
+\Hypertarget{structov__runtime__context_a327bb16dd346b5354bd092c5556efa45}\label{structov__runtime__context_a327bb16dd346b5354bd092c5556efa45} 
+std::\+map$<$ std::\+string, std::\+string $>$ {\bfseries kv\+\_\+state\+\_\+input\+\_\+name\+\_\+map}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/openvino/\+utils.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,32 @@
+\doxysection{ggml-\/opencl.h}
+\hypertarget{ggml-opencl_8h_source}{}\label{ggml-opencl_8h_source}\index{whisper.cpp/ggml/include/ggml-\/opencl.h@{whisper.cpp/ggml/include/ggml-\/opencl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GGML\_OPENCL\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GGML\_OPENCL\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ backend\ API}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ GGML\_BACKEND\_API\ ggml\_backend\_t\ ggml\_backend\_opencl\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00015\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_is\_opencl(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_opencl\_buffer\_type(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00018\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_opencl\_host\_buffer\_type(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_opencl\_reg(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00023\ \}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_OPENCL\_H}}
+
+\end{DoxyCode}

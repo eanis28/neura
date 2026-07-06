@@ -1,0 +1,73 @@
+\doxysection{whisper-\/decoder-\/impl.h}
+\hypertarget{whisper-decoder-impl_8h_source}{}\label{whisper-decoder-impl_8h_source}\index{whisper.cpp/src/coreml/whisper-\/decoder-\/impl.h@{whisper.cpp/src/coreml/whisper-\/decoder-\/impl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ whisper-\/decoder-\/impl.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ This\ file\ was\ automatically\ generated\ and\ should\ not\ be\ edited.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#import\ <Foundation/Foundation.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#import\ <CoreML/CoreML.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <os/log.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ NS\_ASSUME\_NONNULL\_BEGIN}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00015\ API\_AVAILABLE(macos(10.15),\ ios(13.0),\ watchos(6.0),\ tvos(13.0))\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((visibility(\textcolor{stringliteral}{"{}hidden"{}})))}
+\DoxyCodeLine{00016\ @interface\ \doxymbox{\hyperlink{classwhisper__decoder__impl_input}{whisper\_decoder\_implInput}}\ :\ NSObject<MLFeatureProvider>}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00019\ @property\ (readwrite,\ nonatomic,\ strong)\ MLMultiArray\ *\ token\_data;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00022\ @property\ (readwrite,\ nonatomic,\ strong)\ MLMultiArray\ *\ audio\_data;}
+\DoxyCodeLine{00023\ -\/\ (instancetype)init\ NS\_UNAVAILABLE;}
+\DoxyCodeLine{00024\ -\/\ (instancetype)initWithToken\_data:(MLMultiArray\ *)token\_data\ audio\_data:(MLMultiArray\ *)audio\_data\ NS\_DESIGNATED\_INITIALIZER;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ @end}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00029\ API\_AVAILABLE(macos(10.15),\ ios(13.0),\ watchos(6.0),\ tvos(13.0))\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((visibility(\textcolor{stringliteral}{"{}hidden"{}})))}
+\DoxyCodeLine{00030\ @interface\ \doxymbox{\hyperlink{classwhisper__decoder__impl_output}{whisper\_decoder\_implOutput}}\ :\ NSObject<MLFeatureProvider>}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00033\ @property\ (readwrite,\ nonatomic,\ strong)\ MLMultiArray\ *\ cast\_76;}
+\DoxyCodeLine{00034\ -\/\ (instancetype)init\ NS\_UNAVAILABLE;}
+\DoxyCodeLine{00035\ -\/\ (instancetype)initWithCast\_76:(MLMultiArray\ *)cast\_76\ NS\_DESIGNATED\_INITIALIZER;}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ @end}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00040\ API\_AVAILABLE(macos(10.15),\ ios(13.0),\ watchos(6.0),\ tvos(13.0))\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((visibility(\textcolor{stringliteral}{"{}hidden"{}})))}
+\DoxyCodeLine{00041\ @interface\ \doxymbox{\hyperlink{classwhisper__decoder__impl}{whisper\_decoder\_impl}}\ :\ NSObject}
+\DoxyCodeLine{00042\ @property\ (readonly,\ nonatomic,\ nullable)\ MLModel\ *\ model;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00047\ +\ (nullable\ NSURL\ *)URLOfModelInThisBundle;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00055\ -\/\ (instancetype)initWithMLModel:(MLModel\ *)model\ NS\_DESIGNATED\_INITIALIZER;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00060\ -\/\ (nullable\ instancetype)init;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00068\ -\/\ (nullable\ instancetype)initWithConfiguration:(MLModelConfiguration\ *)configuration\ error:(NSError\ *\ \_Nullable\ \_\_autoreleasing\ *\ \_Nullable)error;}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00076\ -\/\ (nullable\ instancetype)initWithContentsOfURL:(NSURL\ *)modelURL\ error:(NSError\ *\ \_Nullable\ \_\_autoreleasing\ *\ \_Nullable)error;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00085\ -\/\ (nullable\ instancetype)initWithContentsOfURL:(NSURL\ *)modelURL\ configuration:(MLModelConfiguration\ *)configuration\ error:(NSError\ *\ \_Nullable\ \_\_autoreleasing\ *\ \_Nullable)error;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00094\ +\ (\textcolor{keywordtype}{void})loadWithConfiguration:(MLModelConfiguration\ *)configuration\ completionHandler:(\textcolor{keywordtype}{void}\ (\string^)(\doxymbox{\hyperlink{classwhisper__decoder__impl}{whisper\_decoder\_impl}}\ *\ \_Nullable\ model,\ NSError\ *\ \_Nullable\ error))handler\ API\_AVAILABLE(macos(11.0),\ ios(14.0),\ watchos(7.0),\ tvos(14.0))\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((visibility(\textcolor{stringliteral}{"{}hidden"{}})));}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00105\ +\ (\textcolor{keywordtype}{void})loadContentsOfURL:(NSURL\ *)modelURL\ configuration:(MLModelConfiguration\ *)configuration\ completionHandler:(\textcolor{keywordtype}{void}\ (\string^)(\doxymbox{\hyperlink{classwhisper__decoder__impl}{whisper\_decoder\_impl}}\ *\ \_Nullable\ model,\ NSError\ *\ \_Nullable\ error))handler\ API\_AVAILABLE(macos(11.0),\ ios(14.0),\ watchos(7.0),\ tvos(14.0))\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((visibility(\textcolor{stringliteral}{"{}hidden"{}})));}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00113\ -\/\ (nullable\ \doxymbox{\hyperlink{classwhisper__decoder__impl_output}{whisper\_decoder\_implOutput}}\ *)predictionFromFeatures:(\doxymbox{\hyperlink{classwhisper__decoder__impl_input}{whisper\_decoder\_implInput}}\ *)input\ error:(NSError\ *\ \_Nullable\ \_\_autoreleasing\ *\ \_Nullable)error;}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00122\ -\/\ (nullable\ \doxymbox{\hyperlink{classwhisper__decoder__impl_output}{whisper\_decoder\_implOutput}}\ *)predictionFromFeatures:(\doxymbox{\hyperlink{classwhisper__decoder__impl_input}{whisper\_decoder\_implInput}}\ *)input\ options:(MLPredictionOptions\ *)options\ error:(NSError\ *\ \_Nullable\ \_\_autoreleasing\ *\ \_Nullable)error;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00129\ -\/\ (\textcolor{keywordtype}{void})predictionFromFeatures:(\doxymbox{\hyperlink{classwhisper__decoder__impl_input}{whisper\_decoder\_implInput}}\ *)input\ completionHandler:(\textcolor{keywordtype}{void}\ (\string^)(\doxymbox{\hyperlink{classwhisper__decoder__impl_output}{whisper\_decoder\_implOutput}}\ *\ \_Nullable\ output,\ NSError\ *\ \_Nullable\ error))completionHandler\ API\_AVAILABLE(macos(14.0),\ ios(17.0),\ watchos(10.0),\ tvos(17.0))\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((visibility(\textcolor{stringliteral}{"{}hidden"{}})));}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00137\ -\/\ (\textcolor{keywordtype}{void})predictionFromFeatures:(\doxymbox{\hyperlink{classwhisper__decoder__impl_input}{whisper\_decoder\_implInput}}\ *)input\ options:(MLPredictionOptions\ *)options\ completionHandler:(\textcolor{keywordtype}{void}\ (\string^)(\doxymbox{\hyperlink{classwhisper__decoder__impl_output}{whisper\_decoder\_implOutput}}\ *\ \_Nullable\ output,\ NSError\ *\ \_Nullable\ error))completionHandler\ API\_AVAILABLE(macos(14.0),\ ios(17.0),\ watchos(10.0),\ tvos(17.0))\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((visibility(\textcolor{stringliteral}{"{}hidden"{}})));}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00146\ -\/\ (nullable\ \doxymbox{\hyperlink{classwhisper__decoder__impl_output}{whisper\_decoder\_implOutput}}\ *)predictionFromToken\_data:(MLMultiArray\ *)token\_data\ audio\_data:(MLMultiArray\ *)audio\_data\ error:(NSError\ *\ \_Nullable\ \_\_autoreleasing\ *\ \_Nullable)error;}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00155\ -\/\ (nullable\ NSArray<\doxymbox{\hyperlink{classwhisper__decoder__impl_output}{whisper\_decoder\_implOutput}}\ *>\ *)predictionsFromInputs:(NSArray<\doxymbox{\hyperlink{classwhisper__decoder__impl_input}{whisper\_decoder\_implInput}}*>\ *)inputArray\ options:(MLPredictionOptions\ *)options\ error:(NSError\ *\ \_Nullable\ \_\_autoreleasing\ *\ \_Nullable)error;}
+\DoxyCodeLine{00156\ @end}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ NS\_ASSUME\_NONNULL\_END}
+
+\end{DoxyCode}

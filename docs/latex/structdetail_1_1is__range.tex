@@ -1,0 +1,48 @@
+\doxysection{detail::\+is\+\_\+range\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Struct Template Reference}
+\hypertarget{structdetail_1_1is__range}{}\label{structdetail_1_1is__range}\index{detail::is\_range$<$ T $>$@{detail::is\_range$<$ T $>$}}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structdetail_1_1is__range_ace5df29dc07df4c868b41ff7eb6b8d74}\label{structdetail_1_1is__range_ace5df29dc07df4c868b41ff7eb6b8d74} 
+static constexpr bool {\bfseries value} = !std::\+is\+\_\+same$<$iterator, \doxymbox{\hyperlink{structdetail_1_1nonesuch}{nonesuch}}$>$::\+value \&\& !std::\+is\+\_\+same$<$sentinel, \doxymbox{\hyperlink{structdetail_1_1nonesuch}{nonesuch}}$>$::\+value \&\& is\+\_\+iterator\+\_\+begin
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structdetail_1_1is__range_aa9f09e007856cae9058250ae2678d685}\label{structdetail_1_1is__range_aa9f09e007856cae9058250ae2678d685} 
+using {\bfseries t\+\_\+ref} = typename std::\+add\+\_\+lvalue\+\_\+reference$<$T$>$::\+type
+\item 
+\Hypertarget{structdetail_1_1is__range_a40f25e407f601af71b29ade4e32a2fd8}\label{structdetail_1_1is__range_a40f25e407f601af71b29ade4e32a2fd8} 
+using {\bfseries iterator} = detected\+\_\+t$<$result\+\_\+of\+\_\+begin, t\+\_\+ref$>$
+\item 
+\Hypertarget{structdetail_1_1is__range_a3c35010cd499456c7da66bf8c78ccb5b}\label{structdetail_1_1is__range_a3c35010cd499456c7da66bf8c78ccb5b} 
+using {\bfseries sentinel} = detected\+\_\+t$<$result\+\_\+of\+\_\+end, t\+\_\+ref$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr auto \doxymbox{\hyperlink{structdetail_1_1is__range_ade99f453e61d56394476506e1c563e2e}{is\+\_\+iterator\+\_\+begin}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-variable-members}
+\Hypertarget{structdetail_1_1is__range_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structdetail_1_1is__range_ade99f453e61d56394476506e1c563e2e}\index{detail::is\_range$<$ T $>$@{detail::is\_range$<$ T $>$}!is\_iterator\_begin@{is\_iterator\_begin}}
+\index{is\_iterator\_begin@{is\_iterator\_begin}!detail::is\_range$<$ T $>$@{detail::is\_range$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{is\_iterator\_begin}{is\_iterator\_begin}}
+{\footnotesize\ttfamily \label{structdetail_1_1is__range_ade99f453e61d56394476506e1c563e2e} 
+template$<$typename T$>$ \\
+auto \doxymbox{\hyperlink{structdetail_1_1is__range}{detail::\+is\+\_\+range}}$<$ T $>$::\+is\+\_\+iterator\+\_\+begin\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}, {\ttfamily [private]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =}
+\DoxyCodeLine{\doxymbox{\hyperlink{structdetail_1_1is__iterator__traits}{is\_iterator\_traits<iterator\_traits<iterator>}}>::value}
+
+\end{DoxyCode}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+json.\+hpp\end{DoxyCompactItemize}

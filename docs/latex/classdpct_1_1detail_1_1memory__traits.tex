@@ -1,0 +1,95 @@
+\doxysection{dpct::\+detail::\+memory\+\_\+traits\texorpdfstring{$<$}{<} Memory, T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classdpct_1_1detail_1_1memory__traits}{}\label{classdpct_1_1detail_1_1memory__traits}\index{dpct::detail::memory\_traits$<$ Memory, T $>$@{dpct::detail::memory\_traits$<$ Memory, T $>$}}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits_a2ddc4f16768e16587dbe74491a768792}{element\+\_\+t}}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1memory__traits_a6f73b429d0b0c66591a13929ab0ceb4e}\label{classdpct_1_1detail_1_1memory__traits_a6f73b429d0b0c66591a13929ab0ceb4e} 
+using {\bfseries value\+\_\+t} = typename std::\+remove\+\_\+cv$<$T$>$::\+type
+\item 
+{\footnotesize template$<$size\+\_\+t Dimension = 1$>$ }\\using \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits_aab5f3816985b24e3dd1c5262c59d9f64}{accessor\+\_\+t}}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1memory__traits_a441d64933e6050c9e790dbe2b2700b0b}\label{classdpct_1_1detail_1_1memory__traits_a441d64933e6050c9e790dbe2b2700b0b} 
+using {\bfseries pointer\+\_\+t} = T \texorpdfstring{$\ast$}{*}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr sycl::\+access::\+target \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits_a0f12bade46a2246e6f6309e62fbb5100}{target}}
+\item 
+static constexpr sycl::\+access\+\_\+mode \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits_aaedbf419012066c63d5cc6a98e4f4789}{mode}}
+\item 
+\Hypertarget{classdpct_1_1detail_1_1memory__traits_aeec8a462214fc60692f6e8e995aa632c}\label{classdpct_1_1detail_1_1memory__traits_aeec8a462214fc60692f6e8e995aa632c} 
+static constexpr size\+\_\+t {\bfseries type\+\_\+size} = sizeof(T)
+\end{DoxyCompactItemize}
+
+
+\label{doc-typedef-members}
+\Hypertarget{classdpct_1_1detail_1_1memory__traits_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classdpct_1_1detail_1_1memory__traits_aab5f3816985b24e3dd1c5262c59d9f64}\index{dpct::detail::memory\_traits$<$ Memory, T $>$@{dpct::detail::memory\_traits$<$ Memory, T $>$}!accessor\_t@{accessor\_t}}
+\index{accessor\_t@{accessor\_t}!dpct::detail::memory\_traits$<$ Memory, T $>$@{dpct::detail::memory\_traits$<$ Memory, T $>$}}
+\doxysubsubsection{\texorpdfstring{accessor\_t}{accessor\_t}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1memory__traits_aab5f3816985b24e3dd1c5262c59d9f64} 
+template$<$memory\+\_\+region Memory, class T = byte\+\_\+t$>$ \\
+template$<$size\+\_\+t Dimension = 1$>$ \\
+using \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits}{dpct::\+detail::\+memory\+\_\+traits}}$<$ Memory, T $>$::\+accessor\+\_\+t}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{typename}\ std::conditional<}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Memory\ ==\ local,\ sycl::local\_accessor<value\_t,\ Dimension>,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::accessor<T,\ Dimension,\ mode,\ target>>::type}
+
+\end{DoxyCode}
+\Hypertarget{classdpct_1_1detail_1_1memory__traits_a2ddc4f16768e16587dbe74491a768792}\index{dpct::detail::memory\_traits$<$ Memory, T $>$@{dpct::detail::memory\_traits$<$ Memory, T $>$}!element\_t@{element\_t}}
+\index{element\_t@{element\_t}!dpct::detail::memory\_traits$<$ Memory, T $>$@{dpct::detail::memory\_traits$<$ Memory, T $>$}}
+\doxysubsubsection{\texorpdfstring{element\_t}{element\_t}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1memory__traits_a2ddc4f16768e16587dbe74491a768792} 
+template$<$memory\+\_\+region Memory, class T = byte\+\_\+t$>$ \\
+using \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits}{dpct::\+detail::\+memory\+\_\+traits}}$<$ Memory, T $>$::\+element\+\_\+t}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{typename}\ std::conditional<Memory\ ==\ constant,\ const\ T,\ T>::type}
+
+\end{DoxyCode}
+
+
+\label{doc-variable-members}
+\Hypertarget{classdpct_1_1detail_1_1memory__traits_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classdpct_1_1detail_1_1memory__traits_aaedbf419012066c63d5cc6a98e4f4789}\index{dpct::detail::memory\_traits$<$ Memory, T $>$@{dpct::detail::memory\_traits$<$ Memory, T $>$}!mode@{mode}}
+\index{mode@{mode}!dpct::detail::memory\_traits$<$ Memory, T $>$@{dpct::detail::memory\_traits$<$ Memory, T $>$}}
+\doxysubsubsection{\texorpdfstring{mode}{mode}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1memory__traits_aaedbf419012066c63d5cc6a98e4f4789} 
+template$<$memory\+\_\+region Memory, class T = byte\+\_\+t$>$ \\
+sycl::\+access\+\_\+mode \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits}{dpct::\+detail::\+memory\+\_\+traits}}$<$ Memory, T $>$::\+mode\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =}
+\DoxyCodeLine{(Memory\ ==\ constant)\ ?\ sycl::access\_mode::read}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ sycl::access\_mode::read\_write}
+
+\end{DoxyCode}
+\Hypertarget{classdpct_1_1detail_1_1memory__traits_a0f12bade46a2246e6f6309e62fbb5100}\index{dpct::detail::memory\_traits$<$ Memory, T $>$@{dpct::detail::memory\_traits$<$ Memory, T $>$}!target@{target}}
+\index{target@{target}!dpct::detail::memory\_traits$<$ Memory, T $>$@{dpct::detail::memory\_traits$<$ Memory, T $>$}}
+\doxysubsubsection{\texorpdfstring{target}{target}}
+{\footnotesize\ttfamily \label{classdpct_1_1detail_1_1memory__traits_a0f12bade46a2246e6f6309e62fbb5100} 
+template$<$memory\+\_\+region Memory, class T = byte\+\_\+t$>$ \\
+sycl::\+access::\+target \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits}{dpct::\+detail::\+memory\+\_\+traits}}$<$ Memory, T $>$::\+target\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =}
+\DoxyCodeLine{sycl::access::target::device}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+dpct/\+helper.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,54 @@
+\doxysection{backend.\+hpp}
+\hypertarget{backend_8hpp_source}{}\label{backend_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/backend.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/backend.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2024\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_BACKEND\_HPP}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_BACKEND\_HPP}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}binbcast.hpp"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}common.hpp"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}concat.hpp"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}conv.hpp"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}convert.hpp"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}count-\/equal.hpp"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}cpy.hpp"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}dequantize.hpp"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}dmmv.hpp"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}element\_wise.hpp"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}fattn.hpp"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}gated\_delta\_net.hpp"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}gla.hpp"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}im2col.hpp"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}mmq.hpp"{}}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ "{}mmvq.hpp"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}norm.hpp"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}outprod.hpp"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ "{}pad.hpp"{}}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}pad\_reflect\_1d.hpp"{}}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ "{}quantize.hpp"{}}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ "{}quants.hpp"{}}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ "{}roll.hpp"{}}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ "{}rope.hpp"{}}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ "{}set\_rows.hpp"{}}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ "{}ssm\_conv.hpp"{}}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ "{}softmax.hpp"{}}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ "{}tsembd.hpp"{}}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ "{}upscale.hpp"{}}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ "{}wkv.hpp"{}}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GGML\_SYCL\_BACKEND\_HPP}}
+
+\end{DoxyCode}

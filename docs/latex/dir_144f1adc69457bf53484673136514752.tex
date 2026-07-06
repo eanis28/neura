@@ -1,0 +1,82 @@
+\doxysection{whisper.\+cpp/\+bindings/\+javascript Directory Reference}
+\hypertarget{dir_144f1adc69457bf53484673136514752}{}\label{dir_144f1adc69457bf53484673136514752}\index{whisper.cpp/bindings/javascript Directory Reference@{whisper.cpp/bindings/javascript Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_144f1adc69457bf53484673136514752_autotoc_md27}{}\doxysubsection{\texorpdfstring{whisper.\+cpp}{whisper.\+cpp}}\label{dir_144f1adc69457bf53484673136514752_autotoc_md27}
+Node.\+js package for Whisper speech recognition
+
+Package:\+ \href{https://www.npmjs.com/package/whisper.cpp}{\texttt{https:\+/\+/\+www.\+npmjs.\+com/\+package/\+whisper.\+cpp}}\hypertarget{dir_144f1adc69457bf53484673136514752_autotoc_md28}{}\doxysubsection{\texorpdfstring{Details}{Details}}\label{dir_144f1adc69457bf53484673136514752_autotoc_md28}
+\doxylink{requirements_The}{The} performance is comparable to when running {\ttfamily whisper.\+cpp} in the browser via WASM.
+
+\doxylink{requirements_The}{The} API is currently very rudimentary:\+ \href{/bindings/javascript/emscripten.cpp}{\texttt{bindings/\+javascript/\+emscripten.\+cpp}}
+
+For sample usage check \href{/tests/test-whisper.js}{\texttt{tests/\+test-\/whisper.\+js}}\hypertarget{dir_144f1adc69457bf53484673136514752_autotoc_md29}{}\doxysubsection{\texorpdfstring{Package building + test}{Package building + test}}\label{dir_144f1adc69457bf53484673136514752_autotoc_md29}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ load\ emscripten}
+\DoxyCodeLine{source\ /path/to/emsdk/emsdk\_env.sh}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ clone\ repo}
+\DoxyCodeLine{git\ clone\ https://github.com/ggerganov/whisper.cpp}
+\DoxyCodeLine{cd\ whisper.cpp}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ grab\ base.en\ model}
+\DoxyCodeLine{./models/download-\/ggml-\/model.sh\ base.en}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ prepare\ PCM\ sample\ for\ testing}
+\DoxyCodeLine{ffmpeg\ -\/i\ samples/jfk.wav\ -\/f\ f32le\ -\/acodec\ pcm\_f32le\ samples/jfk.pcmf32}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ build}
+\DoxyCodeLine{mkdir\ build-\/em\ \&\&\ cd\ build-\/em}
+\DoxyCodeLine{emcmake\ cmake\ ..\ \&\&\ make\ -\/j}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ run\ test}
+\DoxyCodeLine{node\ ../tests/test-\/whisper.js}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ For\ Node.js\ versions\ prior\ to\ v16.4.0,\ experimental\ features\ need\ to\ be\ enabled:}
+\DoxyCodeLine{node\ -\/-\/experimental-\/wasm-\/threads\ -\/-\/experimental-\/wasm-\/simd\ ../tests/test-\/whisper.js}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ publish\ npm\ package}
+\DoxyCodeLine{make\ publish-\/npm}
+
+\end{DoxyCode}
+\hypertarget{dir_144f1adc69457bf53484673136514752_autotoc_md30}{}\doxysubsection{\texorpdfstring{Sample run}{Sample run}}\label{dir_144f1adc69457bf53484673136514752_autotoc_md30}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ node\ -\/-\/experimental-\/wasm-\/threads\ -\/-\/experimental-\/wasm-\/simd\ ../tests/test-\/whisper.js}
+\DoxyCodeLine{}
+\DoxyCodeLine{whisper\_model\_load:\ loading\ model\ from\ 'whisper.bin'}
+\DoxyCodeLine{whisper\_model\_load:\ n\_vocab\ \ \ \ \ \ \ =\ 51864}
+\DoxyCodeLine{whisper\_model\_load:\ n\_audio\_ctx\ \ \ =\ 1500}
+\DoxyCodeLine{whisper\_model\_load:\ n\_audio\_state\ =\ 512}
+\DoxyCodeLine{whisper\_model\_load:\ n\_audio\_head\ \ =\ 8}
+\DoxyCodeLine{whisper\_model\_load:\ n\_audio\_layer\ =\ 6}
+\DoxyCodeLine{whisper\_model\_load:\ n\_text\_ctx\ \ \ \ =\ 448}
+\DoxyCodeLine{whisper\_model\_load:\ n\_text\_state\ \ =\ 512}
+\DoxyCodeLine{whisper\_model\_load:\ n\_text\_head\ \ \ =\ 8}
+\DoxyCodeLine{whisper\_model\_load:\ n\_text\_layer\ \ =\ 6}
+\DoxyCodeLine{whisper\_model\_load:\ n\_mels\ \ \ \ \ \ \ \ =\ 80}
+\DoxyCodeLine{whisper\_model\_load:\ f16\ \ \ \ \ \ \ \ \ \ \ =\ 1}
+\DoxyCodeLine{whisper\_model\_load:\ type\ \ \ \ \ \ \ \ \ \ =\ 2}
+\DoxyCodeLine{whisper\_model\_load:\ adding\ 1607\ extra\ tokens}
+\DoxyCodeLine{whisper\_model\_load:\ mem\_required\ \ =\ \ 506.00\ MB}
+\DoxyCodeLine{whisper\_model\_load:\ ggml\ ctx\ size\ =\ \ 140.60\ MB}
+\DoxyCodeLine{whisper\_model\_load:\ memory\ size\ \ \ =\ \ \ 22.83\ MB}
+\DoxyCodeLine{whisper\_model\_load:\ model\ size\ \ \ \ =\ \ 140.54\ MB}
+\DoxyCodeLine{}
+\DoxyCodeLine{system\_info:\ n\_threads\ =\ 8\ /\ 10\ |\ AVX\ =\ 0\ |\ AVX2\ =\ 0\ |\ AVX512\ =\ 0\ |\ NEON\ =\ 0\ |\ F16C\ =\ 0\ |\ FP16\_VA\ =\ 0\ |\ WASM\_SIMD\ =\ 1\ |\ BLAS\ =\ 0\ |}
+\DoxyCodeLine{}
+\DoxyCodeLine{operator():\ processing\ 176000\ samples,\ 11.0\ sec,\ 8\ threads,\ 1\ processors,\ lang\ =\ en,\ task\ =\ transcribe\ ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{[00:00:00.000\ -\/-\/>\ 00:00:11.000]\ \ \ And\ so\ my\ fellow\ Americans,\ ask\ not\ what\ your\ country\ can\ do\ for\ you,\ ask\ what\ you\ can\ do\ for\ your\ country.}
+\DoxyCodeLine{}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ \ \ load\ time\ =\ \ \ 162.37\ ms}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ \ \ \ mel\ time\ =\ \ \ 183.70\ ms}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ sample\ time\ =\ \ \ \ \ 4.27\ ms}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ encode\ time\ =\ \ 8582.63\ ms\ /\ 1430.44\ ms\ per\ layer}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ decode\ time\ =\ \ \ 436.16\ ms\ /\ 72.69\ ms\ per\ layer}
+\DoxyCodeLine{whisper\_print\_timings:\ \ \ \ total\ time\ =\ \ 9370.90\ ms}
+
+\end{DoxyCode}
+ 

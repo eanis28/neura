@@ -1,0 +1,603 @@
+\doxysection{llama-\/model.h}
+\hypertarget{llama-model_8h_source}{}\label{llama-model_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/model.h@{whisper.cpp/examples/talk-\/llama/llama-\/model.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}llama-\/arch.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}llama-\/graph.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}llama-\/hparams.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}llama-\/memory.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}llama-\/vocab.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <unordered\_set>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}};}
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}};}
+\DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model__loader}{llama\_model\_loader}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ available\ models}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{enum}\ llm\_type\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ LLM\_TYPE\_UNKNOWN,}
+\DoxyCodeLine{00024\ \ \ \ \ LLM\_TYPE\_14M,}
+\DoxyCodeLine{00025\ \ \ \ \ LLM\_TYPE\_17M,}
+\DoxyCodeLine{00026\ \ \ \ \ LLM\_TYPE\_22M,}
+\DoxyCodeLine{00027\ \ \ \ \ LLM\_TYPE\_33M,}
+\DoxyCodeLine{00028\ \ \ \ \ LLM\_TYPE\_47M,}
+\DoxyCodeLine{00029\ \ \ \ \ LLM\_TYPE\_60M,}
+\DoxyCodeLine{00030\ \ \ \ \ LLM\_TYPE\_70M,}
+\DoxyCodeLine{00031\ \ \ \ \ LLM\_TYPE\_80M,}
+\DoxyCodeLine{00032\ \ \ \ \ LLM\_TYPE\_109M,}
+\DoxyCodeLine{00033\ \ \ \ \ LLM\_TYPE\_137M,}
+\DoxyCodeLine{00034\ \ \ \ \ LLM\_TYPE\_140M,}
+\DoxyCodeLine{00035\ \ \ \ \ LLM\_TYPE\_149M,}
+\DoxyCodeLine{00036\ \ \ \ \ LLM\_TYPE\_160M,}
+\DoxyCodeLine{00037\ \ \ \ \ LLM\_TYPE\_190M,}
+\DoxyCodeLine{00038\ \ \ \ \ LLM\_TYPE\_220M,}
+\DoxyCodeLine{00039\ \ \ \ \ LLM\_TYPE\_250M,}
+\DoxyCodeLine{00040\ \ \ \ \ LLM\_TYPE\_256M,}
+\DoxyCodeLine{00041\ \ \ \ \ LLM\_TYPE\_270M,}
+\DoxyCodeLine{00042\ \ \ \ \ LLM\_TYPE\_335M,}
+\DoxyCodeLine{00043\ \ \ \ \ LLM\_TYPE\_350M,}
+\DoxyCodeLine{00044\ \ \ \ \ LLM\_TYPE\_360M,}
+\DoxyCodeLine{00045\ \ \ \ \ LLM\_TYPE\_395M,}
+\DoxyCodeLine{00046\ \ \ \ \ LLM\_TYPE\_410M,}
+\DoxyCodeLine{00047\ \ \ \ \ LLM\_TYPE\_450M,}
+\DoxyCodeLine{00048\ \ \ \ \ LLM\_TYPE\_475M,}
+\DoxyCodeLine{00049\ \ \ \ \ LLM\_TYPE\_558M,}
+\DoxyCodeLine{00050\ \ \ \ \ LLM\_TYPE\_700M,}
+\DoxyCodeLine{00051\ \ \ \ \ LLM\_TYPE\_770M,}
+\DoxyCodeLine{00052\ \ \ \ \ LLM\_TYPE\_780M,}
+\DoxyCodeLine{00053\ \ \ \ \ LLM\_TYPE\_950M,}
+\DoxyCodeLine{00054\ \ \ \ \ LLM\_TYPE\_0\_3B,}
+\DoxyCodeLine{00055\ \ \ \ \ LLM\_TYPE\_0\_5B,}
+\DoxyCodeLine{00056\ \ \ \ \ LLM\_TYPE\_0\_6B,}
+\DoxyCodeLine{00057\ \ \ \ \ LLM\_TYPE\_0\_8B,}
+\DoxyCodeLine{00058\ \ \ \ \ LLM\_TYPE\_1B,}
+\DoxyCodeLine{00059\ \ \ \ \ LLM\_TYPE\_1\_2B,}
+\DoxyCodeLine{00060\ \ \ \ \ LLM\_TYPE\_1\_3B,}
+\DoxyCodeLine{00061\ \ \ \ \ LLM\_TYPE\_1\_4B,}
+\DoxyCodeLine{00062\ \ \ \ \ LLM\_TYPE\_1\_5B,}
+\DoxyCodeLine{00063\ \ \ \ \ LLM\_TYPE\_1\_6B,}
+\DoxyCodeLine{00064\ \ \ \ \ LLM\_TYPE\_1\_7B,}
+\DoxyCodeLine{00065\ \ \ \ \ LLM\_TYPE\_1\_8B,}
+\DoxyCodeLine{00066\ \ \ \ \ LLM\_TYPE\_2B,}
+\DoxyCodeLine{00067\ \ \ \ \ LLM\_TYPE\_2\_6B,}
+\DoxyCodeLine{00068\ \ \ \ \ LLM\_TYPE\_2\_8B,}
+\DoxyCodeLine{00069\ \ \ \ \ LLM\_TYPE\_2\_9B,}
+\DoxyCodeLine{00070\ \ \ \ \ LLM\_TYPE\_3B,}
+\DoxyCodeLine{00071\ \ \ \ \ LLM\_TYPE\_4B,}
+\DoxyCodeLine{00072\ \ \ \ \ LLM\_TYPE\_6B,}
+\DoxyCodeLine{00073\ \ \ \ \ LLM\_TYPE\_6\_9B,}
+\DoxyCodeLine{00074\ \ \ \ \ LLM\_TYPE\_7B,}
+\DoxyCodeLine{00075\ \ \ \ \ LLM\_TYPE\_8B,}
+\DoxyCodeLine{00076\ \ \ \ \ LLM\_TYPE\_9B,}
+\DoxyCodeLine{00077\ \ \ \ \ LLM\_TYPE\_11B,}
+\DoxyCodeLine{00078\ \ \ \ \ LLM\_TYPE\_12B,}
+\DoxyCodeLine{00079\ \ \ \ \ LLM\_TYPE\_13B,}
+\DoxyCodeLine{00080\ \ \ \ \ LLM\_TYPE\_14B,}
+\DoxyCodeLine{00081\ \ \ \ \ LLM\_TYPE\_15B,}
+\DoxyCodeLine{00082\ \ \ \ \ LLM\_TYPE\_16B,}
+\DoxyCodeLine{00083\ \ \ \ \ LLM\_TYPE\_20B,}
+\DoxyCodeLine{00084\ \ \ \ \ LLM\_TYPE\_26B,}
+\DoxyCodeLine{00085\ \ \ \ \ LLM\_TYPE\_27B,}
+\DoxyCodeLine{00086\ \ \ \ \ LLM\_TYPE\_30B,}
+\DoxyCodeLine{00087\ \ \ \ \ LLM\_TYPE\_32B,}
+\DoxyCodeLine{00088\ \ \ \ \ LLM\_TYPE\_34B,}
+\DoxyCodeLine{00089\ \ \ \ \ LLM\_TYPE\_35B,}
+\DoxyCodeLine{00090\ \ \ \ \ LLM\_TYPE\_36B,}
+\DoxyCodeLine{00091\ \ \ \ \ LLM\_TYPE\_40B,}
+\DoxyCodeLine{00092\ \ \ \ \ LLM\_TYPE\_65B,}
+\DoxyCodeLine{00093\ \ \ \ \ LLM\_TYPE\_70B,}
+\DoxyCodeLine{00094\ \ \ \ \ LLM\_TYPE\_120B,}
+\DoxyCodeLine{00095\ \ \ \ \ LLM\_TYPE\_142B,}
+\DoxyCodeLine{00096\ \ \ \ \ LLM\_TYPE\_236B,}
+\DoxyCodeLine{00097\ \ \ \ \ LLM\_TYPE\_290B,}
+\DoxyCodeLine{00098\ \ \ \ \ LLM\_TYPE\_314B,}
+\DoxyCodeLine{00099\ \ \ \ \ LLM\_TYPE\_405B,}
+\DoxyCodeLine{00100\ \ \ \ \ LLM\_TYPE\_671B,}
+\DoxyCodeLine{00101\ \ \ \ \ LLM\_TYPE\_SMALL,}
+\DoxyCodeLine{00102\ \ \ \ \ LLM\_TYPE\_MEDIUM,}
+\DoxyCodeLine{00103\ \ \ \ \ LLM\_TYPE\_LARGE,}
+\DoxyCodeLine{00104\ \ \ \ \ LLM\_TYPE\_XL,}
+\DoxyCodeLine{00105\ \ \ \ \ LLM\_TYPE\_A1\_7B,}
+\DoxyCodeLine{00106\ \ \ \ \ LLM\_TYPE\_A2\_7B,}
+\DoxyCodeLine{00107\ \ \ \ \ LLM\_TYPE\_8x7B,}
+\DoxyCodeLine{00108\ \ \ \ \ LLM\_TYPE\_8x22B,}
+\DoxyCodeLine{00109\ \ \ \ \ LLM\_TYPE\_16x12B,}
+\DoxyCodeLine{00110\ \ \ \ \ LLM\_TYPE\_16x3\_8B,}
+\DoxyCodeLine{00111\ \ \ \ \ LLM\_TYPE\_10B\_128x3\_66B,}
+\DoxyCodeLine{00112\ \ \ \ \ LLM\_TYPE\_57B\_A14B,}
+\DoxyCodeLine{00113\ \ \ \ \ LLM\_TYPE\_17B\_16E,\ \textcolor{comment}{//\ llama4\ Scout}}
+\DoxyCodeLine{00114\ \ \ \ \ LLM\_TYPE\_17B\_128E,\ \textcolor{comment}{//\ llama4\ Maverick}}
+\DoxyCodeLine{00115\ \ \ \ \ LLM\_TYPE\_A13B,}
+\DoxyCodeLine{00116\ \ \ \ \ LLM\_TYPE\_7B\_A1B,}
+\DoxyCodeLine{00117\ \ \ \ \ LLM\_TYPE\_8B\_A1B,\ \textcolor{comment}{//\ lfm2moe}}
+\DoxyCodeLine{00118\ \ \ \ \ LLM\_TYPE\_16B\_A1B,}
+\DoxyCodeLine{00119\ \ \ \ \ LLM\_TYPE\_21B\_A3B,\ \textcolor{comment}{//\ Ernie\ MoE\ small}}
+\DoxyCodeLine{00120\ \ \ \ \ LLM\_TYPE\_24B\_A2B,\ \textcolor{comment}{//\ lfm2moe}}
+\DoxyCodeLine{00121\ \ \ \ \ LLM\_TYPE\_30B\_A3B,}
+\DoxyCodeLine{00122\ \ \ \ \ LLM\_TYPE\_31B\_A3\_5B,}
+\DoxyCodeLine{00123\ \ \ \ \ LLM\_TYPE\_35B\_A3B,\ \textcolor{comment}{//\ Qwen3.5}}
+\DoxyCodeLine{00124\ \ \ \ \ LLM\_TYPE\_48B\_A3B,\ \textcolor{comment}{//\ Kimi\ Linear}}
+\DoxyCodeLine{00125\ \ \ \ \ LLM\_TYPE\_80B\_A3B,\ \textcolor{comment}{//\ Qwen3\ Next}}
+\DoxyCodeLine{00126\ \ \ \ \ LLM\_TYPE\_100B\_A6B,}
+\DoxyCodeLine{00127\ \ \ \ \ LLM\_TYPE\_102B\_A12B,\ \textcolor{comment}{//\ Solar-\/Open}}
+\DoxyCodeLine{00128\ \ \ \ \ LLM\_TYPE\_106B\_A12B,\ \textcolor{comment}{//\ GLM-\/4.5-\/Air}}
+\DoxyCodeLine{00129\ \ \ \ \ LLM\_TYPE\_120B\_A12B,\ \textcolor{comment}{//\ Nemotron\ 3\ Super}}
+\DoxyCodeLine{00130\ \ \ \ \ LLM\_TYPE\_122B\_A10B,\ \textcolor{comment}{//\ Qwen3.5}}
+\DoxyCodeLine{00131\ \ \ \ \ LLM\_TYPE\_196B\_A11B,\ \textcolor{comment}{//\ Step3.5-\/Flash}}
+\DoxyCodeLine{00132\ \ \ \ \ LLM\_TYPE\_230B\_A10B,\ \textcolor{comment}{//\ Minimax\ M2}}
+\DoxyCodeLine{00133\ \ \ \ \ LLM\_TYPE\_235B\_A22B,}
+\DoxyCodeLine{00134\ \ \ \ \ LLM\_TYPE\_300B\_A47B,\ \textcolor{comment}{//\ Ernie\ MoE\ big}}
+\DoxyCodeLine{00135\ \ \ \ \ LLM\_TYPE\_310B\_A15B,\ \textcolor{comment}{//\ /MiMo-\/V2-\/Flash}}
+\DoxyCodeLine{00136\ \ \ \ \ LLM\_TYPE\_355B\_A32B,\ \textcolor{comment}{//\ GLM-\/4.5}}
+\DoxyCodeLine{00137\ \ \ \ \ LLM\_TYPE\_397B\_A17B,\ \textcolor{comment}{//\ Qwen3.5}}
+\DoxyCodeLine{00138\ \ \ \ \ LLM\_TYPE\_744B\_A40B,\ \textcolor{comment}{//\ GLM-\/5}}
+\DoxyCodeLine{00139\ \ \ \ \ LLM\_TYPE\_E2B,}
+\DoxyCodeLine{00140\ \ \ \ \ LLM\_TYPE\_E4B,}
+\DoxyCodeLine{00141\ \};}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ std::string\ llama\_rope\_scaling\_type\_name(llama\_rope\_scaling\_type\ rope\_scaling\_type);}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__layer__posnet}{llama\_layer\_posnet}}\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{comment}{//\ resnet}}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ norm1\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ norm1\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ conv1\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ conv1\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ norm2\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ norm2\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ conv2\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ conv2\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{//\ attention}}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_norm\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_norm\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_q\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_q\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_k\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_k\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_v\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_v\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_o\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_o\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{comment}{//\ normalize}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ norm\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ norm\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00178\ \};}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__layer__convnext}{llama\_layer\_convnext}}\ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dw\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dw\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ norm\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ norm\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ pw1\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ pw1\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ pw2\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ pw2\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gamma\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00194\ \};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__layer__shortconv}{llama\_layer\_shortconv}}\ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ in\_proj\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ conv\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ out\_proj\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00200\ \};}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__layer__nextn}{llama\_layer\_nextn}}\ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ eh\_proj\ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ embed\_tokens\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ enorm\ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ hnorm\ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ shared\_head\_head\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ shared\_head\_norm\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00209\ \};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__layer}{llama\_layer}}\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{comment}{//\ normalization}}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_norm\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_norm\_b\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_norm\_2\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_norm\_2\_b\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_q\_norm\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_q\_norm\_b\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_k\_norm\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_k\_norm\_b\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_out\_norm\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_out\_norm\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_q\_a\_norm\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_kv\_a\_norm\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_sub\_norm\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_post\_norm\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_sub\_norm\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_norm\_cross\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_norm\_enc\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_norm\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_dt\_norm\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_b\_norm\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_c\_norm\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{comment}{//\ attention}}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wq\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wk\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wv\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wqkv\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wq\_a\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wq\_b\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wkv\_a\_mqa\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wkv\_b\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wk\_b\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wv\_b\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wq\_cross\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wk\_cross\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wv\_cross\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo\_cross\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wq\_enc\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wk\_enc\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wv\_enc\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo\_enc\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wqkv\_gate\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{comment}{//\ attention\ bias}}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ bq\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ bk\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ bv\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ bo\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ bqkv\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{comment}{//\ relative\ position\ bias}}
+\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_rel\_b\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_rel\_b\_enc\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_rel\_b\_cross\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{comment}{//\ normalization}}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_norm\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_norm\_b\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_post\_norm\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ layer\_out\_norm\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ layer\_out\_norm\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_norm\_exps\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_norm\_enc\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{comment}{//\ ff}}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ w1}}
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ w2}}
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ w3}}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_enc\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\_enc\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\_enc\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{comment}{//\ ff\ MoE}}
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_inp\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_exps\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\_exps\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\_exps\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_up\_exps\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_inp\_b\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_exps\_b\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\_exps\_b\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00295\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\_exps\_b\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_up\_exps\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{comment}{//\ ff\ MoE\ per-\/expert\ scales\ (NVFP4\ per-\/tensor\ scale2)}}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_exps\_s\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\_exps\_s\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\_exps\_s\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{comment}{//\ ff\ MoE\ latent\ proj}}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_latent\_down\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_latent\_up\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{comment}{//\ ff\ shared\ expert\ (shexp)}}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_inp\_shexp\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_shexp\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\_shexp\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\_shexp\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{comment}{//\ ff\ adjugate\ experts\ (chexps)}}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_chexps\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\_chexps\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\_chexps\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{comment}{//\ ff\ bias}}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\_b\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ b2}}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\_b\ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ b3}}
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_act\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_exp\_probs\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{comment}{//\ mamba\ proj}}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_in\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_x\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_dt\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_out\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{comment}{//\ mamba}}
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_conv1d\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_a\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_d\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \textcolor{comment}{//\ mamba\ bias}}
+\DoxyCodeLine{00337\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_conv1d\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_dt\_b\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{comment}{//\ qwen3next}}
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_beta\_alpha\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{comment}{//\ qwen3.5}}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_alpha\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{comment}{//\ rwkv}}
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_w1\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_w2\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00349\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_lerp\_x\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_lerp\_w\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00351\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_lerp\_k\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_lerp\_v\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00353\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_lerp\_r\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_lerp\_g\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_lerp\_fused\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_first\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_decay\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_decay\_w1\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_decay\_w2\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_key\ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_key\_b\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_value\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_value\_b\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_receptance\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_receptance\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_gate\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{comment}{//\ rwkv7}}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_w0\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00371\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_a0\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_a1\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_a2\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_v0\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_v1\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_v2\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_g1\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_g2\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_k\_k\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_k\_a\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_r\_k\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_ln\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_ln\_b\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00385\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ time\_mix\_output\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ channel\_mix\_lerp\_k\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ channel\_mix\_lerp\_r\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ channel\_mix\_key\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ channel\_mix\_receptance\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ channel\_mix\_value\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{comment}{//\ long\ rope\ factors}}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ rope\_long\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ rope\_short\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ rope\_freqs\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{comment}{//\ bitnet\ scale}}
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wq\_s\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wk\_s\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wv\_s\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo\_s\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wqkv\_s\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00405\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wqkv\_gate\_s\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_s\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\_s\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\_s\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_gate\_shexp\_s\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_up\_shexp\_s\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_down\_shexp\_s\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_out\_s\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_alpha\_s\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_beta\_s\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{comment}{//\ altup\ \&\ laurel}}
+\DoxyCodeLine{00417\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ per\_layer\_inp\_gate\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00418\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ per\_layer\_proj\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ per\_layer\_post\_norm\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ altup\_correct\_coef\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ altup\_correct\_scale\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ altup\_predict\_coef\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ altup\_router\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00424\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ altup\_router\_norm\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00425\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ laurel\_l\ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ laurel\_r\ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ laurel\_post\_norm\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{comment}{//\ openai-\/moe}}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_sinks\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{comment}{//\ cogvlm}}
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ visexp\_attn\_wqkv\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ visexp\_attn\_wo\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ visexp\_ffn\_gate\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ visexp\_ffn\_down\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ visexp\_ffn\_up\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \ \ \ \ \textcolor{comment}{//\ xIELU\ activation\ parameters\ for\ Apertus}}
+\DoxyCodeLine{00440\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_act\_alpha\_n\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00441\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_act\_alpha\_p\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00442\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_act\_beta\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ffn\_act\_eps\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00444\ }
+\DoxyCodeLine{00445\ \ \ \ \ \textcolor{comment}{//\ Kimi\ Linear\ KDA\ (using\ ssm\_\ prefix\ for\ consistency)}}
+\DoxyCodeLine{00446\ \ \ \ \ \textcolor{comment}{//\ Note:\ ssm\_dt\_b\ already\ exists\ above\ (mamba\ bias),\ reused\ for\ Kimi\ dt\_bias}}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_q\_conv\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_k\_conv\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_v\_conv\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_f\_a\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_f\_b\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_beta\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00453\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_g\_a\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_g\_b\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ssm\_o\_norm\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \ \ \ \ \textcolor{comment}{//\ DSA\ (deepseek\ sparse\ attention)}}
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ indexer\_k\_norm\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ indexer\_k\_norm\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ indexer\_proj\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ indexer\_attn\_k\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ indexer\_attn\_q\_b\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ note:\ for\ lora\ a/b,\ not\ bias}}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__layer__posnet}{llama\_layer\_posnet}}\ posnet;}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__layer__convnext}{llama\_layer\_convnext}}\ convnext;}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__layer__shortconv}{llama\_layer\_shortconv}}\ shortconv;}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__layer__nextn}{llama\_layer\_nextn}}\ nextn;}
+\DoxyCodeLine{00471\ \};}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \textcolor{keyword}{struct\ }llama\_model\ \{}
+\DoxyCodeLine{00474\ \ \ \ \ llm\_type\ type\ =\ LLM\_TYPE\_UNKNOWN;}
+\DoxyCodeLine{00475\ \ \ \ \ llm\_arch\ arch\ =\ LLM\_ARCH\_UNKNOWN;}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \ \ \ \ std::string\ name\ =\ \textcolor{stringliteral}{"{}n/a"{}};}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \ \ \ \ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ hparams\ =\ \{\};}
+\DoxyCodeLine{00480\ \ \ \ \ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ \ \ vocab;}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00482\ \ \ \ \ \textcolor{comment}{//\ for\ classifier\ models}}
+\DoxyCodeLine{00483\ \ \ \ \ std::vector<std::string>\ classifier\_labels;}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tok\_embd\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00486\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ type\_embd\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ pos\_embd\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tok\_norm\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00489\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tok\_norm\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ output\_norm\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00492\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ output\_norm\_b\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00493\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ output\ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ output\_b\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00495\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ output\_norm\_enc\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{comment}{//\ classifier}}
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls\_b\ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00500\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls\_out\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00501\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls\_out\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00502\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls\_norm\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ conv1d\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ conv1d\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{comment}{//\ gemma3n\ altup}}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tok\_embd\_per\_layer\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00509\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ altup\_proj\ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00510\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ altup\_unembd\_proj\ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ per\_layer\_model\_proj\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ per\_layer\_proj\_norm\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00514\ \ \ \ \ std::vector<llama\_layer>\ layers;}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{comment}{//Dense\ linear\ projections\ for\ SentenceTransformers\ models\ like\ embeddinggemma}}
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{comment}{//\ For\ Sentence\ Transformers\ models\ structure\ see}}
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{comment}{//\ https://sbert.net/docs/sentence\_transformer/usage/custom\_models.html\#structure-\/of-\/sentence-\/transformer-\/models}}
+\DoxyCodeLine{00519\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dense\_2\_out\_layers\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00520\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dense\_2\_out\_layers\_b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00521\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dense\_3\_out\_layers\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{comment}{//\ gguf\ metadata}}
+\DoxyCodeLine{00524\ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ gguf\_kv;}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \ \ \ \ \textcolor{comment}{//\ list\ of\ devices\ used\ in\ this\ model}}
+\DoxyCodeLine{00527\ \ \ \ \ std::vector<ggml\_backend\_dev\_t>\ devices;}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{comment}{//\ for\ quantize-\/stats\ only}}
+\DoxyCodeLine{00530\ \ \ \ \ std::vector<std::pair<std::string,\ struct\ ggml\_tensor\ *>>\ tensors\_by\_name;}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \ \ \textcolor{comment}{//\ for\ keeping\ track\ of\ associated\ LoRA\ adapters}}
+\DoxyCodeLine{00533\ \ \ \ \ std::unordered\_set<llama\_adapter\_lora\ *>\ loras;}
+\DoxyCodeLine{00534\ }
+\DoxyCodeLine{00535\ \ \ \ \ int64\_t\ t\_load\_us\ \ =\ 0;}
+\DoxyCodeLine{00536\ \ \ \ \ int64\_t\ t\_start\_us\ =\ 0;}
+\DoxyCodeLine{00537\ }
+\DoxyCodeLine{00538\ \ \ \ \ \textcolor{keyword}{explicit}\ llama\_model(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__model__params}{llama\_model\_params}}\ \&\ params);}
+\DoxyCodeLine{00539\ \ \ \ \ \string~llama\_model();}
+\DoxyCodeLine{00540\ }
+\DoxyCodeLine{00541\ \ \ \ \ \textcolor{keywordtype}{void}\ load\_stats\ \ (\doxymbox{\hyperlink{structllama__model__loader}{llama\_model\_loader}}\ \&\ ml);}
+\DoxyCodeLine{00542\ \ \ \ \ \textcolor{keywordtype}{void}\ load\_arch\ \ \ (\doxymbox{\hyperlink{structllama__model__loader}{llama\_model\_loader}}\ \&\ ml);}
+\DoxyCodeLine{00543\ \ \ \ \ \textcolor{keywordtype}{void}\ load\_hparams(\doxymbox{\hyperlink{structllama__model__loader}{llama\_model\_loader}}\ \&\ ml);}
+\DoxyCodeLine{00544\ \ \ \ \ \textcolor{keywordtype}{void}\ load\_vocab\ \ (\doxymbox{\hyperlink{structllama__model__loader}{llama\_model\_loader}}\ \&\ ml);}
+\DoxyCodeLine{00545\ \ \ \ \ \textcolor{keywordtype}{bool}\ load\_tensors(\doxymbox{\hyperlink{structllama__model__loader}{llama\_model\_loader}}\ \&\ ml);\ \textcolor{comment}{//\ returns\ false\ if\ cancelled\ by\ progress\_callback}}
+\DoxyCodeLine{00546\ }
+\DoxyCodeLine{00547\ \ \ \ \ std::string\ arch\_name()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00548\ \ \ \ \ std::string\ type\_name()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00549\ }
+\DoxyCodeLine{00550\ \ \ \ \ std::string\ desc()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00552\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size()\ \textcolor{keyword}{const};\ \textcolor{comment}{//\ file\ size}}
+\DoxyCodeLine{00553\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ n\_tensors()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00554\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ n\_devices()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \ \ \ \ uint32\_t\ n\_gpu\_layers()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00557\ \ \ \ \ llama\_split\_mode\ split\_mode()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \ \ \ \ std::map<ggml\_backend\_buffer\_type\_t,\ size\_t>\ memory\_breakdown()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{comment}{//\ total\ number\ of\ parameters\ in\ the\ model}}
+\DoxyCodeLine{00562\ \ \ \ \ uint64\_t\ n\_elements()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00563\ }
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{keywordtype}{void}\ print\_info()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ \ \ \ \ ggml\_backend\_dev\_t\ dev\_layer(\textcolor{keywordtype}{int}\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00567\ \ \ \ \ ggml\_backend\_dev\_t\ dev\_output()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \ \ \ \ ggml\_backend\_buffer\_type\_t\ select\_buft(\textcolor{keywordtype}{int}\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_tensor\_overrides()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_tensor(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00574\ }
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{keywordtype}{float}\ get\_rope\_freq\_base\ (\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,\ \textcolor{keywordtype}{int}\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{keywordtype}{float}\ get\_rope\_freq\_scale(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,\ \textcolor{keywordtype}{int}\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00577\ }
+\DoxyCodeLine{00578\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_rope\_factors(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,\ \textcolor{keywordtype}{int}\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \ \ \ \ \textcolor{comment}{//\ TODO:\ move\ this\ to\ new\ llm\_arch\_model\_i\ interface}}
+\DoxyCodeLine{00581\ \ \ \ \ \doxymbox{\hyperlink{structllama__memory__i}{llama\_memory\_i}}\ *\ create\_memory(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__memory__params}{llama\_memory\_params}}\ \&\ params,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00583\ \ \ \ \ \textcolor{comment}{//\ TODO:\ move\ this\ to\ new\ llm\_arch\_model\_i\ interface}}
+\DoxyCodeLine{00584\ \ \ \ \ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ build\_graph(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00587\ \ \ \ \ \doxymbox{\hyperlink{structllama__model__params}{llama\_model\_params}}\ params;}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__model_1_1impl}{impl}};}
+\DoxyCodeLine{00590\ \ \ \ \ std::unique\_ptr<impl>\ pimpl;}
+\DoxyCodeLine{00591\ \};}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ llm\_type\_name(llm\_type\ type);}
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00595\ \textcolor{comment}{//\ For\ internal\ test\ use}}
+\DoxyCodeLine{00596\ \textcolor{comment}{//\ TODO:\ remove}}
+\DoxyCodeLine{00597\ \textcolor{keyword}{const}\ std::vector<std::pair<std::string,\ ggml\_tensor\ *>>\ \&\ llama\_internal\_get\_tensor\_map(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ *\ model);}
+
+\end{DoxyCode}

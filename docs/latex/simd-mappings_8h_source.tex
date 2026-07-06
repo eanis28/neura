@@ -1,0 +1,1325 @@
+\doxysection{simd-\/mappings.h}
+\hypertarget{simd-mappings_8h_source}{}\label{simd-mappings_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/simd-\/mappings.h@{whisper.cpp/ggml/src/ggml-\/cpu/simd-\/mappings.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/cpu-\/impl.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifdef\ \_\_ARM\_FEATURE\_SVE}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <arm\_sve.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_ARM\_FEATURE\_SVE}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_NEON)\ \&\&\ !defined(\_\_CUDACC\_\_)\ \&\&\ !defined(\_\_MUSACC\_\_)}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ if\ YCM\ cannot\ find\ <arm\_neon.h>,\ make\ a\ symbolic\ link\ to\ it,\ for\ example:}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \ \ \$\ ln\ -\/sfn\ /Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include/arm\_neon.h\ ./src/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <arm\_neon.h>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#if\ defined(\_\_riscv\_v\_intrinsic)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <riscv\_vector.h>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ simd\ mappings}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ FP16\ to\ FP32\ conversion}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ 16-\/bit\ float}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ on\ Arm,\ we\ use\ \_\_fp16}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ on\ x86,\ we\ use\ uint16\_t}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ for\ old\ CUDA\ compilers\ (<=\ 11),\ we\ use\ uint16\_t:\ ref\ https://github.com/ggml-\/org/llama.cpp/pull/10616}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ for\ \ \ \ \ MUSA\ compilers\ \ \ \ \ \ \ \ ,\ we\ use\ uint16\_t:\ ref\ https://github.com/ggml-\/org/llama.cpp/pull/11843}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_NEON)\ \&\&\ !(defined(\_\_CUDACC\_\_)\ \&\&\ \_\_CUDACC\_VER\_MAJOR\_\_\ <=\ 11)\ \&\&\ !defined(\_\_MUSACC\_\_)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP16\_TO\_FP32(x)\ neon\_compute\_fp16\_to\_fp32(x)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP32\_TO\_FP16(x)\ neon\_compute\_fp32\_to\_fp16(x)}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_FP16\_TO\_FP32(x)\ GGML\_CPU\_COMPUTE\_FP16\_TO\_FP32(x)}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ neon\_compute\_fp16\_to\_fp32(ggml\_fp16\_t\ h)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \_\_fp16\ tmp;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ memcpy(\&tmp,\ \&h,\ \textcolor{keyword}{sizeof}(ggml\_fp16\_t));}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{float})tmp;}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ ggml\_fp16\_t\ neon\_compute\_fp32\_to\_fp16(\textcolor{keywordtype}{float}\ f)\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ ggml\_fp16\_t\ res;}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \_\_fp16\ tmp\ =\ f;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ memcpy(\&res,\ \&tmp,\ \textcolor{keyword}{sizeof}(ggml\_fp16\_t));}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#elif\ defined(\_\_F16C\_\_)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\ \ \ \ \#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP16\_TO\_FP32(x)\ \_mm\_cvtss\_f32(\_mm\_cvtph\_ps(\_mm\_cvtsi32\_si128(x)))}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP32\_TO\_FP16(x)\ \_mm\_extract\_epi16(\_mm\_cvtps\_ph(\_mm\_set\_ss(x),\ 0),\ 0)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP16\_TO\_FP32(x)\ \_cvtsh\_ss(x)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP32\_TO\_FP16(x)\ \_cvtss\_sh(x,\ 0)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#elif\ defined(\_\_POWER9\_VECTOR\_\_)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP16\_TO\_FP32(x)\ power\_compute\_fp16\_to\_fp32(x)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP32\_TO\_FP16(x)\ power\_compute\_fp32\_to\_fp16(x)}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{/*\ the\ inline\ asm\ below\ is\ about\ 12\%\ faster\ than\ the\ lookup\ method\ */}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_FP16\_TO\_FP32(x)\ GGML\_CPU\_COMPUTE\_FP16\_TO\_FP32(x)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_FP32\_TO\_FP16(x)\ GGML\_CPU\_COMPUTE\_FP32\_TO\_FP16(x)}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ power\_compute\_fp16\_to\_fp32(ggml\_fp16\_t\ h)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ f;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ d;}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \_\_asm\_\_(}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}mtfprd\ \%0,\%2\(\backslash\)n"{}}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}xscvhpdp\ \%0,\%0\(\backslash\)n"{}}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}frsp\ \%1,\%0\(\backslash\)n"{}}\ :}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ temp\ */}\ \textcolor{stringliteral}{"{}=d"{}}(d),}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ out\ */}\ \ \textcolor{stringliteral}{"{}=f"{}}(f):}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ in\ */}\ \ \ \textcolor{stringliteral}{"{}r"{}}(h));}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f;}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ ggml\_fp16\_t\ power\_compute\_fp32\_to\_fp16(\textcolor{keywordtype}{float}\ f)\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ d;}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ ggml\_fp16\_t\ r;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \_\_asm\_\_(\ \textcolor{comment}{/*\ xscvdphp\ can\ work\ on\ double\ or\ single\ precision\ */}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}xscvdphp\ \%0,\%2\(\backslash\)n"{}}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}mffprd\ \%1,\%0\(\backslash\)n"{}}\ :}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ temp\ */}\ \textcolor{stringliteral}{"{}=d"{}}(d),}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ out\ */}\ \ \textcolor{stringliteral}{"{}=r"{}}(r):}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ in\ */}\ \ \ \textcolor{stringliteral}{"{}f"{}}(f));}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r;}
+\DoxyCodeLine{00094\ \ \ \ \ \}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#elif\ defined(\_\_riscv)\ \&\&\ defined(\_\_riscv\_zfhmin)}}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ riscv\_compute\_fp16\_to\_fp32(ggml\_fp16\_t\ h)\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \_Float16\ hf;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ memcpy(\&hf,\ \&h,\ \textcolor{keyword}{sizeof}(ggml\_fp16\_t));}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hf;}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ ggml\_fp16\_t\ riscv\_compute\_fp32\_to\_fp16(\textcolor{keywordtype}{float}\ f)\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ ggml\_fp16\_t\ res;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \_Float16\ hf\ =\ (\_Float16)f;}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ memcpy(\&res,\ \&hf,\ \textcolor{keyword}{sizeof}(ggml\_fp16\_t));}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00107\ \ \ \ \ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP16\_TO\_FP32(x)\ riscv\_compute\_fp16\_to\_fp32(x)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_COMPUTE\_FP32\_TO\_FP16(x)\ riscv\_compute\_fp32\_to\_fp16(x)}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_FP16\_TO\_FP32(x)\ GGML\_CPU\_COMPUTE\_FP16\_TO\_FP32(x)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_CPU\_FP32\_TO\_FP16(x)\ GGML\_CPU\_COMPUTE\_FP32\_TO\_FP16(x)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{comment}{//\ precomputed\ f32\ table\ for\ f16\ (256\ KB)}}
+\DoxyCodeLine{00116\ \textcolor{comment}{//\ defined\ in\ ggml-\/cpu.c,\ initialized\ in\ ggml\_cpu\_init()}}
+\DoxyCodeLine{00117\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ ggml\_table\_f32\_f16[1\ <<\ 16];}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{comment}{//\ precomputed\ f32\ table\ for\ e8m0\ half\ (1\ KB)}}
+\DoxyCodeLine{00120\ \textcolor{comment}{//\ defined\ in\ ggml-\/cpu.c,\ initialized\ in\ ggml\_cpu\_init()}}
+\DoxyCodeLine{00121\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ ggml\_table\_f32\_e8m0\_half[1\ <<\ 8];}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{comment}{//\ Use\ lookup\ table\ for\ E8M0\ on\ x86\ (faster\ than\ bit\ manipulation)}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#if\ defined(\_\_AVX\_\_)\ ||\ defined(\_\_AVX2\_\_)\ ||\ defined(\_\_AVX512F\_\_)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ GGML\_CPU\_E8M0\_TO\_FP32\_HALF(x)\ ggml\_table\_f32\_e8m0\_half[(uint8\_t)(x)]}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ GGML\_CPU\_E8M0\_TO\_FP32\_HALF(x)\ GGML\_E8M0\_TO\_FP32\_HALF(x)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{comment}{//\ On\ ARM\ NEON,\ it's\ quicker\ to\ directly\ convert\ x\ -\/>\ x\ instead\ of\ calling\ into\ ggml\_lookup\_fp16\_to\_fp32,}}
+\DoxyCodeLine{00131\ \textcolor{comment}{//\ so\ we\ define\ GGML\_CPU\_FP16\_TO\_FP32\ and\ GGML\_CPU\_FP32\_TO\_FP16\ elsewhere\ for\ NEON.}}
+\DoxyCodeLine{00132\ \textcolor{comment}{//\ This\ is\ also\ true\ for\ POWER9.}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#if\ !defined(GGML\_CPU\_FP16\_TO\_FP32)}}
+\DoxyCodeLine{00134\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ ggml\_lookup\_fp16\_to\_fp32(ggml\_fp16\_t\ f)\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ uint16\_t\ s;}
+\DoxyCodeLine{00136\ \ \ \ \ memcpy(\&s,\ \&f,\ \textcolor{keyword}{sizeof}(uint16\_t));}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_table\_f32\_f16[s];}
+\DoxyCodeLine{00138\ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ GGML\_CPU\_FP16\_TO\_FP32(x)\ ggml\_lookup\_fp16\_to\_fp32(x)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#if\ !defined(GGML\_CPU\_FP32\_TO\_FP16)}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ GGML\_CPU\_FP32\_TO\_FP16(x)\ GGML\_COMPUTE\_FP32\_TO\_FP16(x)}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{comment}{//\ we\ define\ a\ common\ set\ of\ C\ macros\ which\ map\ to\ specific\ intrinsics\ based\ on\ the\ current\ architecture}}
+\DoxyCodeLine{00149\ \textcolor{comment}{//\ we\ then\ implement\ the\ fundamental\ computation\ operations\ below\ using\ only\ these\ macros}}
+\DoxyCodeLine{00150\ \textcolor{comment}{//\ adding\ support\ for\ new\ architectures\ requires\ to\ define\ the\ corresponding\ SIMD\ macros}}
+\DoxyCodeLine{00151\ \textcolor{comment}{//}}
+\DoxyCodeLine{00152\ \textcolor{comment}{//\ GGML\_F32\_STEP\ /\ GGML\_F16\_STEP}}
+\DoxyCodeLine{00153\ \textcolor{comment}{//\ \ \ number\ of\ elements\ to\ process\ in\ a\ single\ step}}
+\DoxyCodeLine{00154\ \textcolor{comment}{//}}
+\DoxyCodeLine{00155\ \textcolor{comment}{//\ GGML\_F32\_EPR\ /\ GGML\_F16\_EPR}}
+\DoxyCodeLine{00156\ \textcolor{comment}{//\ \ \ number\ of\ elements\ to\ fit\ in\ a\ single\ register}}
+\DoxyCodeLine{00157\ \textcolor{comment}{//}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_FEATURE\_SVE)\ \&\&\ defined(\_\_ARM\_FEATURE\_FMA)}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{comment}{//\ F32\ SVE}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ 8}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ DEFAULT\_PG\ svptrue\_b32()}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ svfloat32\_t}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_ZERO\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ svdup\_n\_f32(0.0f)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_SET1(x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ svdup\_n\_f32(x)}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_LOAD\_IMPL(pg,\ a)\ \ \ \ \ \ \ svld1\_f32(pg,\ a)}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_LOAD(a)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32xt\_LOAD\_IMPL(DEFAULT\_PG,\ a)}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_STORE\_IMPL(pg,\ a,\ b)\ \ \ svst1\_f32(pg,\ a,\ b)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_STORE(a,\ b)\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32xt\_STORE\_IMPL(DEFAULT\_PG,\ a,\ b)}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_FMA\_IMPL(pg,\ a,\ b,\ c)\ \ svmad\_f32\_m(pg,\ b,\ c,\ a)}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_FMA(a,\ b,\ c)\ \ \ \ \ \ \ \ \ \ \ GGML\_F32xt\_FMA\_IMPL(DEFAULT\_PG,\ a,\ b,\ c)}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_ADD\_IMPL(pg,\ a,\ b)\ \ \ \ \ svadd\_f32\_m(pg,\ a,\ b)}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_ADD(a,\ b)\ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32xt\_ADD\_IMPL(DEFAULT\_PG,\ a,\ b)}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_MUL\_IMPL(pg,\ a,\ b)\ \ \ \ \ svmul\_f32\_m(pg,\ a,\ b)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_MUL(a,\ b)\ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32xt\_MUL\_IMPL(DEFAULT\_PG,\ a,\ b)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_REDUCE\_ONE\_IMPL(pg,\ a)\ svaddv(pg,\ a)}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_REDUCE\_ONE(a)\ \ \ \ \ \ \ \ \ \ GGML\_F32xt\_REDUCE\_ONE\_IMPL(DEFAULT\_PG,\ a)}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_REDUCE\_IMPL(pg,\ res,\ sum1,\ sum2,\ sum3,\ sum4,\ sum5,\ sum6,\ sum7,\ sum8)\ \ \(\backslash\)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\ \ \ \ sum1\ =\ svadd\_f32\_m(DEFAULT\_PG,\ sum1,\ sum2);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\ \ \ \ sum3\ =\ svadd\_f32\_m(DEFAULT\_PG,\ sum3,\ sum4);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\ \ \ \ sum5\ =\ svadd\_f32\_m(DEFAULT\_PG,\ sum5,\ sum6);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\ \ \ \ sum7\ =\ svadd\_f32\_m(DEFAULT\_PG,\ sum7,\ sum8);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\ \ \ \ sum1\ =\ svadd\_f32\_m(DEFAULT\_PG,\ sum1,\ sum3);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\ \ \ \ sum5\ =\ svadd\_f32\_m(DEFAULT\_PG,\ sum5,\ sum7);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\ \ \ \ sum1\ =\ svadd\_f32\_m(DEFAULT\_PG,\ sum1,\ sum5);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\ \ \ \ (res)\ =\ (ggml\_float)\ GGML\_F32xt\_REDUCE\_ONE(sum1);\ \ \(\backslash\)}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ GGML\_F32xt\_REDUCE(res,\ sum1,\ sum2,\ sum3,\ sum4,\ sum5,\ sum6,\ sum7,\ sum8)\ \ \(\backslash\)}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ GGML\_F32xt\_REDUCE\_IMPL(DEFAULT\_PG,\ res,\ sum1,\ sum2,\ sum3,\ sum4,\ sum5,\ sum6,\ sum7,\ sum8)}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32xt}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32xt\_ZERO}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32xt\_SET1}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32xt\_LOAD}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32xt\_STORE}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32xt\_FMA}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32xt\_ADD}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32xt\_MUL}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32xt\_REDUCE}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{comment}{//\ F16\ SVE}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ DEFAULT\_PG32\ \ \ \ svptrue\_b32()}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ DEFAULT\_PG16\ \ \ \ svptrue\_b16()}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ svfloat16\_t}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_ZERO\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ svdup\_n\_f16(0.0f)}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_SET1(x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ svdup\_n\_f16(x)}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_LOAD(p)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ svld1\_f16(DEFAULT\_PG16,\ (const\ \_\_fp16\ *)(p))}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_STORE(dst\_ptr,\ src\_vec)\ svst1\_f16(DEFAULT\_PG16,\ (\_\_fp16\ *)(dst\_ptr),\ (src\_vec))}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_FMA\_IMPL(pg,\ a,\ b,\ c)\ \ \ svmad\_f16\_x(pg,\ b,\ c,\ a)}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_FMA(a,\ b,\ c)\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cxt\_FMA\_IMPL(DEFAULT\_PG16,\ a,\ b,\ c)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_ADD\_IMPL(pg,\ a,\ b)\ \ \ \ \ \ svadd\_f16\_x(pg,\ a,\ b)}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_ADD(a,\ b)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cxt\_ADD\_IMPL(DEFAULT\_PG16,\ a,\ b)}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_MUL\_IMPL(pg,\ a,\ b)\ \ \ \ \ \ svmul\_f16\_x(pg,\ a,\ b)}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_MUL(a,\ b)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cxt\_MUL\_IMPL(DEFAULT\_PG16,\ a,\ b)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ GGML\_F32Cxt\_REDUCE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16xt\_REDUCE\_MIXED}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ GGML\_F16x\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cxt}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ GGML\_F16x\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cxt\_ZERO}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ GGML\_F16x\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cxt\_SET1}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ GGML\_F16x\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F32Cxt\_LOAD(p)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ GGML\_F16x\_VEC\_STORE(p,\ r,\ i)\ GGML\_F32Cxt\_STORE((\_\_fp16\ *)(p),\ r)}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#define\ GGML\_F16x\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cxt\_FMA}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ GGML\_F16x\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cxt\_ADD}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ GGML\_F16x\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cxt\_MUL}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ GGML\_F16x\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F32Cxt\_REDUCE}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#define\ GGML\_F16xt\_REDUCE\_ONE\_IMPL(pg,\ a)\ svaddv\_f16(pg,\ a)}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ GGML\_F16xt\_REDUCE\_ONE(a)\ \ \ \ \ \ \ \ \ \ GGML\_F16xt\_REDUCE\_ONE\_IMPL(DEFAULT\_PG16,\ a)}}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ GGML\_F16xt\_REDUCE\_MIXED\_IMPL(pg16,\ res,\ sum1,\ sum2,\ sum3,\ sum4)\ \ \(\backslash\)}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\ \ \ \ sum1\ =\ svadd\_f16\_x(pg16,\ sum1,\ sum2);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\ \ \ \ sum3\ =\ svadd\_f16\_x(pg16,\ sum3,\ sum4);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\ \ \ \ sum1\ =\ svadd\_f16\_x(pg16,\ sum1,\ sum3);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\ \ \ \ \_\_fp16\ sum\_f16\ =\ svaddv\_f16(pg16,\ sum1);\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\ \ \ \ (res)\ =\ (ggml\_float)\ sum\_f16;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ GGML\_F16xt\_REDUCE\_MIXED(res,\ sum1,\ sum2,\ sum3,\ sum4)\ \ \(\backslash\)}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ GGML\_F16xt\_REDUCE\_MIXED\_IMPL(DEFAULT\_PG16,\ res,\ sum1,\ sum2,\ sum3,\ sum4)}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{comment}{//\ F16\ NEON}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_FEATURE\_FP16\_VECTOR\_ARITHMETIC)}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_STEP\ 32}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_EPR\ \ 8}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\ \ \ \ \ \ \ \ \ \ \ \ \ \ float16x8\_t}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_ZERO\ \ \ \ \ \ \ \ \ vdupq\_n\_f16(0.0f)}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_SET1(x)\ \ \ \ \ \ vdupq\_n\_f16(x)}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_LOAD(x)\ \ \ \ \ \ vld1q\_f16((const\ \_\_fp16\ *)(x))}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_STORE\ \ \ \ \ \ \ \ vst1q\_f16}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_FMA(a,\ b,\ c)\ vfmaq\_f16(a,\ b,\ c)}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_ADD\ \ \ \ \ \ \ \ \ \ vaddq\_f16}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_MUL\ \ \ \ \ \ \ \ \ \ vmulq\_f16}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ offset\ =\ GGML\_F16\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ (x)[i]\ =\ vaddq\_f16((x)[i],\ (x)[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ (x)[i]\ =\ vaddq\_f16((x)[i],\ (x)[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ (x)[i]\ =\ vaddq\_f16((x)[i],\ (x)[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ float32x4\_t\ t0\ =\ vcvt\_f32\_f16(vget\_low\_f16\ ((x)[0]));\ \(\backslash\)}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ float32x4\_t\ t1\ =\ vcvt\_f32\_f16(vget\_high\_f16((x)[0]));\ \(\backslash\)}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (res)\ =\ (ggml\_float)\ vaddvq\_f32(vaddq\_f32(t0,\ t1));\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_ZERO}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_SET1}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F16x8\_LOAD(p)}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ GGML\_F16x8\_STORE((\_\_fp16\ *)(p),\ (r)[i])}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_FMA}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_ADD}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_MUL}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F16x8\_REDUCE}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{comment}{//\ if\ FP16\ vector\ arithmetic\ is\ not\ supported,\ we\ use\ FP32\ instead}}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{comment}{//\ and\ take\ advantage\ of\ the\ vcvt\_\ functions\ to\ convert\ to/from\ FP16}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_STEP\ 16}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_EPR\ \ 4}}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\ \ \ \ \ \ \ \ \ \ \ \ \ \ float32x4\_t}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_ZERO\ \ \ \ \ \ \ \ \ vdupq\_n\_f32(0.0f)}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_SET1(x)\ \ \ \ \ \ vdupq\_n\_f32(x)}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_LOAD(x)\ \ \ \ \ \ vcvt\_f32\_f16(vld1\_f16((const\ \_\_fp16\ *)(x)))}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_STORE(x,\ y)\ \ vst1\_f16(x,\ vcvt\_f16\_f32(y))}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_FMA(a,\ b,\ c)\ vfmaq\_f32(a,\ b,\ c)}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_ADD\ \ \ \ \ \ \ \ \ \ vaddq\_f32}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_MUL\ \ \ \ \ \ \ \ \ \ vmulq\_f32}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_REDUCE\ \ \ \ \ \ \ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_ZERO}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_SET1}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F32Cx4\_LOAD(p)}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ GGML\_F32Cx4\_STORE((\_\_fp16\ *)(p),\ r[i])}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_FMA}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_ADD}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_MUL}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_REDUCE}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#elif\ defined(\_\_ARM\_NEON)\ \&\&\ defined(\_\_ARM\_FEATURE\_FMA)}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \textcolor{comment}{//\ F32\ NEON}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 16}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 4}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\ \ \ \ \ \ \ \ \ \ \ \ \ \ float32x4\_t}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ZERO\ \ \ \ \ \ \ \ \ vdupq\_n\_f32(0.0f)}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_SET1(x)\ \ \ \ \ \ vdupq\_n\_f32(x)}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_LOAD\ \ \ \ \ \ \ \ \ vld1q\_f32}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_STORE\ \ \ \ \ \ \ \ vst1q\_f32}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_FMA(a,\ b,\ c)\ vfmaq\_f32(a,\ b,\ c)}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ADD\ \ \ \ \ \ \ \ \ \ vaddq\_f32}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_MUL\ \ \ \ \ \ \ \ \ \ vmulq\_f32}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_REDUCE\_ONE(x)\ vaddvq\_f32(x)}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (x)[i]\ =\ vaddq\_f32((x)[i],\ (x)[offset+i]);\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (x)[i]\ =\ vaddq\_f32((x)[i],\ (x)[offset+i]);\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (x)[i]\ =\ vaddq\_f32((x)[i],\ (x)[offset+i]);\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\ \ \ \ (res)\ =\ (ggml\_float)\ GGML\_F32x4\_REDUCE\_ONE((x)[0]);\ \(\backslash\)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x4}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x4\_ZERO}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x4\_SET1}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x4\_LOAD}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x4\_STORE}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x4\_ADD}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x4\_MUL}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \textcolor{comment}{//\ F16\ NEON}}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_FEATURE\_FP16\_VECTOR\_ARITHMETIC)}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_STEP\ 32}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_EPR\ \ 8}}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\ \ \ \ \ \ \ \ \ \ \ \ \ \ float16x8\_t}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_ZERO\ \ \ \ \ \ \ \ \ vdupq\_n\_f16(0.0f)}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_SET1(x)\ \ \ \ \ \ vdupq\_n\_f16(x)}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_LOAD(x)\ \ \ \ \ \ vld1q\_f16((const\ \_\_fp16\ *)(x))}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_STORE\ \ \ \ \ \ \ \ vst1q\_f16}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_FMA(a,\ b,\ c)\ vfmaq\_f16(a,\ b,\ c)}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_ADD\ \ \ \ \ \ \ \ \ \ vaddq\_f16}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_MUL\ \ \ \ \ \ \ \ \ \ vmulq\_f16}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16x8\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ offset\ =\ GGML\_F16\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ (x)[i]\ =\ vaddq\_f16((x)[i],\ (x)[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ (x)[i]\ =\ vaddq\_f16((x)[i],\ (x)[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ (x)[i]\ =\ vaddq\_f16((x)[i],\ (x)[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ float32x4\_t\ t0\ =\ vcvt\_f32\_f16(vget\_low\_f16\ ((x)[0]));\ \(\backslash\)}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ const\ float32x4\_t\ t1\ =\ vcvt\_f32\_f16(vget\_high\_f16((x)[0]));\ \(\backslash\)}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (res)\ =\ (ggml\_float)\ vaddvq\_f32(vaddq\_f32(t0,\ t1));\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_ZERO}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_SET1}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F16x8\_LOAD(p)}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ GGML\_F16x8\_STORE((\_\_fp16\ *)(p),\ (r)[i])}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_FMA}}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_ADD}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x8\_MUL}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F16x8\_REDUCE}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{comment}{//\ if\ FP16\ vector\ arithmetic\ is\ not\ supported,\ we\ use\ FP32\ instead}}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{comment}{//\ and\ take\ advantage\ of\ the\ vcvt\_\ functions\ to\ convert\ to/from\ FP16}}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_STEP\ 16}}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_EPR\ \ 4}}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\ \ \ \ \ \ \ \ \ \ \ \ \ \ float32x4\_t}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_ZERO\ \ \ \ \ \ \ \ \ vdupq\_n\_f32(0.0f)}}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_SET1(x)\ \ \ \ \ \ vdupq\_n\_f32(x)}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_LOAD(x)\ \ \ \ \ \ vcvt\_f32\_f16(vld1\_f16((const\ \_\_fp16\ *)(x)))}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_STORE(x,\ y)\ \ vst1\_f16(x,\ vcvt\_f16\_f32(y))}}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_FMA(a,\ b,\ c)\ vfmaq\_f32(a,\ b,\ c)}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_ADD\ \ \ \ \ \ \ \ \ \ vaddq\_f32}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_MUL\ \ \ \ \ \ \ \ \ \ vmulq\_f32}}
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32Cx4\_REDUCE\ \ \ \ \ \ \ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_ZERO}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_SET1}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F32Cx4\_LOAD(p)}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ GGML\_F32Cx4\_STORE((\_\_fp16\ *)(p),\ r[i])}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_FMA}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_ADD}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_MUL}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_REDUCE}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#elif\ defined(\_\_AVX512F\_\_)}}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \textcolor{comment}{//\ F32\ AVX512}}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 64}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 16}}
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#define\ GGML\_F32x16\ \ \ \ \ \ \ \ \ \_\_m512}}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#define\ GGML\_F32x16\_ZERO\ \ \ \ \_mm512\_setzero\_ps()}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\#define\ GGML\_F32x16\_SET1(x)\ \_mm512\_set1\_ps(x)}}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{\#define\ GGML\_F32x16\_LOAD\ \ \ \ \_mm512\_loadu\_ps}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#define\ GGML\_F32x16\_STORE\ \ \ \_mm512\_storeu\_ps}}
+\DoxyCodeLine{00447\ \textcolor{comment}{//\ \_mm512\_fmadd\_ps\ is\ defined\ in\ AVX512F\ so\ no\ guard\ is\ required}}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\#define\ GGML\_F32x16\_FMA(a,\ b,\ c)\ \_mm512\_fmadd\_ps(b,\ c,\ a)}}
+\DoxyCodeLine{00449\ \textcolor{preprocessor}{\#define\ GGML\_F32x16\_ADD\ \ \ \ \ \_mm512\_add\_ps}}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#define\ GGML\_F32x16\_MUL\ \ \ \ \ \_mm512\_mul\_ps}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#define\ GGML\_F32x16\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm512\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00459\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm512\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm512\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00465\ \textcolor{preprocessor}{\ \ \ \ res\ =\ (ggml\_float)\ \_mm512\_reduce\_add\_ps(x[0]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \textcolor{comment}{//\ TODO:\ is\ this\ optimal\ ?}}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x16}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x16\_ZERO}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x16\_SET1}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x16\_LOAD}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x16\_STORE}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x16\_FMA}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x16\_ADD}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x16\_MUL}}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x16\_REDUCE}}
+\DoxyCodeLine{00479\ }
+\DoxyCodeLine{00480\ \textcolor{comment}{//\ F16\ AVX512}}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\#if\ defined(\_\_AVX512FP16\_\_)}}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#define\ GGML\_F16\_STEP\ 128}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\#define\ GGML\_F16\_EPR\ \ 32}}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#define\ GGML\_F16x32\ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m512h}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\#define\ GGML\_F16x32\_ZERO\ \ \ \ \ \ \ \ \ \_mm512\_setzero\_ph()}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#define\ GGML\_F16x32\_SET1(x)\ \ \ \ \ \ \_mm512\_set1\_ph(\_\_extension\_\_(\_Float16)(x))}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\#define\ GGML\_F16x32\_LOAD(x)\ \ \ \ \ \ \_mm512\_loadu\_ph(x)}}
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\#define\ GGML\_F16x32\_STORE(x,\ y)\ \ \_mm512\_storeu\_ph(x,\ y)}}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#define\ GGML\_F16x32\_FMA(a,\ b,\ c)\ \_mm512\_fmadd\_ph(b,\ c,\ a)}}
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\#define\ GGML\_F16x32\_ADD\ \ \ \ \ \ \ \ \ \ \_mm512\_add\_ph}}
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\#define\ GGML\_F16x32\_MUL\ \ \ \ \ \ \ \ \ \ \_mm512\_mul\_ph}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#define\ GGML\_F16x32\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F16\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm512\_add\_ph(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00502\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm512\_add\_ph(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm512\_add\_ph(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\ \ \ \ res\ =\ (ggml\_float)\ \_mm512\_reduce\_add\_ph(x[0]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00510\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x32}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F16x32\_ZERO}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F16x32\_SET1}}
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F16x32\_LOAD(p)}}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ GGML\_F16x32\_STORE(p,\ r[i])}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x32\_FMA}}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x32\_ADD}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x32\_MUL}}
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F16x32\_REDUCE}}
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ Fallback\ FP16\ <-\/>\ FP32}}
+\DoxyCodeLine{00523\ }
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\#define\ GGML\_F16\_STEP\ 64}}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#define\ GGML\_F16\_EPR\ \ 16}}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx16\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m512}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx16\_ZERO\ \ \ \ \ \ \ \ \_mm512\_setzero\_ps()}}
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx16\_SET1(x)\ \ \ \ \ \_mm512\_set1\_ps(x)}}
+\DoxyCodeLine{00530\ }
+\DoxyCodeLine{00531\ \textcolor{comment}{//\ unlike\ \ \_mm256\_cvt\ intrinsics\ that\ require\ F16C,\ \_mm512\_cvt\ is\ defined\ in\ AVX512F}}
+\DoxyCodeLine{00532\ \textcolor{comment}{//\ so\ F16C\ guard\ isn't\ required}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx16\_LOAD(x)\ \ \ \ \ \_mm512\_cvtph\_ps(\_mm256\_loadu\_si256((const\ \_\_m256i\ *)(x)))}}
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx16\_STORE(x,\ y)\ \_mm256\_storeu\_si256((\_\_m256i\ *)(x),\ \_mm512\_cvtps\_ph(y,\ 0))}}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx16\_FMA(a,\ b,\ c)\ \_mm512\_fmadd\_ps(b,\ c,\ a)}}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx16\_ADD\ \ \ \ \ \ \ \ \ \_mm512\_add\_ps}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx16\_MUL\ \ \ \ \ \ \ \ \ \_mm512\_mul\_ps}}
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx16\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00540\ \textcolor{preprocessor}{do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00541\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00543\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm512\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00545\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm512\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00549\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00551\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm512\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00552\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00553\ \textcolor{preprocessor}{\ \ \ \ res\ =\ (ggml\_float)\ \_mm512\_reduce\_add\_ps(x[0]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx16}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx16\_ZERO}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx16\_SET1}}
+\DoxyCodeLine{00559\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F32Cx16\_LOAD(p)}}
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ GGML\_F32Cx16\_STORE(p,\ r[i])}}
+\DoxyCodeLine{00561\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx16\_FMA}}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx16\_ADD}}
+\DoxyCodeLine{00563\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx16\_MUL}}
+\DoxyCodeLine{00564\ }
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F32Cx16\_REDUCE}}
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_AVX512FP16\_\_}}
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\#elif\ defined(\_\_AVX\_\_)}}
+\DoxyCodeLine{00569\ }
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \textcolor{comment}{//\ F32\ AVX}}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 32}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 8}}
+\DoxyCodeLine{00576\ }
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\ \ \ \ \ \ \ \ \ \_\_m256}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_ZERO\ \ \ \ \_mm256\_setzero\_ps()}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_SET1(x)\ \_mm256\_set1\_ps(x)}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_LOAD\ \ \ \ \_mm256\_loadu\_ps}}
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_STORE\ \ \ \_mm256\_storeu\_ps}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#if\ defined(\_\_FMA\_\_)}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32x8\_FMA(a,\ b,\ c)\ \_mm256\_fmadd\_ps(b,\ c,\ a)}}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32x8\_FMA(a,\ b,\ c)\ \_mm256\_add\_ps(\_mm256\_mul\_ps(b,\ c),\ a)}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_ADD\ \ \ \ \ \_mm256\_add\_ps}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_MUL\ \ \ \ \ \_mm256\_mul\_ps}}
+\DoxyCodeLine{00589\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00590\ \textcolor{preprocessor}{do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00593\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm256\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00594\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm256\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00598\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm256\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00603\ \textcolor{preprocessor}{\ \ \ \ const\ \_\_m128\ t0\ =\ \_mm\_add\_ps(\_mm256\_castps256\_ps128(x[0]),\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_mm256\_extractf128\_ps(x[0],\ 1));\ \(\backslash\)}}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\ \ \ \ const\ \_\_m128\ t1\ =\ \_mm\_hadd\_ps(t0,\ t0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\ \ \ \ res\ =\ (ggml\_float)\ \_mm\_cvtss\_f32(\_mm\_hadd\_ps(t1,\ t1));\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{00608\ \textcolor{comment}{//\ TODO:\ is\ this\ optimal\ ?}}
+\DoxyCodeLine{00609\ }
+\DoxyCodeLine{00610\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x8}}
+\DoxyCodeLine{00611\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x8\_ZERO}}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x8\_SET1}}
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x8\_LOAD}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x8\_STORE}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x8\_FMA}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x8\_ADD}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x8\_MUL}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x8\_REDUCE}}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00620\ \textcolor{comment}{//\ F16\ AVX}}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\#define\ GGML\_F16\_STEP\ 32}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\#define\ GGML\_F16\_EPR\ \ 8}}
+\DoxyCodeLine{00624\ }
+\DoxyCodeLine{00625\ \textcolor{comment}{//\ F16\ arithmetic\ is\ not\ supported\ by\ AVX,\ so\ we\ use\ F32\ instead}}
+\DoxyCodeLine{00626\ }
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m256}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_ZERO\ \ \ \ \ \ \ \ \_mm256\_setzero\_ps()}}
+\DoxyCodeLine{00629\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_SET1(x)\ \ \ \ \ \_mm256\_set1\_ps(x)}}
+\DoxyCodeLine{00630\ }
+\DoxyCodeLine{00631\ \textcolor{preprocessor}{\#if\ defined(\_\_F16C\_\_)}}
+\DoxyCodeLine{00632\ \textcolor{comment}{//\ the\ \ \_mm256\_cvt\ intrinsics\ require\ F16C}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_LOAD(x)\ \ \ \ \ \_mm256\_cvtph\_ps(\_mm\_loadu\_si128((const\ \_\_m128i\ *)(x)))}}
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_STORE(x,\ y)\ \_mm\_storeu\_si128((\_\_m128i\ *)(x),\ \_mm256\_cvtps\_ph(y,\ 0))}}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00636\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \_\_m256\ \_\_avx\_f32cx8\_load(\textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00637\ \ \ \ \ \textcolor{keywordtype}{float}\ tmp[8];}
+\DoxyCodeLine{00638\ }
+\DoxyCodeLine{00639\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ i++)\ \{}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ tmp[i]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{00641\ \ \ \ \ \}}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00643\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm256\_loadu\_ps(tmp);}
+\DoxyCodeLine{00644\ \}}
+\DoxyCodeLine{00645\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \_\_avx\_f32cx8\_store(ggml\_fp16\_t\ *x,\ \_\_m256\ y)\ \{}
+\DoxyCodeLine{00646\ \ \ \ \ \textcolor{keywordtype}{float}\ arr[8];}
+\DoxyCodeLine{00647\ }
+\DoxyCodeLine{00648\ \ \ \ \ \_mm256\_storeu\_ps(arr,\ y);}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ i++)}
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ x[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[i]);}
+\DoxyCodeLine{00652\ \}}
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_LOAD(x)\ \ \ \ \ \_\_avx\_f32cx8\_load(x)}}
+\DoxyCodeLine{00654\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_STORE(x,\ y)\ \_\_avx\_f32cx8\_store(x,\ y)}}
+\DoxyCodeLine{00655\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00656\ }
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_FMA\ \ \ \ \ \ \ \ \ GGML\_F32x8\_FMA}}
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_ADD\ \ \ \ \ \ \ \ \ \_mm256\_add\_ps}}
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_MUL\ \ \ \ \ \ \ \ \ \_mm256\_mul\_ps}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_REDUCE\ \ \ \ \ \ GGML\_F32x8\_REDUCE}}
+\DoxyCodeLine{00661\ }
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8}}
+\DoxyCodeLine{00663\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_ZERO}}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_SET1}}
+\DoxyCodeLine{00665\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F32Cx8\_LOAD(p)}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ GGML\_F32Cx8\_STORE(p,\ r[i])}}
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_FMA}}
+\DoxyCodeLine{00668\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_ADD}}
+\DoxyCodeLine{00669\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_MUL}}
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_REDUCE}}
+\DoxyCodeLine{00671\ }
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\#elif\ defined(\_\_POWER9\_VECTOR\_\_)}}
+\DoxyCodeLine{00673\ }
+\DoxyCodeLine{00674\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{00675\ }
+\DoxyCodeLine{00676\ \textcolor{comment}{//\ F32\ POWER9}}
+\DoxyCodeLine{00677\ }
+\DoxyCodeLine{00678\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 32}}
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 4}}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\ \ \ \ \ \ \ \ \ \ \ \ \ \ vector\ float}}
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ZERO\ \ \ \ \ \ \ \ \ \{0.0f\}}}
+\DoxyCodeLine{00683\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_SET1\ \ \ \ \ \ \ \ \ vec\_splats}}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_LOAD(p)\ \ \ \ \ \ vec\_xl(0,\ p)}}
+\DoxyCodeLine{00685\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_STORE(p,\ r)\ \ vec\_xst(r,\ 0,\ p)}}
+\DoxyCodeLine{00686\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_FMA(a,\ b,\ c)\ vec\_madd(b,\ c,\ a)}}
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ADD\ \ \ \ \ \ \ \ \ \ vec\_add}}
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_MUL\ \ \ \ \ \ \ \ \ \ vec\_mul}}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00693\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ vec\_add(x[i],\ x[offset+i]);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00694\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ vec\_add(x[i],\ x[offset+i]);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ vec\_add(x[i],\ x[offset+i]);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\ \ \ \ res\ =\ vec\_extract(x[0],\ 0)\ +\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00704\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ vec\_extract(x[0],\ 1)\ +\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ vec\_extract(x[0],\ 2)\ +\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ vec\_extract(x[0],\ 3);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_REDUCE\_4(res,\ s0,\ s1,\ s2,\ s3)\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00710\ \textcolor{preprocessor}{\ \ \ \ vector\ float\ v\ =\ vec\_add(vec\_add(s0,\ s1),\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vec\_add(s2,\ s3));\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00712\ \textcolor{preprocessor}{\ \ \ \ v\ =\ vec\_add(v,\ vec\_sld(v,\ v,\ 8));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\ \ \ \ v\ =\ vec\_add(v,\ vec\_sld(v,\ v,\ 4));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\ \ \ \ res\ +=\ (ggml\_float)\ vec\_extract(v,\ 0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00716\ }
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x4}}
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x4\_ZERO}}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x4\_SET1}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x4\_LOAD}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x4\_STORE}}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x4\_ADD}}
+\DoxyCodeLine{00724\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x4\_MUL}}
+\DoxyCodeLine{00725\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{00726\ }
+\DoxyCodeLine{00727\ \textcolor{comment}{//\ F16\ POWER9}}
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\#define\ GGML\_F16\_STEP\ \ \ \ \ \ \ GGML\_F32\_STEP}}
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\#define\ GGML\_F16\_EPR\ \ \ \ \ \ \ \ GGML\_F32\_EPR}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ GGML\_F32x4}}
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ZERO\ \ \ GGML\_F32x4\_ZERO}}
+\DoxyCodeLine{00732\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_SET1\ \ \ GGML\_F32x4\_SET1}}
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_FMA\ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{00734\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ADD\ \ \ \ GGML\_F32x4\_ADD}}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_MUL\ \ \ \ GGML\_F32x4\_MUL}}
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_REDUCE\ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{00737\ \textcolor{comment}{//\ Use\ vec\_xl,\ not\ vec\_ld,\ in\ case\ the\ load\ address\ is\ not\ aligned.}}
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ (i\ \&\ 0x1)\ ?\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\ \ vec\_extract\_fp32\_from\_shorth(vec\_xl(0,\ p\ -\/\ GGML\_F16\_EPR))\ :\ \(\backslash\)}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\ \ vec\_extract\_fp32\_from\_shortl(vec\_xl(0,\ p))}}
+\DoxyCodeLine{00741\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ ggml\_endian\_byte(\textcolor{keywordtype}{int}\ i)\ \{}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ uint16\_t\ tmp\_val\ =\ 1;}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)\&tmp\_val)[i];}
+\DoxyCodeLine{00744\ \}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\#define\ GGML\_ENDIAN\_BYTE(i)\ ggml\_endian\_byte(i)}}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\ \ if\ (i\ \&\ 0x1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00748\ \textcolor{preprocessor}{\ \ \ \ vec\_xst(vec\_pack\_to\_short\_fp32(r[i\ -\/\ GGML\_ENDIAN\_BYTE(1)],\ \ \(\backslash\)}}
+\DoxyCodeLine{00749\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r[i\ -\/\ GGML\_ENDIAN\_BYTE(0)]),\ \(\backslash\)}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ 0,\ p\ -\/\ GGML\_F16\_EPR)}}
+\DoxyCodeLine{00751\ }
+\DoxyCodeLine{00752\ \textcolor{comment}{//BF16\ POWER9}}
+\DoxyCodeLine{00753\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_STEP\ 16}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_EPR\ \ 8}}
+\DoxyCodeLine{00755\ }
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{\#define\ GGML\_BF16x8\ \ \ \ \ \ \ \ \ vector\ unsigned\ short}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\#define\ GGML\_BF16x8\_ZERO\ \ \ \ vec\_splats((unsigned\ short)0)}}
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\#define\ GGML\_BF16x8\_LOAD(p)\ vec\_xl(0,\ (const\ unsigned\ short\ *)(p))}}
+\DoxyCodeLine{00759\ }
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_VEC\ \ \ \ \ \ \ \ \ \ GGML\_BF16x8}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_VEC\_ZERO\ \ \ \ \ GGML\_BF16x8\_ZERO}}
+\DoxyCodeLine{00762\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_VEC\_LOAD\ \ \ \ \ GGML\_BF16x8\_LOAD}}
+\DoxyCodeLine{00763\ \textcolor{preprocessor}{\#if\ defined(\_\_LITTLE\_ENDIAN\_\_)}}
+\DoxyCodeLine{00764\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_TO\_F32\_LO(v)\ ((vector\ float)\ vec\_mergel(GGML\_BF16\_VEC\_ZERO,\ (v)))}}
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_TO\_F32\_HI(v)\ ((vector\ float)\ vec\_mergeh(GGML\_BF16\_VEC\_ZERO,\ (v)))}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_TO\_F32\_LO(v)\ ((vector\ float)\ vec\_mergel((v),\ GGML\_BF16\_VEC\_ZERO))}}
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_TO\_F32\_HI(v)\ ((vector\ float)\ vec\_mergeh((v),\ GGML\_BF16\_VEC\_ZERO))}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_FMA\_LO(acc,\ x,\ y)\ \(\backslash\)}}
+\DoxyCodeLine{00771\ \textcolor{preprocessor}{\ \ \ \ (acc)\ =\ GGML\_F32x4\_FMA((acc),\ GGML\_BF16\_TO\_F32\_LO(x),\ GGML\_BF16\_TO\_F32\_LO(y))}}
+\DoxyCodeLine{00772\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_FMA\_HI(acc,\ x,\ y)\ \(\backslash\)}}
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\ \ \ \ (acc)\ =\ GGML\_F32x4\_FMA((acc),\ GGML\_BF16\_TO\_F32\_HI(x),\ GGML\_BF16\_TO\_F32\_HI(y))}}
+\DoxyCodeLine{00774\ }
+\DoxyCodeLine{00775\ \textcolor{preprocessor}{\#elif\ defined(\_\_wasm\_simd128\_\_)}}
+\DoxyCodeLine{00776\ }
+\DoxyCodeLine{00777\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{00778\ }
+\DoxyCodeLine{00779\ \textcolor{comment}{//\ F32\ WASM}}
+\DoxyCodeLine{00780\ }
+\DoxyCodeLine{00781\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 16}}
+\DoxyCodeLine{00782\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 4}}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\ \ \ \ \ \ \ \ \ \ \ \ \ \ v128\_t}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ZERO\ \ \ \ \ \ \ \ \ wasm\_f32x4\_splat(0.0f)}}
+\DoxyCodeLine{00786\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_SET1(x)\ \ \ \ \ \ wasm\_f32x4\_splat(x)}}
+\DoxyCodeLine{00787\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_LOAD\ \ \ \ \ \ \ \ \ wasm\_v128\_load}}
+\DoxyCodeLine{00788\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_STORE\ \ \ \ \ \ \ \ wasm\_v128\_store}}
+\DoxyCodeLine{00789\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_FMA(a,\ b,\ c)\ wasm\_f32x4\_add(wasm\_f32x4\_mul(b,\ c),\ a)}}
+\DoxyCodeLine{00790\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ADD\ \ \ \ \ \ \ \ \ \ wasm\_f32x4\_add}}
+\DoxyCodeLine{00791\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_MUL\ \ \ \ \ \ \ \ \ \ wasm\_f32x4\_mul}}
+\DoxyCodeLine{00792\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00793\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00795\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00796\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ wasm\_f32x4\_add(x[i],\ x[offset+i]);\ \ \(\backslash\)}}
+\DoxyCodeLine{00797\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00798\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00799\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00800\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ wasm\_f32x4\_add(x[i],\ x[offset+i]);\ \ \(\backslash\)}}
+\DoxyCodeLine{00801\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ wasm\_f32x4\_add(x[i],\ x[offset+i]);\ \ \(\backslash\)}}
+\DoxyCodeLine{00805\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\ \ \ \ res\ =\ wasm\_f32x4\_extract\_lane(x[0],\ 0)\ +\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00807\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ wasm\_f32x4\_extract\_lane(x[0],\ 1)\ +\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ wasm\_f32x4\_extract\_lane(x[0],\ 2)\ +\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00809\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ wasm\_f32x4\_extract\_lane(x[0],\ 3);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00810\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00811\ }
+\DoxyCodeLine{00812\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x4}}
+\DoxyCodeLine{00813\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x4\_ZERO}}
+\DoxyCodeLine{00814\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x4\_SET1}}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x4\_LOAD}}
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x4\_STORE}}
+\DoxyCodeLine{00817\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{00818\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x4\_ADD}}
+\DoxyCodeLine{00819\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x4\_MUL}}
+\DoxyCodeLine{00820\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{00821\ }
+\DoxyCodeLine{00822\ \textcolor{comment}{//\ F16\ WASM}}
+\DoxyCodeLine{00823\ }
+\DoxyCodeLine{00824\ \textcolor{preprocessor}{\#define\ GGML\_F16\_STEP\ 16}}
+\DoxyCodeLine{00825\ \textcolor{preprocessor}{\#define\ GGML\_F16\_EPR\ \ 4}}
+\DoxyCodeLine{00826\ }
+\DoxyCodeLine{00827\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ v128\_t\ \_\_wasm\_f16x4\_load(\textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ p)\ \{}
+\DoxyCodeLine{00828\ \ \ \ \ \textcolor{keywordtype}{float}\ tmp[4];}
+\DoxyCodeLine{00829\ }
+\DoxyCodeLine{00830\ \ \ \ \ tmp[0]\ =\ GGML\_CPU\_FP16\_TO\_FP32(p[0]);}
+\DoxyCodeLine{00831\ \ \ \ \ tmp[1]\ =\ GGML\_CPU\_FP16\_TO\_FP32(p[1]);}
+\DoxyCodeLine{00832\ \ \ \ \ tmp[2]\ =\ GGML\_CPU\_FP16\_TO\_FP32(p[2]);}
+\DoxyCodeLine{00833\ \ \ \ \ tmp[3]\ =\ GGML\_CPU\_FP16\_TO\_FP32(p[3]);}
+\DoxyCodeLine{00834\ }
+\DoxyCodeLine{00835\ \ \ \ \ \textcolor{keywordflow}{return}\ wasm\_v128\_load(tmp);}
+\DoxyCodeLine{00836\ \}}
+\DoxyCodeLine{00837\ }
+\DoxyCodeLine{00838\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \_\_wasm\_f16x4\_store(ggml\_fp16\_t\ *\ p,\ v128\_t\ x)\ \{}
+\DoxyCodeLine{00839\ \ \ \ \ \textcolor{keywordtype}{float}\ tmp[4];}
+\DoxyCodeLine{00840\ }
+\DoxyCodeLine{00841\ \ \ \ \ wasm\_v128\_store(tmp,\ x);}
+\DoxyCodeLine{00842\ }
+\DoxyCodeLine{00843\ \ \ \ \ p[0]\ =\ GGML\_CPU\_FP32\_TO\_FP16(tmp[0]);}
+\DoxyCodeLine{00844\ \ \ \ \ p[1]\ =\ GGML\_CPU\_FP32\_TO\_FP16(tmp[1]);}
+\DoxyCodeLine{00845\ \ \ \ \ p[2]\ =\ GGML\_CPU\_FP32\_TO\_FP16(tmp[2]);}
+\DoxyCodeLine{00846\ \ \ \ \ p[3]\ =\ GGML\_CPU\_FP32\_TO\_FP16(tmp[3]);}
+\DoxyCodeLine{00847\ \}}
+\DoxyCodeLine{00848\ }
+\DoxyCodeLine{00849\ \textcolor{preprocessor}{\#define\ GGML\_F16x4\ \ \ \ \ \ \ \ \ \ \ \ \ v128\_t}}
+\DoxyCodeLine{00850\ \textcolor{preprocessor}{\#define\ GGML\_F16x4\_ZERO\ \ \ \ \ \ \ \ wasm\_f32x4\_splat(0.0f)}}
+\DoxyCodeLine{00851\ \textcolor{preprocessor}{\#define\ GGML\_F16x4\_SET1(x)\ \ \ \ \ wasm\_f32x4\_splat(x)}}
+\DoxyCodeLine{00852\ \textcolor{preprocessor}{\#define\ GGML\_F16x4\_LOAD(x)\ \ \ \ \ \_\_wasm\_f16x4\_load(x)}}
+\DoxyCodeLine{00853\ \textcolor{preprocessor}{\#define\ GGML\_F16x4\_STORE(x,\ y)\ \_\_wasm\_f16x4\_store(x,\ y)}}
+\DoxyCodeLine{00854\ \textcolor{preprocessor}{\#define\ GGML\_F16x4\_FMA\ \ \ \ \ \ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{00855\ \textcolor{preprocessor}{\#define\ GGML\_F16x4\_ADD\ \ \ \ \ \ \ \ \ wasm\_f32x4\_add}}
+\DoxyCodeLine{00856\ \textcolor{preprocessor}{\#define\ GGML\_F16x4\_MUL\ \ \ \ \ \ \ \ \ wasm\_f32x4\_mul}}
+\DoxyCodeLine{00857\ \textcolor{preprocessor}{\#define\ GGML\_F16x4\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00858\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00859\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F16\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00860\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00861\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ wasm\_f32x4\_add(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00862\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00863\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00864\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00865\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ wasm\_f32x4\_add(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00866\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00867\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00868\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00869\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ wasm\_f32x4\_add(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00870\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00871\ \textcolor{preprocessor}{\ \ \ \ res\ =\ (ggml\_float)\ (wasm\_f32x4\_extract\_lane(x[0],\ 0)\ +\ \ \(\backslash\)}}
+\DoxyCodeLine{00872\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ wasm\_f32x4\_extract\_lane(x[0],\ 1)\ +\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00873\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ wasm\_f32x4\_extract\_lane(x[0],\ 2)\ +\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00874\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ wasm\_f32x4\_extract\_lane(x[0],\ 3));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00875\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00876\ }
+\DoxyCodeLine{00877\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x4}}
+\DoxyCodeLine{00878\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F16x4\_ZERO}}
+\DoxyCodeLine{00879\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F16x4\_SET1}}
+\DoxyCodeLine{00880\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F16x4\_LOAD(p)}}
+\DoxyCodeLine{00881\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ GGML\_F16x4\_STORE(p,\ r[i])}}
+\DoxyCodeLine{00882\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x4\_FMA}}
+\DoxyCodeLine{00883\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x4\_ADD}}
+\DoxyCodeLine{00884\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F16x4\_MUL}}
+\DoxyCodeLine{00885\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F16x4\_REDUCE}}
+\DoxyCodeLine{00886\ }
+\DoxyCodeLine{00887\ \textcolor{preprocessor}{\#elif\ defined(\_\_SSE3\_\_)}}
+\DoxyCodeLine{00888\ }
+\DoxyCodeLine{00889\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{00890\ }
+\DoxyCodeLine{00891\ \textcolor{comment}{//\ F32\ SSE}}
+\DoxyCodeLine{00892\ }
+\DoxyCodeLine{00893\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 32}}
+\DoxyCodeLine{00894\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 4}}
+\DoxyCodeLine{00895\ }
+\DoxyCodeLine{00896\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\ \ \ \ \ \ \ \ \ \_\_m128}}
+\DoxyCodeLine{00897\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ZERO\ \ \ \ \_mm\_setzero\_ps()}}
+\DoxyCodeLine{00898\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_SET1(x)\ \_mm\_set1\_ps(x)}}
+\DoxyCodeLine{00899\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_LOAD\ \ \ \ \_mm\_loadu\_ps}}
+\DoxyCodeLine{00900\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_STORE\ \ \ \_mm\_storeu\_ps}}
+\DoxyCodeLine{00901\ \textcolor{preprocessor}{\#if\ defined(\_\_FMA\_\_)}}
+\DoxyCodeLine{00902\ \ \ \ \ \textcolor{comment}{//\ TODO:\ Does\ this\ work?}}
+\DoxyCodeLine{00903\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32x4\_FMA(a,\ b,\ c)\ \_mm\_fmadd\_ps(b,\ c,\ a)}}
+\DoxyCodeLine{00904\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00905\ \textcolor{preprocessor}{\ \ \ \ \#define\ GGML\_F32x4\_FMA(a,\ b,\ c)\ \_mm\_add\_ps(\_mm\_mul\_ps(b,\ c),\ a)}}
+\DoxyCodeLine{00906\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00907\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ADD\ \ \ \ \ \_mm\_add\_ps}}
+\DoxyCodeLine{00908\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_MUL\ \ \ \ \ \_mm\_mul\_ps}}
+\DoxyCodeLine{00909\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00910\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00911\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00912\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00913\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00914\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00915\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00916\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00917\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00918\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00919\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00920\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00921\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_mm\_add\_ps(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00922\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00923\ \textcolor{preprocessor}{\ \ \ \ const\ \_\_m128\ t0\ =\ \_mm\_hadd\_ps(x[0],\ x[0]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00924\ \textcolor{preprocessor}{\ \ \ \ res\ =\ (ggml\_float)\ \_mm\_cvtss\_f32(\_mm\_hadd\_ps(t0,\ t0));\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00925\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00926\ \textcolor{comment}{//\ TODO:\ is\ this\ optimal\ ?}}
+\DoxyCodeLine{00927\ }
+\DoxyCodeLine{00928\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x4}}
+\DoxyCodeLine{00929\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x4\_ZERO}}
+\DoxyCodeLine{00930\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x4\_SET1}}
+\DoxyCodeLine{00931\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x4\_LOAD}}
+\DoxyCodeLine{00932\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x4\_STORE}}
+\DoxyCodeLine{00933\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{00934\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x4\_ADD}}
+\DoxyCodeLine{00935\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x4\_MUL}}
+\DoxyCodeLine{00936\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{00937\ }
+\DoxyCodeLine{00938\ \textcolor{comment}{//\ F16\ SSE}}
+\DoxyCodeLine{00939\ }
+\DoxyCodeLine{00940\ \textcolor{preprocessor}{\#define\ GGML\_F16\_STEP\ 32}}
+\DoxyCodeLine{00941\ \textcolor{preprocessor}{\#define\ GGML\_F16\_EPR\ \ 4}}
+\DoxyCodeLine{00942\ }
+\DoxyCodeLine{00943\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \_\_m128\ \_\_sse\_f16x4\_load(\textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{00944\ \ \ \ \ \textcolor{keywordtype}{float}\ tmp[4];}
+\DoxyCodeLine{00945\ }
+\DoxyCodeLine{00946\ \ \ \ \ tmp[0]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[0]);}
+\DoxyCodeLine{00947\ \ \ \ \ tmp[1]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[1]);}
+\DoxyCodeLine{00948\ \ \ \ \ tmp[2]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[2]);}
+\DoxyCodeLine{00949\ \ \ \ \ tmp[3]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[3]);}
+\DoxyCodeLine{00950\ }
+\DoxyCodeLine{00951\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_loadu\_ps(tmp);}
+\DoxyCodeLine{00952\ \}}
+\DoxyCodeLine{00953\ }
+\DoxyCodeLine{00954\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \_\_sse\_f16x4\_store(ggml\_fp16\_t\ *\ x,\ \_\_m128\ y)\ \{}
+\DoxyCodeLine{00955\ \ \ \ \ \textcolor{keywordtype}{float}\ arr[4];}
+\DoxyCodeLine{00956\ }
+\DoxyCodeLine{00957\ \ \ \ \ \_mm\_storeu\_ps(arr,\ y);}
+\DoxyCodeLine{00958\ }
+\DoxyCodeLine{00959\ \ \ \ \ x[0]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[0]);}
+\DoxyCodeLine{00960\ \ \ \ \ x[1]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[1]);}
+\DoxyCodeLine{00961\ \ \ \ \ x[2]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[2]);}
+\DoxyCodeLine{00962\ \ \ \ \ x[3]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[3]);}
+\DoxyCodeLine{00963\ \}}
+\DoxyCodeLine{00964\ }
+\DoxyCodeLine{00965\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128}}
+\DoxyCodeLine{00966\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_ZERO\ \ \ \ \ \ \ \ \_mm\_setzero\_ps()}}
+\DoxyCodeLine{00967\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_SET1(x)\ \ \ \ \ \_mm\_set1\_ps(x)}}
+\DoxyCodeLine{00968\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_LOAD(x)\ \ \ \ \ \_\_sse\_f16x4\_load(x)}}
+\DoxyCodeLine{00969\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_STORE(x,\ y)\ \_\_sse\_f16x4\_store(x,\ y)}}
+\DoxyCodeLine{00970\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_FMA\ \ \ \ \ \ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{00971\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_ADD\ \ \ \ \ \ \ \ \ \_mm\_add\_ps}}
+\DoxyCodeLine{00972\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_MUL\ \ \ \ \ \ \ \ \ \_mm\_mul\_ps}}
+\DoxyCodeLine{00973\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_REDUCE\ \ \ \ \ \ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{00974\ }
+\DoxyCodeLine{00975\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4}}
+\DoxyCodeLine{00976\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_ZERO}}
+\DoxyCodeLine{00977\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_SET1}}
+\DoxyCodeLine{00978\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ \ GGML\_F32Cx4\_LOAD(p)}}
+\DoxyCodeLine{00979\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ \ GGML\_F32Cx4\_STORE(p,\ r[i])}}
+\DoxyCodeLine{00980\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_FMA}}
+\DoxyCodeLine{00981\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_ADD}}
+\DoxyCodeLine{00982\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_MUL}}
+\DoxyCodeLine{00983\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_REDUCE}}
+\DoxyCodeLine{00984\ }
+\DoxyCodeLine{00985\ \textcolor{preprocessor}{\#elif\ defined(\_\_loongarch\_asx)}}
+\DoxyCodeLine{00986\ }
+\DoxyCodeLine{00987\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{00988\ }
+\DoxyCodeLine{00989\ \textcolor{comment}{//\ F32\ LASX}}
+\DoxyCodeLine{00990\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 32}}
+\DoxyCodeLine{00991\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 8}}
+\DoxyCodeLine{00992\ }
+\DoxyCodeLine{00993\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\ \ \ \ \ \ \ \ \ \_\_m256}}
+\DoxyCodeLine{00994\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_ZERO\ \ \ \ (\_\_m256)\_\_lasx\_xvldi(0)}}
+\DoxyCodeLine{00995\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_SET1(x)\ (\_\_m256)\_\_lasx\_xvreplfr2vr\_s((x))}}
+\DoxyCodeLine{00996\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_LOAD(x)\ (\_\_m256)\_\_lasx\_xvld((x),\ 0)}}
+\DoxyCodeLine{00997\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_STORE(x,y)\ \ \ \_\_lasx\_xvst((y),\ (x),\ 0)}}
+\DoxyCodeLine{00998\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_FMA(a,\ b,\ c)\ \_\_lasx\_xvfmadd\_s(b,\ c,\ a)}}
+\DoxyCodeLine{00999\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_ADD\ \ \ \ \ \_\_lasx\_xvfadd\_s}}
+\DoxyCodeLine{01000\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_MUL\ \ \ \ \ \_\_lasx\_xvfmul\_s}}
+\DoxyCodeLine{01001\ \textcolor{preprocessor}{\#define\ GGML\_F32x8\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01002\ \textcolor{preprocessor}{do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01003\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01004\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01005\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_\_lasx\_xvfadd\_s(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01006\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01007\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01008\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01009\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_\_lasx\_xvfadd\_s(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01010\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01011\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01012\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01013\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_\_lasx\_xvfadd\_s(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01014\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01015\ \textcolor{preprocessor}{\ \ \ \ float\ *tmp\_p\ =\ (float\ *)\&x[0];\ \(\backslash\)}}
+\DoxyCodeLine{01016\ \textcolor{preprocessor}{\ \ \ \ res\ =\ tmp\_p[0]\ +\ tmp\_p[1]\ +\ tmp\_p[2]\ +\ tmp\_p[3]\ +\ tmp\_p[4]\ +\ tmp\_p[5]\ +\ tmp\_p[6]\ +\ tmp\_p[7];\ \ \(\backslash\)}}
+\DoxyCodeLine{01017\ \textcolor{preprocessor}{\}\ while\ (0)}}
+\DoxyCodeLine{01018\ \textcolor{comment}{//\ TODO:\ is\ this\ optimal\ ?}}
+\DoxyCodeLine{01019\ }
+\DoxyCodeLine{01020\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x8}}
+\DoxyCodeLine{01021\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x8\_ZERO}}
+\DoxyCodeLine{01022\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x8\_SET1}}
+\DoxyCodeLine{01023\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x8\_LOAD}}
+\DoxyCodeLine{01024\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x8\_STORE}}
+\DoxyCodeLine{01025\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x8\_FMA}}
+\DoxyCodeLine{01026\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x8\_ADD}}
+\DoxyCodeLine{01027\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x8\_MUL}}
+\DoxyCodeLine{01028\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x8\_REDUCE}}
+\DoxyCodeLine{01029\ }
+\DoxyCodeLine{01030\ \textcolor{comment}{//\ F16\ LASX}}
+\DoxyCodeLine{01031\ }
+\DoxyCodeLine{01032\ \textcolor{preprocessor}{\#define\ GGML\_F16\_STEP\ 32}}
+\DoxyCodeLine{01033\ \textcolor{preprocessor}{\#define\ GGML\_F16\_EPR\ \ 8}}
+\DoxyCodeLine{01034\ }
+\DoxyCodeLine{01035\ \textcolor{comment}{//\ F16\ arithmetic\ is\ not\ supported\ by\ LASX,\ so\ we\ use\ F32\ instead}}
+\DoxyCodeLine{01036\ }
+\DoxyCodeLine{01037\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\ \ \ \ \ \ \ \ \ \ \_\_m256}}
+\DoxyCodeLine{01038\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_ZERO\ \ \ \ (\_\_m256)\_\_lasx\_xvldi(0)}}
+\DoxyCodeLine{01039\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_SET1(x)\ (\_\_m256)\_\_lasx\_xvreplfr2vr\_s((x))}}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01041\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \_\_m256\ \_\_lasx\_f32cx8\_load(\textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{01042\ \ \ \ \ \_\_m256i\ a;}
+\DoxyCodeLine{01043\ \ \ \ \ memcpy(\&a,\ x,\ \textcolor{keyword}{sizeof}(ggml\_fp16\_t)\ *\ 8);}
+\DoxyCodeLine{01044\ \ \ \ \ a\ =\ \_\_lasx\_xvpermi\_d(a,\ 0\ |\ (1\ <<\ 4));}
+\DoxyCodeLine{01045\ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_lasx\_xvfcvtl\_s\_h(a);}
+\DoxyCodeLine{01046\ \}}
+\DoxyCodeLine{01047\ }
+\DoxyCodeLine{01048\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \_\_lasx\_f32cx8\_store(ggml\_fp16\_t\ *\ x,\ \_\_m256\ y)\ \{}
+\DoxyCodeLine{01049\ \ \ \ \ \_\_m256i\ a\ =\ \_\_lasx\_xvfcvt\_h\_s(y,\ y);}
+\DoxyCodeLine{01050\ \ \ \ \ a\ =\ \_\_lasx\_xvpermi\_d(a,\ 0\ |\ (2\ <<\ 2));}
+\DoxyCodeLine{01051\ \ \ \ \ memcpy(x,\ \&a,\ \textcolor{keyword}{sizeof}(ggml\_fp16\_t)\ *\ 8);}
+\DoxyCodeLine{01052\ \}}
+\DoxyCodeLine{01053\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_LOAD(x)\ \ \ \ \ \_\_lasx\_f32cx8\_load(x)}}
+\DoxyCodeLine{01054\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_STORE(x,\ y)\ \_\_lasx\_f32cx8\_store(x,\ y)}}
+\DoxyCodeLine{01055\ }
+\DoxyCodeLine{01056\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_FMA\ \ \ \ \ \ \ \ \ GGML\_F32x8\_FMA}}
+\DoxyCodeLine{01057\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_ADD\ \ \ \ \ \ \ \ \ \_\_lasx\_xvfadd\_s}}
+\DoxyCodeLine{01058\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_MUL\ \ \ \ \ \ \ \ \ \_\_lasx\_xvfmul\_s}}
+\DoxyCodeLine{01059\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx8\_REDUCE\ \ \ \ \ \ GGML\_F32x8\_REDUCE}}
+\DoxyCodeLine{01060\ }
+\DoxyCodeLine{01061\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8}}
+\DoxyCodeLine{01062\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_ZERO}}
+\DoxyCodeLine{01063\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_SET1}}
+\DoxyCodeLine{01064\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ GGML\_F32Cx8\_LOAD(p)}}
+\DoxyCodeLine{01065\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ GGML\_F32Cx8\_STORE(p,\ r[i])}}
+\DoxyCodeLine{01066\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_FMA}}
+\DoxyCodeLine{01067\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_ADD}}
+\DoxyCodeLine{01068\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_MUL}}
+\DoxyCodeLine{01069\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F32Cx8\_REDUCE}}
+\DoxyCodeLine{01070\ }
+\DoxyCodeLine{01071\ \textcolor{preprocessor}{\#elif\ defined(\_\_loongarch\_sx)}}
+\DoxyCodeLine{01072\ }
+\DoxyCodeLine{01073\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{01074\ }
+\DoxyCodeLine{01075\ \textcolor{comment}{//\ F32\ LSX}}
+\DoxyCodeLine{01076\ }
+\DoxyCodeLine{01077\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 32}}
+\DoxyCodeLine{01078\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 4}}
+\DoxyCodeLine{01079\ }
+\DoxyCodeLine{01080\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\ \ \ \ \ \ \ \ \ \_\_m128}}
+\DoxyCodeLine{01081\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ZERO\ \ \ \ (\_\_m128)\_\_lsx\_vldi(0)}}
+\DoxyCodeLine{01082\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_SET1(x)\ (\_\_m128)\_\_lsx\_vreplfr2vr\_s((x))}}
+\DoxyCodeLine{01083\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_LOAD(x)\ (\_\_m128)\_\_lsx\_vld((x),\ 0)}}
+\DoxyCodeLine{01084\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_STORE(x,\ y)\ \ \ \_\_lsx\_vst(y,\ x,\ 0)}}
+\DoxyCodeLine{01085\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_FMA(a,\ b,\ c)\ \_\_lsx\_vfmadd\_s(b,\ c,\ a)}}
+\DoxyCodeLine{01086\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ADD\ \ \ \ \ \_\_lsx\_vfadd\_s}}
+\DoxyCodeLine{01087\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_MUL\ \ \ \ \ \_\_lsx\_vfmul\_s}}
+\DoxyCodeLine{01088\ }
+\DoxyCodeLine{01089\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01090\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01091\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01092\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01093\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_\_lsx\_vfadd\_s(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01094\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01095\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01096\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01097\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_\_lsx\_vfadd\_s(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01098\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01099\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01100\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01101\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ \_\_lsx\_vfadd\_s(x[i],\ x[offset+i]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01102\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01103\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ t0\ =\ \_\_lsx\_vpickev\_w((\_\_m128i)x[0],\ (\_\_m128i)x[0]);\ \(\backslash\)}}
+\DoxyCodeLine{01104\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ t1\ =\ \_\_lsx\_vpickod\_w((\_\_m128i)x[0],\ (\_\_m128i)x[0]);\ \(\backslash\)}}
+\DoxyCodeLine{01105\ \textcolor{preprocessor}{\ \ \ \ \_\_m128\ t2\ =\ \_\_lsx\_vfadd\_s((\_\_m128)t0,\ (\_\_m128)t1);\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01106\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ t3\ =\ \_\_lsx\_vpickev\_w((\_\_m128i)t2,\ (\_\_m128i)t2);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01107\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ t4\ =\ \_\_lsx\_vpickod\_w((\_\_m128i)t2,\ (\_\_m128i)t2);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01108\ \textcolor{preprocessor}{\ \ \ \ \_\_m128\ t5\ =\ \_\_lsx\_vfadd\_s((\_\_m128)t3,\ (\_\_m128)t4);\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01109\ \textcolor{preprocessor}{\ \ \ \ res\ =\ (ggml\_float)\ ((v4f32)t5)[0];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01110\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{01111\ }
+\DoxyCodeLine{01112\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x4}}
+\DoxyCodeLine{01113\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x4\_ZERO}}
+\DoxyCodeLine{01114\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x4\_SET1}}
+\DoxyCodeLine{01115\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x4\_LOAD}}
+\DoxyCodeLine{01116\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x4\_STORE}}
+\DoxyCodeLine{01117\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{01118\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x4\_ADD}}
+\DoxyCodeLine{01119\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x4\_MUL}}
+\DoxyCodeLine{01120\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{01121\ }
+\DoxyCodeLine{01122\ \textcolor{comment}{//\ F16\ LSX}}
+\DoxyCodeLine{01123\ }
+\DoxyCodeLine{01124\ \textcolor{preprocessor}{\#define\ GGML\_F16\_STEP\ 32}}
+\DoxyCodeLine{01125\ \textcolor{preprocessor}{\#define\ GGML\_F16\_EPR\ \ 4}}
+\DoxyCodeLine{01126\ }
+\DoxyCodeLine{01127\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \_\_m128\ \_\_lsx\_f16x4\_load(\textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{01128\ \ \ \ \ \textcolor{keywordtype}{float}\ tmp[4];}
+\DoxyCodeLine{01129\ }
+\DoxyCodeLine{01130\ \ \ \ \ tmp[0]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[0]);}
+\DoxyCodeLine{01131\ \ \ \ \ tmp[1]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[1]);}
+\DoxyCodeLine{01132\ \ \ \ \ tmp[2]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[2]);}
+\DoxyCodeLine{01133\ \ \ \ \ tmp[3]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[3]);}
+\DoxyCodeLine{01134\ }
+\DoxyCodeLine{01135\ \ \ \ \ \textcolor{keywordflow}{return}\ (\_\_m128)\_\_lsx\_vld(tmp,\ 0);}
+\DoxyCodeLine{01136\ \}}
+\DoxyCodeLine{01137\ }
+\DoxyCodeLine{01138\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \_\_lsx\_f16x4\_store(ggml\_fp16\_t\ *\ x,\ \_\_m128\ y)\ \{}
+\DoxyCodeLine{01139\ \ \ \ \ \textcolor{keywordtype}{float}\ arr[4];}
+\DoxyCodeLine{01140\ }
+\DoxyCodeLine{01141\ \ \ \ \ \_\_lsx\_vst(y,\ arr,\ 0);}
+\DoxyCodeLine{01142\ }
+\DoxyCodeLine{01143\ \ \ \ \ x[0]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[0]);}
+\DoxyCodeLine{01144\ \ \ \ \ x[1]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[1]);}
+\DoxyCodeLine{01145\ \ \ \ \ x[2]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[2]);}
+\DoxyCodeLine{01146\ \ \ \ \ x[3]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[3]);}
+\DoxyCodeLine{01147\ \}}
+\DoxyCodeLine{01148\ }
+\DoxyCodeLine{01149\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128}}
+\DoxyCodeLine{01150\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_ZERO\ \ \ \ \ \ \ \ (\_\_m128)\_\_lsx\_vldi(0)}}
+\DoxyCodeLine{01151\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_SET1(x)\ \ \ \ \ (\_\_m128)\_\_lsx\_vreplfr2vr\_s((x))}}
+\DoxyCodeLine{01152\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_LOAD(x)\ \ \ \ \ (\_\_m128)\_\_lsx\_f16x4\_load(x)}}
+\DoxyCodeLine{01153\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_STORE(x,\ y)\ \_\_lsx\_f16x4\_store(x,\ y)}}
+\DoxyCodeLine{01154\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_FMA\ \ \ \ \ \ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{01155\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_ADD\ \ \ \ \ \ \ \ \ \_\_lsx\_vfadd\_s}}
+\DoxyCodeLine{01156\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_MUL\ \ \ \ \ \ \ \ \ \_\_lsx\_vfmul\_s}}
+\DoxyCodeLine{01157\ \textcolor{preprocessor}{\#define\ GGML\_F32Cx4\_REDUCE\ \ \ \ \ \ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{01158\ }
+\DoxyCodeLine{01159\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4}}
+\DoxyCodeLine{01160\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_ZERO}}
+\DoxyCodeLine{01161\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_SET1}}
+\DoxyCodeLine{01162\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ \ GGML\_F32Cx4\_LOAD(p)}}
+\DoxyCodeLine{01163\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ \ GGML\_F32Cx4\_STORE(p,\ r[i])}}
+\DoxyCodeLine{01164\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_FMA}}
+\DoxyCodeLine{01165\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_ADD}}
+\DoxyCodeLine{01166\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_MUL}}
+\DoxyCodeLine{01167\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ \ GGML\_F32Cx4\_REDUCE}}
+\DoxyCodeLine{01168\ }
+\DoxyCodeLine{01169\ \textcolor{preprocessor}{\#elif\ defined(\_\_VXE\_\_)\ ||\ defined(\_\_VXE2\_\_)}}
+\DoxyCodeLine{01170\ }
+\DoxyCodeLine{01171\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{01172\ }
+\DoxyCodeLine{01173\ \textcolor{comment}{//\ F32\ s390x}}
+\DoxyCodeLine{01174\ }
+\DoxyCodeLine{01175\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 32}}
+\DoxyCodeLine{01176\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 4}}
+\DoxyCodeLine{01177\ }
+\DoxyCodeLine{01178\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\ \ \ \ \ \ \ \ \ \ \ \ \ \ float32x4\_t}}
+\DoxyCodeLine{01179\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ZERO\ \ \ \ \ \ \ \ \ vec\_splats(0.0f)}}
+\DoxyCodeLine{01180\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_SET1\ \ \ \ \ \ \ \ \ vec\_splats}}
+\DoxyCodeLine{01181\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_LOAD(p)\ \ \ \ \ \ vec\_xl(0,\ p)}}
+\DoxyCodeLine{01182\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_STORE(p,\ r)\ \ vec\_xst(r,\ 0,\ p)}}
+\DoxyCodeLine{01183\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_FMA(a,\ b,\ c)\ vec\_madd(b,\ c,\ a)}}
+\DoxyCodeLine{01184\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ADD\ \ \ \ \ \ \ \ \ \ vec\_add}}
+\DoxyCodeLine{01185\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_MUL\ \ \ \ \ \ \ \ \ \ vec\_mul}}
+\DoxyCodeLine{01186\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_REDUCE(res,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01187\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01188\ \textcolor{preprocessor}{\ \ \ \ int\ offset\ =\ GGML\_F32\_ARR\ >>\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01189\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01190\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ vec\_add(x[i],\ x[offset\ +\ i]);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01191\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01192\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01193\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01194\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ vec\_add(x[i],\ x[offset\ +\ i]);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01195\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01196\ \textcolor{preprocessor}{\ \ \ \ offset\ >>=\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01197\ \textcolor{preprocessor}{\ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ offset;\ ++i)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01198\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ x[i]\ =\ vec\_add(x[i],\ x[offset\ +\ i]);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01199\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01200\ \textcolor{preprocessor}{\ \ \ \ float32x4\_t\ tmp\ =\ x[0]\ +\ vec\_reve(x[0]);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01201\ \textcolor{preprocessor}{\ \ \ \ res\ =\ tmp[0]\ +\ tmp[1];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01202\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{01203\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_REDUCE\_4(res,\ s0,\ s1,\ s2,\ s3)\ \(\backslash\)}}
+\DoxyCodeLine{01204\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01205\ \textcolor{preprocessor}{\ \ \ \ float32x4\_t\ v\ =\ vec\_add(vec\_add(s0,\ s1),\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01206\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vec\_add(s2,\ s3));\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01207\ \textcolor{preprocessor}{\ \ \ \ v\ =\ vec\_add(v,\ vec\_sld(v,\ v,\ 8));\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01208\ \textcolor{preprocessor}{\ \ \ \ v\ =\ vec\_add(v,\ vec\_sld(v,\ v,\ 4));\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01209\ \textcolor{preprocessor}{\ \ \ \ res\ +=\ (ggml\_float)vec\_extract(v,\ 0);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01210\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{01211\ }
+\DoxyCodeLine{01212\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x4}}
+\DoxyCodeLine{01213\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x4\_ZERO}}
+\DoxyCodeLine{01214\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x4\_SET1}}
+\DoxyCodeLine{01215\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x4\_LOAD}}
+\DoxyCodeLine{01216\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x4\_STORE}}
+\DoxyCodeLine{01217\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{01218\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x4\_ADD}}
+\DoxyCodeLine{01219\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x4\_MUL}}
+\DoxyCodeLine{01220\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{01221\ }
+\DoxyCodeLine{01222\ \textcolor{comment}{//\ F16\ s390x}}
+\DoxyCodeLine{01223\ \textcolor{preprocessor}{\#define\ GGML\_F16\_STEP\ GGML\_F32\_STEP}}
+\DoxyCodeLine{01224\ \textcolor{preprocessor}{\#define\ GGML\_F16\_EPR\ \ GGML\_F32\_EPR}}
+\DoxyCodeLine{01225\ }
+\DoxyCodeLine{01226\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ float32x4\_t\ \_\_lzs\_f16cx4\_load(\textcolor{keyword}{const}\ ggml\_fp16\_t\ *\ x)\ \{}
+\DoxyCodeLine{01227\ \ \ \ \ \textcolor{keywordtype}{float}\ tmp[4];}
+\DoxyCodeLine{01228\ }
+\DoxyCodeLine{01229\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 4;\ i++)\ \{}
+\DoxyCodeLine{01230\ \ \ \ \ \ \ \ \ tmp[i]\ =\ GGML\_CPU\_FP16\_TO\_FP32(x[i]);}
+\DoxyCodeLine{01231\ \ \ \ \ \}}
+\DoxyCodeLine{01232\ }
+\DoxyCodeLine{01233\ \ \ \ \ \textcolor{comment}{//\ note:\ keep\ type-\/cast\ here\ to\ prevent\ compiler\ bugs}}
+\DoxyCodeLine{01234\ \ \ \ \ \textcolor{comment}{//\ see:\ https://github.com/ggml-\/org/llama.cpp/issues/12846}}
+\DoxyCodeLine{01235\ \ \ \ \ \textcolor{keywordflow}{return}\ vec\_xl(0,\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)(tmp));}
+\DoxyCodeLine{01236\ \}}
+\DoxyCodeLine{01237\ }
+\DoxyCodeLine{01238\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \_\_lzs\_f16cx4\_store(ggml\_fp16\_t\ *\ x,\ float32x4\_t\ v\_y)\ \{}
+\DoxyCodeLine{01239\ \ \ \ \ \textcolor{keywordtype}{float}\ arr[4];}
+\DoxyCodeLine{01240\ }
+\DoxyCodeLine{01241\ \ \ \ \ \textcolor{comment}{//\ note:\ keep\ type-\/cast\ here\ to\ prevent\ compiler\ bugs}}
+\DoxyCodeLine{01242\ \ \ \ \ \textcolor{comment}{//\ see:\ https://github.com/ggml-\/org/llama.cpp/issues/12846}}
+\DoxyCodeLine{01243\ \ \ \ \ vec\_xst(v\_y,\ 0,\ (\textcolor{keywordtype}{float}\ *)(arr));}
+\DoxyCodeLine{01244\ }
+\DoxyCodeLine{01245\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 4;\ i++)\ \{}
+\DoxyCodeLine{01246\ \ \ \ \ \ \ \ \ x[i]\ =\ GGML\_CPU\_FP32\_TO\_FP16(arr[i]);}
+\DoxyCodeLine{01247\ \ \ \ \ \}}
+\DoxyCodeLine{01248\ \}}
+\DoxyCodeLine{01249\ }
+\DoxyCodeLine{01250\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32x4}}
+\DoxyCodeLine{01251\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ZERO\ \ \ \ \ \ \ \ \ \ \ GGML\_F32x4\_ZERO}}
+\DoxyCodeLine{01252\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_SET1\ \ \ \ \ \ \ \ \ \ \ GGML\_F32x4\_SET1}}
+\DoxyCodeLine{01253\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_LOAD(p,\ i)\ \ \ \ \ \_\_lzs\_f16cx4\_load(p)}}
+\DoxyCodeLine{01254\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_STORE(p,\ r,\ i)\ \_\_lzs\_f16cx4\_store(p,\ r[i])}}
+\DoxyCodeLine{01255\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_FMA\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{01256\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_ADD\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32x4\_ADD}}
+\DoxyCodeLine{01257\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_MUL\ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32x4\_MUL}}
+\DoxyCodeLine{01258\ \textcolor{preprocessor}{\#define\ GGML\_F16\_VEC\_REDUCE\ \ \ \ \ \ \ \ \ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{01259\ }
+\DoxyCodeLine{01260\ \textcolor{comment}{//\ BF16\ s390x}}
+\DoxyCodeLine{01261\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_STEP\ 16}}
+\DoxyCodeLine{01262\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_EPR\ \ 8}}
+\DoxyCodeLine{01263\ }
+\DoxyCodeLine{01264\ \textcolor{preprocessor}{\#define\ GGML\_BF16x8\ \ \ \ \ \ \ \ \ \_\_vector\ unsigned\ short}}
+\DoxyCodeLine{01265\ \textcolor{preprocessor}{\#define\ GGML\_BF16x8\_ZERO\ \ \ \ vec\_splats((unsigned\ short)0)}}
+\DoxyCodeLine{01266\ \textcolor{preprocessor}{\#define\ GGML\_BF16x8\_LOAD(p)\ vec\_xl(0,\ (const\ unsigned\ short\ *)(p))}}
+\DoxyCodeLine{01267\ }
+\DoxyCodeLine{01268\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_VEC\ \ \ \ \ \ GGML\_BF16x8}}
+\DoxyCodeLine{01269\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_VEC\_ZERO\ GGML\_BF16x8\_ZERO}}
+\DoxyCodeLine{01270\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_VEC\_LOAD\ GGML\_BF16x8\_LOAD}}
+\DoxyCodeLine{01271\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_TO\_F32\_LO(v)\ ((float32x4\_t)\ vec\_mergel((v),\ GGML\_BF16\_VEC\_ZERO))}}
+\DoxyCodeLine{01272\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_TO\_F32\_HI(v)\ ((float32x4\_t)\ vec\_mergeh((v),\ GGML\_BF16\_VEC\_ZERO))}}
+\DoxyCodeLine{01273\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_FMA\_LO(acc,\ x,\ y)\ \(\backslash\)}}
+\DoxyCodeLine{01274\ \textcolor{preprocessor}{\ \ \ \ (acc)\ =\ GGML\_F32x4\_FMA((acc),\ GGML\_BF16\_TO\_F32\_LO(x),\ GGML\_BF16\_TO\_F32\_LO(y))}}
+\DoxyCodeLine{01275\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_FMA\_HI(acc,\ x,\ y)\ \(\backslash\)}}
+\DoxyCodeLine{01276\ \textcolor{preprocessor}{\ \ \ \ (acc)\ =\ GGML\_F32x4\_FMA((acc),\ GGML\_BF16\_TO\_F32\_HI(x),\ GGML\_BF16\_TO\_F32\_HI(y))}}
+\DoxyCodeLine{01277\ }
+\DoxyCodeLine{01278\ \textcolor{preprocessor}{\#elif\ defined(\_\_riscv\_v\_intrinsic)}}
+\DoxyCodeLine{01279\ }
+\DoxyCodeLine{01280\ \textcolor{comment}{//\ compatible\ with\ vlen\ >=\ 128}}
+\DoxyCodeLine{01281\ }
+\DoxyCodeLine{01282\ \textcolor{preprocessor}{\#define\ GGML\_SIMD}}
+\DoxyCodeLine{01283\ }
+\DoxyCodeLine{01284\ \textcolor{comment}{//\ F32}}
+\DoxyCodeLine{01285\ }
+\DoxyCodeLine{01286\ \textcolor{preprocessor}{\#define\ GGML\_F32\_STEP\ 16}}
+\DoxyCodeLine{01287\ \textcolor{preprocessor}{\#define\ GGML\_F32\_EPR\ \ 4}}
+\DoxyCodeLine{01288\ }
+\DoxyCodeLine{01289\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\ \ \ \ \ \ \ \ \ \ \ \ \ \ vfloat32m1\_t}}
+\DoxyCodeLine{01290\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ZERO\ \ \ \ \ \ \ \ \ \_\_riscv\_vfmv\_v\_f\_f32m1(0.0f,\ GGML\_F32\_EPR)}}
+\DoxyCodeLine{01291\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_SET1(x)\ \ \ \ \ \ \_\_riscv\_vfmv\_v\_f\_f32m1(x,\ GGML\_F32\_EPR)}}
+\DoxyCodeLine{01292\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_LOAD(x)\ \ \ \ \ \ \_\_riscv\_vle32\_v\_f32m1(x,\ GGML\_F32\_EPR)}}
+\DoxyCodeLine{01293\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_STORE(b,\ v)\ \ \_\_riscv\_vse32\_v\_f32m1(b,\ v,\ GGML\_F32\_EPR)}}
+\DoxyCodeLine{01294\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_FMA(a,\ b,\ c)\ \_\_riscv\_vfmacc\_vv\_f32m1(a,\ b,\ c,\ GGML\_F32\_EPR)}}
+\DoxyCodeLine{01295\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_ADD(a,\ b)\ \ \ \ \_\_riscv\_vfadd\_vv\_f32m1(a,\ b,\ GGML\_F32\_EPR)}}
+\DoxyCodeLine{01296\ \textcolor{preprocessor}{\#define\ GGML\_F32x4\_MUL(a,\ b)\ \ \ \ \_\_riscv\_vfmul\_vv\_f32m1(a,\ b,\ GGML\_F32\_EPR)}}
+\DoxyCodeLine{01297\ }
+\DoxyCodeLine{01298\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\ \ \ \ \ \ \ \ GGML\_F32x4}}
+\DoxyCodeLine{01299\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ZERO\ \ \ GGML\_F32x4\_ZERO}}
+\DoxyCodeLine{01300\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_SET1\ \ \ GGML\_F32x4\_SET1}}
+\DoxyCodeLine{01301\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_LOAD\ \ \ GGML\_F32x4\_LOAD}}
+\DoxyCodeLine{01302\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_STORE\ \ GGML\_F32x4\_STORE}}
+\DoxyCodeLine{01303\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_FMA\ \ \ \ GGML\_F32x4\_FMA}}
+\DoxyCodeLine{01304\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_ADD\ \ \ \ GGML\_F32x4\_ADD}}
+\DoxyCodeLine{01305\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_MUL\ \ \ \ GGML\_F32x4\_MUL}}
+\DoxyCodeLine{01306\ \textcolor{preprocessor}{\#define\ GGML\_F32\_VEC\_REDUCE\ GGML\_F32x4\_REDUCE}}
+\DoxyCodeLine{01307\ }
+\DoxyCodeLine{01308\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01309\ }
+\DoxyCodeLine{01310\ \textcolor{comment}{//\ GGML\_F32\_ARR\ /\ GGML\_F16\_ARR}}
+\DoxyCodeLine{01311\ \textcolor{comment}{//\ \ \ number\ of\ registers\ to\ use\ per\ step}}
+\DoxyCodeLine{01312\ \textcolor{preprocessor}{\#ifdef\ GGML\_SIMD}}
+\DoxyCodeLine{01313\ \textcolor{preprocessor}{\#define\ GGML\_F32\_ARR\ (GGML\_F32\_STEP/GGML\_F32\_EPR)}}
+\DoxyCodeLine{01314\ \textcolor{preprocessor}{\#define\ GGML\_F16\_ARR\ (GGML\_F16\_STEP/GGML\_F16\_EPR)}}
+\DoxyCodeLine{01315\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01316\ }
+\DoxyCodeLine{01317\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{01318\ \}}
+\DoxyCodeLine{01319\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

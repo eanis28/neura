@@ -1,0 +1,83 @@
+\doxysection{ggml\+\_\+cann\+\_\+nz\+\_\+workspace Struct Reference}
+\hypertarget{structggml__cann__nz__workspace}{}\label{structggml__cann__nz__workspace}\index{ggml\_cann\_nz\_workspace@{ggml\_cann\_nz\_workspace}}
+
+
+Workspace for caching NZ buffers per device.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__nz__workspace_a5b1c0c4e90774e65e53b1d10e9bdedec}\label{structggml__cann__nz__workspace_a5b1c0c4e90774e65e53b1d10e9bdedec} 
+{\bfseries ggml\+\_\+cann\+\_\+nz\+\_\+workspace} ()
+\begin{DoxyCompactList}\small\item\em Constructor. Initializes the workspace with no allocated memory. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{structggml__cann__nz__workspace_a65bc992ed644fa0256cee28c2ad5c843}{clear}} ()
+\begin{DoxyCompactList}\small\item\em Free cached memory and reset the workspace. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{structggml__cann__nz__workspace_a28dbe6ac8cef8bfb236da201a993be51}{realloc}} (size\+\_\+t new\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Allocate or reallocate the workspace buffer. \end{DoxyCompactList}\item 
+void \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__cann__nz__workspace_a84862808f8d7353c14786d159d3bbfb3}{get}} () const
+\begin{DoxyCompactList}\small\item\em Get the device buffer pointer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__nz__workspace_a1c4940d841675d9899097499f962b2d8}\label{structggml__cann__nz__workspace_a1c4940d841675d9899097499f962b2d8} 
+void \texorpdfstring{$\ast$}{*} {\bfseries ptr}
+\item 
+\Hypertarget{structggml__cann__nz__workspace_a2841351f3988ec8bfcb8dfe9ef1bb1d1}\label{structggml__cann__nz__workspace_a2841351f3988ec8bfcb8dfe9ef1bb1d1} 
+size\+\_\+t {\bfseries allocated}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Workspace for caching NZ buffers per device. 
+
+This struct manages a device buffer used in NZ computations. It supports allocation, reallocation, and clearing of cached memory. \doxylink{requirements_The}{The} struct is designed to be used with a global array, one per device. 
+
+\label{doc-func-members}
+\Hypertarget{structggml__cann__nz__workspace_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structggml__cann__nz__workspace_a65bc992ed644fa0256cee28c2ad5c843}\index{ggml\_cann\_nz\_workspace@{ggml\_cann\_nz\_workspace}!clear@{clear}}
+\index{clear@{clear}!ggml\_cann\_nz\_workspace@{ggml\_cann\_nz\_workspace}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily \label{structggml__cann__nz__workspace_a65bc992ed644fa0256cee28c2ad5c843} 
+void ggml\+\_\+cann\+\_\+nz\+\_\+workspace::\+clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Free cached memory and reset the workspace. 
+
+If a buffer has been allocated, this function releases it using aclrt\+Free and resets internal state. \Hypertarget{structggml__cann__nz__workspace_a84862808f8d7353c14786d159d3bbfb3}\index{ggml\_cann\_nz\_workspace@{ggml\_cann\_nz\_workspace}!get@{get}}
+\index{get@{get}!ggml\_cann\_nz\_workspace@{ggml\_cann\_nz\_workspace}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily \label{structggml__cann__nz__workspace_a84862808f8d7353c14786d159d3bbfb3} 
+void \texorpdfstring{$\ast$}{*} ggml\+\_\+cann\+\_\+nz\+\_\+workspace::\+get (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the device buffer pointer. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to the allocated buffer, or nullptr if not allocated. 
+\end{DoxyReturn}
+\Hypertarget{structggml__cann__nz__workspace_a28dbe6ac8cef8bfb236da201a993be51}\index{ggml\_cann\_nz\_workspace@{ggml\_cann\_nz\_workspace}!realloc@{realloc}}
+\index{realloc@{realloc}!ggml\_cann\_nz\_workspace@{ggml\_cann\_nz\_workspace}}
+\doxysubsubsection{\texorpdfstring{realloc()}{realloc()}}
+{\footnotesize\ttfamily \label{structggml__cann__nz__workspace_a28dbe6ac8cef8bfb236da201a993be51} 
+void ggml\+\_\+cann\+\_\+nz\+\_\+workspace::\+realloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{new\+\_\+size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Allocate or reallocate the workspace buffer. 
+
+If the requested size is larger than the currently allocated size, the old buffer will be freed and a new buffer of the requested size will be allocated on the device.
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+size} & Size in bytes to allocate for the workspace. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+ggml-\/cann.\+cpp\end{DoxyCompactItemize}

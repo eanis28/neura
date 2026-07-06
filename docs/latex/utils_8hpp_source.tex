@@ -1,0 +1,25 @@
+\doxysection{utils.\+hpp}
+\hypertarget{utils_8hpp_source}{}\label{utils_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/zdnn/utils.hpp@{whisper.cpp/ggml/src/ggml-\/zdnn/utils.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GGML\_ZDNN\_UTILITIES\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GGML\_ZDNN\_UTILITIES\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}common.hpp"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ zdnn\_data\_types\ ggml\_zdnn\_type\_mapping(ggml\_type\ type);}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keywordtype}{void}\ ggml\_zdnn\_create\_tensor(zdnn\_tensor\_desc\ \&\ pre\_tfm\_desc,}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ zdnn\_tensor\_desc\ \&\ tfm\_desc,}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ zdnn\_ztensor\ \ \ \ \ \&\ ztensor,}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ \ \ \ \ \ \ *\ src,}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ \ \ \ \ \ \ \ \ \ \ *\ ne,}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ zdnn\_data\_layouts\ \ \ layout);}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keywordtype}{void}\ ggml\_zdnn\_load\_tensor(zdnn\_ztensor\ \&\ ztensor,\ \textcolor{keywordtype}{void}\ *\ buffer);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{void}\ ggml\_zdnn\_init\_tensor(\doxymbox{\hyperlink{structggml__backend__zdnn__buffer}{ggml\_backend\_zdnn\_buffer}}\ *\ buffer,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GGML\_ZDNN\_UTILITIES\_HPP}}
+
+\end{DoxyCode}

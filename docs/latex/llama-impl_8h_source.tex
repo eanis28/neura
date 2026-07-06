@@ -1,0 +1,81 @@
+\doxysection{llama-\/impl.h}
+\hypertarget{llama-impl_8h_source}{}\label{llama-impl_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/impl.h@{whisper.cpp/examples/talk-\/llama/llama-\/impl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}\ \textcolor{comment}{//\ for\ ggml\_log\_level}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifdef\ \_\_GNUC\_\_}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#\ \ \ \ if\ defined(\_\_MINGW32\_\_)\ \&\&\ !defined(\_\_clang\_\_)}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ LLAMA\_ATTRIBUTE\_FORMAT(...)\ \_\_attribute\_\_((format(gnu\_printf,\ \_\_VA\_ARGS\_\_)))}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ LLAMA\_ATTRIBUTE\_FORMAT(...)\ \_\_attribute\_\_((format(printf,\ \_\_VA\_ARGS\_\_)))}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#\ \ \ \ define\ LLAMA\_ATTRIBUTE\_FORMAT(...)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{comment}{//}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ logging}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ LLAMA\_ATTRIBUTE\_FORMAT(2,\ 3)}
+\DoxyCodeLine{00023\ void\ llama\_log\_internal\ \ \ \ \ \ \ \ (ggml\_log\_level\ level,\ const\ \textcolor{keywordtype}{char}\ *\ format,\ ...);}
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{void}\ llama\_log\_callback\_default(ggml\_log\_level\ level,\ const\ \textcolor{keywordtype}{char}\ *\ text,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ LLAMA\_LOG(...)\ \ \ \ \ \ \ llama\_log\_internal(GGML\_LOG\_LEVEL\_NONE\ ,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ LLAMA\_LOG\_INFO(...)\ \ llama\_log\_internal(GGML\_LOG\_LEVEL\_INFO\ ,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ LLAMA\_LOG\_WARN(...)\ \ llama\_log\_internal(GGML\_LOG\_LEVEL\_WARN\ ,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ LLAMA\_LOG\_ERROR(...)\ llama\_log\_internal(GGML\_LOG\_LEVEL\_ERROR,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ LLAMA\_LOG\_DEBUG(...)\ llama\_log\_internal(GGML\_LOG\_LEVEL\_DEBUG,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ LLAMA\_LOG\_CONT(...)\ \ llama\_log\_internal(GGML\_LOG\_LEVEL\_CONT\ ,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ helpers}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00038\ \textcolor{keyword}{struct\ }no\_init\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ T\ value;}
+\DoxyCodeLine{00040\ \ \ \ \ no\_init()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00041\ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{struct\ }time\_meas\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ time\_meas(int64\_t\ \&\ t\_acc,\ \textcolor{keywordtype}{bool}\ disable\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00045\ \ \ \ \ \string~time\_meas();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ t\_start\_us;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ int64\_t\ \&\ t\_acc;}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00053\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structbuffer__view}{buffer\_view}}\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ T\ *\ data;}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size\ =\ 0;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_data()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ data\ \&\&\ size\ >\ 0;}
+\DoxyCodeLine{00059\ \ \ \ \ \}}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{void}\ replace\_all(std::string\ \&\ s,\ \textcolor{keyword}{const}\ std::string\ \&\ search,\ \textcolor{keyword}{const}\ std::string\ \&\ replace);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ TODO:\ rename\ to\ llama\_format\ ?}}
+\DoxyCodeLine{00065\ LLAMA\_ATTRIBUTE\_FORMAT(1,\ 2)}
+\DoxyCodeLine{00066\ std::\textcolor{keywordtype}{string}\ format(const\ \textcolor{keywordtype}{char}\ *\ fmt,\ ...);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ std::\textcolor{keywordtype}{string}\ llama\_format\_tensor\_shape(const\ std::vector<int64\_t>\ \&\ ne);}
+\DoxyCodeLine{00069\ std::\textcolor{keywordtype}{string}\ llama\_format\_tensor\_shape(const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ std::\textcolor{keywordtype}{string}\ gguf\_kv\_to\_str(const\ struct\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx\_gguf,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ LLAMA\_TENSOR\_NAME\_FATTN\ \ \ "{}\_\_fattn\_\_"{}}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ LLAMA\_TENSOR\_NAME\_FGDN\_AR\ "{}\_\_fgdn\_ar\_\_"{}}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ LLAMA\_TENSOR\_NAME\_FGDN\_CH\ "{}\_\_fgdn\_ch\_\_"{}}}
+
+\end{DoxyCode}

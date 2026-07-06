@@ -1,0 +1,40 @@
+\doxysection{Landing.\+h File Reference}
+\hypertarget{_landing_8h}{}\label{_landing_8h}\index{Landing.h@{Landing.h}}
+
+
+Landing page interface for the Neura application.  
+
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{_landing_8h_a8e78e4dc209a56d251b1f702a4bd8043}{run\+Landing\+Page}} ()
+\begin{DoxyCompactList}\small\item\em Displays the application landing page with navigation options. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Landing page interface for the Neura application. 
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{_landing_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_landing_8h_a8e78e4dc209a56d251b1f702a4bd8043}\index{Landing.h@{Landing.h}!runLandingPage@{runLandingPage}}
+\index{runLandingPage@{runLandingPage}!Landing.h@{Landing.h}}
+\doxysubsubsection{\texorpdfstring{runLandingPage()}{runLandingPage()}}
+{\footnotesize\ttfamily \label{_landing_8h_a8e78e4dc209a56d251b1f702a4bd8043} 
+bool run\+Landing\+Page (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Displays the application landing page with navigation options. 
+
+Creates and runs a modal window showing the Neura landing screen with buttons for Start, Tutorial, and Settings. \doxylink{requirements_The}{The} window is centered on screen at half the desktop resolution. User can navigate to different parts of the application or close to exit.
+
+\begin{DoxyReturn}{Returns}
+true if user clicked Start or Tutorial (proceed to main app), false if user closed the window or pressed Escape (exit app) 
+\end{DoxyReturn}

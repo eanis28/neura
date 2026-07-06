@@ -1,0 +1,52 @@
+\doxysection{ggml\+\_\+backend\+\_\+i Struct Reference}
+\hypertarget{structggml__backend__i}{}\label{structggml__backend__i}\index{ggml\_backend\_i@{ggml\_backend\_i}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__i_abf1aab5936524a6228d15322f60aed13}\label{structggml__backend__i_abf1aab5936524a6228d15322f60aed13} 
+const char \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+name} )(ggml\+\_\+backend\+\_\+t backend)
+\item 
+\Hypertarget{structggml__backend__i_a1a30977c78f527fe3e82019ac8204697}\label{structggml__backend__i_a1a30977c78f527fe3e82019ac8204697} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries free} )(ggml\+\_\+backend\+\_\+t backend)
+\item 
+\Hypertarget{structggml__backend__i_af99d14df3348159b4575519d16829855}\label{structggml__backend__i_af99d14df3348159b4575519d16829855} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries set\+\_\+tensor\+\_\+async} )(ggml\+\_\+backend\+\_\+t backend, struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, const void \texorpdfstring{$\ast$}{*}data, size\+\_\+t offset, size\+\_\+t size)
+\item 
+\Hypertarget{structggml__backend__i_a7c8bd29401e555a882b8fe57742babe8}\label{structggml__backend__i_a7c8bd29401e555a882b8fe57742babe8} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+tensor\+\_\+async} )(ggml\+\_\+backend\+\_\+t backend, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor, void \texorpdfstring{$\ast$}{*}data, size\+\_\+t offset, size\+\_\+t size)
+\item 
+\Hypertarget{structggml__backend__i_ab0cff053c36af0f6d9d3350572949295}\label{structggml__backend__i_ab0cff053c36af0f6d9d3350572949295} 
+bool(\texorpdfstring{$\ast$}{*} {\bfseries cpy\+\_\+tensor\+\_\+async} )(ggml\+\_\+backend\+\_\+t backend\+\_\+src, ggml\+\_\+backend\+\_\+t backend\+\_\+dst, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}src, struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}dst)
+\item 
+\Hypertarget{structggml__backend__i_af7f34a8d41d7992e98be28e2a70638ae}\label{structggml__backend__i_af7f34a8d41d7992e98be28e2a70638ae} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries synchronize} )(ggml\+\_\+backend\+\_\+t backend)
+\item 
+\Hypertarget{structggml__backend__i_a05013cea7f279a4835fe6a20cfba7f2d}\label{structggml__backend__i_a05013cea7f279a4835fe6a20cfba7f2d} 
+ggml\+\_\+backend\+\_\+graph\+\_\+plan\+\_\+t(\texorpdfstring{$\ast$}{*} {\bfseries graph\+\_\+plan\+\_\+create} )(ggml\+\_\+backend\+\_\+t backend, const struct \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph)
+\item 
+\Hypertarget{structggml__backend__i_a65f03b5f93f900b10bb1f9e6ee8b7446}\label{structggml__backend__i_a65f03b5f93f900b10bb1f9e6ee8b7446} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries graph\+\_\+plan\+\_\+free} )(ggml\+\_\+backend\+\_\+t backend, ggml\+\_\+backend\+\_\+graph\+\_\+plan\+\_\+t plan)
+\item 
+\Hypertarget{structggml__backend__i_a808c9c0acf1d1a924374027324ab5170}\label{structggml__backend__i_a808c9c0acf1d1a924374027324ab5170} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries graph\+\_\+plan\+\_\+update} )(ggml\+\_\+backend\+\_\+t backend, ggml\+\_\+backend\+\_\+graph\+\_\+plan\+\_\+t plan, const struct \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph)
+\item 
+\Hypertarget{structggml__backend__i_a8d3c52cb715c77d30962564c90591b9b}\label{structggml__backend__i_a8d3c52cb715c77d30962564c90591b9b} 
+enum ggml\+\_\+status(\texorpdfstring{$\ast$}{*} {\bfseries graph\+\_\+plan\+\_\+compute} )(ggml\+\_\+backend\+\_\+t backend, ggml\+\_\+backend\+\_\+graph\+\_\+plan\+\_\+t plan)
+\item 
+\Hypertarget{structggml__backend__i_a67eba069f7bb459a116e19f72c8d00ef}\label{structggml__backend__i_a67eba069f7bb459a116e19f72c8d00ef} 
+enum ggml\+\_\+status(\texorpdfstring{$\ast$}{*} {\bfseries graph\+\_\+compute} )(ggml\+\_\+backend\+\_\+t backend, struct \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph)
+\item 
+\Hypertarget{structggml__backend__i_a251d3c54dc7ea177e1716fba8b826bcf}\label{structggml__backend__i_a251d3c54dc7ea177e1716fba8b826bcf} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries event\+\_\+record} )(ggml\+\_\+backend\+\_\+t backend, ggml\+\_\+backend\+\_\+event\+\_\+t event)
+\item 
+\Hypertarget{structggml__backend__i_a0873939f86a0bafe1135cf61907dac47}\label{structggml__backend__i_a0873939f86a0bafe1135cf61907dac47} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries event\+\_\+wait} )(ggml\+\_\+backend\+\_\+t backend, ggml\+\_\+backend\+\_\+event\+\_\+t event)
+\item 
+\Hypertarget{structggml__backend__i_a5d01cde7dcf298e46c90c6bcf909ab1b}\label{structggml__backend__i_a5d01cde7dcf298e46c90c6bcf909ab1b} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries graph\+\_\+optimize} )(ggml\+\_\+backend\+\_\+t backend, struct \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}cgraph)
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/backend-\/impl.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,63 @@
+\doxysection{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+cross Class Reference}
+\hypertarget{classllm__graph__input__attn__cross}{}\label{classllm__graph__input__attn__cross}\index{llm\_graph\_input\_attn\_cross@{llm\_graph\_input\_attn\_cross}}
+Inheritance diagram for llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+cross:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllm__graph__input__attn__cross}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__attn__cross_a6738450dff5f35281caf032b17813d0c}\label{classllm__graph__input__attn__cross_a6738450dff5f35281caf032b17813d0c} 
+{\bfseries llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+cross} (const \doxymbox{\hyperlink{structllama__cross}{llama\+\_\+cross}} \texorpdfstring{$\ast$}{*}cross)
+\item 
+void \doxymbox{\hyperlink{classllm__graph__input__attn__cross_a19dee53c5fbd7e0556c6c2704fac8a39}{set\+\_\+input}} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) override
+\item 
+\Hypertarget{classllm__graph__input__attn__cross_a7f0efbe015af8fb7e6e6d1fa9a49444e}\label{classllm__graph__input__attn__cross_a7f0efbe015af8fb7e6e6d1fa9a49444e} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+kq\+\_\+mask\+\_\+cross} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool {\bfseries can\+\_\+reuse} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__attn__cross_a0ec062c727fcd8a9ec07baf8f775c5cc}\label{classllm__graph__input__attn__cross_a0ec062c727fcd8a9ec07baf8f775c5cc} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries cross\+\_\+kq\+\_\+mask} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__cross_a3beaaa7d4670834156068666c68d28f7}\label{classllm__graph__input__attn__cross_a3beaaa7d4670834156068666c68d28f7} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries cross\+\_\+kq\+\_\+mask\+\_\+cnv} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__cross_a94ee8b4bdaf3445ad6f1777642049025}\label{classllm__graph__input__attn__cross_a94ee8b4bdaf3445ad6f1777642049025} 
+const \doxymbox{\hyperlink{structllama__cross}{llama\+\_\+cross}} \texorpdfstring{$\ast$}{*} {\bfseries cross} = nullptr
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries debug} = 0
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllm__graph__input__attn__cross_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllm__graph__input__attn__cross_a19dee53c5fbd7e0556c6c2704fac8a39}\index{llm\_graph\_input\_attn\_cross@{llm\_graph\_input\_attn\_cross}!set\_input@{set\_input}}
+\index{set\_input@{set\_input}!llm\_graph\_input\_attn\_cross@{llm\_graph\_input\_attn\_cross}}
+\doxysubsubsection{\texorpdfstring{set\_input()}{set\_input()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__attn__cross_a19dee53c5fbd7e0556c6c2704fac8a39} 
+void llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+cross::\+set\+\_\+input (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}}]{ubatch}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,67 @@
+\doxysection{ggml-\/metal.h}
+\hypertarget{ggml-metal_8h_source}{}\label{ggml-metal_8h_source}\index{whisper.cpp/ggml/include/ggml-\/metal.h@{whisper.cpp/ggml/include/ggml-\/metal.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Note:\ this\ description\ is\ outdated}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ An\ interface\ allowing\ to\ compute\ ggml\_cgraph\ with\ Metal}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ This\ is\ a\ fully\ functional\ interface\ that\ extends\ ggml\ with\ GPU\ support\ for\ Apple\ devices.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ A\ similar\ interface\ can\ be\ created\ for\ other\ GPU\ backends\ (e.g.\ Vulkan,\ CUDA,\ etc.)}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ How\ it\ works?}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ As\ long\ as\ your\ program\ can\ create\ and\ evaluate\ a\ ggml\_cgraph\ on\ the\ CPU,\ you\ can\ use\ this}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ interface\ to\ evaluate\ the\ same\ graph\ on\ the\ GPU.\ Instead\ of\ using\ ggml\_graph\_compute(),\ you}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ use\ ggml\_metal\_graph\_compute()\ (or\ ggml\_vulkan\_graph\_compute(),\ etc.)}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ You\ only\ need\ to\ make\ sure\ that\ all\ memory\ buffers\ that\ you\ used\ during\ the\ graph\ creation}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ are\ mapped\ to\ the\ device\ memory\ with\ the\ ggml\_metal\_add\_buffer()\ function.\ This\ mapping\ is}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ used\ during\ the\ graph\ evaluation\ to\ determine\ the\ arguments\ of\ the\ compute\ kernels.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ Synchronization\ between\ device\ and\ host\ memory\ (for\ example\ for\ input\ and\ output\ tensors)}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ is\ done\ with\ the\ ggml\_metal\_set\_tensor()\ and\ ggml\_metal\_get\_tensor()\ functions.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}};}
+\DoxyCodeLine{00031\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{//}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ backend\ API}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ user-\/code\ should\ use\ only\ these\ functions}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ TODO:\ remove\ in\ the\ future}}
+\DoxyCodeLine{00043\ GGML\_BACKEND\_API\ ggml\_backend\_t\ ggml\_backend\_metal\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_is\_metal(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_metal\_set\_abort\_callback(ggml\_backend\_t\ backend,\ ggml\_abort\_callback\ abort\_callback,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ helper\ to\ check\ if\ the\ device\ supports\ a\ specific\ family}}
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ ideally,\ the\ user\ code\ should\ be\ doing\ these\ checks}}
+\DoxyCodeLine{00051\ \textcolor{comment}{//\ ref:\ https://developer.apple.com/metal/Metal-\/Feature-\/Set-\/Tables.pdf}}
+\DoxyCodeLine{00052\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_metal\_supports\_family(ggml\_backend\_t\ backend,\ \textcolor{keywordtype}{int}\ family);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ capture\ all\ command\ buffers\ committed\ the\ next\ time\ \`{}ggml\_backend\_graph\_compute`\ is\ called}}
+\DoxyCodeLine{00055\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_metal\_capture\_next\_compute(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ \doxymbox{\hyperlink{structggml__backend__metal__reg}{ggml\_backend\_metal\_reg}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00060\ \}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

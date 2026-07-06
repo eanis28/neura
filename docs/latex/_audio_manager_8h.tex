@@ -1,0 +1,55 @@
+\doxysection{Audio\+Manager.\+h File Reference}
+\hypertarget{_audio_manager_8h}{}\label{_audio_manager_8h}\index{AudioManager.h@{AudioManager.h}}
+
+
+Real-\/time audio capture and shared buffer management for voice recognition.  
+
+
+{\ttfamily \+\#include $<$portaudio.\+h$>$}\newline
+{\ttfamily \+\#include $<$atomic$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include $<$mutex$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_shared_audio_buffer}{Shared\+Audio\+Buffer}}
+\begin{DoxyCompactList}\small\item\em Shared buffer for microphone audio samples. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_audio_manager}{Audio\+Manager}}
+\begin{DoxyCompactList}\small\item\em Manages microphone audio input using Port\+Audio. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{_audio_manager_8h_ab11ecc08c66b52541e02c1cd047f38fc}\label{_audio_manager_8h_ab11ecc08c66b52541e02c1cd047f38fc} 
+std::\+atomic$<$ float $>$ {\bfseries g\+\_\+volume}
+\begin{DoxyCompactList}\small\item\em Global volume level used by the assistant. \end{DoxyCompactList}\item 
+\Hypertarget{_audio_manager_8h_ad106db914f1ee348d991ca7ea02d06b0}\label{_audio_manager_8h_ad106db914f1ee348d991ca7ea02d06b0} 
+std::\+atomic$<$ bool $>$ {\bfseries g\+\_\+mic\+Muted}
+\begin{DoxyCompactList}\small\item\em Global flag indicating whether the microphone is muted. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_shared_audio_buffer}{Shared\+Audio\+Buffer}} \doxymbox{\hyperlink{_audio_manager_8h_ab98a94287c677aff9912ecf3ee32ea09}{g\+\_\+audio\+Buf}}
+\begin{DoxyCompactList}\small\item\em Global shared audio buffer for microphone input. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Real-\/time audio capture and shared buffer management for voice recognition. 
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-var-members}
+\Hypertarget{_audio_manager_8h_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{_audio_manager_8h_ab98a94287c677aff9912ecf3ee32ea09}\index{AudioManager.h@{AudioManager.h}!g\_audioBuf@{g\_audioBuf}}
+\index{g\_audioBuf@{g\_audioBuf}!AudioManager.h@{AudioManager.h}}
+\doxysubsubsection{\texorpdfstring{g\_audioBuf}{g\_audioBuf}}
+{\footnotesize\ttfamily \label{_audio_manager_8h_ab98a94287c677aff9912ecf3ee32ea09} 
+\doxymbox{\hyperlink{struct_shared_audio_buffer}{Shared\+Audio\+Buffer}} g\+\_\+audio\+Buf\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Global shared audio buffer for microphone input. 
+
+Global shared audio buffer for microphone input.
+
+This buffer is filled by the Port\+Audio callback and consumed by other components such as speech recognition. 

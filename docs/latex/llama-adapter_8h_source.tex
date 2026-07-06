@@ -1,0 +1,95 @@
+\doxysection{llama-\/adapter.h}
+\hypertarget{llama-adapter_8h_source}{}\label{llama-adapter_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/adapter.h@{whisper.cpp/examples/talk-\/llama/llama-\/adapter.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/cpp.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ TODO:\ pimpl}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ llama\_adapter\_cvec}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__adapter__cvec}{llama\_adapter\_cvec}}\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor\_for(\textcolor{keywordtype}{int}\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ apply\_to(\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,\ \textcolor{keywordtype}{int}\ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{bool}\ apply(}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ \&\ model,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ data,}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len,}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ n\_embd,}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ il\_start,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ il\_end);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{bool}\ init(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__model}{llama\_model}}\ \&\ model);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ int32\_t\ layer\_start\ =\ -\/1;}
+\DoxyCodeLine{00034\ \ \ \ \ int32\_t\ layer\_end\ \ \ =\ -\/1;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ std::vector<ggml\_context\_ptr>\ ctxs;}
+\DoxyCodeLine{00037\ \ \ \ \ std::vector<ggml\_backend\_buffer\_ptr>\ bufs;}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ std::vector<ggml\_tensor\ *>\ tensors;\ \textcolor{comment}{//\ per\ layer}}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{using\ }llama\_adapter\_cvec\_ptr\ =\ std::shared\_ptr<llama\_adapter\_cvec>;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//}}
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ llama\_adapter\_lora}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{struct\ }llama\_adapter\_lora\_weight\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ a\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00050\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ b\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//\ get\ actual\ scale\ based\ on\ rank\ and\ alpha}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{float}\ get\_scale(\textcolor{keywordtype}{float}\ alpha,\ \textcolor{keywordtype}{float}\ adapter\_scale)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ rank\ \ =\ (float)\ b-\/>ne[0];}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ scale\ =\ alpha\ ?\ adapter\_scale\ *\ alpha\ /\ rank\ :\ adapter\_scale;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ scale;}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ llama\_adapter\_lora\_weight()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00060\ \ \ \ \ llama\_adapter\_lora\_weight(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ a,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ b)\ :\ a(a),\ b(b)\ \{\}}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{struct\ }llama\_adapter\_lora\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ map\ tensor\ name\ to\ lora\_a\_b}}
+\DoxyCodeLine{00065\ \ \ \ \ std::unordered\_map<std::string,\ llama\_adapter\_lora\_weight>\ ab\_map;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ std::vector<ggml\_context\_ptr>\ ctxs;}
+\DoxyCodeLine{00068\ \ \ \ \ std::vector<ggml\_backend\_buffer\_ptr>\ bufs;}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{float}\ alpha;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//\ gguf\ metadata}}
+\DoxyCodeLine{00073\ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ gguf\_kv;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ activated\ lora\ (aLoRA)}}
+\DoxyCodeLine{00076\ \ \ \ \ std::vector<llama\_token>\ alora\_invocation\_tokens;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ llama\_adapter\_lora()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00079\ \ \ \ \ \string~llama\_adapter\_lora()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \doxymbox{\hyperlink{structllama__adapter__lora__weight}{llama\_adapter\_lora\_weight}}\ *\ get\_weight(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ w);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ uint32\_t\ get\_n\_nodes()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ab\_map.size()\ *\ 6u;\ \textcolor{comment}{//\ a,\ b,\ scale,\ add,\ 2\ x\ mul\_mat}}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{using\ }llama\_adapter\_loras\ =\ std::unordered\_map<llama\_adapter\_lora\ *,\ float>;}
+\DoxyCodeLine{00089\ \textcolor{keyword}{using\ }llama\_adapter\_loras\_ptr\ =\ std::unique\_ptr<llama\_adapter\_loras>;}
+
+\end{DoxyCode}

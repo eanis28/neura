@@ -1,0 +1,142 @@
+\doxysection{simd-\/gemm.h}
+\hypertarget{simd-gemm_8h_source}{}\label{simd-gemm_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/simd-\/gemm.h@{whisper.cpp/ggml/src/ggml-\/cpu/simd-\/gemm.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Computes\ C[M\ x\ N]\ +=\ A[M\ x\ K]\ *\ B[K\ x\ N]}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}simd-\/mappings.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ TODO:\ add\ support\ for\ sizeless\ vector\ types}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ defined(GGML\_SIMD)\ \&\&\ !defined(\_\_ARM\_FEATURE\_SVE)\ \&\&\ !defined(\_\_riscv\_v\_intrinsic)}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ TODO:\ untested\ on\ avx512}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ These\ are\ in\ units\ of\ GGML\_F32\_EPR}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#if\ defined(\_\_AVX512F\_\_)\ ||\ defined\ (\_\_ARM\_NEON\_\_)}}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ GEMM\_RM\ =\ 4;}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ GEMM\_RN\ =\ 4;\ \textcolor{comment}{//\ 16+4+1\ =\ 25/32}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#elif\ defined(\_\_AVX2\_\_)\ ||\ defined(\_\_AVX\_\_)}}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ GEMM\_RM\ =\ 6;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ GEMM\_RN\ =\ 2;\ \textcolor{comment}{//\ 12+2+1\ =\ 15/16}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ GEMM\_RM\ =\ 2;}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ GEMM\_RN\ =\ 2;}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ RM,\ \textcolor{keywordtype}{int}\ RN>}
+\DoxyCodeLine{00024\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ simd\_gemm\_ukernel(}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ *\ GGML\_RESTRICT\ C,}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ A,}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ B,}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{int}\ K,\ \textcolor{keywordtype}{int}\ N)}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ KN\ =\ GGML\_F32\_EPR;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ GGML\_F32\_VEC\ acc[RM][RN];}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ i\ =\ 0;\ i\ <\ RM;\ i++)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ 0;\ r\ <\ RN;\ r++)\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ acc[i][r]\ =\ GGML\_F32\_VEC\_LOAD(C\ +\ i\ *\ N\ +\ r\ *\ KN);}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00037\ \ \ \ \ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ kk\ =\ 0;\ kk\ <\ K;\ kk++)\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ Bv[RN];}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ 0;\ r\ <\ RN;\ r++)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ Bv[r]\ =\ GGML\_F32\_VEC\_LOAD(B\ +\ kk\ *\ N\ +\ r\ *\ KN);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ i\ =\ 0;\ i\ <\ RM;\ i++)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\ p\ =\ GGML\_F32\_VEC\_SET1(A[i\ *\ K\ +\ kk]);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ 0;\ r\ <\ RN;\ r++)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acc[i][r]\ =\ GGML\_F32\_VEC\_FMA(acc[i][r],\ Bv[r],\ p);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ i\ =\ 0;\ i\ <\ RM;\ i++)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ 0;\ r\ <\ RN;\ r++)\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_F32\_VEC\_STORE(C\ +\ i\ *\ N\ +\ r\ *\ KN,\ acc[i][r]);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{comment}{//\ C[M\ x\ N]\ +=\ A[M\ x\ K]\ *\ B[K\ x\ N]}}
+\DoxyCodeLine{00060\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ simd\_gemm(}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ *\ GGML\_RESTRICT\ C,}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ A,}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ B,}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{int}\ M,\ \textcolor{keywordtype}{int}\ K,\ \textcolor{keywordtype}{int}\ N)}
+\DoxyCodeLine{00065\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ KN\ =\ GGML\_F32\_EPR;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ int64\_t\ ii\ =\ 0;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ ii\ +\ GEMM\_RM\ <=\ M;\ ii\ +=\ GEMM\_RM)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ int64\_t\ jj\ =\ 0;}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ jj\ +\ GEMM\_RN\ *\ KN\ <=\ N;\ jj\ +=\ GEMM\_RN\ *\ KN)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ simd\_gemm\_ukernel<GEMM\_RM,\ GEMM\_RN>(C\ +\ jj,\ A,\ B\ +\ jj,\ K,\ N);}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ jj\ +\ KN\ <=\ N;\ jj\ +=\ KN)\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ simd\_gemm\_ukernel<GEMM\_RM,\ 1>(C\ +\ jj,\ A,\ B\ +\ jj,\ K,\ N);}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ jj\ <\ N;\ jj++)\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ i\ =\ 0;\ i\ <\ GEMM\_RM;\ i++)\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ a\ =\ C[i\ *\ N\ +\ jj];}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ kk\ =\ 0;\ kk\ <\ K;\ kk++)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ +=\ A[i\ +\ kk]\ *\ B[kk\ *\ N\ +\ jj];}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ C[i\ *\ N\ +\ jj]\ =\ a;}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ A\ +=\ GEMM\_RM\ *\ K;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ C\ +=\ GEMM\_RM\ *\ N;}
+\DoxyCodeLine{00089\ \ \ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ Tail\ rows:\ one\ at\ a\ time}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ ii\ <\ M;\ ii++)\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ int64\_t\ jj\ =\ 0;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ jj\ +\ GEMM\_RN\ *\ KN\ <=\ N;\ jj\ +=\ GEMM\_RN\ *\ KN)\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ simd\_gemm\_ukernel<1,\ GEMM\_RN>(C\ +\ jj,\ A,\ B\ +\ jj,\ K,\ N);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ jj\ +\ KN\ <=\ N;\ jj\ +=\ KN)\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ simd\_gemm\_ukernel<1,\ 1>(C\ +\ jj,\ A,\ B\ +\ jj,\ K,\ N);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ jj\ <\ N;\ jj++)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ a\ =\ C[jj];}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ kk\ =\ 0;\ kk\ <\ K;\ kk++)\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ +=\ A[kk]\ *\ B[kk\ *\ N\ +\ jj];}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ C[jj]\ =\ a;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ A\ +=\ K;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ C\ +=\ N;}
+\DoxyCodeLine{00110\ \ \ \ \ \}}
+\DoxyCodeLine{00111\ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#if\ defined(\_\_GNUC\_\_)\ \&\&\ !defined(\_\_clang\_\_)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ pop}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ scalar\ path}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ simd\_gemm(}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ *\ GGML\_RESTRICT\ C,}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ A,}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ GGML\_RESTRICT\ B,}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{int}\ M,\ \textcolor{keywordtype}{int}\ K,\ \textcolor{keywordtype}{int}\ N)}
+\DoxyCodeLine{00124\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ i\ =\ 0;\ i\ <\ M;\ i++)\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ j\ =\ 0;\ j\ <\ N;\ j++)\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ sum\ =\ C[i\ *\ N\ +\ j];}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (int64\_t\ kk\ =\ 0;\ kk\ <\ K;\ kk++)\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sum\ +=\ A[i\ *\ K\ +\ kk]\ *\ B[kk\ *\ N\ +\ j];}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ C[i\ *\ N\ +\ j]\ =\ sum;}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00133\ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SIMD}}
+
+\end{DoxyCode}

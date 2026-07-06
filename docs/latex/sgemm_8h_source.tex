@@ -1,0 +1,31 @@
+\doxysection{sgemm.\+h}
+\hypertarget{sgemm_8h_source}{}\label{sgemm_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/llamafile/sgemm.h@{whisper.cpp/ggml/src/ggml-\/cpu/llamafile/sgemm.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#if\ defined(\_\_VXE\_\_)\ ||\ defined(\_\_VXE2\_\_)}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vecintrin.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ NOINLINE\ \_\_declspec(noinline)}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ NOINLINE\ \_\_attribute\_\_((\_\_noinline\_\_))}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{bool}\ llamafile\_sgemm(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ int64\_t,\ int64\_t,\ int64\_t,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *,\ int64\_t,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *,\ int64\_t,\ \textcolor{keywordtype}{void}\ *,\ int64\_t,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

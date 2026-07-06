@@ -1,0 +1,180 @@
+\doxysection{Conversation\+Logger Class Reference}
+\hypertarget{class_conversation_logger}{}\label{class_conversation_logger}\index{ConversationLogger@{ConversationLogger}}
+
+
+Appends structured JSON log entries for every command/\+response cycle.  
+
+
+
+
+{\ttfamily \+\#include $<$Conversation\+Logger.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_conversation_logger_ae4db02d7951119bdd1084150b5740a18}{Conversation\+Logger}} (const std::\+string \&\doxymbox{\hyperlink{class_conversation_logger_ab573e10289909607a18a76fe383bdd09}{file\+Path}}="{}conversation.\+json"{}, bool append=true)
+\begin{DoxyCompactList}\small\item\em Opens or creates the JSON log file. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_conversation_logger_afc99fb907dd0dfeb4ac59cadd011ce5e}{\texorpdfstring{$\sim$}{\string~}\+Conversation\+Logger}} ()
+\begin{DoxyCompactList}\small\item\em Closes the JSON array and flushes the file to disk. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_conversation_logger_a95fbbde2b9c0a644526647a727b84f2a}{log}} (const std::\+string \&command, const std::\+string \&response, bool success)
+\begin{DoxyCompactList}\small\item\em Appends one command/\+response exchange to the log. \end{DoxyCompactList}\item 
+const std::\+string \& \doxymbox{\hyperlink{class_conversation_logger_a78e9f934933e335a66b649a37088f35c}{get\+File\+Path}} () const
+\begin{DoxyCompactList}\small\item\em Returns the path of the file being written to. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+string \doxymbox{\hyperlink{class_conversation_logger_affdf5d030ac84d4f59c8d621d395311e}{current\+Timestamp}} ()
+\begin{DoxyCompactList}\small\item\em Returns the current local time formatted as an ISO 8601 string. \end{DoxyCompactList}\item 
+static std::\+string \doxymbox{\hyperlink{class_conversation_logger_a6d20964a561a72fcd8454fb1285f5ea4}{json\+Escape}} (const std::\+string \&s)
+\begin{DoxyCompactList}\small\item\em Escapes special characters in s so it is safe to embed in a JSON string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_conversation_logger_ab573e10289909607a18a76fe383bdd09}\label{class_conversation_logger_ab573e10289909607a18a76fe383bdd09} 
+std::\+string {\bfseries file\+Path}
+\begin{DoxyCompactList}\small\item\em Path to the JSON log file. \end{DoxyCompactList}\item 
+\Hypertarget{class_conversation_logger_a083356b9e722d66d7e6bea702b92ae5c}\label{class_conversation_logger_a083356b9e722d66d7e6bea702b92ae5c} 
+std::\+fstream {\bfseries file}
+\begin{DoxyCompactList}\small\item\em Open file stream; kept alive for the object\textquotesingle{}s lifetime. \end{DoxyCompactList}\item 
+\Hypertarget{class_conversation_logger_af28953bd45d5d389a8e42d943a26e514}\label{class_conversation_logger_af28953bd45d5d389a8e42d943a26e514} 
+int {\bfseries entry\+Count} = 0
+\begin{DoxyCompactList}\small\item\em Monotonically increasing counter used to assign entry IDs. \end{DoxyCompactList}\item 
+\Hypertarget{class_conversation_logger_a1d098f7af69e09f8152c53bee8eb81e4}\label{class_conversation_logger_a1d098f7af69e09f8152c53bee8eb81e4} 
+bool {\bfseries first\+Entry} = true
+\begin{DoxyCompactList}\small\item\em true until the first entry is written; controls comma placement. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Appends structured JSON log entries for every command/\+response cycle. 
+
+Opens (or creates) a JSON file at construction and writes each entry immediately via \doxylink{class_conversation_logger_a95fbbde2b9c0a644526647a727b84f2a}{log()}. \doxylink{requirements_The}{The} destructor closes the JSON array correctly so the file is always well-\/formed, even after an unclean exit during normal operation (entries already flushed remain valid). \begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+
+\label{doc-constructors}
+\Hypertarget{class_conversation_logger_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_conversation_logger_ae4db02d7951119bdd1084150b5740a18}\index{ConversationLogger@{ConversationLogger}!ConversationLogger@{ConversationLogger}}
+\index{ConversationLogger@{ConversationLogger}!ConversationLogger@{ConversationLogger}}
+\doxysubsubsection{\texorpdfstring{ConversationLogger()}{ConversationLogger()}}
+{\footnotesize\ttfamily \label{class_conversation_logger_ae4db02d7951119bdd1084150b5740a18} 
+Conversation\+Logger::\+\+Conversation\+Logger (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{file\+Path}{ = {\ttfamily "{}conversation.json"{}}, }\item[{bool}]{append}{ = {\ttfamily true}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Opens or creates the JSON log file. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+When append is true, new entries are added after any existing content, preserving history across sessions. When false, the file is truncated and a fresh JSON array is started.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{class_conversation_logger_ab573e10289909607a18a76fe383bdd09}{file\+Path}} & Path to the JSON log file. Defaults to "{}conversation.\+json"{} in the working directory. \\
+\hline
+{\em append} & true to preserve existing log entries across sessions; false to start a new log each session. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_conversation_logger_afc99fb907dd0dfeb4ac59cadd011ce5e}\index{ConversationLogger@{ConversationLogger}!````~ConversationLogger@{\texorpdfstring{$\sim$}{\string~}ConversationLogger}}
+\index{````~ConversationLogger@{\texorpdfstring{$\sim$}{\string~}ConversationLogger}!ConversationLogger@{ConversationLogger}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}ConversationLogger()}{\string~ConversationLogger()}}
+{\footnotesize\ttfamily \label{class_conversation_logger_afc99fb907dd0dfeb4ac59cadd011ce5e} 
+Conversation\+Logger::\+\texorpdfstring{$\sim$}{\string~}\+Conversation\+Logger (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Closes the JSON array and flushes the file to disk. 
+
+Writes the closing ]\+ bracket to ensure the file is a valid JSON array. Entries written before an unexpected termination (e.\+g. a crash after construction) remain readable up to the last successfully flushed entry. 
+
+\label{doc-func-members}
+\Hypertarget{class_conversation_logger_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_conversation_logger_affdf5d030ac84d4f59c8d621d395311e}\index{ConversationLogger@{ConversationLogger}!currentTimestamp@{currentTimestamp}}
+\index{currentTimestamp@{currentTimestamp}!ConversationLogger@{ConversationLogger}}
+\doxysubsubsection{\texorpdfstring{currentTimestamp()}{currentTimestamp()}}
+{\footnotesize\ttfamily \label{class_conversation_logger_affdf5d030ac84d4f59c8d621d395311e} 
+std::\+string Conversation\+Logger::\+current\+Timestamp (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+Returns the current local time formatted as an ISO 8601 string. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+A string of the form "{}\+YYYY-\/\+MM-\/\+DDTHH:\+\+MM:\+\+SS"{} representing the local wall-\/clock time at the moment of the call. 
+\end{DoxyReturn}
+\Hypertarget{class_conversation_logger_a78e9f934933e335a66b649a37088f35c}\index{ConversationLogger@{ConversationLogger}!getFilePath@{getFilePath}}
+\index{getFilePath@{getFilePath}!ConversationLogger@{ConversationLogger}}
+\doxysubsubsection{\texorpdfstring{getFilePath()}{getFilePath()}}
+{\footnotesize\ttfamily \label{class_conversation_logger_a78e9f934933e335a66b649a37088f35c} 
+const std::\+string \& Conversation\+Logger::\+get\+File\+Path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the path of the file being written to. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+A const reference to the log file path string set at construction. 
+\end{DoxyReturn}
+\Hypertarget{class_conversation_logger_a6d20964a561a72fcd8454fb1285f5ea4}\index{ConversationLogger@{ConversationLogger}!jsonEscape@{jsonEscape}}
+\index{jsonEscape@{jsonEscape}!ConversationLogger@{ConversationLogger}}
+\doxysubsubsection{\texorpdfstring{jsonEscape()}{jsonEscape()}}
+{\footnotesize\ttfamily \label{class_conversation_logger_a6d20964a561a72fcd8454fb1285f5ea4} 
+std::\+string Conversation\+Logger::\+json\+Escape (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{s}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+Escapes special characters in s so it is safe to embed in a JSON string. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Handles the characters required by the JSON specification:\+ "{}, \textbackslash{}, ~\newline
+, \textbackslash{}r, \textbackslash{}t, and control characters in the range U+0000–\+U+001F.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & \doxylink{requirements_The}{The} raw input string to escape. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A copy of s with all necessary characters escaped. 
+\end{DoxyReturn}
+\Hypertarget{class_conversation_logger_a95fbbde2b9c0a644526647a727b84f2a}\index{ConversationLogger@{ConversationLogger}!log@{log}}
+\index{log@{log}!ConversationLogger@{ConversationLogger}}
+\doxysubsubsection{\texorpdfstring{log()}{log()}}
+{\footnotesize\ttfamily \label{class_conversation_logger_a95fbbde2b9c0a644526647a727b84f2a} 
+void Conversation\+Logger::\+log (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{command}{, }\item[{const std::\+string \&}]{response}{, }\item[{bool}]{success}{}\end{DoxyParamCaption})}
+
+
+
+Appends one command/\+response exchange to the log. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Serialises the exchange as a JSON object with id, timestamp, command, response, and success fields, then flushes immediately so the entry is durable. Should be called after every action, regardless of outcome.
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & \doxylink{requirements_The}{The} raw input string issued by the user or caller. \\
+\hline
+{\em response} & \doxylink{requirements_The}{The} reply or status message produced by the action. \\
+\hline
+{\em success} & true if the action completed without error; false otherwise. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_conversation_logger_8h}{Conversation\+Logger.\+h}}\item 
+Conversation\+Logger.\+cpp\end{DoxyCompactItemize}

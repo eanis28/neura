@@ -1,0 +1,102 @@
+\doxysection{Piece Class Reference}
+\hypertarget{class_piece}{}\label{class_piece}\index{Piece@{Piece}}
+Inheritance diagram for Piece:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_piece}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_piece_a2886b1f61013eb8a536e36267b78c088}\label{class_piece_a2886b1f61013eb8a536e36267b78c088} 
+enum {\bfseries Types} :\+ char \{ \newline
+{\bfseries Pawn}
+, {\bfseries Knight}
+, {\bfseries Bishop}
+, {\bfseries Rook}
+, \newline
+{\bfseries Queen}
+, {\bfseries King}
+, {\bfseries NUM\+\_\+\+PIECES}
+ \}
+\item 
+\Hypertarget{class_piece_a819862ec664be11f2e3bca4e612742cf}\label{class_piece_a819862ec664be11f2e3bca4e612742cf} 
+enum {\bfseries Colors} :\+ char \{ {\bfseries White}
+, {\bfseries Black}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_piece_ace7f0d08d8279e0f916ae6fc4e9e4ccb}\label{class_piece_ace7f0d08d8279e0f916ae6fc4e9e4ccb} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries name} () const
+\item 
+\Hypertarget{class_piece_a40d470c201af49fa88d251d268c64ab2}\label{class_piece_a40d470c201af49fa88d251d268c64ab2} 
+char {\bfseries initial} () const
+\item 
+\Hypertarget{class_piece_a0b2b07fb0f9019267c6c2da49171abc8}\label{class_piece_a0b2b07fb0f9019267c6c2da49171abc8} 
+Types {\bfseries type} () const
+\item 
+\Hypertarget{class_piece_af9715147a4c98c9714bbe436c1e01216}\label{class_piece_af9715147a4c98c9714bbe436c1e01216} 
+Colors {\bfseries color} () const
+\item 
+\Hypertarget{class_piece_a564878c62b8e3ee429a5f0510901e784}\label{class_piece_a564878c62b8e3ee429a5f0510901e784} 
+char {\bfseries pos} () const
+\item 
+\Hypertarget{class_piece_a73b800ede6fa5a242d439538310347e5}\label{class_piece_a73b800ede6fa5a242d439538310347e5} 
+void {\bfseries set\+Pos} (char pos)
+\item 
+\Hypertarget{class_piece_a7a74b516259b2f87547d12596dd07845}\label{class_piece_a7a74b516259b2f87547d12596dd07845} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries coord} () const
+\item 
+\Hypertarget{class_piece_adda88f27daf12950db263e52026ca209}\label{class_piece_adda88f27daf12950db263e52026ca209} 
+const std::\+set$<$ char $>$ \& {\bfseries allowed} () const
+\item 
+\Hypertarget{class_piece_a5d6b3950f85003bd8328ebd09fbf2c91}\label{class_piece_a5d6b3950f85003bd8328ebd09fbf2c91} 
+bool {\bfseries can\+Reach} (char pos) const
+\item 
+\Hypertarget{class_piece_a83c322fd79030801b69075040a1cce17}\label{class_piece_a83c322fd79030801b69075040a1cce17} 
+virtual bool {\bfseries move\+Pattern} (char pos) const =0
+\item 
+\Hypertarget{class_piece_a1387e5b6fc14e1c81c90b831cabc918c}\label{class_piece_a1387e5b6fc14e1c81c90b831cabc918c} 
+void {\bfseries take} ()
+\item 
+\Hypertarget{class_piece_a64628fa8f5a3751376a9049a7e6c477c}\label{class_piece_a64628fa8f5a3751376a9049a7e6c477c} 
+virtual void {\bfseries reinit} (const \doxymbox{\hyperlink{struct_state}{State}} \&state)=0
+\item 
+\Hypertarget{class_piece_aadbe01be18281af2081202e8e1f20c5a}\label{class_piece_aadbe01be18281af2081202e8e1f20c5a} 
+void {\bfseries invalidate} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_piece_ae39545b78674c0c3517dd12304d2cf93}\label{class_piece_ae39545b78674c0c3517dd12304d2cf93} 
+{\bfseries Piece} (Types type, Colors color, char pos, std::\+set$<$ char $>$ allowed)
+\item 
+\Hypertarget{class_piece_ab050f85b3adb1311d88407edc2262871}\label{class_piece_ab050f85b3adb1311d88407edc2262871} 
+{\bfseries Piece} (const \doxymbox{\hyperlink{class_piece}{Piece}} \&)=delete
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_piece_ae4414d42197ee30d7e9b4ba196082467}\label{class_piece_ae4414d42197ee30d7e9b4ba196082467} 
+const Types {\bfseries m\+\_\+type}
+\item 
+\Hypertarget{class_piece_a493a3c2cbdea6df3fda5323a348adb9f}\label{class_piece_a493a3c2cbdea6df3fda5323a348adb9f} 
+const Colors {\bfseries m\+\_\+color}
+\item 
+\Hypertarget{class_piece_a8899b62d588ed19f989a31f424142d31}\label{class_piece_a8899b62d588ed19f989a31f424142d31} 
+char {\bfseries m\+\_\+pos}
+\item 
+\Hypertarget{class_piece_a996dc35634e271df2f828c9e98e4e3b1}\label{class_piece_a996dc35634e271df2f828c9e98e4e3b1} 
+std::\+set$<$ char $>$ {\bfseries m\+\_\+allowed}
+\item 
+\Hypertarget{class_piece_aa3ee30aff92e09f54f1ea61702ff65d2}\label{class_piece_aa3ee30aff92e09f54f1ea61702ff65d2} 
+bool {\bfseries m\+\_\+update} = false
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+wchess/\+libwchess/\+Chessboard.\+cpp\end{DoxyCompactItemize}

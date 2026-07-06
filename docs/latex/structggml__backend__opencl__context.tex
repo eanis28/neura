@@ -1,0 +1,904 @@
+\doxysection{ggml\+\_\+backend\+\_\+opencl\+\_\+context Struct Reference}
+\hypertarget{structggml__backend__opencl__context}{}\label{structggml__backend__opencl__context}\index{ggml\_backend\_opencl\_context@{ggml\_backend\_opencl\_context}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa26f5d8af5698d86b39a0197f85d91be}\label{structggml__backend__opencl__context_aa26f5d8af5698d86b39a0197f85d91be} 
+void {\bfseries write\+\_\+profiling\+\_\+info} ()
+\item 
+\Hypertarget{structggml__backend__opencl__context_a24016914094221cfb9aaf199a8a927e3}\label{structggml__backend__opencl__context_a24016914094221cfb9aaf199a8a927e3} 
+size\+\_\+t {\bfseries get\+\_\+kernel\+\_\+workgroup\+\_\+size} (cl\+\_\+kernel kernel) const
+\item 
+\Hypertarget{structggml__backend__opencl__context_a00ea2c6b7ebb308d9eb396d79f4e155e}\label{structggml__backend__opencl__context_a00ea2c6b7ebb308d9eb396d79f4e155e} 
+void {\bfseries enqueue\+\_\+ndrange\+\_\+kernel} (cl\+\_\+kernel kernel, cl\+\_\+uint work\+\_\+dim, size\+\_\+t \texorpdfstring{$\ast$}{*}global\+\_\+work\+\_\+size, size\+\_\+t \texorpdfstring{$\ast$}{*}local\+\_\+work\+\_\+size, const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor)
+\item 
+\Hypertarget{structggml__backend__opencl__context_a9e436a38373f98b021d4446983c67fcf}\label{structggml__backend__opencl__context_a9e436a38373f98b021d4446983c67fcf} 
+void {\bfseries free} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0799b39d5320e2b1368abb0018f53381}\label{structggml__backend__opencl__context_a0799b39d5320e2b1368abb0018f53381} 
+int {\bfseries ref\+\_\+count}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a3af268a062668919993f2a1f41120e35}\label{structggml__backend__opencl__context_a3af268a062668919993f2a1f41120e35} 
+cl\+\_\+device\+\_\+id {\bfseries device}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af9f435957a98a9b246ade912a9ccd25f}\label{structggml__backend__opencl__context_af9f435957a98a9b246ade912a9ccd25f} 
+std::\+string {\bfseries device\+\_\+name}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab3097b28d9b766bf7b589a09302e9903}\label{structggml__backend__opencl__context_ab3097b28d9b766bf7b589a09302e9903} 
+std::\+string {\bfseries driver\+\_\+version}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab3987a0c13cb64b9b23d7598cbf44bb3}\label{structggml__backend__opencl__context_ab3987a0c13cb64b9b23d7598cbf44bb3} 
+GPU\+\_\+\+FAMILY {\bfseries gpu\+\_\+family}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a3e4d497dcab493b816d35e8d962baf3b}\label{structggml__backend__opencl__context_a3e4d497dcab493b816d35e8d962baf3b} 
+ADRENO\+\_\+\+GPU\+\_\+\+GEN {\bfseries adreno\+\_\+gen}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abb0c404d059859a3feef76537085639f}\label{structggml__backend__opencl__context_abb0c404d059859a3feef76537085639f} 
+cl\+\_\+int {\bfseries alignment}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4600ef9cd090026800b13d67d79edca0}\label{structggml__backend__opencl__context_a4600ef9cd090026800b13d67d79edca0} 
+size\+\_\+t {\bfseries max\+\_\+alloc\+\_\+size}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a893a94c81282234c8e896c6c2c6184c3}\label{structggml__backend__opencl__context_a893a94c81282234c8e896c6c2c6184c3} 
+size\+\_\+t {\bfseries max\+\_\+workgroup\+\_\+size}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a7ca7e9550653b6c8a083d08feb151aeb}\label{structggml__backend__opencl__context_a7ca7e9550653b6c8a083d08feb151aeb} 
+bool {\bfseries fp16\+\_\+support}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a005fe32b6e48c9322529965143e768af}\label{structggml__backend__opencl__context_a005fe32b6e48c9322529965143e768af} 
+bool {\bfseries has\+\_\+vector\+\_\+subgroup\+\_\+broadcast}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1ce1322a3d83d59185e94218e2e2fce2}\label{structggml__backend__opencl__context_a1ce1322a3d83d59185e94218e2e2fce2} 
+bool {\bfseries disable\+\_\+fusion}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af5f43929d269581cab37e8ddc9f560a0}\label{structggml__backend__opencl__context_af5f43929d269581cab37e8ddc9f560a0} 
+bool {\bfseries adreno\+\_\+has\+\_\+large\+\_\+buffer}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5ea40313a9910fae9fad53eeeeb2085c}\label{structggml__backend__opencl__context_a5ea40313a9910fae9fad53eeeeb2085c} 
+bool {\bfseries adreno\+\_\+use\+\_\+large\+\_\+buffer}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a14badd2f1030c9664373b89bd06d102e}\label{structggml__backend__opencl__context_a14badd2f1030c9664373b89bd06d102e} 
+\doxymbox{\hyperlink{structggml__cl__compiler__version}{ggml\+\_\+cl\+\_\+compiler\+\_\+version}} {\bfseries adreno\+\_\+cl\+\_\+compiler\+\_\+version}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1b5ddc0a98f82571b236891c22efa85e}\label{structggml__backend__opencl__context_a1b5ddc0a98f82571b236891c22efa85e} 
+int {\bfseries adreno\+\_\+wave\+\_\+size}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a6e8f2d939bc0e06c1fd69331fbb115da}\label{structggml__backend__opencl__context_a6e8f2d939bc0e06c1fd69331fbb115da} 
+cl\+\_\+bool {\bfseries non\+\_\+uniform\+\_\+workgroups}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abf8e7cbeab5a7d0d617cc2e256ecaaed}\label{structggml__backend__opencl__context_abf8e7cbeab5a7d0d617cc2e256ecaaed} 
+size\+\_\+t {\bfseries image\+\_\+max\+\_\+buffer\+\_\+size}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5b338c5569190bcf705951030a1d1887}\label{structggml__backend__opencl__context_a5b338c5569190bcf705951030a1d1887} 
+cl\+\_\+context {\bfseries context}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae68146cf04cd7cf980f13baadba751b8}\label{structggml__backend__opencl__context_ae68146cf04cd7cf980f13baadba751b8} 
+cl\+\_\+command\+\_\+queue {\bfseries queue}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a166bbb8ce8758f786d33b596ee1e4c1f}\label{structggml__backend__opencl__context_a166bbb8ce8758f786d33b596ee1e4c1f} 
+\doxymbox{\hyperlink{structggml__cl__buffer}{ggml\+\_\+cl\+\_\+buffer}} {\bfseries prealloc\+\_\+quant\+\_\+trans}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1ab09d8726aa80fbb82f0d56521d1b58}\label{structggml__backend__opencl__context_a1ab09d8726aa80fbb82f0d56521d1b58} 
+\doxymbox{\hyperlink{structggml__cl__buffer}{ggml\+\_\+cl\+\_\+buffer}} {\bfseries prealloc\+\_\+scales\+\_\+trans}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a570b3ad993e32974750977c098144afd}\label{structggml__backend__opencl__context_a570b3ad993e32974750977c098144afd} 
+\doxymbox{\hyperlink{structggml__cl__buffer}{ggml\+\_\+cl\+\_\+buffer}} {\bfseries prealloc\+\_\+act\+\_\+trans}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a8f169ad4f18832702de8bb72f4cd0403}\label{structggml__backend__opencl__context_a8f169ad4f18832702de8bb72f4cd0403} 
+\doxymbox{\hyperlink{structggml__cl__buffer}{ggml\+\_\+cl\+\_\+buffer}} {\bfseries prealloc\+\_\+src0}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa73056077c166a6d49aa9f00462254b9}\label{structggml__backend__opencl__context_aa73056077c166a6d49aa9f00462254b9} 
+\doxymbox{\hyperlink{structggml__cl__buffer}{ggml\+\_\+cl\+\_\+buffer}} {\bfseries prealloc\+\_\+src1}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a7958236f9009938982004482e6fd0ffa}\label{structggml__backend__opencl__context_a7958236f9009938982004482e6fd0ffa} 
+cl\+\_\+program {\bfseries program\+\_\+add}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a7c0e2cbf16fd89e9fc9dbee4f2faef05}\label{structggml__backend__opencl__context_a7c0e2cbf16fd89e9fc9dbee4f2faef05} 
+cl\+\_\+program {\bfseries program\+\_\+add\+\_\+id}
+\item 
+\Hypertarget{structggml__backend__opencl__context_adfe7431d80f12030e6f96a35cbdc285b}\label{structggml__backend__opencl__context_adfe7431d80f12030e6f96a35cbdc285b} 
+cl\+\_\+program {\bfseries program\+\_\+clamp}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1b27bd22d629fed41fa11c102a135dc8}\label{structggml__backend__opencl__context_a1b27bd22d629fed41fa11c102a135dc8} 
+cl\+\_\+program {\bfseries program\+\_\+cvt}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a13b59032e3f54ad1df693ab79098a030}\label{structggml__backend__opencl__context_a13b59032e3f54ad1df693ab79098a030} 
+cl\+\_\+program {\bfseries program\+\_\+diag\+\_\+mask\+\_\+inf}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ace229807b97dbecbf7e8eaa7f5638b55}\label{structggml__backend__opencl__context_ace229807b97dbecbf7e8eaa7f5638b55} 
+cl\+\_\+program {\bfseries program\+\_\+gelu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5772822b1884d3741b177a4b85493e7b}\label{structggml__backend__opencl__context_a5772822b1884d3741b177a4b85493e7b} 
+cl\+\_\+program {\bfseries program\+\_\+gemv\+\_\+noshuffle\+\_\+general}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1dd9540963e709487d6fb5b6d96bff15}\label{structggml__backend__opencl__context_a1dd9540963e709487d6fb5b6d96bff15} 
+cl\+\_\+program {\bfseries program\+\_\+gemv\+\_\+noshuffle}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab4e71a774360053d81fa00580f9ed2bc}\label{structggml__backend__opencl__context_ab4e71a774360053d81fa00580f9ed2bc} 
+cl\+\_\+program {\bfseries program\+\_\+get\+\_\+rows}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4a1a1e5c8ccd57afcd6987d1e7cdc89c}\label{structggml__backend__opencl__context_a4a1a1e5c8ccd57afcd6987d1e7cdc89c} 
+cl\+\_\+program {\bfseries program\+\_\+set\+\_\+rows}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a558a91aa21e4a056ebe58b7ee28bac9b}\label{structggml__backend__opencl__context_a558a91aa21e4a056ebe58b7ee28bac9b} 
+cl\+\_\+program {\bfseries program\+\_\+glu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aef1fe0b26478da56d428d87e43f3ed7b}\label{structggml__backend__opencl__context_aef1fe0b26478da56d428d87e43f3ed7b} 
+cl\+\_\+program {\bfseries program\+\_\+im2col\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0e86fa8148f184b55ccb229f3b7c684c}\label{structggml__backend__opencl__context_a0e86fa8148f184b55ccb229f3b7c684c} 
+cl\+\_\+program {\bfseries program\+\_\+im2col\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a890627033c5445a6cd4eacd05625732c}\label{structggml__backend__opencl__context_a890627033c5445a6cd4eacd05625732c} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mat\+\_\+\+Ab\+\_\+\+Bi\+\_\+8x4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aea23df5d094b208a3277d26f94914a69}\label{structggml__backend__opencl__context_aea23df5d094b208a3277d26f94914a69} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+q4\+\_\+0\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac4c73a142dfc538e4e0e003d27fc5f56}\label{structggml__backend__opencl__context_ac4c73a142dfc538e4e0e003d27fc5f56} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+q4\+\_\+0\+\_\+f32\+\_\+v}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a80dabd57e8b41387032a0553705d128e}\label{structggml__backend__opencl__context_a80dabd57e8b41387032a0553705d128e} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+q4\+\_\+0\+\_\+f32\+\_\+8x\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0c818afdfe8c79ac94c20400562e6751}\label{structggml__backend__opencl__context_a0c818afdfe8c79ac94c20400562e6751} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+q4\+\_\+0\+\_\+f32\+\_\+1d\+\_\+8x\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab6568ac34bef31798247893f0fb5f778}\label{structggml__backend__opencl__context_ab6568ac34bef31798247893f0fb5f778} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+q4\+\_\+0\+\_\+f32\+\_\+1d\+\_\+16x\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1e08e97a1e9e7cf3e2ba1451914fd286}\label{structggml__backend__opencl__context_a1e08e97a1e9e7cf3e2ba1451914fd286} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+q6\+\_\+K}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a655b364d007a7e3ef18d52f85a48c983}\label{structggml__backend__opencl__context_a655b364d007a7e3ef18d52f85a48c983} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+q8\+\_\+0\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a72efe4da6c636b41fb472726a628ac99}\label{structggml__backend__opencl__context_a72efe4da6c636b41fb472726a628ac99} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+q8\+\_\+0\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5df35f01b4397ff0860ac2210002fba8}\label{structggml__backend__opencl__context_a5df35f01b4397ff0860ac2210002fba8} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+mxfp4\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_afbf25b5b18865c95d0cd259f2eff2cb3}\label{structggml__backend__opencl__context_afbf25b5b18865c95d0cd259f2eff2cb3} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+mxfp4\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a3b6810022e717cc37cee6b3a008905c0}\label{structggml__backend__opencl__context_a3b6810022e717cc37cee6b3a008905c0} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+f16\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abc9d6bf2df339d26c0c353249b4e5726}\label{structggml__backend__opencl__context_abc9d6bf2df339d26c0c353249b4e5726} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+f16\+\_\+f32\+\_\+1row}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a6b1b587806ed73f59ff93f1cc42f6060}\label{structggml__backend__opencl__context_a6b1b587806ed73f59ff93f1cc42f6060} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+f16\+\_\+f32\+\_\+l4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a98e1c66f3d0025c3c93d728dbf5b313b}\label{structggml__backend__opencl__context_a98e1c66f3d0025c3c93d728dbf5b313b} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+f16\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5e9e34d7dc1472998d8c110ef9b5ba05}\label{structggml__backend__opencl__context_a5e9e34d7dc1472998d8c110ef9b5ba05} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+f32\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aae640472f06e087979d47f278c1c7e6b}\label{structggml__backend__opencl__context_aae640472f06e087979d47f278c1c7e6b} 
+cl\+\_\+program {\bfseries program\+\_\+mul}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abf5b98a05112326626897cb196be0ed8}\label{structggml__backend__opencl__context_abf5b98a05112326626897cb196be0ed8} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mat\+\_\+f16\+\_\+f32\+\_\+tiled}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a31be0e8c8c90c033374551dcd86c3395}\label{structggml__backend__opencl__context_a31be0e8c8c90c033374551dcd86c3395} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mm\+\_\+f16\+\_\+f32\+\_\+kqv}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a15c6ccbd62cd137abd666724bbfa706a}\label{structggml__backend__opencl__context_a15c6ccbd62cd137abd666724bbfa706a} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mm\+\_\+f16\+\_\+f32\+\_\+kq}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0f6ac0e9b43b79de0b1178c3a2c76072}\label{structggml__backend__opencl__context_a0f6ac0e9b43b79de0b1178c3a2c76072} 
+cl\+\_\+program {\bfseries program\+\_\+div}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a6c028f53d494d43bc5378c6b5f221ffb}\label{structggml__backend__opencl__context_a6c028f53d494d43bc5378c6b5f221ffb} 
+cl\+\_\+program {\bfseries program\+\_\+sub}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a96ac8d06a1f0ed60daa649dce7cec163}\label{structggml__backend__opencl__context_a96ac8d06a1f0ed60daa649dce7cec163} 
+cl\+\_\+program {\bfseries program\+\_\+norm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a2c6ddd8427fc32eb32a5777678a9eeb1}\label{structggml__backend__opencl__context_a2c6ddd8427fc32eb32a5777678a9eeb1} 
+cl\+\_\+program {\bfseries program\+\_\+relu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0482c91a0f8c56623ff652d02c29395a}\label{structggml__backend__opencl__context_a0482c91a0f8c56623ff652d02c29395a} 
+cl\+\_\+program {\bfseries program\+\_\+rms\+\_\+norm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac8a56e71b38db9748efb1b6ad1938a14}\label{structggml__backend__opencl__context_ac8a56e71b38db9748efb1b6ad1938a14} 
+cl\+\_\+program {\bfseries program\+\_\+group\+\_\+norm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a572224bceae86150dbe6feedefde6229}\label{structggml__backend__opencl__context_a572224bceae86150dbe6feedefde6229} 
+cl\+\_\+program {\bfseries program\+\_\+rope}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a8b3d27384a4a65f268ee60418a433b24}\label{structggml__backend__opencl__context_a8b3d27384a4a65f268ee60418a433b24} 
+cl\+\_\+program {\bfseries program\+\_\+silu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a6d87457e07e072dc64bf4eff9f7d274f}\label{structggml__backend__opencl__context_a6d87457e07e072dc64bf4eff9f7d274f} 
+cl\+\_\+program {\bfseries program\+\_\+sigmoid}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0bfcd2725cedb7b8bf029c13144fe863}\label{structggml__backend__opencl__context_a0bfcd2725cedb7b8bf029c13144fe863} 
+cl\+\_\+program {\bfseries program\+\_\+softmax\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a9ebf1e3bc874030a01191ef844f7d1f9}\label{structggml__backend__opencl__context_a9ebf1e3bc874030a01191ef844f7d1f9} 
+cl\+\_\+program {\bfseries program\+\_\+softmax\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0347b3805fc912a991bbdbefb50e5d3e}\label{structggml__backend__opencl__context_a0347b3805fc912a991bbdbefb50e5d3e} 
+cl\+\_\+program {\bfseries program\+\_\+softmax\+\_\+4\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af347f27f7f63815f9d8399ca02c429e6}\label{structggml__backend__opencl__context_af347f27f7f63815f9d8399ca02c429e6} 
+cl\+\_\+program {\bfseries program\+\_\+softmax\+\_\+4\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a31b2bc78af942b5cb09d75a701285dbb}\label{structggml__backend__opencl__context_a31b2bc78af942b5cb09d75a701285dbb} 
+cl\+\_\+program {\bfseries program\+\_\+argsort\+\_\+f32\+\_\+i32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_acaaca64207b59951d366fbd74d04d9ae}\label{structggml__backend__opencl__context_acaaca64207b59951d366fbd74d04d9ae} 
+cl\+\_\+program {\bfseries program\+\_\+sum\+\_\+rows\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae7807d198059b1c6e39ee8da1c42466e}\label{structggml__backend__opencl__context_ae7807d198059b1c6e39ee8da1c42466e} 
+cl\+\_\+program {\bfseries program\+\_\+pad}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a2e7351ac9dd27a1af5b99202b15fcecb}\label{structggml__backend__opencl__context_a2e7351ac9dd27a1af5b99202b15fcecb} 
+cl\+\_\+program {\bfseries program\+\_\+upscale}
+\item 
+\Hypertarget{structggml__backend__opencl__context_acb67b305a78dfacd7d870396c12840c4}\label{structggml__backend__opencl__context_acb67b305a78dfacd7d870396c12840c4} 
+cl\+\_\+program {\bfseries program\+\_\+conv\+\_\+2d\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae0e798fc4c038bb3870a8c1e467c5362}\label{structggml__backend__opencl__context_ae0e798fc4c038bb3870a8c1e467c5362} 
+cl\+\_\+program {\bfseries program\+\_\+conv\+\_\+2d\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae7235e50ee802a89aec37e53c90fe087}\label{structggml__backend__opencl__context_ae7235e50ee802a89aec37e53c90fe087} 
+cl\+\_\+program {\bfseries program\+\_\+conv\+\_\+2d\+\_\+f16\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1952fe5599c36681cef921ae5cae3afa}\label{structggml__backend__opencl__context_a1952fe5599c36681cef921ae5cae3afa} 
+cl\+\_\+program {\bfseries program\+\_\+tsembd}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae0d36de4e8eb9a1671ba06ab087b694a}\label{structggml__backend__opencl__context_ae0d36de4e8eb9a1671ba06ab087b694a} 
+cl\+\_\+program {\bfseries program\+\_\+gemv\+\_\+moe\+\_\+mxfp4\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a76f4f2360904d741fba5837ef772b9e7}\label{structggml__backend__opencl__context_a76f4f2360904d741fba5837ef772b9e7} 
+cl\+\_\+program {\bfseries program\+\_\+gemm\+\_\+moe\+\_\+mxfp4\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a65c40d8c5bdabde396078f6a1823a79a}\label{structggml__backend__opencl__context_a65c40d8c5bdabde396078f6a1823a79a} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+id\+\_\+q4\+\_\+0\+\_\+f32\+\_\+8x\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1117984cd4bd7506628afbeb592785c4}\label{structggml__backend__opencl__context_a1117984cd4bd7506628afbeb592785c4} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+id\+\_\+q8\+\_\+0\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a22f8d8820dee2999fbf14539ee210a13}\label{structggml__backend__opencl__context_a22f8d8820dee2999fbf14539ee210a13} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+id\+\_\+q8\+\_\+0\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0843113618953d483b7510f9335c39ce}\label{structggml__backend__opencl__context_a0843113618953d483b7510f9335c39ce} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+id\+\_\+mxfp4\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1221f77e1fb1d0d4105725e2c3328d7e}\label{structggml__backend__opencl__context_a1221f77e1fb1d0d4105725e2c3328d7e} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mv\+\_\+id\+\_\+mxfp4\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0682bd04c6f25b4820bec7f7389a59cf}\label{structggml__backend__opencl__context_a0682bd04c6f25b4820bec7f7389a59cf} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mm\+\_\+f32\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a94cf80a50e09bd0544fe72c44d8cdf40}\label{structggml__backend__opencl__context_a94cf80a50e09bd0544fe72c44d8cdf40} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mm\+\_\+f16\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1d527e9a14d3cb143cc47bee61bdc39d}\label{structggml__backend__opencl__context_a1d527e9a14d3cb143cc47bee61bdc39d} 
+cl\+\_\+program {\bfseries program\+\_\+mul\+\_\+mm\+\_\+q8\+\_\+0\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a16d5984bc9dd53dd5b0daabf4d464791}\label{structggml__backend__opencl__context_a16d5984bc9dd53dd5b0daabf4d464791} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+add}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a2b1cab7969c2b36ec936b60d8db9b9cf}\label{structggml__backend__opencl__context_a2b1cab7969c2b36ec936b60d8db9b9cf} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+add\+\_\+row}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5b47d1043d4e50b5e5486a2cb7153e0c}\label{structggml__backend__opencl__context_a5b47d1043d4e50b5e5486a2cb7153e0c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+add\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aafa094ca93bad319b00b66f1d9383fcb}\label{structggml__backend__opencl__context_aafa094ca93bad319b00b66f1d9383fcb} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+add\+\_\+row\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4e94f6288114ad1ee221fd1bbec9bdd6}\label{structggml__backend__opencl__context_a4e94f6288114ad1ee221fd1bbec9bdd6} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1e77980ae2171834b13d658a6f44a7c9}\label{structggml__backend__opencl__context_a1e77980ae2171834b13d658a6f44a7c9} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+row}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a2a8763e770358d8b872afa719e2382cc}\label{structggml__backend__opencl__context_a2a8763e770358d8b872afa719e2382cc} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac60dedcb9d6071787444c7744bac803c}\label{structggml__backend__opencl__context_ac60dedcb9d6071787444c7744bac803c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+row\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a73e313dc590c5dd2111171dd86f898e3}\label{structggml__backend__opencl__context_a73e313dc590c5dd2111171dd86f898e3} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+div}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5641e1f0171158c59d50cd2dd9617683}\label{structggml__backend__opencl__context_a5641e1f0171158c59d50cd2dd9617683} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+div\+\_\+row}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a409bd564dd5c24d70083dfed294099f2}\label{structggml__backend__opencl__context_a409bd564dd5c24d70083dfed294099f2} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+div\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab5293dda42863d64ce24eeec59fd90c8}\label{structggml__backend__opencl__context_ab5293dda42863d64ce24eeec59fd90c8} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+div\+\_\+row\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af2148e48b4282186c502da26dedb39a7}\label{structggml__backend__opencl__context_af2148e48b4282186c502da26dedb39a7} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sub}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0112c6036867ebb06e0230b023d7a3c7}\label{structggml__backend__opencl__context_a0112c6036867ebb06e0230b023d7a3c7} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sub\+\_\+row}
+\item 
+\Hypertarget{structggml__backend__opencl__context_afd70acb135d0d797283afb6c9145da31}\label{structggml__backend__opencl__context_afd70acb135d0d797283afb6c9145da31} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sub\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a07b20fe81a72358c6b66b1928ebef433}\label{structggml__backend__opencl__context_a07b20fe81a72358c6b66b1928ebef433} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sub\+\_\+row\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a9560eb5ce75cd60daa4c9d55e2b2a548}\label{structggml__backend__opencl__context_a9560eb5ce75cd60daa4c9d55e2b2a548} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+add\+\_\+id}
+\item 
+\Hypertarget{structggml__backend__opencl__context_acc70318de030ccec22ff8445be6dfbf5}\label{structggml__backend__opencl__context_acc70318de030ccec22ff8445be6dfbf5} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+scale\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a952c59c00b626bf2623ef7078c155a78}\label{structggml__backend__opencl__context_a952c59c00b626bf2623ef7078c155a78} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+scale\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0f94deeddbc7b97447f3f2143d19ac7e}\label{structggml__backend__opencl__context_a0f94deeddbc7b97447f3f2143d19ac7e} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sqr\+\_\+cont\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a647c8c3fc0091ca2348e70d259f6e84f}\label{structggml__backend__opencl__context_a647c8c3fc0091ca2348e70d259f6e84f} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sqr\+\_\+cont\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0e715c3899b11eb07a51f3e26f0ea9fa}\label{structggml__backend__opencl__context_a0e715c3899b11eb07a51f3e26f0ea9fa} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sqr\+\_\+cont\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a6784567dea1ec948b4144aece722517c}\label{structggml__backend__opencl__context_a6784567dea1ec948b4144aece722517c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sqr\+\_\+cont\+\_\+f16\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a68862ef106547ee63f8d91dee27843f7}\label{structggml__backend__opencl__context_a68862ef106547ee63f8d91dee27843f7} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sqrt\+\_\+cont\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a73428f762e45bdcfa414c5d0803f6a97}\label{structggml__backend__opencl__context_a73428f762e45bdcfa414c5d0803f6a97} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sqrt\+\_\+cont\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ad06f2fefcb0371472b9b67b37a218e88}\label{structggml__backend__opencl__context_ad06f2fefcb0371472b9b67b37a218e88} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sqrt\+\_\+cont\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a7d35d50c1dc5ca094adfc5edba539911}\label{structggml__backend__opencl__context_a7d35d50c1dc5ca094adfc5edba539911} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sqrt\+\_\+cont\+\_\+f16\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a10157484101e232990aada469f873042}\label{structggml__backend__opencl__context_a10157484101e232990aada469f873042} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mean\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab28c106d8f5eb234455590a2ec11cf2f}\label{structggml__backend__opencl__context_ab28c106d8f5eb234455590a2ec11cf2f} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mean\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae4eb12a11a4be5c8e31a9239ec4478f9}\label{structggml__backend__opencl__context_ae4eb12a11a4be5c8e31a9239ec4478f9} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+silu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a6c2b133e67c8bc0c9a26a60766427641}\label{structggml__backend__opencl__context_a6c2b133e67c8bc0c9a26a60766427641} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+silu\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a50e8c9cfcf67a8a7165587d0791c9df1}\label{structggml__backend__opencl__context_a50e8c9cfcf67a8a7165587d0791c9df1} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+gelu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a40939440a75ef53b2840ccb7ebfcf665}\label{structggml__backend__opencl__context_a40939440a75ef53b2840ccb7ebfcf665} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+gelu\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af3df3d190671abfc54c183a7ab269c30}\label{structggml__backend__opencl__context_af3df3d190671abfc54c183a7ab269c30} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+gelu\+\_\+erf}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4f30fb717227c4d9d88d97ac8793b350}\label{structggml__backend__opencl__context_a4f30fb717227c4d9d88d97ac8793b350} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+gelu\+\_\+erf\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abbd384d18149cc7896e7238eebae7259}\label{structggml__backend__opencl__context_abbd384d18149cc7896e7238eebae7259} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+gelu\+\_\+quick}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af9a2836c51b0a400378c6765866fa4b3}\label{structggml__backend__opencl__context_af9a2836c51b0a400378c6765866fa4b3} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+gelu\+\_\+quick\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a52ce8415749b0bc834021a03d45d86fb}\label{structggml__backend__opencl__context_a52ce8415749b0bc834021a03d45d86fb} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+relu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a131fa4d33897c26569fcce0ef401b5ca}\label{structggml__backend__opencl__context_a131fa4d33897c26569fcce0ef401b5ca} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sigmoid\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa5d576246d4a8f4cbd4fee16b7f1f344}\label{structggml__backend__opencl__context_aa5d576246d4a8f4cbd4fee16b7f1f344} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sigmoid\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abdd4203ac536c2ad67ebee08edab289c}\label{structggml__backend__opencl__context_abdd4203ac536c2ad67ebee08edab289c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+tri}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a03fa375a7b200ca6b3a5e4cafa62627d}\label{structggml__backend__opencl__context_a03fa375a7b200ca6b3a5e4cafa62627d} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+fill}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ad9f8a4fd25095d3b4582393bdc0a0a8c}\label{structggml__backend__opencl__context_ad9f8a4fd25095d3b4582393bdc0a0a8c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+clamp}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab35860d2d143a9a660a4fbbfce1f9f6e}\label{structggml__backend__opencl__context_ab35860d2d143a9a660a4fbbfce1f9f6e} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+geglu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4de712ae5fc8adfbb7d9dafe84d5936c}\label{structggml__backend__opencl__context_a4de712ae5fc8adfbb7d9dafe84d5936c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+reglu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_afbdb40c3fa514bff7a9f5e4dcc11462a}\label{structggml__backend__opencl__context_afbdb40c3fa514bff7a9f5e4dcc11462a} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+swiglu}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aead7a3f2d781687eaacf3ca2460361ad}\label{structggml__backend__opencl__context_aead7a3f2d781687eaacf3ca2460361ad} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+swiglu\+\_\+oai}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a3e111267f739fdd2914e98c6fa17da24}\label{structggml__backend__opencl__context_a3e111267f739fdd2914e98c6fa17da24} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+geglu\+\_\+erf}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a07375126dc831770821864e17d953a16}\label{structggml__backend__opencl__context_a07375126dc831770821864e17d953a16} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+geglu\+\_\+quick}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aca46329a38c938a28a70000638f7ffd3}\label{structggml__backend__opencl__context_aca46329a38c938a28a70000638f7ffd3} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+geglu\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac9f2b8d71241cf306999bfc1a9c0a114}\label{structggml__backend__opencl__context_ac9f2b8d71241cf306999bfc1a9c0a114} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+reglu\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a2be757685fcd26c2bf91739e6a46554f}\label{structggml__backend__opencl__context_a2be757685fcd26c2bf91739e6a46554f} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+swiglu\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae76c9ef43a6b99c73214e63022d5ce43}\label{structggml__backend__opencl__context_ae76c9ef43a6b99c73214e63022d5ce43} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+geglu\+\_\+erf\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa2306e68c1a548c36f0c51dc097856d8}\label{structggml__backend__opencl__context_aa2306e68c1a548c36f0c51dc097856d8} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+geglu\+\_\+quick\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5309ff75ff80fba742567d97d1c2be65}\label{structggml__backend__opencl__context_a5309ff75ff80fba742567d97d1c2be65} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+norm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4c47cc536e3904d15341cbd5e4cf215a}\label{structggml__backend__opencl__context_a4c47cc536e3904d15341cbd5e4cf215a} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+norm\+\_\+mul\+\_\+add}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aff8f2b980a4a6bbee42d5aa8c4ec5822}\label{structggml__backend__opencl__context_aff8f2b980a4a6bbee42d5aa8c4ec5822} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rms\+\_\+norm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0cda97173c331a98a90962fb75d264d5}\label{structggml__backend__opencl__context_a0cda97173c331a98a90962fb75d264d5} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rms\+\_\+norm\+\_\+mul}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab1b6b77f5abe9d546d9aacf8410c3446}\label{structggml__backend__opencl__context_ab1b6b77f5abe9d546d9aacf8410c3446} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+l2\+\_\+norm\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac6e090fd74c5c37096933023b4cf8d33}\label{structggml__backend__opencl__context_ac6e090fd74c5c37096933023b4cf8d33} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+group\+\_\+norm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa9911c573596abee823e9e406425d5cb}\label{structggml__backend__opencl__context_aa9911c573596abee823e9e406425d5cb} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+group\+\_\+norm\+\_\+mul\+\_\+add}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aeb15d4ce1d3a9e1ee49cbf4576fd2e9c}\label{structggml__backend__opencl__context_aeb15d4ce1d3a9e1ee49cbf4576fd2e9c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+diag\+\_\+mask\+\_\+inf}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a74b7c1eb97f562c3dc4f13731e4d9431}\label{structggml__backend__opencl__context_a74b7c1eb97f562c3dc4f13731e4d9431} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+diag\+\_\+mask\+\_\+inf\+\_\+8}
+\item 
+\Hypertarget{structggml__backend__opencl__context_acb93369a7a4878fa51f272655ebcdca5}\label{structggml__backend__opencl__context_acb93369a7a4878fa51f272655ebcdca5} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+diag\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aedaf1fc73a2c5259a950ab5efe7cb9ae}\label{structggml__backend__opencl__context_aedaf1fc73a2c5259a950ab5efe7cb9ae} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+soft\+\_\+max}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac86d468ffa5e952c9d4c1c3208d9c530}\label{structggml__backend__opencl__context_ac86d468ffa5e952c9d4c1c3208d9c530} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+soft\+\_\+max\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae29eb2834a8becf48eb9cc821663a48a}\label{structggml__backend__opencl__context_ae29eb2834a8becf48eb9cc821663a48a} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+soft\+\_\+max\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a280f8879b40e37f652884c68a25f61da}\label{structggml__backend__opencl__context_a280f8879b40e37f652884c68a25f61da} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+soft\+\_\+max\+\_\+4\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a95ac227bd2d4bc4db52a9cf38bea766f}\label{structggml__backend__opencl__context_a95ac227bd2d4bc4db52a9cf38bea766f} 
+std::\+map$<$ std::\+pair$<$ int, int $>$, cl\+\_\+kernel $>$ {\bfseries kernels\+\_\+flash\+\_\+attn\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a53e57b8949b506e7618ad43d67fa0ece}\label{structggml__backend__opencl__context_a53e57b8949b506e7618ad43d67fa0ece} 
+std::\+map$<$ std::\+pair$<$ int, int $>$, cl\+\_\+kernel $>$ {\bfseries kernels\+\_\+flash\+\_\+attn\+\_\+f16\+\_\+q1}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1e442b29463d1dba3fe0f7927a6c9f76}\label{structggml__backend__opencl__context_a1e442b29463d1dba3fe0f7927a6c9f76} 
+std::\+map$<$ std::\+pair$<$ int, int $>$, cl\+\_\+kernel $>$ {\bfseries kernels\+\_\+flash\+\_\+attn\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a795814bd15f47d0ff6a1b6442ff436a6}\label{structggml__backend__opencl__context_a795814bd15f47d0ff6a1b6442ff436a6} 
+std::\+map$<$ std::\+pair$<$ int, int $>$, cl\+\_\+kernel $>$ {\bfseries kernels\+\_\+flash\+\_\+attn\+\_\+f32\+\_\+q1}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a77e6e5bb3198677d21ee7317013eef24}\label{structggml__backend__opencl__context_a77e6e5bb3198677d21ee7317013eef24} 
+std::\+map$<$ std::\+pair$<$ int, int $>$, cl\+\_\+kernel $>$ {\bfseries kernels\+\_\+flash\+\_\+attn\+\_\+f32\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a8cebf233c759b9217be36101d43c3a80}\label{structggml__backend__opencl__context_a8cebf233c759b9217be36101d43c3a80} 
+std::\+map$<$ std::\+pair$<$ int, int $>$, cl\+\_\+kernel $>$ {\bfseries kernels\+\_\+flash\+\_\+attn\+\_\+f32\+\_\+f16\+\_\+q1}
+\item 
+\Hypertarget{structggml__backend__opencl__context_adcc4c443191a4f0c36bf9162a0ce35ee}\label{structggml__backend__opencl__context_adcc4c443191a4f0c36bf9162a0ce35ee} 
+std::\+map$<$ std::\+pair$<$ int, int $>$, int $>$ {\bfseries kernels\+\_\+flash\+\_\+attn\+\_\+bm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a9c758c39225f80110dd10b3392663c8e}\label{structggml__backend__opencl__context_a9c758c39225f80110dd10b3392663c8e} 
+std::\+map$<$ std::\+pair$<$ int, int $>$, int $>$ {\bfseries kernels\+\_\+flash\+\_\+attn\+\_\+bn}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a157b0068e97c575b62e5fc0f493ff7a3}\label{structggml__backend__opencl__context_a157b0068e97c575b62e5fc0f493ff7a3} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+get\+\_\+rows\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a41fe6de286506c9087086d151c126600}\label{structggml__backend__opencl__context_a41fe6de286506c9087086d151c126600} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+get\+\_\+rows\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a9f53be409efec032220e72eea5b3f3cf}\label{structggml__backend__opencl__context_a9f53be409efec032220e72eea5b3f3cf} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+get\+\_\+rows\+\_\+q4\+\_\+0}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a174d405704b62ae76dee92700e8cb8fa}\label{structggml__backend__opencl__context_a174d405704b62ae76dee92700e8cb8fa} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+set\+\_\+rows\+\_\+f32\+\_\+i64}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a7edfe4b3018103291fe03c848def11ef}\label{structggml__backend__opencl__context_a7edfe4b3018103291fe03c848def11ef} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+set\+\_\+rows\+\_\+f32\+\_\+i32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0714b453f377c118a060a21e5a76e996}\label{structggml__backend__opencl__context_a0714b453f377c118a060a21e5a76e996} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+set\+\_\+rows\+\_\+f16\+\_\+i64}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa89983c34f8fc8f45b60ce75ea415b9d}\label{structggml__backend__opencl__context_aa89983c34f8fc8f45b60ce75ea415b9d} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+set\+\_\+rows\+\_\+f16\+\_\+i32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a2d01a1ea97321fe277091abe7eac593b}\label{structggml__backend__opencl__context_a2d01a1ea97321fe277091abe7eac593b} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rope\+\_\+norm\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a9e6185ac2d8479ef36fd477e1e069ac9}\label{structggml__backend__opencl__context_a9e6185ac2d8479ef36fd477e1e069ac9} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rope\+\_\+norm\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1ba092a203453b6c2696f007f22a1295}\label{structggml__backend__opencl__context_a1ba092a203453b6c2696f007f22a1295} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rope\+\_\+neox\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5bb09687adeaacbfd0cedf6731b699fe}\label{structggml__backend__opencl__context_a5bb09687adeaacbfd0cedf6731b699fe} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rope\+\_\+neox\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa6f925871af1eff94465f3d7b21207bb}\label{structggml__backend__opencl__context_aa6f925871af1eff94465f3d7b21207bb} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rope\+\_\+multi\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a51c4868ce1983d98548659624510e059}\label{structggml__backend__opencl__context_a51c4868ce1983d98548659624510e059} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rope\+\_\+multi\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a3365cb5519542632e0656945fd877f0d}\label{structggml__backend__opencl__context_a3365cb5519542632e0656945fd877f0d} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rope\+\_\+vision\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abb6391c56b33f160c0eb0f125f802ae5}\label{structggml__backend__opencl__context_abb6391c56b33f160c0eb0f125f802ae5} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+rope\+\_\+vision\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0aea79989e52e1d1c5f676f2218de7ba}\label{structggml__backend__opencl__context_a0aea79989e52e1d1c5f676f2218de7ba} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+cpy\+\_\+f16\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a292bd04a0d235d337cc3617314e9eea8}\label{structggml__backend__opencl__context_a292bd04a0d235d337cc3617314e9eea8} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+cpy\+\_\+f16\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a934ba4536f1d6e904e79cd01bbb8dffb}\label{structggml__backend__opencl__context_a934ba4536f1d6e904e79cd01bbb8dffb} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+cpy\+\_\+f32\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ada7abd4a48f6ef7e2571063e2f42f788}\label{structggml__backend__opencl__context_ada7abd4a48f6ef7e2571063e2f42f788} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+cpy\+\_\+f32\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4905ce24617ea28ff1fdcfd54b7fc93e}\label{structggml__backend__opencl__context_a4905ce24617ea28ff1fdcfd54b7fc93e} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+cpy\+\_\+i32\+\_\+i32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a13e72ac63100205f152b00cc9a6ae8ff}\label{structggml__backend__opencl__context_a13e72ac63100205f152b00cc9a6ae8ff} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+f32\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1d4de4a0aa77b8db91bf506a8ca463ea}\label{structggml__backend__opencl__context_a1d4de4a0aa77b8db91bf506a8ca463ea} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+f16\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5d46ef661ca2cdb7eba2c462fc4673aa}\label{structggml__backend__opencl__context_a5d46ef661ca2cdb7eba2c462fc4673aa} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+f16\+\_\+f32\+\_\+1row}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a9f5139790749fd1b796bf9b5c1e710c2}\label{structggml__backend__opencl__context_a9f5139790749fd1b796bf9b5c1e710c2} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+f16\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ad505765aad340a2bce0ea741adeb7fc4}\label{structggml__backend__opencl__context_ad505765aad340a2bce0ea741adeb7fc4} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+f16\+\_\+f32\+\_\+l4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a58347783cd642bf2f1418cb8dbd60660}\label{structggml__backend__opencl__context_a58347783cd642bf2f1418cb8dbd60660} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+f16\+\_\+f32\+\_\+tiled}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4527b55356683f629dd1aedc42dcdbd2}\label{structggml__backend__opencl__context_a4527b55356683f629dd1aedc42dcdbd2} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mm\+\_\+f16\+\_\+f32\+\_\+kqv}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abd0df4785c0df121ae522371f231721d}\label{structggml__backend__opencl__context_abd0df4785c0df121ae522371f231721d} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mm\+\_\+f16\+\_\+f32\+\_\+kq}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a8fefbd598934e5e056b3bd037b5b18d3}\label{structggml__backend__opencl__context_a8fefbd598934e5e056b3bd037b5b18d3} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+q4\+\_\+0\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae99d6251f7968b0cecc50b68b795b42e}\label{structggml__backend__opencl__context_ae99d6251f7968b0cecc50b68b795b42e} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+q4\+\_\+0\+\_\+f32\+\_\+v}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac04106b540a2181217995a4937c0f30e}\label{structggml__backend__opencl__context_ac04106b540a2181217995a4937c0f30e} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+q4\+\_\+0}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aad10775206077025d37cc9cd4bcf83c7}\label{structggml__backend__opencl__context_aad10775206077025d37cc9cd4bcf83c7} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+q4\+\_\+0}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a3b3fadf25ae70580a879e1e5add90a2f}\label{structggml__backend__opencl__context_a3b3fadf25ae70580a879e1e5add90a2f} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+q4\+\_\+1}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a8deef5dd4b5c6dc9ade0400775b3f2e3}\label{structggml__backend__opencl__context_a8deef5dd4b5c6dc9ade0400775b3f2e3} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+q4\+\_\+1}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1c04574f1bb371977ca09c6e9393186f}\label{structggml__backend__opencl__context_a1c04574f1bb371977ca09c6e9393186f} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+mxfp4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af4b4b1da22e2840a27242bd56a36c4fc}\label{structggml__backend__opencl__context_af4b4b1da22e2840a27242bd56a36c4fc} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+mxfp4\+\_\+trans}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a7c5dd3d4303bc1fccd632a4d44bbb49b}\label{structggml__backend__opencl__context_a7c5dd3d4303bc1fccd632a4d44bbb49b} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+mxfp4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a491365e1f33bd303e598047f01f416a1}\label{structggml__backend__opencl__context_a491365e1f33bd303e598047f01f416a1} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+mxfp4\+\_\+trans}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4ab3f472253a7c0c687070cd4a9fe39c}\label{structggml__backend__opencl__context_a4ab3f472253a7c0c687070cd4a9fe39c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+q8\+\_\+0}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a91f7bb5995dcd2fe1cd626f32875a41d}\label{structggml__backend__opencl__context_a91f7bb5995dcd2fe1cd626f32875a41d} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+q8\+\_\+0}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abc35965f1ace5e0f0e01501d7ecc2279}\label{structggml__backend__opencl__context_abc35965f1ace5e0f0e01501d7ecc2279} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+q8\+\_\+0\+\_\+trans}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abfe7759cc55156a2dae2e14dc4ab8682}\label{structggml__backend__opencl__context_abfe7759cc55156a2dae2e14dc4ab8682} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+q6\+\_\+\+K\+\_\+noshuffle}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a45ede770bd4f9a417cc1bc02a459a711}\label{structggml__backend__opencl__context_a45ede770bd4f9a417cc1bc02a459a711} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+q6\+\_\+\+K\+\_\+noshuffle}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ad1aeb3ce5fa21d6aae946f4483c0ba3d}\label{structggml__backend__opencl__context_ad1aeb3ce5fa21d6aae946f4483c0ba3d} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+q4\+\_\+0\+\_\+f32\+\_\+8x\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a55213a1be8706c65c071000645ab349a}\label{structggml__backend__opencl__context_a55213a1be8706c65c071000645ab349a} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+q4\+\_\+0\+\_\+noshuffle}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a7554859eda9d2ec71c3b593b07389e57}\label{structggml__backend__opencl__context_a7554859eda9d2ec71c3b593b07389e57} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+q4\+\_\+0\+\_\+noshuffle}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a67a19373cc4a065fd8e05c93880cbe14}\label{structggml__backend__opencl__context_a67a19373cc4a065fd8e05c93880cbe14} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+q4\+\_\+1\+\_\+noshuffle}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a93990e5001ee5257645858a153684033}\label{structggml__backend__opencl__context_a93990e5001ee5257645858a153684033} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+q4\+\_\+1\+\_\+noshuffle}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aabb3ad752b7c93f4bd5f7475da3dd4b8}\label{structggml__backend__opencl__context_aabb3ad752b7c93f4bd5f7475da3dd4b8} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+q4\+\_\+K}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac6b6d64cc090d7dda7d14702d055f8c5}\label{structggml__backend__opencl__context_ac6b6d64cc090d7dda7d14702d055f8c5} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+q4\+\_\+K}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4cb2ff6a3959081545d5ddd28d69acdf}\label{structggml__backend__opencl__context_a4cb2ff6a3959081545d5ddd28d69acdf} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+convert\+\_\+block\+\_\+q6\+\_\+K}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aaa5bcaf0a32ca304406963fa8e792603}\label{structggml__backend__opencl__context_aaa5bcaf0a32ca304406963fa8e792603} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+restore\+\_\+block\+\_\+q6\+\_\+K}
+\item 
+\Hypertarget{structggml__backend__opencl__context_acc3a8729780562470366f3e38defff36}\label{structggml__backend__opencl__context_acc3a8729780562470366f3e38defff36} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+q4\+\_\+0\+\_\+f32\+\_\+1d\+\_\+8x\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a9991cd55c7ce308e631b01ee9c0ee09a}\label{structggml__backend__opencl__context_a9991cd55c7ce308e631b01ee9c0ee09a} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mat\+\_\+q4\+\_\+0\+\_\+f32\+\_\+1d\+\_\+16x\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab44f7fc8da3e268ef7103995428bc348}\label{structggml__backend__opencl__context_ab44f7fc8da3e268ef7103995428bc348} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+q4\+\_\+1\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aafead543b4a3cf4cddcb4775f3e0d5e2}\label{structggml__backend__opencl__context_aafead543b4a3cf4cddcb4775f3e0d5e2} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+q4\+\_\+1\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af40d6300bd5c95717a4226daa70e415b}\label{structggml__backend__opencl__context_af40d6300bd5c95717a4226daa70e415b} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+q4\+\_\+\+K\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac5edae05eeb149d787fe96d0f598539f}\label{structggml__backend__opencl__context_ac5edae05eeb149d787fe96d0f598539f} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+q4\+\_\+\+K\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af368ce49a447c76c47c304ad4efd5198}\label{structggml__backend__opencl__context_af368ce49a447c76c47c304ad4efd5198} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+q6\+\_\+\+K\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a94ea175491e6cb4ce55472bec2dcfb47}\label{structggml__backend__opencl__context_a94ea175491e6cb4ce55472bec2dcfb47} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+q6\+\_\+\+K\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a87a9bc2bb7f62bd0a34cae2d1ff5a521}\label{structggml__backend__opencl__context_a87a9bc2bb7f62bd0a34cae2d1ff5a521} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+mxfp4\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab435a8ac6774fd77f1c93f0dcaefe324}\label{structggml__backend__opencl__context_ab435a8ac6774fd77f1c93f0dcaefe324} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+mxfp4\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a2b052d6a041d8fa1368391f9b7ab587f}\label{structggml__backend__opencl__context_a2b052d6a041d8fa1368391f9b7ab587f} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+q8\+\_\+0\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_abce01cf33b3ff3e32927a261048b8b2d}\label{structggml__backend__opencl__context_abce01cf33b3ff3e32927a261048b8b2d} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+q8\+\_\+0\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac354667b6749f438e1bf536deb4e1ce8}\label{structggml__backend__opencl__context_ac354667b6749f438e1bf536deb4e1ce8} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+solve\+\_\+tri\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa6dcea9b08053a944ef41150a674174c}\label{structggml__backend__opencl__context_aa6dcea9b08053a944ef41150a674174c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+im2col\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ad326b666e594a616e883c402a506ffda}\label{structggml__backend__opencl__context_ad326b666e594a616e883c402a506ffda} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+im2col\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a70ad43361ac63b2a35aa322df3daed57}\label{structggml__backend__opencl__context_a70ad43361ac63b2a35aa322df3daed57} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+argsort\+\_\+f32\+\_\+i32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ad64e1ddc765e7d4ef830fd16950f06eb}\label{structggml__backend__opencl__context_ad64e1ddc765e7d4ef830fd16950f06eb} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sum\+\_\+rows\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a933162fe2f4260eee542fe6952235478}\label{structggml__backend__opencl__context_a933162fe2f4260eee542fe6952235478} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+sum\+\_\+rows\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae5bb15cbf1c1baf8d5b735c8adc7a5a2}\label{structggml__backend__opencl__context_ae5bb15cbf1c1baf8d5b735c8adc7a5a2} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+cumsum\+\_\+blk}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a0740f611c5319111835aea60313567a9}\label{structggml__backend__opencl__context_a0740f611c5319111835aea60313567a9} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+cumsum\+\_\+add}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa4977dd804c1036137e4a43fc872495b}\label{structggml__backend__opencl__context_aa4977dd804c1036137e4a43fc872495b} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+repeat\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a51ebe6fa805ae274235cd6c876d5f383}\label{structggml__backend__opencl__context_a51ebe6fa805ae274235cd6c876d5f383} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+pad}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a23a6a46b3cb22391499150e24b5bae34}\label{structggml__backend__opencl__context_a23a6a46b3cb22391499150e24b5bae34} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+tanh\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a001bcd903762e7c4374d48d767cd2a33}\label{structggml__backend__opencl__context_a001bcd903762e7c4374d48d767cd2a33} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+tanh\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af00049f2aa39cc42c74b5e527b273c43}\label{structggml__backend__opencl__context_af00049f2aa39cc42c74b5e527b273c43} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+tanh\+\_\+f32\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5ab67fd1ac476c8dbf21ec023b0097c0}\label{structggml__backend__opencl__context_a5ab67fd1ac476c8dbf21ec023b0097c0} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+tanh\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af14bfe9971c962b76a90c46fc5652ee6}\label{structggml__backend__opencl__context_af14bfe9971c962b76a90c46fc5652ee6} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+tanh\+\_\+f16\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a2f1fe3e6d898243d62d9c4f56101d4e4}\label{structggml__backend__opencl__context_a2f1fe3e6d898243d62d9c4f56101d4e4} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+tanh\+\_\+f16\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a99f652cb27b46edb5e16cb1850502341}\label{structggml__backend__opencl__context_a99f652cb27b46edb5e16cb1850502341} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+neg\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4e406f87e064c4b35d11d24560ac8bbd}\label{structggml__backend__opencl__context_a4e406f87e064c4b35d11d24560ac8bbd} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+neg\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af20040bd5557c60219b27c25490776a7}\label{structggml__backend__opencl__context_af20040bd5557c60219b27c25490776a7} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+neg\+\_\+f32\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa13128c124a150540990ecaf8ee1c1c1}\label{structggml__backend__opencl__context_aa13128c124a150540990ecaf8ee1c1c1} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+neg\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a6658be4be0e863606efca95b2320ff55}\label{structggml__backend__opencl__context_a6658be4be0e863606efca95b2320ff55} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+neg\+\_\+f16\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a401e1316708ff5075ee2fe6ef03243c8}\label{structggml__backend__opencl__context_a401e1316708ff5075ee2fe6ef03243c8} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+neg\+\_\+f16\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af448d1f33fe530cb8df329db1148ac32}\label{structggml__backend__opencl__context_af448d1f33fe530cb8df329db1148ac32} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+exp\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab728ee17d834ac618857a306f2d8ef72}\label{structggml__backend__opencl__context_ab728ee17d834ac618857a306f2d8ef72} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+exp\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a3768849e4731a0e3fa67b111d69fc737}\label{structggml__backend__opencl__context_a3768849e4731a0e3fa67b111d69fc737} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+exp\+\_\+f32\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a20f3527cd9f984c34825ac903333b508}\label{structggml__backend__opencl__context_a20f3527cd9f984c34825ac903333b508} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+exp\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a6504565585db93551d40f657c15dec08}\label{structggml__backend__opencl__context_a6504565585db93551d40f657c15dec08} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+exp\+\_\+f16\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aae692fe17cf60b96b98c6fa2023daae0}\label{structggml__backend__opencl__context_aae692fe17cf60b96b98c6fa2023daae0} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+exp\+\_\+f16\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5f6a2a81198d574b592663c2473cf22b}\label{structggml__backend__opencl__context_a5f6a2a81198d574b592663c2473cf22b} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+expm1\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa4fa2fc1b97ba8a4655634d477400bc9}\label{structggml__backend__opencl__context_aa4fa2fc1b97ba8a4655634d477400bc9} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+expm1\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a13bcee036aabc8f7a4f22cc941136ea6}\label{structggml__backend__opencl__context_a13bcee036aabc8f7a4f22cc941136ea6} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+expm1\+\_\+f32\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_afb019b4c6b50e305d46bc8e7b94c845b}\label{structggml__backend__opencl__context_afb019b4c6b50e305d46bc8e7b94c845b} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+expm1\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_afaeb2952720f6cec38fb606c7fa024ce}\label{structggml__backend__opencl__context_afaeb2952720f6cec38fb606c7fa024ce} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+expm1\+\_\+f16\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a124b35d5060efb287a09754a7135c503}\label{structggml__backend__opencl__context_a124b35d5060efb287a09754a7135c503} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+expm1\+\_\+f16\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5f2ca95b5110f0c0569eb80d40dea2a4}\label{structggml__backend__opencl__context_a5f2ca95b5110f0c0569eb80d40dea2a4} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+softplus\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa7934ea3df25acefd62692ef8aed5cfd}\label{structggml__backend__opencl__context_aa7934ea3df25acefd62692ef8aed5cfd} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+softplus\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab435c26f68713ee5bcfeca715ce10506}\label{structggml__backend__opencl__context_ab435c26f68713ee5bcfeca715ce10506} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+softplus\+\_\+f32\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a9b876b56bfa8ea6becac7dae77ca164e}\label{structggml__backend__opencl__context_a9b876b56bfa8ea6becac7dae77ca164e} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+softplus\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a08c0cfffa2448b4d2665e2375d7034cf}\label{structggml__backend__opencl__context_a08c0cfffa2448b4d2665e2375d7034cf} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+softplus\+\_\+f16\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_afc3ba5dfdfd76e015beca3ed702af2a8}\label{structggml__backend__opencl__context_afc3ba5dfdfd76e015beca3ed702af2a8} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+softplus\+\_\+f16\+\_\+nc}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a151773f4cd6a3bd951862a73b773b601}\label{structggml__backend__opencl__context_a151773f4cd6a3bd951862a73b773b601} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+upscale}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ac5d02ab962965107ca90110f6caadadc}\label{structggml__backend__opencl__context_ac5d02ab962965107ca90110f6caadadc} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+upscale\+\_\+bilinear}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a52afa05eecc3110792aa2dcac6b50034}\label{structggml__backend__opencl__context_a52afa05eecc3110792aa2dcac6b50034} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+concat\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a3be1fd84f3d450a24107c43f258f7fd2}\label{structggml__backend__opencl__context_a3be1fd84f3d450a24107c43f258f7fd2} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+conv\+\_\+2d\+\_\+f16}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a40fa9916e01062b74d125e468be1759e}\label{structggml__backend__opencl__context_a40fa9916e01062b74d125e468be1759e} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+conv\+\_\+2d\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a3cdb103091aca77a546be62b207f2143}\label{structggml__backend__opencl__context_a3cdb103091aca77a546be62b207f2143} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+conv\+\_\+2d\+\_\+f16\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aed72faad1ca541a8a853a20dae4a5005}\label{structggml__backend__opencl__context_aed72faad1ca541a8a853a20dae4a5005} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+ssm\+\_\+conv\+\_\+f32\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae62d6afa87f355575fa139d91ce6d660}\label{structggml__backend__opencl__context_ae62d6afa87f355575fa139d91ce6d660} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+ssm\+\_\+conv\+\_\+f32\+\_\+f32\+\_\+4}
+\item 
+\Hypertarget{structggml__backend__opencl__context_afaec42840c24f71c9a85e521a9b24f7b}\label{structggml__backend__opencl__context_afaec42840c24f71c9a85e521a9b24f7b} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+timestep\+\_\+embedding}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa97444757aebb2b6cdc76a5fedeb5274}\label{structggml__backend__opencl__context_aa97444757aebb2b6cdc76a5fedeb5274} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+gemv\+\_\+moe\+\_\+mxfp4\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_afa9b654aac687c36b8eeca66213e7460}\label{structggml__backend__opencl__context_afa9b654aac687c36b8eeca66213e7460} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+gemm\+\_\+moe\+\_\+mxfp4\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a32b67a1937c86a8e2e72ceb968d6cf16}\label{structggml__backend__opencl__context_a32b67a1937c86a8e2e72ceb968d6cf16} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+id\+\_\+q4\+\_\+0\+\_\+f32\+\_\+8x\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ab9a0e753961333919dc8285b2a7e6a1f}\label{structggml__backend__opencl__context_ab9a0e753961333919dc8285b2a7e6a1f} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+id\+\_\+q8\+\_\+0\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a5e0c67c77c15ebbec9a9e2cac7268bbf}\label{structggml__backend__opencl__context_a5e0c67c77c15ebbec9a9e2cac7268bbf} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+id\+\_\+q8\+\_\+0\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_adc315b3757080faaafe4efc595c89801}\label{structggml__backend__opencl__context_adc315b3757080faaafe4efc595c89801} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+id\+\_\+mxfp4\+\_\+f32}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a4bcabb0f171cc8d10d900a55a73e420d}\label{structggml__backend__opencl__context_a4bcabb0f171cc8d10d900a55a73e420d} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mv\+\_\+id\+\_\+mxfp4\+\_\+f32\+\_\+flat}
+\item 
+\Hypertarget{structggml__backend__opencl__context_af274861c0b30f72ab9992f9f8287feed}\label{structggml__backend__opencl__context_af274861c0b30f72ab9992f9f8287feed} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mm\+\_\+f32\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_aa6aea4926b2182a97ab3e7606c82c664}\label{structggml__backend__opencl__context_aa6aea4926b2182a97ab3e7606c82c664} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mm\+\_\+f16\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a1f94d14dc7b9f7ee587aa0970f42e4d9}\label{structggml__backend__opencl__context_a1f94d14dc7b9f7ee587aa0970f42e4d9} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mm\+\_\+q4\+\_\+0\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_a20e4fde595c3a175becd35b6b56f7b15}\label{structggml__backend__opencl__context_a20e4fde595c3a175becd35b6b56f7b15} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mm\+\_\+q4\+\_\+1\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae2738bb388b371b54b973e55b416769c}\label{structggml__backend__opencl__context_ae2738bb388b371b54b973e55b416769c} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mm\+\_\+q8\+\_\+0\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ae9f2d7612cd0da01800bd9e5681fdffc}\label{structggml__backend__opencl__context_ae9f2d7612cd0da01800bd9e5681fdffc} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mm\+\_\+q4\+\_\+k\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ad2f25fe8aa5c3352a384a722c48089ec}\label{structggml__backend__opencl__context_ad2f25fe8aa5c3352a384a722c48089ec} 
+cl\+\_\+kernel {\bfseries kernel\+\_\+mul\+\_\+mm\+\_\+q6\+\_\+k\+\_\+f32\+\_\+l4\+\_\+lm}
+\item 
+\Hypertarget{structggml__backend__opencl__context_ababd2a596d18d537eb61043115cb7b01}\label{structggml__backend__opencl__context_ababd2a596d18d537eb61043115cb7b01} 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_profiling_info}{Profiling\+Info}} $>$ {\bfseries profiling\+\_\+info}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/opencl/\+ggml-\/opencl.\+cpp\end{DoxyCompactItemize}

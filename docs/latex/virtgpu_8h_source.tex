@@ -1,0 +1,123 @@
+\doxysection{virtgpu.\+h}
+\hypertarget{virtgpu_8h_source}{}\label{virtgpu_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}virtgpu-\/utils.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}virtgpu-\/shm.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}virtgpu-\/apir.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}backend/shared/api\_remoting.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}backend/shared/apir\_cs.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <fcntl.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <sys/stat.h>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <sys/sysmacros.h>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <threads.h>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <xf86drm.h>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}ggml-\/remoting.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ VIRGL\_RENDERER\_UNSTABLE\_APIS\ 1}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}apir\_hw.h"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <drm/virtgpu\_drm.h>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}venus\_hw.h"{}}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#ifndef\ VIRTGPU\_DRM\_CAPSET\_APIR}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ Will\ be\ defined\ include/drm/virtgpu\_drm.h\ when}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ https://gitlab.freedesktop.org/virgl/virglrenderer/-\//merge\_requests/1590/diffs}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ is\ merged}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#\ \ \ \ define\ VIRTGPU\_DRM\_CAPSET\_APIR\ 10}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ Mesa/Virlgrenderer\ Venus\ internal.\ Only\ necessary\ during\ the}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ Venus-\/>APIR\ transition\ in\ Virglrenderer}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ VENUS\_COMMAND\_TYPE\_LENGTH\ 331}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#ifndef\ VIRTGPU\_DRM\_CAPSET\_VENUS\ \ }\textcolor{comment}{//\ only\ available\ with\ Linux\ >=\ v6.16}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#\ \ \ \ define\ VIRTGPU\_DRM\_CAPSET\_VENUS\ 4}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{typedef}\ uint32\_t\ virgl\_renderer\_capset;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{/*\ from\ src/virtio/vulkan/vn\_renderer\_virtgpu.c\ */}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ VIRTGPU\_PCI\_VENDOR\_ID\ \ \ \ \ \ \ 0x1af4}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ VIRTGPU\_PCI\_DEVICE\_ID\ \ \ \ \ \ \ 0x1050}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ VIRTGPU\_BLOB\_MEM\_GUEST\_VRAM\ 0x0004}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ VIRTGPU\_PARAM\_GUEST\_VRAM\ \ \ \ 9}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ SHMEM\_DATA\_SIZE\ \ 0x1830000\ \ }\textcolor{comment}{//\ 24MiB}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ SHMEM\_REPLY\_SIZE\ 0x4000}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ ARRAY\_SIZE(x)\ (sizeof(x)\ /\ sizeof((x)[0]))}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{enum}\ virt\_gpu\_result\_t\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ APIR\_SUCCESS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00059\ \ \ \ \ APIR\_ERROR\_INITIALIZATION\_FAILED\ =\ -\/1,}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ PRINTFLIKE(f,\ a)\ \_\_attribute\_\_((format(\_\_printf\_\_,\ f,\ a)))}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_apir\_capset;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{int}\ fd;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ virgl\_renderer\_capset\ \ \ \ \ \ id;}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ version;}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structvirgl__renderer__capset__apir}{virgl\_renderer\_capset\_apir}}\ data;}
+\DoxyCodeLine{00073\ \ \ \ \ \}\ capset;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \doxymbox{\hyperlink{structutil__sparse__array}{util\_sparse\_array}}\ shmem\_array;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{/*\ APIR\ communication\ pages\ */}}
+\DoxyCodeLine{00078\ \ \ \ \ \doxymbox{\hyperlink{structvirtgpu__shmem}{virtgpu\_shmem}}\ reply\_shmem;}
+\DoxyCodeLine{00079\ \ \ \ \ \doxymbox{\hyperlink{structvirtgpu__shmem}{virtgpu\_shmem}}\ data\_shmem;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{/*\ Mutex\ to\ protect\ shared\ data\_shmem\ buffer\ from\ concurrent\ access\ */}}
+\DoxyCodeLine{00082\ \ \ \ \ mtx\_t\ data\_shmem\_mutex;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{/*\ Cached\ device\ information\ to\ prevent\ memory\ leaks\ and\ race\ conditions\ */}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ \ \ description;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ \ \ name;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ int32\_t\ \ device\_count;}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ uint32\_t\ type;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ memory\_free;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ memory\_total;}
+\DoxyCodeLine{00092\ \ \ \ \ \}\ cached\_device\_info;}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{/*\ Cached\ buffer\ type\ information\ to\ prevent\ memory\ leaks\ and\ race\ conditions\ */}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ apir\_buffer\_type\_host\_handle\_t\ host\_handle;}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ alignment;}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_size;}
+\DoxyCodeLine{00100\ \ \ \ \ \}\ cached\_buffer\_type;}
+\DoxyCodeLine{00101\ \};}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ virtgpu\_ioctl(\doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ request,\ \textcolor{keywordtype}{void}\ *\ args)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordflow}{return}\ drmIoctl(gpu-\/>fd,\ request,\ args);}
+\DoxyCodeLine{00105\ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ create\_virtgpu();}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ remote\_call\_prepare(\doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ ApirCommandType\ apir\_cmd\_type,\ int32\_t\ cmd\_flags);}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ uint32\_t\ remote\_call(\doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ \ \ \ \ \ \ gpu,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ \ enc,}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ **\ dec,}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ \ max\_wait\_ms,}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ *\ \ \ \ \ call\_duration\_ns);}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{keywordtype}{void}\ remote\_call\_finish(\doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu,\ \doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec);}
+
+\end{DoxyCode}

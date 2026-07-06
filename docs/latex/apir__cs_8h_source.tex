@@ -1,0 +1,384 @@
+\doxysection{apir\+\_\+cs.\+h}
+\hypertarget{apir__cs_8h_source}{}\label{apir__cs_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_cs.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_cs.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ likely(x)\ \ \ \_\_builtin\_expect(!!(x),\ 1)}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ unlikely(x)\ \_\_builtin\_expect(!!(x),\ 0)}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ cur;}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ start;}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ end;}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ fatal;}
+\DoxyCodeLine{00016\ \};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cur;}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ end;}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ fatal;}
+\DoxyCodeLine{00022\ \};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ new\ encoder\ and\ decoder}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ apir\_new\_decoder(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ dec\ =\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ .cur\ \ \ =\ ptr,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ .end\ \ \ =\ ptr\ +\ size,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ .fatal\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00033\ \ \ \ \ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{return}\ dec;}
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ apir\_new\_encoder(\textcolor{keywordtype}{char}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ enc\ =\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ .cur\ \ \ =\ ptr,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ .start\ =\ ptr,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ .end\ \ \ =\ ptr\ +\ size,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ .fatal\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00044\ \ \ \ \ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordflow}{return}\ enc;}
+\DoxyCodeLine{00047\ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ fatal\ flag\ handling}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encoder\_reset\_fatal(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc)\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ enc-\/>fatal\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00055\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encoder\_set\_fatal(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ enc-\/>fatal\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ apir\_encoder\_get\_fatal(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{return}\ enc-\/>fatal;}
+\DoxyCodeLine{00063\ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decoder\_reset\_fatal(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ dec-\/>fatal\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00067\ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decoder\_set\_fatal(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ dec-\/>fatal\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00071\ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ apir\_decoder\_get\_fatal(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordflow}{return}\ dec-\/>fatal;}
+\DoxyCodeLine{00075\ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *\ encode\ peek}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ apir\_decoder\_peek\_internal(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{void}\ *\ val,\ \textcolor{keywordtype}{size\_t}\ val\_size)\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ assert(val\_size\ <=\ size);}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordflow}{if}\ (unlikely(size\ >\ (\textcolor{keywordtype}{size\_t})\ (dec-\/>end\ -\/\ dec-\/>cur)))\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ GGML\_LOG\_ERROR(\textcolor{stringliteral}{"{}\%s:\ reading\ too\ much\ from\ the\ decoder\ ...\(\backslash\)n"{}},\ \_\_func\_\_);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ apir\_decoder\_set\_fatal(dec);}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ memset(val,\ 0,\ val\_size);}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00089\ \ \ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{/*\ we\ should\ not\ rely\ on\ the\ compiler\ to\ optimize\ away\ memcpy...\ */}}
+\DoxyCodeLine{00092\ \ \ \ \ memcpy(val,\ dec-\/>cur,\ val\_size);}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00094\ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decoder\_peek(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{void}\ *\ val,\ \textcolor{keywordtype}{size\_t}\ val\_size)\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ apir\_decoder\_peek\_internal(dec,\ size,\ val,\ val\_size);}
+\DoxyCodeLine{00098\ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ apir\_decoder\_use\_inplace(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordflow}{if}\ (unlikely(size\ >\ (\textcolor{keywordtype}{size\_t})\ (dec-\/>end\ -\/\ dec-\/>cur)))\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ GGML\_LOG\_ERROR(\textcolor{stringliteral}{"{}\%s:\ reading\ too\ much\ from\ the\ decoder\ ...\(\backslash\)n"{}},\ \_\_func\_\_);}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ apir\_decoder\_set\_fatal(dec);}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ addr\ =\ dec-\/>cur;}
+\DoxyCodeLine{00107\ \ \ \ \ dec-\/>cur\ +=\ size;}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordflow}{return}\ addr;}
+\DoxyCodeLine{00110\ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ read/write}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decoder\_read(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{void}\ *\ val,\ \textcolor{keywordtype}{size\_t}\ val\_size)\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordflow}{if}\ (apir\_decoder\_peek\_internal(dec,\ size,\ val,\ val\_size))\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ dec-\/>cur\ +=\ size;}
+\DoxyCodeLine{00119\ \ \ \ \ \}}
+\DoxyCodeLine{00120\ \}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{char}\ *\ apir\_encoder\_write(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ val,\ \textcolor{keywordtype}{size\_t}\ val\_size)\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ assert(val\_size\ <=\ size);}
+\DoxyCodeLine{00124\ \ \ \ \ assert(size\ <=\ ((\textcolor{keywordtype}{size\_t})\ (enc-\/>end\ -\/\ enc-\/>cur)));}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{char}\ *\ write\_addr\ =\ enc-\/>cur;}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{comment}{/*\ we\ should\ not\ rely\ on\ the\ compiler\ to\ optimize\ away\ memcpy...\ */}}
+\DoxyCodeLine{00128\ \ \ \ \ memcpy(write\_addr,\ val,\ val\_size);}
+\DoxyCodeLine{00129\ \ \ \ \ enc-\/>cur\ +=\ size;}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordflow}{return}\ write\_addr;}
+\DoxyCodeLine{00132\ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ *\ encode/decode}}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ data\_size)\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ assert(size\ \%\ 4\ ==\ 0);}
+\DoxyCodeLine{00140\ \ \ \ \ apir\_decoder\_read(dec,\ size,\ data,\ data\_size);}
+\DoxyCodeLine{00141\ \}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ data\_size)\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ assert(size\ \%\ 4\ ==\ 0);}
+\DoxyCodeLine{00145\ \ \ \ \ apir\_encoder\_write(enc,\ size,\ data,\ data\_size);}
+\DoxyCodeLine{00146\ \}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ typed\ encode/decode}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{comment}{/*\ uint8\_t\ */}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_uint8\_t(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ uint8\_t\ *\ val)\ \{}
+\DoxyCodeLine{00155\ \ \ \ \ apir\_encode(enc,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}),\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00156\ \}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_uint8\_t(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uint8\_t\ *\ val)\ \{}
+\DoxyCodeLine{00159\ \ \ \ \ apir\_decode(dec,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}),\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00160\ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{comment}{/*\ uint64\_t\ */}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_uint64\_t(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ uint64\_t\ *\ val)\ \{}
+\DoxyCodeLine{00165\ \ \ \ \ apir\_encode(enc,\ 8,\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00166\ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_uint64\_t(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uint64\_t\ *\ val)\ \{}
+\DoxyCodeLine{00169\ \ \ \ \ apir\_decode(dec,\ 8,\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00170\ \}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_uint64\_t\_array(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ uint64\_t\ *\ val,\ uint32\_t\ count)\ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ size\ =\ \textcolor{keyword}{sizeof}(*val)\ *\ count;}
+\DoxyCodeLine{00174\ \ \ \ \ assert(size\ >=\ count);}
+\DoxyCodeLine{00175\ \ \ \ \ apir\_encode(enc,\ size,\ val,\ size);}
+\DoxyCodeLine{00176\ \}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_uint64\_t\_array(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uint64\_t\ *\ val,\ uint32\_t\ count)\ \{}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ size\ =\ \textcolor{keyword}{sizeof}(*val)\ *\ count;}
+\DoxyCodeLine{00180\ \ \ \ \ assert(size\ >=\ count);}
+\DoxyCodeLine{00181\ \ \ \ \ apir\_decode(dec,\ size,\ val,\ size);}
+\DoxyCodeLine{00182\ \}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ uint64\_t\ *\ apir\_decode\_uint64\_t\_array\_inplace(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uint32\_t\ count)\ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordflow}{return}\ (uint64\_t\ *)\ (uintptr\_t)\ apir\_decoder\_use\_inplace(dec,\ count\ *\ \textcolor{keyword}{sizeof}(uint64\_t));}
+\DoxyCodeLine{00186\ \}}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \textcolor{comment}{/*\ int32\_t\ */}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_int32\_t(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ int32\_t\ *\ val)\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ apir\_encode(enc,\ 4,\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00192\ \}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_int32\_t(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ int32\_t\ *\ val)\ \{}
+\DoxyCodeLine{00195\ \ \ \ \ apir\_decode(dec,\ 4,\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00196\ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_int32\_t\_array(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ int32\_t\ *\ val,\ uint32\_t\ count)\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ size\ =\ \textcolor{keyword}{sizeof}(*val)\ *\ count;}
+\DoxyCodeLine{00200\ \ \ \ \ assert(size\ >=\ count);}
+\DoxyCodeLine{00201\ \ \ \ \ apir\_encode(enc,\ size,\ val,\ size);}
+\DoxyCodeLine{00202\ \}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_int32\_t\_array(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ int32\_t\ *\ val,\ uint32\_t\ count)\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ size\ =\ \textcolor{keyword}{sizeof}(*val)\ *\ count;}
+\DoxyCodeLine{00206\ \ \ \ \ assert(size\ >=\ count);}
+\DoxyCodeLine{00207\ \ \ \ \ apir\_decode(dec,\ size,\ val,\ size);}
+\DoxyCodeLine{00208\ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{comment}{/*\ array\ size\ (uint64\_t)\ */}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_array\_size(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ uint64\_t\ size)\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ apir\_encode\_uint64\_t(enc,\ \&size);}
+\DoxyCodeLine{00214\ \}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint64\_t\ apir\_decode\_array\_size(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uint64\_t\ expected\_size)\ \{}
+\DoxyCodeLine{00217\ \ \ \ \ uint64\_t\ size;}
+\DoxyCodeLine{00218\ \ \ \ \ apir\_decode\_uint64\_t(dec,\ \&size);}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keywordflow}{if}\ (size\ !=\ expected\_size)\ \{}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ GGML\_LOG\_ERROR(\textcolor{stringliteral}{"{}\%s:\ Couldn't\ decode\ array\ from\ the\ decoder\(\backslash\)n"{}},\ \_\_func\_\_);}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ apir\_decoder\_set\_fatal(dec);}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ size\ =\ 0;}
+\DoxyCodeLine{00223\ \ \ \ \ \}}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keywordflow}{return}\ size;}
+\DoxyCodeLine{00225\ \}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint64\_t\ apir\_decode\_array\_size\_unchecked(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00228\ \ \ \ \ uint64\_t\ size;}
+\DoxyCodeLine{00229\ \ \ \ \ apir\_decode\_uint64\_t(dec,\ \&size);}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordflow}{return}\ size;}
+\DoxyCodeLine{00231\ \}}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \textcolor{comment}{/*\ non-\/array\ pointer\ */}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ apir\_encode\_simple\_pointer(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ val)\ \{}
+\DoxyCodeLine{00236\ \ \ \ \ apir\_encode\_array\_size(enc,\ val\ ?\ 1\ :\ 0);}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keywordflow}{return}\ val;}
+\DoxyCodeLine{00238\ \}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ apir\_decode\_simple\_pointer(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec)\ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keywordflow}{return}\ apir\_decode\_array\_size\_unchecked(dec);}
+\DoxyCodeLine{00242\ \}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \textcolor{comment}{/*\ uint32\_t\ */}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_uint32\_t(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ uint32\_t\ *\ val)\ \{}
+\DoxyCodeLine{00247\ \ \ \ \ apir\_encode(enc,\ 4,\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00248\ \}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_uint32\_t(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uint32\_t\ *\ val)\ \{}
+\DoxyCodeLine{00251\ \ \ \ \ apir\_decode(dec,\ 4,\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00252\ \}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_uint32\_t\_array(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ uint32\_t\ *\ val,\ uint32\_t\ count)\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ size\ =\ \textcolor{keyword}{sizeof}(*val)\ *\ count;}
+\DoxyCodeLine{00256\ \ \ \ \ assert(size\ >=\ count);}
+\DoxyCodeLine{00257\ \ \ \ \ apir\_encode(enc,\ size,\ val,\ size);}
+\DoxyCodeLine{00258\ \}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_uint32\_t\_array(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uint32\_t\ *\ val,\ uint32\_t\ count)\ \{}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ size\ =\ \textcolor{keyword}{sizeof}(*val)\ *\ count;}
+\DoxyCodeLine{00262\ \ \ \ \ assert(size\ >=\ count);}
+\DoxyCodeLine{00263\ \ \ \ \ apir\_decode(dec,\ size,\ val,\ size);}
+\DoxyCodeLine{00264\ \}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{comment}{/*\ size\_t\ */}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_size\_t(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ *\ val)\ \{}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ tmp\ =\ *val;}
+\DoxyCodeLine{00270\ \ \ \ \ apir\_encode\_uint64\_t(enc,\ \&tmp);}
+\DoxyCodeLine{00271\ \}}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_size\_t(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{size\_t}\ *\ val)\ \{}
+\DoxyCodeLine{00274\ \ \ \ \ uint64\_t\ tmp;}
+\DoxyCodeLine{00275\ \ \ \ \ apir\_decode\_uint64\_t(dec,\ \&tmp);}
+\DoxyCodeLine{00276\ \ \ \ \ *val\ =\ tmp;}
+\DoxyCodeLine{00277\ \}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_size\_t\_array(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ *\ val,\ uint32\_t\ count)\ \{}
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{size\_t})\ ==\ \textcolor{keyword}{sizeof}(uint64\_t))\ \{}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ apir\_encode\_uint64\_t\_array(enc,\ (\textcolor{keyword}{const}\ uint64\_t\ *)\ val,\ count);}
+\DoxyCodeLine{00282\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (uint32\_t\ i\ =\ 0;\ i\ <\ count;\ i++)\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ apir\_encode\_size\_t(enc,\ \&val[i]);}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00286\ \ \ \ \ \}}
+\DoxyCodeLine{00287\ \}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_size\_t\_array(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{size\_t}\ *\ val,\ uint32\_t\ count)\ \{}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{size\_t})\ ==\ \textcolor{keyword}{sizeof}(uint64\_t))\ \{}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ apir\_decode\_uint64\_t\_array(dec,\ (uint64\_t\ *)\ val,\ count);}
+\DoxyCodeLine{00292\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (uint32\_t\ i\ =\ 0;\ i\ <\ count;\ i++)\ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ apir\_decode\_size\_t(dec,\ \&val[i]);}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00296\ \ \ \ \ \}}
+\DoxyCodeLine{00297\ \}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \textcolor{comment}{/*\ opaque\ blob\ */}}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_blob\_array(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ val,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00302\ \ \ \ \ apir\_encode(enc,\ (size\ +\ 3)\ \&\ \string~3,\ val,\ size);}
+\DoxyCodeLine{00303\ \}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_blob\_array(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{void}\ *\ val,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00306\ \ \ \ \ apir\_decode(dec,\ (size\ +\ 3)\ \&\ \string~3,\ val,\ size);}
+\DoxyCodeLine{00307\ \}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \textcolor{comment}{/*\ string\ */}}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_char\_array(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ val,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00312\ \ \ \ \ assert(size\ \&\&\ strlen(val)\ <\ size);}
+\DoxyCodeLine{00313\ \ \ \ \ apir\_encode\_blob\_array(enc,\ val,\ size);}
+\DoxyCodeLine{00314\ \}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_char\_array(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{char}\ *\ val,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00317\ \ \ \ \ apir\_decode\_blob\_array(dec,\ val,\ size);}
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{keywordflow}{if}\ (size)\ \{}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ val[size\ -\/\ 1]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00320\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ GGML\_LOG\_ERROR(\textcolor{stringliteral}{"{}\%s:\ Couldn't\ decode\ the\ blog\ array\(\backslash\)n"{}},\ \_\_func\_\_);}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ apir\_decoder\_set\_fatal(dec);}
+\DoxyCodeLine{00323\ \ \ \ \ \}}
+\DoxyCodeLine{00324\ \}}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{comment}{/*\ (temp)\ buffer\ allocation\ */}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ *\ apir\_decoder\_alloc\_array(\textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{size\_t}\ count)\ \{}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ alloc\_size;}
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keywordflow}{if}\ (unlikely(\_\_builtin\_mul\_overflow(size,\ count,\ \&alloc\_size)))\ \{}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ GGML\_LOG\_ERROR(\textcolor{stringliteral}{"{}\%s:\ overflow\ in\ array\ allocation\ of\ \%zu\ *\ \%zu\ bytes\(\backslash\)n"{}},\ \_\_func\_\_,\ size,\ count);}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00333\ \ \ \ \ \}}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{keywordflow}{return}\ malloc(alloc\_size);}
+\DoxyCodeLine{00336\ \}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \textcolor{comment}{/*\ bool\ */}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_bool\_t(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ *\ val)\ \{}
+\DoxyCodeLine{00341\ \ \ \ \ apir\_encode(enc,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}),\ val,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{bool}));}
+\DoxyCodeLine{00342\ \}}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_bool\_t(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \textcolor{keywordtype}{bool}\ *\ val)\ \{}
+\DoxyCodeLine{00345\ \ \ \ \ apir\_decode(dec,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}),\ val,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{bool}));}
+\DoxyCodeLine{00346\ \}}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \textcolor{comment}{/*\ apir\_buffer\_type\_host\_handle\_t\ */}}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_apir\_buffer\_type\_host\_handle\_t(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enc,}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ apir\_buffer\_type\_host\_handle\_t\ *\ val)\ \{}
+\DoxyCodeLine{00352\ \ \ \ \ apir\_encode(enc,\ \textcolor{keyword}{sizeof}(apir\_buffer\_type\_host\_handle\_t),\ val,\ \textcolor{keyword}{sizeof}(apir\_buffer\_type\_host\_handle\_t));}
+\DoxyCodeLine{00353\ \}}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_apir\_buffer\_type\_host\_handle\_t(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dec,}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_buffer\_type\_host\_handle\_t\ *\ val)\ \{}
+\DoxyCodeLine{00357\ \ \ \ \ apir\_decode(dec,\ \textcolor{keyword}{sizeof}(apir\_buffer\_type\_host\_handle\_t),\ val,\ \textcolor{keyword}{sizeof}(apir\_buffer\_type\_host\_handle\_t));}
+\DoxyCodeLine{00358\ \}}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \textcolor{comment}{/*\ apir\_buffer\_host\_handle\_t\ */}}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_apir\_buffer\_host\_handle\_t(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ apir\_buffer\_host\_handle\_t\ *\ val)\ \{}
+\DoxyCodeLine{00363\ \ \ \ \ apir\_encode(enc,\ \textcolor{keyword}{sizeof}(apir\_buffer\_host\_handle\_t),\ val,\ \textcolor{keyword}{sizeof}(apir\_buffer\_host\_handle\_t));}
+\DoxyCodeLine{00364\ \}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_apir\_buffer\_host\_handle\_t(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ apir\_buffer\_host\_handle\_t\ *\ val)\ \{}
+\DoxyCodeLine{00367\ \ \ \ \ apir\_decode(dec,\ \textcolor{keyword}{sizeof}(apir\_buffer\_host\_handle\_t),\ val,\ \textcolor{keyword}{sizeof}(apir\_buffer\_host\_handle\_t));}
+\DoxyCodeLine{00368\ \}}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \textcolor{comment}{/*\ uintptr\_t\ */}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_encode\_uintptr\_t(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \textcolor{keyword}{const}\ uintptr\_t\ *\ val)\ \{}
+\DoxyCodeLine{00373\ \ \ \ \ apir\_encode(enc,\ \textcolor{keyword}{sizeof}(*val),\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00374\ \}}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ apir\_decode\_uintptr\_t(\doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ uintptr\_t\ *\ val)\ \{}
+\DoxyCodeLine{00377\ \ \ \ \ apir\_decode(dec,\ \textcolor{keyword}{sizeof}(*val),\ val,\ \textcolor{keyword}{sizeof}(*val));}
+\DoxyCodeLine{00378\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,591 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: ClassName
+%%Creator: Doxygen
+%%CreationDate: Time
+%%For: 
+%Magnification: 1.00
+%%Orientation: Portrait
+%%BoundingBox: 0 0 500 5183.246094
+%%Pages: 0
+%%BeginSetup
+%%EndSetup
+%%EndComments
+
+% ----- variables -----
+
+/boxwidth 0 def
+/boxheight 40 def
+/fontheight 24 def
+/marginwidth 10 def
+/distx 20 def
+/disty 40 def
+/boundaspect 0.096465 def  % aspect ratio of the BoundingBox (width/height)
+/boundx 500 def
+/boundy boundx boundaspect div def
+/xspacing 0 def
+/yspacing 0 def
+/rows 99 def
+/cols 2 def
+/scalefactor 0 def
+/boxfont /Times-Roman findfont fontheight scalefont def
+
+% ----- procedures -----
+
+/dotted { [1 4] 0 setdash } def
+/dashed { [5] 0 setdash } def
+/solid  { [] 0 setdash } def
+
+/max % result = MAX(arg1,arg2)
+{
+  /a exch def
+  /b exch def
+  a b gt {a} {b} ifelse
+} def
+
+/xoffset % result = MAX(0,(scalefactor-(boxwidth*cols+distx*(cols-1)))/2)
+{
+  0 scalefactor boxwidth cols mul distx cols 1 sub mul add sub 2 div max
+} def
+
+/cw % boxwidth = MAX(boxwidth, stringwidth(arg1))
+{
+  /str exch def
+  /boxwidth boxwidth str stringwidth pop max def
+} def
+
+/box % draws a box with text 'arg1' at grid pos (arg2,arg3)
+{ gsave
+  2 setlinewidth
+  newpath
+  exch xspacing mul xoffset add
+  exch yspacing mul
+  moveto
+  boxwidth 0 rlineto 
+  0 boxheight rlineto 
+  boxwidth neg 0 rlineto 
+  0 boxheight neg rlineto 
+  closepath
+  dup stringwidth pop neg boxwidth add 2 div
+  boxheight fontheight 2 div sub 2 div
+  rmoveto show stroke
+  grestore
+} def  
+
+/mark
+{ newpath
+  exch xspacing mul xoffset add boxwidth add
+  exch yspacing mul
+  moveto
+  0 boxheight 4 div rlineto
+  boxheight neg 4 div boxheight neg 4 div rlineto
+  closepath
+  eofill
+  stroke
+} def
+
+/arrow
+{ newpath
+  moveto
+  3 -8 rlineto
+  -6 0 rlineto
+  3 8 rlineto
+  closepath
+  eofill
+  stroke
+} def
+
+/out % draws an output connector for the block at (arg1,arg2)
+{
+  newpath
+  exch xspacing mul xoffset add boxwidth 2 div add
+  exch yspacing mul boxheight add
+  /y exch def
+  /x exch def
+  x y moveto
+  0 disty 2 div rlineto 
+  stroke
+  1 eq { x y disty 2 div add arrow } if
+} def
+
+/in % draws an input connector for the block at (arg1,arg2)
+{
+  newpath
+  exch xspacing mul xoffset add boxwidth 2 div add
+  exch yspacing mul disty 2 div sub
+  /y exch def
+  /x exch def
+  x y moveto
+  0 disty 2 div rlineto
+  stroke
+  1 eq { x y disty 2 div add arrow } if
+} def
+
+/hedge
+{
+  exch xspacing mul xoffset add boxwidth 2 div add
+  exch yspacing mul boxheight 2 div sub
+  /y exch def
+  /x exch def
+  newpath
+  x y moveto
+  boxwidth 2 div distx add 0 rlineto
+  stroke
+  1 eq
+  { newpath x boxwidth 2 div distx add add y moveto
+    -8 3 rlineto
+    0 -6 rlineto
+    8 3 rlineto
+    closepath
+    eofill
+    stroke
+  } if
+} def
+
+/vedge
+{
+  /ye exch def
+  /ys exch def
+  /xs exch def
+  newpath
+  xs xspacing mul xoffset add boxwidth 2 div add dup
+  ys yspacing mul boxheight 2 div sub
+  moveto
+  ye yspacing mul boxheight 2 div sub
+  lineto
+  stroke
+} def
+
+/conn % connections the blocks from col 'arg1' to 'arg2' of row 'arg3'
+{
+  /ys exch def
+  /xe exch def
+  /xs exch def
+  newpath
+  xs xspacing mul xoffset add boxwidth 2 div add
+  ys yspacing mul disty 2 div sub
+  moveto
+  xspacing xe xs sub mul 0
+  rlineto
+  stroke
+} def
+
+% ----- main ------
+
+boxfont setfont
+1 boundaspect scale
+(llm_graph_context) cw
+(llm_build_afmoe) cw
+(llm_build_apertus) cw
+(llm_build_arcee) cw
+(llm_build_arctic) cw
+(llm_build_baichuan) cw
+(llm_build_bailingmoe) cw
+(llm_build_bailingmoe2) cw
+(llm_build_bert) cw
+(llm_build_bitnet) cw
+(llm_build_bloom) cw
+(llm_build_chameleon) cw
+(llm_build_chatglm) cw
+(llm_build_codeshell) cw
+(llm_build_cogvlm) cw
+(llm_build_cohere2_iswa) cw
+(llm_build_command_r) cw
+(llm_build_dbrx) cw
+(llm_build_deci) cw
+(llm_build_deepseek) cw
+(llm_build_deepseek2) cw
+(llm_build_delta_net_base) cw
+(llm_build_dots1) cw
+(llm_build_dream) cw
+(llm_build_ernie4_5) cw
+(llm_build_ernie4_5_moe) cw
+(llm_build_eurobert) cw
+(llm_build_exaone) cw
+(llm_build_exaone4< iswa >) cw
+(llm_build_exaone_moe) cw
+(llm_build_falcon) cw
+(llm_build_gemma) cw
+(llm_build_gemma2_iswa) cw
+(llm_build_gemma3< iswa >) cw
+(llm_build_gemma3n_iswa) cw
+(llm_build_gemma_embedding) cw
+(llm_build_glm4) cw
+(llm_build_glm4_moe) cw
+(llm_build_gpt2) cw
+(llm_build_gptneox) cw
+(llm_build_granite) cw
+(llm_build_grok) cw
+(llm_build_grovemoe) cw
+(llm_build_hunyuan_dense) cw
+(llm_build_hunyuan_moe) cw
+(llm_build_internlm2) cw
+(llm_build_jais) cw
+(llm_build_jais2) cw
+(llm_build_lfm2< iswa >) cw
+(llm_build_llada) cw
+(llm_build_llada_moe) cw
+(llm_build_llama< embed >) cw
+(llm_build_llama_iswa) cw
+(llm_build_maincoder) cw
+(llm_build_mamba_base) cw
+(llm_build_mimo2_iswa) cw
+(llm_build_minicpm3) cw
+(llm_build_minimax_m2) cw
+(llm_build_mistral3) cw
+(llm_build_modern_bert) cw
+(llm_build_mpt) cw
+(llm_build_nemotron) cw
+(llm_build_neo_bert) cw
+(llm_build_olmo) cw
+(llm_build_olmo2< iswa >) cw
+(llm_build_olmoe) cw
+(llm_build_openai_moe_iswa) cw
+(llm_build_openelm) cw
+(llm_build_orion) cw
+(llm_build_paddleocr) cw
+(llm_build_pangu_embedded) cw
+(llm_build_phi2) cw
+(llm_build_phi3< iswa >) cw
+(llm_build_plamo) cw
+(llm_build_plamo3< iswa >) cw
+(llm_build_plm) cw
+(llm_build_qwen) cw
+(llm_build_qwen2) cw
+(llm_build_qwen2moe) cw
+(llm_build_qwen2vl) cw
+(llm_build_qwen3) cw
+(llm_build_qwen3moe) cw
+(llm_build_qwen3vl) cw
+(llm_build_qwen3vlmoe) cw
+(llm_build_refact) cw
+(llm_build_rnd1) cw
+(llm_build_rwkv6_base) cw
+(llm_build_rwkv7_base) cw
+(llm_build_seed_oss) cw
+(llm_build_smallthinker< iswa >) cw
+(llm_build_smollm3) cw
+(llm_build_stablelm) cw
+(llm_build_starcoder) cw
+(llm_build_starcoder2) cw
+(llm_build_step35_iswa) cw
+(llm_build_t5_dec) cw
+(llm_build_t5_enc) cw
+(llm_build_wavtokenizer_dec) cw
+(llm_build_xverse) cw
+/boxwidth boxwidth marginwidth 2 mul add def
+/xspacing boxwidth distx add def
+/yspacing boxheight disty add def
+/scalefactor 
+  boxwidth cols mul distx cols 1 sub mul add
+  boxheight rows mul disty rows 1 sub mul add boundaspect mul 
+  max def
+boundx scalefactor div boundy scalefactor div scale
+
+% ----- classes -----
+
+ (llm_graph_context) 0.000000 98.000000 box
+ (llm_build_afmoe) 1.000000 97.000000 box
+ (llm_build_apertus) 1.000000 96.000000 box
+ (llm_build_arcee) 1.000000 95.000000 box
+ (llm_build_arctic) 1.000000 94.000000 box
+ (llm_build_baichuan) 1.000000 93.000000 box
+ (llm_build_bailingmoe) 1.000000 92.000000 box
+ (llm_build_bailingmoe2) 1.000000 91.000000 box
+ (llm_build_bert) 1.000000 90.000000 box
+ (llm_build_bitnet) 1.000000 89.000000 box
+ (llm_build_bloom) 1.000000 88.000000 box
+ (llm_build_chameleon) 1.000000 87.000000 box
+ (llm_build_chatglm) 1.000000 86.000000 box
+ (llm_build_codeshell) 1.000000 85.000000 box
+ (llm_build_cogvlm) 1.000000 84.000000 box
+ (llm_build_cohere2_iswa) 1.000000 83.000000 box
+ (llm_build_command_r) 1.000000 82.000000 box
+ (llm_build_dbrx) 1.000000 81.000000 box
+ (llm_build_deci) 1.000000 80.000000 box
+ (llm_build_deepseek) 1.000000 79.000000 box
+ (llm_build_deepseek2) 1.000000 78.000000 box
+ (llm_build_delta_net_base) 1.000000 77.000000 box
+1.000000 77.000000 mark
+ (llm_build_dots1) 1.000000 76.000000 box
+ (llm_build_dream) 1.000000 75.000000 box
+ (llm_build_ernie4_5) 1.000000 74.000000 box
+ (llm_build_ernie4_5_moe) 1.000000 73.000000 box
+ (llm_build_eurobert) 1.000000 72.000000 box
+ (llm_build_exaone) 1.000000 71.000000 box
+ (llm_build_exaone4< iswa >) 1.000000 70.000000 box
+ (llm_build_exaone_moe) 1.000000 69.000000 box
+ (llm_build_falcon) 1.000000 68.000000 box
+ (llm_build_gemma) 1.000000 67.000000 box
+ (llm_build_gemma2_iswa) 1.000000 66.000000 box
+ (llm_build_gemma3< iswa >) 1.000000 65.000000 box
+ (llm_build_gemma3n_iswa) 1.000000 64.000000 box
+ (llm_build_gemma_embedding) 1.000000 63.000000 box
+ (llm_build_glm4) 1.000000 62.000000 box
+ (llm_build_glm4_moe) 1.000000 61.000000 box
+ (llm_build_gpt2) 1.000000 60.000000 box
+ (llm_build_gptneox) 1.000000 59.000000 box
+ (llm_build_granite) 1.000000 58.000000 box
+ (llm_build_grok) 1.000000 57.000000 box
+ (llm_build_grovemoe) 1.000000 56.000000 box
+ (llm_build_hunyuan_dense) 1.000000 55.000000 box
+ (llm_build_hunyuan_moe) 1.000000 54.000000 box
+ (llm_build_internlm2) 1.000000 53.000000 box
+ (llm_build_jais) 1.000000 52.000000 box
+ (llm_build_jais2) 1.000000 51.000000 box
+ (llm_build_lfm2< iswa >) 1.000000 50.000000 box
+ (llm_build_llada) 1.000000 49.000000 box
+ (llm_build_llada_moe) 1.000000 48.000000 box
+ (llm_build_llama< embed >) 1.000000 47.000000 box
+ (llm_build_llama_iswa) 1.000000 46.000000 box
+ (llm_build_maincoder) 1.000000 45.000000 box
+ (llm_build_mamba_base) 1.000000 44.000000 box
+1.000000 44.000000 mark
+ (llm_build_mimo2_iswa) 1.000000 43.000000 box
+ (llm_build_minicpm3) 1.000000 42.000000 box
+ (llm_build_minimax_m2) 1.000000 41.000000 box
+ (llm_build_mistral3) 1.000000 40.000000 box
+ (llm_build_modern_bert) 1.000000 39.000000 box
+ (llm_build_mpt) 1.000000 38.000000 box
+ (llm_build_nemotron) 1.000000 37.000000 box
+ (llm_build_neo_bert) 1.000000 36.000000 box
+ (llm_build_olmo) 1.000000 35.000000 box
+ (llm_build_olmo2< iswa >) 1.000000 34.000000 box
+ (llm_build_olmoe) 1.000000 33.000000 box
+ (llm_build_openai_moe_iswa) 1.000000 32.000000 box
+ (llm_build_openelm) 1.000000 31.000000 box
+ (llm_build_orion) 1.000000 30.000000 box
+ (llm_build_paddleocr) 1.000000 29.000000 box
+ (llm_build_pangu_embedded) 1.000000 28.000000 box
+ (llm_build_phi2) 1.000000 27.000000 box
+ (llm_build_phi3< iswa >) 1.000000 26.000000 box
+ (llm_build_plamo) 1.000000 25.000000 box
+ (llm_build_plamo3< iswa >) 1.000000 24.000000 box
+ (llm_build_plm) 1.000000 23.000000 box
+ (llm_build_qwen) 1.000000 22.000000 box
+ (llm_build_qwen2) 1.000000 21.000000 box
+ (llm_build_qwen2moe) 1.000000 20.000000 box
+ (llm_build_qwen2vl) 1.000000 19.000000 box
+ (llm_build_qwen3) 1.000000 18.000000 box
+ (llm_build_qwen3moe) 1.000000 17.000000 box
+ (llm_build_qwen3vl) 1.000000 16.000000 box
+ (llm_build_qwen3vlmoe) 1.000000 15.000000 box
+ (llm_build_refact) 1.000000 14.000000 box
+ (llm_build_rnd1) 1.000000 13.000000 box
+ (llm_build_rwkv6_base) 1.000000 12.000000 box
+1.000000 12.000000 mark
+ (llm_build_rwkv7_base) 1.000000 11.000000 box
+1.000000 11.000000 mark
+ (llm_build_seed_oss) 1.000000 10.000000 box
+ (llm_build_smallthinker< iswa >) 1.000000 9.000000 box
+ (llm_build_smollm3) 1.000000 8.000000 box
+ (llm_build_stablelm) 1.000000 7.000000 box
+ (llm_build_starcoder) 1.000000 6.000000 box
+ (llm_build_starcoder2) 1.000000 5.000000 box
+ (llm_build_step35_iswa) 1.000000 4.000000 box
+ (llm_build_t5_dec) 1.000000 3.000000 box
+ (llm_build_t5_enc) 1.000000 2.000000 box
+ (llm_build_wavtokenizer_dec) 1.000000 1.000000 box
+ (llm_build_xverse) 1.000000 0.000000 box
+
+% ----- relations -----
+
+solid
+1 0.000000 97.250000 out
+solid
+0 0.000000 97.500000 hedge
+solid
+0 0.000000 96.500000 hedge
+solid
+0 0.000000 95.500000 hedge
+solid
+0 0.000000 94.500000 hedge
+solid
+0 0.000000 93.500000 hedge
+solid
+0 0.000000 92.500000 hedge
+solid
+0 0.000000 91.500000 hedge
+solid
+0 0.000000 90.500000 hedge
+solid
+0 0.000000 89.500000 hedge
+solid
+0 0.000000 88.500000 hedge
+solid
+0 0.000000 87.500000 hedge
+solid
+0 0.000000 86.500000 hedge
+solid
+0 0.000000 85.500000 hedge
+solid
+0 0.000000 84.500000 hedge
+solid
+0 0.000000 83.500000 hedge
+solid
+0 0.000000 82.500000 hedge
+solid
+0 0.000000 81.500000 hedge
+solid
+0 0.000000 80.500000 hedge
+solid
+0 0.000000 79.500000 hedge
+solid
+0 0.000000 78.500000 hedge
+solid
+0 0.000000 77.500000 hedge
+solid
+0 0.000000 76.500000 hedge
+solid
+0 0.000000 75.500000 hedge
+solid
+0 0.000000 74.500000 hedge
+solid
+0 0.000000 73.500000 hedge
+solid
+0 0.000000 72.500000 hedge
+solid
+0 0.000000 71.500000 hedge
+solid
+0 0.000000 70.500000 hedge
+solid
+0 0.000000 69.500000 hedge
+solid
+0 0.000000 68.500000 hedge
+solid
+0 0.000000 67.500000 hedge
+solid
+0 0.000000 66.500000 hedge
+solid
+0 0.000000 65.500000 hedge
+solid
+0 0.000000 64.500000 hedge
+solid
+0 0.000000 63.500000 hedge
+solid
+0 0.000000 62.500000 hedge
+solid
+0 0.000000 61.500000 hedge
+solid
+0 0.000000 60.500000 hedge
+solid
+0 0.000000 59.500000 hedge
+solid
+0 0.000000 58.500000 hedge
+solid
+0 0.000000 57.500000 hedge
+solid
+0 0.000000 56.500000 hedge
+solid
+0 0.000000 55.500000 hedge
+solid
+0 0.000000 54.500000 hedge
+solid
+0 0.000000 53.500000 hedge
+solid
+0 0.000000 52.500000 hedge
+solid
+0 0.000000 51.500000 hedge
+solid
+0 0.000000 50.500000 hedge
+solid
+0 0.000000 49.500000 hedge
+solid
+0 0.000000 48.500000 hedge
+solid
+0 0.000000 47.500000 hedge
+solid
+0 0.000000 46.500000 hedge
+solid
+0 0.000000 45.500000 hedge
+solid
+0 0.000000 44.500000 hedge
+solid
+0 0.000000 43.500000 hedge
+solid
+0 0.000000 42.500000 hedge
+solid
+0 0.000000 41.500000 hedge
+solid
+0 0.000000 40.500000 hedge
+solid
+0 0.000000 39.500000 hedge
+solid
+0 0.000000 38.500000 hedge
+solid
+0 0.000000 37.500000 hedge
+solid
+0 0.000000 36.500000 hedge
+solid
+0 0.000000 35.500000 hedge
+solid
+0 0.000000 34.500000 hedge
+solid
+0 0.000000 33.500000 hedge
+solid
+0 0.000000 32.500000 hedge
+solid
+0 0.000000 31.500000 hedge
+solid
+0 0.000000 30.500000 hedge
+solid
+0 0.000000 29.500000 hedge
+solid
+0 0.000000 28.500000 hedge
+solid
+0 0.000000 27.500000 hedge
+solid
+0 0.000000 26.500000 hedge
+solid
+0 0.000000 25.500000 hedge
+solid
+0 0.000000 24.500000 hedge
+solid
+0 0.000000 23.500000 hedge
+solid
+0 0.000000 22.500000 hedge
+solid
+0 0.000000 21.500000 hedge
+solid
+0 0.000000 20.500000 hedge
+solid
+0 0.000000 19.500000 hedge
+solid
+0 0.000000 18.500000 hedge
+solid
+0 0.000000 17.500000 hedge
+solid
+0 0.000000 16.500000 hedge
+solid
+0 0.000000 15.500000 hedge
+solid
+0 0.000000 14.500000 hedge
+solid
+0 0.000000 13.500000 hedge
+solid
+0 0.000000 12.500000 hedge
+solid
+0 0.000000 11.500000 hedge
+solid
+0 0.000000 10.500000 hedge
+solid
+0 0.000000 9.500000 hedge
+solid
+0 0.000000 8.500000 hedge
+solid
+0 0.000000 7.500000 hedge
+solid
+0 0.000000 6.500000 hedge
+solid
+0 0.000000 5.500000 hedge
+solid
+0 0.000000 4.500000 hedge
+solid
+0 0.000000 3.500000 hedge
+solid
+0 0.000000 2.500000 hedge
+solid
+0 0.000000 1.500000 hedge
+solid
+0 0.000000 0.500000 hedge
+solid
+0.000000 98.000000 0.500000 vedge

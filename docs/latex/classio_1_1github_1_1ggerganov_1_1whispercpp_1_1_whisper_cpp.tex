@@ -1,0 +1,157 @@
+\doxysection{io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp Class Reference}
+\hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp}{}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp}\index{io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}}
+Inheritance diagram for io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a1a085d0708b36c5f244a1c292191bd72}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a1a085d0708b36c5f244a1c292191bd72} 
+File {\bfseries model\+Dir} ()
+\item 
+void \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a56edc4cc0be71362e6b417794f0d57de}{init\+Context}} (String model\+Path)  throws File\+Not\+Found\+Exception 
+\item 
+void \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a8a32561ed1c5eeef7ecc20e51931aad9}{init\+Context}} (String model\+Path, \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_context_params_1_1_by_value}{Whisper\+Context\+Params.\+By\+Value}} params)  throws File\+Not\+Found\+Exception 
+\item 
+\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_context_params_1_1_by_value}{Whisper\+Context\+Params.\+By\+Value}} \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a996140fec85a463b668454414c091951}{get\+Context\+Default\+Params}} ()
+\item 
+\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}} \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a3e1010f4ff42c0bad899c0f4d63f396a}{get\+Full\+Default\+Params}} (\doxymbox{\hyperlink{enumio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_sampling_strategy}{Whisper\+Sampling\+Strategy}} strategy)
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_af9abcb9ce74a4a93e5cc33de7ec031ea}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_af9abcb9ce74a4a93e5cc33de7ec031ea} 
+void {\bfseries close} ()
+\item 
+String \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a32bc35cc972050654c4e0205bd217818}{full\+Transcribe}} (\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}} whisper\+Params, float\+[$\,$]\+ audio\+Data)  throws IOException 
+\item 
+List$<$ \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1bean_1_1_whisper_segment}{Whisper\+Segment}} $>$ \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a168bc37886c1dac5cc34b35a6f07fde0}{full\+Transcribe\+With\+Time}} (\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}} whisper\+Params, float\+[$\,$]\+ audio\+Data)  throws IOException 
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a9d07de5f0d6bc742b28247d18e10cd02}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a9d07de5f0d6bc742b28247d18e10cd02} 
+String {\bfseries get\+System\+Info} ()
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_ada17ef628fbbc6af015bed09d029d81b}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_ada17ef628fbbc6af015bed09d029d81b} 
+int {\bfseries bench\+Memcpy} (int nthread)
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_ab8b44db6a94357f2093dc0cb86e74e93}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_ab8b44db6a94357f2093dc0cb86e74e93} 
+int {\bfseries bench\+Ggml\+Mul\+Mat} (int nthread)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a60d6ad71b86d14f7dd0df3c147debb47}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a60d6ad71b86d14f7dd0df3c147debb47} 
+void {\bfseries init\+Context\+Impl} (String model\+Path, \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_context_params_1_1_by_value}{Whisper\+Context\+Params.\+By\+Value}} params)  throws File\+Not\+Found\+Exception 
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a9d7a6f33d07ad7e91a750778de0c8f05}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a9d7a6f33d07ad7e91a750778de0c8f05} 
+void {\bfseries free\+Context} ()
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_adfa9838223a232fb048d1e11184fb90c}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_adfa9838223a232fb048d1e11184fb90c} 
+void {\bfseries free\+Params} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a49c1259ceed374880258eb1da4a51b96}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a49c1259ceed374880258eb1da4a51b96} 
+\doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_jna_library}{Whisper\+Cpp\+Jna\+Library}} {\bfseries lib} = Whisper\+Cpp\+Jna\+Library.\+instance
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a2ee4024024ac2cae9e82f68e588eecf6}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a2ee4024024ac2cae9e82f68e588eecf6} 
+Pointer {\bfseries ctx} = null
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_aec1a7ec2a9d4fcbd35c4d103e0af0ecc}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_aec1a7ec2a9d4fcbd35c4d103e0af0ecc} 
+Pointer {\bfseries params\+Pointer} = null
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a6728a00499e822a475966db78f475c56}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a6728a00499e822a475966db78f475c56} 
+Pointer {\bfseries greedy\+Params\+Pointer} = null
+\item 
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a656464411ae70e101604008eecc772a8}\label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a656464411ae70e101604008eecc772a8} 
+Pointer {\bfseries beam\+Params\+Pointer} = null
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Before calling most methods, you must call {\ttfamily init\+Context(model\+Path)} to initialise the {\ttfamily ctx} Pointer. 
+
+\label{doc-func-members}
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a32bc35cc972050654c4e0205bd217818}\index{io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}!fullTranscribe@{fullTranscribe}}
+\index{fullTranscribe@{fullTranscribe}!io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}}
+\doxysubsubsection{\texorpdfstring{fullTranscribe()}{fullTranscribe()}}
+{\footnotesize\ttfamily \label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a32bc35cc972050654c4e0205bd217818} 
+String io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp.\+full\+Transcribe (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}}}]{whisper\+Params}{, }\item[{float\+[$\,$]\+}]{audio\+Data}{}\end{DoxyParamCaption}) throws IOException\hspace{0.3cm}{\ttfamily [inline]}}
+
+Run the entire model:\+ PCM -\/\texorpdfstring{$>$}{>} log mel spectrogram -\/\texorpdfstring{$>$}{>} encoder -\/\texorpdfstring{$>$}{>} decoder -\/\texorpdfstring{$>$}{>} text. Not thread safe for same context Uses the specified decoding strategy to obtain the text. \Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a168bc37886c1dac5cc34b35a6f07fde0}\index{io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}!fullTranscribeWithTime@{fullTranscribeWithTime}}
+\index{fullTranscribeWithTime@{fullTranscribeWithTime}!io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}}
+\doxysubsubsection{\texorpdfstring{fullTranscribeWithTime()}{fullTranscribeWithTime()}}
+{\footnotesize\ttfamily \label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a168bc37886c1dac5cc34b35a6f07fde0} 
+List$<$ \doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1bean_1_1_whisper_segment}{Whisper\+Segment}} $>$ io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp.\+full\+Transcribe\+With\+Time (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}}}]{whisper\+Params}{, }\item[{float\+[$\,$]\+}]{audio\+Data}{}\end{DoxyParamCaption}) throws IOException\hspace{0.3cm}{\ttfamily [inline]}}
+
+Full transcribe with time list.
+
+
+\begin{DoxyParams}{Parameters}
+{\em whisper\+Params} & the whisper params \\
+\hline
+{\em audio\+Data} & the audio data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the list 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em IOException} & the io exception \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a996140fec85a463b668454414c091951}\index{io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}!getContextDefaultParams@{getContextDefaultParams}}
+\index{getContextDefaultParams@{getContextDefaultParams}!io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}}
+\doxysubsubsection{\texorpdfstring{getContextDefaultParams()}{getContextDefaultParams()}}
+{\footnotesize\ttfamily \label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a996140fec85a463b668454414c091951} 
+\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_context_params_1_1_by_value}{Whisper\+Context\+Params.\+By\+Value}} io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp.\+get\+Context\+Default\+Params (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Provides default params which can be used with {\ttfamily whisper\+\_\+init\+\_\+from\+\_\+file\+\_\+with\+\_\+params()} etc. Returns a By\+Value instance to ensure proper parameter passing to native code. \Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a3e1010f4ff42c0bad899c0f4d63f396a}\index{io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}!getFullDefaultParams@{getFullDefaultParams}}
+\index{getFullDefaultParams@{getFullDefaultParams}!io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}}
+\doxysubsubsection{\texorpdfstring{getFullDefaultParams()}{getFullDefaultParams()}}
+{\footnotesize\ttfamily \label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a3e1010f4ff42c0bad899c0f4d63f396a} 
+\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_full_params_1_1_by_value}{Whisper\+Full\+Params.\+By\+Value}} io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp.\+get\+Full\+Default\+Params (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{enumio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_sampling_strategy}{Whisper\+Sampling\+Strategy}}}]{strategy}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Provides default params which can be used with {\ttfamily whisper\+\_\+full()} etc. Because this function allocates memory for the params, the caller must call either:\+
+\begin{DoxyItemize}
+\item call {\ttfamily whisper\+\_\+free\+\_\+params()}
+\item {\ttfamily Native.\+free(Pointer.\+native\+Value(pointer));}
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em strategy} & -\/ GREEDY \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a56edc4cc0be71362e6b417794f0d57de}\index{io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}!initContext@{initContext}}
+\index{initContext@{initContext}!io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}}
+\doxysubsubsection{\texorpdfstring{initContext()}{initContext()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a56edc4cc0be71362e6b417794f0d57de} 
+void io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp.\+init\+Context (\begin{DoxyParamCaption}\item[{String}]{model\+Path}{}\end{DoxyParamCaption}) throws File\+Not\+Found\+Exception\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+Path} & -\/ absolute path, or just the name (eg:\+ "{}base"{}, "{}base-\/en"{} or "{}base.\+en"{}) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a8a32561ed1c5eeef7ecc20e51931aad9}\index{io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}!initContext@{initContext}}
+\index{initContext@{initContext}!io.github.ggerganov.whispercpp.WhisperCpp@{io.github.ggerganov.whispercpp.WhisperCpp}}
+\doxysubsubsection{\texorpdfstring{initContext()}{initContext()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1_whisper_cpp_a8a32561ed1c5eeef7ecc20e51931aad9} 
+void io.\+github.\+ggerganov.\+whispercpp.\+Whisper\+Cpp.\+init\+Context (\begin{DoxyParamCaption}\item[{String}]{model\+Path}{, }\item[{\doxymbox{\hyperlink{classio_1_1github_1_1ggerganov_1_1whispercpp_1_1params_1_1_whisper_context_params_1_1_by_value}{Whisper\+Context\+Params.\+By\+Value}}}]{params}{}\end{DoxyParamCaption}) throws File\+Not\+Found\+Exception\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+Path} & -\/ absolute path, or just the name (eg:\+ "{}base"{}, "{}base-\/en"{} or "{}base.\+en"{}) \\
+\hline
+{\em params} & -\/ params to use when initialising the context \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+bindings/\+java/\+src/\+main/\+java/\+io/\+github/\+ggerganov/\+whispercpp/\+Whisper\+Cpp.\+java\end{DoxyCompactItemize}

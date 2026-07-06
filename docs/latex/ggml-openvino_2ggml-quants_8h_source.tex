@@ -1,0 +1,159 @@
+\doxysection{ggml-\/quants.h}
+\hypertarget{ggml-openvino_2ggml-quants_8h_source}{}\label{ggml-openvino_2ggml-quants_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/ggml-\/quants.h@{whisper.cpp/ggml/src/ggml-\/openvino/ggml-\/quants.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}ggml-\/openvino-\/extra.h"{}}\ \ \textcolor{comment}{//\ For\ ExtraQuantType}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <openvino/op/constant.hpp>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <openvino/runtime/tensor.hpp>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keywordtype}{void}\ unpack\_32\_4(\textcolor{keyword}{const}\ uint8\_t*\ data,\ uint8\_t*\ dst);}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keywordtype}{void}\ extract\_q4\_0\_data(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights\_arr,}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales\_arr,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp\_arr);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{void}\ extract\_q4\_1\_data(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights\_arr,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales\_arr,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp\_arr,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_bias\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{void}\ extract\_q8\_0\_data(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights\_arr,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales\_arr,}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp\_arr);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keywordtype}{void}\ unpack\_256\_4(\textcolor{keyword}{const}\ uint8\_t*\ data,\ uint8\_t*\ dst);}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keywordtype}{void}\ extract\_q4\_k\_data(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights\_arr,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales\_arr,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp\_arr,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_bias\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keywordtype}{void}\ extract\_q5\_k\_data(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights\_arr,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales\_arr,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp\_arr,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_bias\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{void}\ extract\_q6\_k\_data(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights\_arr,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales\_arr,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp\_arr);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ GGML\_QUANTIZATION\_GROUP\_SIZE\ =\ 32;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ ov::Output<ov::Node>\ make\_int8\_weights(ov::Tensor\ \&\ weight,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ group\_size\ =\ GGML\_QUANTIZATION\_GROUP\_SIZE,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_bias\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ ov::Output<ov::Node>\ make\_int4\_weights(ov::Tensor\ \&\ weight,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ group\_size\ =\ GGML\_QUANTIZATION\_GROUP\_SIZE,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_bias\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//\ Extract\ quantized\ weights\ from\ tensor\ and\ create\ weight\ subgraph}}
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ If\ weights/scales/zp\ are\ provided\ (non-\/empty),\ uses\ them\ as\ output\ buffers}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//\ Otherwise\ allocates\ new\ ov::Tensors\ internally}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ Returns\ the\ weight\ node\ (make\_int4\_weights\ or\ make\_int8\_weights\ result)}}
+\DoxyCodeLine{00064\ std::shared\_ptr<ov::Node>\ extract\_quantized\_weights(}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data,\ \ \textcolor{comment}{//\ Source\ data\ pointer\ (may\ differ\ from\ tensor-\/>data)}}
+\DoxyCodeLine{00067\ \ \ \ \ ov::Tensor\ \&\ weights,}
+\DoxyCodeLine{00068\ \ \ \ \ ov::Tensor\ \&\ scales,}
+\DoxyCodeLine{00069\ \ \ \ \ ov::Tensor\ \&\ zp,}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_bias\ =\ \textcolor{keyword}{false});\ \ \textcolor{comment}{//\ Use\ fp\ bias\ instead\ of\ quantized\ zero\_point\ (for\ test-\/backend-\/ops)}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ Requantize\ weights\ from\ tensor\ to\ target\ format,\ writing\ to\ provided\ buffers}}
+\DoxyCodeLine{00073\ \textcolor{comment}{//\ For\ F16\ target,\ only\ weights\ buffer\ is\ used\ (scales/zp\ ignored)}}
+\DoxyCodeLine{00074\ \textcolor{comment}{//\ Returns\ the\ weight\ node}}
+\DoxyCodeLine{00075\ std::shared\_ptr<ov::Node>\ requantize\_to\_buffers(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data,\ \ \textcolor{comment}{//\ Source\ data\ pointer}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ExtraQuantType\ requant\_type,}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ block\_size,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ extra\_quant\_type\_name(ExtraQuantType\ t)\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordflow}{switch}\ (t)\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{case}\ ExtraQuantType::F16:}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}F16"{}};}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordflow}{case}\ ExtraQuantType::Q4\_0\_C:}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Q4\_0\_C"{}};}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{case}\ ExtraQuantType::Q4\_0\_128:}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Q4\_0\_128"{}};}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordflow}{case}\ ExtraQuantType::Q8\_0\_C:}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Q8\_0\_C"{}};}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordflow}{case}\ ExtraQuantType::Q8\_0\_32:}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Q8\_0\_32"{}};}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordflow}{case}\ ExtraQuantType::Q8\_1\_C:}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Q8\_1\_C"{}};}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unknown"{}};}
+\DoxyCodeLine{00099\ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{comment}{//\ Result\ from\ process\_weight\_tensor\ containing\ the\ weight\ node\ and\ tensors.}}
+\DoxyCodeLine{00103\ \textcolor{comment}{//\ For\ quantized\ weights,\ also\ contains\ the\ extracted\ layout\ and\ scale/zp\ tensors.}}
+\DoxyCodeLine{00104\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_ov_weight}{OvWeight}}\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ std::shared\_ptr<ov::Node>\ weight\_node;}
+\DoxyCodeLine{00106\ \ \ \ \ \doxymbox{\hyperlink{structggml__openvino__extracted__layout}{ggml\_openvino\_extracted\_layout}}\ layout;\ \ \textcolor{comment}{//\ Only\ meaningful\ for\ quantized\ (layout.total\_size\ >\ 0)}}
+\DoxyCodeLine{00107\ \ \ \ \ ov::Tensor\ weights;}
+\DoxyCodeLine{00108\ \ \ \ \ ov::Tensor\ scales;}
+\DoxyCodeLine{00109\ \ \ \ \ ov::Tensor\ zp;}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_quantized()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ layout.scales\_size\ >\ 0;\ \}}
+\DoxyCodeLine{00112\ \};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{comment}{//\ Process\ weight\ tensor\ and\ create\ an\ OpenVINO\ weight\ node}}
+\DoxyCodeLine{00115\ \textcolor{comment}{//\ Handles\ F16/F32/BF16\ and\ quantized\ weights,\ with\ optional\ requantization}}
+\DoxyCodeLine{00116\ \textcolor{comment}{//\ If\ output\_base\_ptr\ is\ nullptr,\ allocates\ internal\ buffers\ (for\ decoder\ use)}}
+\DoxyCodeLine{00117\ \textcolor{comment}{//\ If\ output\_base\_ptr\ is\ provided,\ uses\ pre-\/allocated\ buffers\ at\ specified\ offsets\ (for\ backend\ buffer\ use)}}
+\DoxyCodeLine{00118\ \textcolor{comment}{//\ Returns\ OvWeight\ with\ the\ weight\ node\ and\ optional\ quantized\ tensors}}
+\DoxyCodeLine{00119\ \doxymbox{\hyperlink{struct_ov_weight}{OvWeight}}\ process\_weight\_tensor(}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Source\ data\ pointer\ (may\ differ\ from\ tensor-\/>data)}}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ output\_base\_ptr\ =\ \textcolor{keyword}{nullptr},\ \ \textcolor{comment}{//\ Base\ pointer\ for\ output\ buffers\ (or\ nullptr\ for\ internal\ allocation)}}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_bias\ =\ \textcolor{keyword}{false});\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Use\ fp\ bias\ instead\ of\ quantized\ zero\_point,\ only\ used\ in\ test-\/backend-\/ops}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{keywordtype}{void}\ quantize\_q4\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights\_arr,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales\_arr,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp\_arr,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ k,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ qk);}
+\DoxyCodeLine{00131\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{structquantize__q8__1}{quantize\_q8\_1}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights\_arr,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales\_arr,}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp\_arr,}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ k,}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ qk);}
+\DoxyCodeLine{00137\ \textcolor{keywordtype}{void}\ quantize\_q8\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ weights\_arr,}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ scales\_arr,}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ov::Tensor\ \&\ zp\_arr,}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ k,}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ qk);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{namespace\ }ov\ \{}
+\DoxyCodeLine{00145\ \textcolor{keyword}{namespace\ }op\ \{}
+\DoxyCodeLine{00146\ \textcolor{keyword}{namespace\ }util\ \{}
+\DoxyCodeLine{00147\ \textcolor{comment}{//\ From\ <openvino>/src/common/transformations/include/transformations/utils/utils.hpp}}
+\DoxyCodeLine{00148\ \textcolor{keywordtype}{bool}\ get\_single\_value(\textcolor{keyword}{const}\ std::shared\_ptr<ov::op::v0::Constant>\&\ const\_node,}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\&\ value,}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ check\_value\_range\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00151\ \}\ \ \textcolor{comment}{//\ namespace\ util}}
+\DoxyCodeLine{00152\ \}\ \ \textcolor{comment}{//\ namespace\ op}}
+\DoxyCodeLine{00153\ \}\ \ \textcolor{comment}{//\ namespace\ ov}}
+
+\end{DoxyCode}

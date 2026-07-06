@@ -1,0 +1,91 @@
+\doxysection{ggml\+\_\+metal Struct Reference}
+\hypertarget{structggml__metal}{}\label{structggml__metal}\index{ggml\_metal@{ggml\_metal}}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__metal_a844b1c1251f772b2ec90d4fba034a3cb}\label{structggml__metal_a844b1c1251f772b2ec90d4fba034a3cb} 
+char {\bfseries name} \+[128]\+
+\item 
+\Hypertarget{structggml__metal_a92605aea255097676514ba514389a64c}\label{structggml__metal_a92605aea255097676514ba514389a64c} 
+ggml\+\_\+metal\+\_\+device\+\_\+t {\bfseries dev}
+\item 
+\Hypertarget{structggml__metal_acbc39b67e1785b202f03dc52709e52bc}\label{structggml__metal_acbc39b67e1785b202f03dc52709e52bc} 
+ggml\+\_\+metal\+\_\+library\+\_\+t {\bfseries lib}
+\item 
+\Hypertarget{structggml__metal_aaa7f691a7e101156f107bd417134f536}\label{structggml__metal_aaa7f691a7e101156f107bd417134f536} 
+ggml\+\_\+metal\+\_\+event\+\_\+t {\bfseries ev\+\_\+cpy}
+\item 
+\Hypertarget{structggml__metal_a60fddb4826afc94709eac074159bacdc}\label{structggml__metal_a60fddb4826afc94709eac074159bacdc} 
+dispatch\+\_\+queue\+\_\+t {\bfseries d\+\_\+queue}
+\item 
+\Hypertarget{structggml__metal_a871d2674a0b2820cdc68f48436a32534}\label{structggml__metal_a871d2674a0b2820cdc68f48436a32534} 
+ggml\+\_\+metal\+\_\+pipelines\+\_\+t {\bfseries pipelines\+\_\+ext}
+\item 
+\Hypertarget{structggml__metal_aa19d20a8b0d9c500f77b857dad7addc4}\label{structggml__metal_aa19d20a8b0d9c500f77b857dad7addc4} 
+bool {\bfseries use\+\_\+fusion}
+\item 
+\Hypertarget{structggml__metal_a0f37f10101d05559cc28fbada0f1c141}\label{structggml__metal_a0f37f10101d05559cc28fbada0f1c141} 
+bool {\bfseries use\+\_\+concurrency}
+\item 
+\Hypertarget{structggml__metal_a4492892cc0b966a59f244fc087c35966}\label{structggml__metal_a4492892cc0b966a59f244fc087c35966} 
+bool {\bfseries use\+\_\+graph\+\_\+optimize}
+\item 
+\Hypertarget{structggml__metal_a4fe5184544218ab094d98c82625c4bbe}\label{structggml__metal_a4fe5184544218ab094d98c82625c4bbe} 
+int {\bfseries debug\+\_\+graph}
+\item 
+\Hypertarget{structggml__metal_a25dbd7a53aef17601258627aa9dad03c}\label{structggml__metal_a25dbd7a53aef17601258627aa9dad03c} 
+int {\bfseries debug\+\_\+fusion}
+\item 
+\Hypertarget{structggml__metal_a717deaf8c4d4b15a02e61b1cb906f228}\label{structggml__metal_a717deaf8c4d4b15a02e61b1cb906f228} 
+uint64\+\_\+t {\bfseries fuse\+\_\+cnt} \+[GGML\+\_\+\+OP\+\_\+\+COUNT]\+
+\item 
+\Hypertarget{structggml__metal_aa8f3e321e9020f25ef8215c4f3aa3048}\label{structggml__metal_aa8f3e321e9020f25ef8215c4f3aa3048} 
+int {\bfseries capture\+\_\+compute}
+\item 
+\Hypertarget{structggml__metal_a8275baaf3e26ac7fcb39c266e8691be3}\label{structggml__metal_a8275baaf3e26ac7fcb39c266e8691be3} 
+bool {\bfseries capture\+\_\+started}
+\item 
+\Hypertarget{structggml__metal_a7fe5096cb0f5d0c4579f057195cb3a6b}\label{structggml__metal_a7fe5096cb0f5d0c4579f057195cb3a6b} 
+id$<$ MTLCapture\+Scope $>$ {\bfseries capture\+\_\+scope}
+\item 
+\Hypertarget{structggml__metal_a272cab54dfc3977ac3b78c7e294574fa}\label{structggml__metal_a272cab54dfc3977ac3b78c7e294574fa} 
+int {\bfseries n\+\_\+cb}
+\item 
+\Hypertarget{structggml__metal_a0305d409e20fccbdb471c399fab71182}\label{structggml__metal_a0305d409e20fccbdb471c399fab71182} 
+int {\bfseries n\+\_\+nodes\+\_\+0}
+\item 
+\Hypertarget{structggml__metal_a47f3a005fba0e01157862ba8970d370c}\label{structggml__metal_a47f3a005fba0e01157862ba8970d370c} 
+int {\bfseries n\+\_\+nodes\+\_\+1}
+\item 
+\Hypertarget{structggml__metal_abcdcf5f3f6fc1c7eba9e06d950771668}\label{structggml__metal_abcdcf5f3f6fc1c7eba9e06d950771668} 
+int {\bfseries n\+\_\+nodes\+\_\+per\+\_\+cb}
+\item 
+\Hypertarget{structggml__metal_a301be1259b22909fd218354324140b5f}\label{structggml__metal_a301be1259b22909fd218354324140b5f} 
+struct \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*} {\bfseries gf}
+\item 
+\Hypertarget{structggml__metal_a36d2ee809246a8c16f1fba7a59f6f1a3}\label{structggml__metal_a36d2ee809246a8c16f1fba7a59f6f1a3} 
+void(\texorpdfstring{$^\wedge$}{\string^} {\bfseries encode\+\_\+async} )(size\+\_\+t ith)
+\item 
+\Hypertarget{structggml__metal_ad88a2dadc26eb719b8a56fcf2c51eeb6}\label{structggml__metal_ad88a2dadc26eb719b8a56fcf2c51eeb6} 
+struct \doxymbox{\hyperlink{structggml__metal__command__buffer}{ggml\+\_\+metal\+\_\+command\+\_\+buffer}} {\bfseries cmd\+\_\+bufs} \+[GGML\+\_\+\+METAL\+\_\+\+MAX\+\_\+\+COMMAND\+\_\+\+BUFFERS+1]\+
+\item 
+\Hypertarget{structggml__metal_ab5e71672132ce71477270f3b0fb978a0}\label{structggml__metal_ab5e71672132ce71477270f3b0fb978a0} 
+NSMutable\+Array \texorpdfstring{$\ast$}{*} {\bfseries cmd\+\_\+bufs\+\_\+ext}
+\item 
+\Hypertarget{structggml__metal_a556382c2c724b741f7ff1d42675b63b5}\label{structggml__metal_a556382c2c724b741f7ff1d42675b63b5} 
+id$<$ MTLCommand\+Buffer $>$ {\bfseries cmd\+\_\+buf\+\_\+last}
+\item 
+\Hypertarget{structggml__metal_ad5ff2cba0b840bdc38fd005bd20ec0fa}\label{structggml__metal_ad5ff2cba0b840bdc38fd005bd20ec0fa} 
+ggml\+\_\+abort\+\_\+callback {\bfseries abort\+\_\+callback}
+\item 
+\Hypertarget{structggml__metal_a13d83ff801446704dc19e4bcc5913eec}\label{structggml__metal_a13d83ff801446704dc19e4bcc5913eec} 
+void \texorpdfstring{$\ast$}{*} {\bfseries abort\+\_\+callback\+\_\+data}
+\item 
+\Hypertarget{structggml__metal_aea98271dfa7ff7c31ccd2bfd67f6261b}\label{structggml__metal_aea98271dfa7ff7c31ccd2bfd67f6261b} 
+bool {\bfseries has\+\_\+error}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/metal/\+ggml-\/metal-\/context.\+m\end{DoxyCompactItemize}

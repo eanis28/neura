@@ -1,0 +1,745 @@
+\doxysection{whisper.\+h}
+\hypertarget{whisper_8h_source}{}\label{whisper_8h_source}\index{whisper.cpp/include/whisper.h@{whisper.cpp/include/whisper.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ WHISPER\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ WHISPER\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/cpu.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifdef\ \_\_GNUC\_\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ \ \ define\ WHISPER\_DEPRECATED(func,\ hint)\ func\ \_\_attribute\_\_((deprecated(hint)))}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#elif\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ \ \ \ define\ WHISPER\_DEPRECATED(func,\ hint)\ \_\_declspec(deprecated(hint))\ func}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#\ \ \ \ define\ WHISPER\_DEPRECATED(func,\ hint)\ func}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#ifdef\ WHISPER\_SHARED}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#\ \ \ \ ifdef\ \_WIN32}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ ifdef\ WHISPER\_BUILD}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ define\ WHISPER\_API\ \_\_declspec(dllexport)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ define\ WHISPER\_API\ \_\_declspec(dllimport)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ WHISPER\_API\ \_\_attribute\_\_\ ((visibility\ ("{}default"{})))}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ \ \ \ define\ WHISPER\_API}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ WHISPER\_SAMPLE\_RATE\ 16000}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ WHISPER\_N\_FFT\ \ \ \ \ \ \ 400}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ WHISPER\_HOP\_LENGTH\ \ 160}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ WHISPER\_CHUNK\_SIZE\ \ 30}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ C\ interface}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ The\ following\ interface\ is\ thread-\/safe\ as\ long\ as\ the\ sample\ whisper\_context\ is\ not\ used\ by\ multiple\ threads}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//\ concurrently.}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ Basic\ usage:}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \#include\ "{}whisper.h"{}}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ ...}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ whisper\_context\_params\ cparams\ =\ whisper\_context\_default\_params();}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ struct\ whisper\_context\ *\ ctx\ =\ whisper\_init\_from\_file\_with\_params("{}/path/to/ggml-\/base.en.bin"{},\ cparams);}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ if\ (whisper\_full(ctx,\ wparams,\ pcmf32.data(),\ pcmf32.size())\ !=\ 0)\ \{}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ fprintf(stderr,\ "{}failed\ to\ process\ audio\(\backslash\)n"{});}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ return\ 7;}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \}}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ const\ int\ n\_segments\ =\ whisper\_full\_n\_segments(ctx);}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ n\_segments;\ ++i)\ \{}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ const\ char\ *\ text\ =\ whisper\_full\_get\_segment\_text(ctx,\ i);}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ printf("{}\%s"{},\ text);}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \}}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ whisper\_free(ctx);}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ ...}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//\ This\ is\ a\ demonstration\ of\ the\ most\ straightforward\ usage\ of\ the\ library.}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ "{}pcmf32"{}\ contains\ the\ RAW\ audio\ data\ in\ 32-\/bit\ floating\ point\ format.}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//\ The\ interface\ also\ allows\ for\ more\ fine-\/grained\ control\ over\ the\ computation,\ but\ it\ requires\ a\ deeper}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ understanding\ of\ how\ the\ model\ works.}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}};}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__state}{whisper\_state}};}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{typedef}\ int32\_t\ whisper\_pos;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{typedef}\ int32\_t\ whisper\_token;}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{typedef}\ int32\_t\ whisper\_seq\_id;}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{enum}\ whisper\_alignment\_heads\_preset\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_NONE,}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_N\_TOP\_MOST,\ \ \textcolor{comment}{//\ All\ heads\ from\ the\ N-\/top-\/most\ text-\/layers}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_CUSTOM,}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_TINY\_EN,}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_TINY,}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_BASE\_EN,}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_BASE,}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_SMALL\_EN,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_SMALL,}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_MEDIUM\_EN,}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_MEDIUM,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_LARGE\_V1,}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_LARGE\_V2,}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_LARGE\_V3,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ WHISPER\_AHEADS\_LARGE\_V3\_TURBO,}
+\DoxyCodeLine{00104\ \ \ \ \ \};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__ahead}{whisper\_ahead}}\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_text\_layer;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_head;}
+\DoxyCodeLine{00109\ \ \ \ \ \}\ \doxymbox{\hyperlink{structwhisper__ahead}{whisper\_ahead}};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__aheads}{whisper\_aheads}}\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ n\_heads;}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structwhisper__ahead}{whisper\_ahead}}\ *\ heads;}
+\DoxyCodeLine{00114\ \ \ \ \ \}\ \doxymbox{\hyperlink{structwhisper__aheads}{whisper\_aheads}};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ use\_gpu;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ flash\_attn;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ gpu\_device;\ \ \textcolor{comment}{//\ CUDA\ device}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [EXPERIMENTAL]\ Token-\/level\ timestamps\ with\ DTW}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ dtw\_token\_timestamps;}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ whisper\_alignment\_heads\_preset\ dtw\_aheads\_preset;}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dtw\_n\_top;}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__aheads}{whisper\_aheads}}\ dtw\_aheads;}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ dtw\_mem\_size;\ \textcolor{comment}{//\ TODO:\ remove}}
+\DoxyCodeLine{00129\ \ \ \ \ \};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__token__data}{whisper\_token\_data}}\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ whisper\_token\ id;\ \ \textcolor{comment}{//\ token\ id}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ whisper\_token\ tid;\ \textcolor{comment}{//\ forced\ timestamp\ token\ id}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ p;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ probability\ of\ the\ token}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ plog;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\ probability\ of\ the\ token}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ pt;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ probability\ of\ the\ timestamp\ token}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ ptsum;\ \ \ \ \ \ \ \textcolor{comment}{//\ sum\ of\ probabilities\ of\ all\ timestamp\ tokens}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ token-\/level\ timestamp\ data}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ do\ not\ use\ if\ you\ haven't\ computed\ token-\/level\ timestamps}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ int64\_t\ t0;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ start\ time\ of\ the\ token}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ int64\_t\ t1;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ end\ time\ of\ the\ token}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [EXPERIMENTAL]\ Token-\/level\ timestamps\ with\ DTW}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ do\ not\ use\ if\ you\ haven't\ computed\ token-\/level\ timestamps\ with\ dtw}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Roughly\ corresponds\ to\ the\ moment\ in\ audio\ in\ which\ the\ token\ was\ output}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ int64\_t\ t\_dtw;}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ vlen;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ voice\ length\ of\ the\ token}}
+\DoxyCodeLine{00151\ \ \ \ \ \}\ \doxymbox{\hyperlink{structwhisper__token__data}{whisper\_token\_data}};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__model__loader}{whisper\_model\_loader}}\ \{}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ context;}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ size\_t\ (*read)(\textcolor{keywordtype}{void}\ *\ ctx,\ \textcolor{keywordtype}{void}\ *\ output,\ \textcolor{keywordtype}{size\_t}\ read\_size);}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ bool\ \ \ \ (*eof)(\textcolor{keywordtype}{void}\ *\ ctx);}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ void\ \ (*close)(\textcolor{keywordtype}{void}\ *\ ctx);}
+\DoxyCodeLine{00159\ \ \ \ \ \}\ \doxymbox{\hyperlink{structwhisper__model__loader}{whisper\_model\_loader}};}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{comment}{//\ grammar\ element\ type}}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{enum}\ whisper\_gretype\ \{}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ end\ of\ rule\ definition}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ WHISPER\_GRETYPE\_END\ \ \ \ \ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ start\ of\ alternate\ definition\ for\ rule}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ WHISPER\_GRETYPE\_ALT\ \ \ \ \ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ non-\/terminal\ element:\ reference\ to\ rule}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ WHISPER\_GRETYPE\_RULE\_REF\ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ terminal\ element:\ character\ (code\ point)}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ WHISPER\_GRETYPE\_CHAR\ \ \ \ \ \ \ \ \ \ \ =\ 3,}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ inverse\ char(s)\ ([\string^a],\ [\string^a-\/b]\ [\string^abc])}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ WHISPER\_GRETYPE\_CHAR\_NOT\ \ \ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ modifies\ a\ preceding\ WHISPER\_GRETYPE\_CHAR\ or\ LLAMA\_GRETYPE\_CHAR\_ALT\ to}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ be\ an\ inclusive\ range\ ([a-\/z])}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ WHISPER\_GRETYPE\_CHAR\_RNG\_UPPER\ =\ 5,}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ modifies\ a\ preceding\ WHISPER\_GRETYPE\_CHAR\ or}}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ WHISPER\_GRETYPE\_CHAR\_RNG\_UPPER\ to\ add\ an\ alternate\ char\ to\ match\ ([ab],\ [a-\/zA])}}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ WHISPER\_GRETYPE\_CHAR\_ALT\ \ \ \ \ \ \ =\ 6,}
+\DoxyCodeLine{00185\ \ \ \ \ \};}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__grammar__element}{whisper\_grammar\_element}}\ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ whisper\_gretype\ type;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ value;\ \textcolor{comment}{//\ Unicode\ code\ point\ or\ rule\ ID}}
+\DoxyCodeLine{00190\ \ \ \ \ \}\ \doxymbox{\hyperlink{structwhisper__grammar__element}{whisper\_grammar\_element}};}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__params}{whisper\_vad\_params}}\ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ threshold;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Probability\ threshold\ to\ consider\ as\ speech.}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ min\_speech\_duration\_ms;\ \ \textcolor{comment}{//\ Min\ duration\ for\ a\ valid\ speech\ segment.}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ min\_silence\_duration\_ms;\ \textcolor{comment}{//\ Min\ silence\ duration\ to\ consider\ speech\ as\ ended.}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ max\_speech\_duration\_s;\ \ \ \textcolor{comment}{//\ Max\ duration\ of\ a\ speech\ segment\ before\ forcing\ a\ new\ segment.}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ speech\_pad\_ms;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Padding\ added\ before\ and\ after\ speech\ segments.}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ samples\_overlap;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Overlap\ in\ seconds\ when\ copying\ audio\ samples\ from\ speech\ segment.}}
+\DoxyCodeLine{00199\ \ \ \ \ \}\ \doxymbox{\hyperlink{structwhisper__vad__params}{whisper\_vad\_params}};}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_version(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ Various\ functions\ for\ loading\ a\ ggml\ whisper\ model.}}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{comment}{//\ Allocate\ (almost)\ all\ memory\ needed\ for\ the\ model.}}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{comment}{//\ Return\ NULL\ on\ failure}}
+\DoxyCodeLine{00206\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_from\_file\_with\_params\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ params);}
+\DoxyCodeLine{00207\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_from\_buffer\_with\_params(\textcolor{keywordtype}{void}\ *\ buffer,\ \textcolor{keywordtype}{size\_t}\ buffer\_size,\ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ params);}
+\DoxyCodeLine{00208\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_with\_params\ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__model__loader}{whisper\_model\_loader}}\ *\ loader,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ params);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{comment}{//\ These\ are\ the\ same\ as\ the\ above,\ but\ the\ internal\ state\ of\ the\ context\ is\ not\ allocated\ automatically}}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{comment}{//\ It\ is\ the\ responsibility\ of\ the\ caller\ to\ allocate\ the\ state\ using\ whisper\_init\_state()\ (\#523)}}
+\DoxyCodeLine{00212\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_from\_file\_with\_params\_no\_state\ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ params);}
+\DoxyCodeLine{00213\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_from\_buffer\_with\_params\_no\_state(\textcolor{keywordtype}{void}\ *\ buffer,\ \textcolor{keywordtype}{size\_t}\ buffer\_size,\ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ params);}
+\DoxyCodeLine{00214\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_with\_params\_no\_state\ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__model__loader}{whisper\_model\_loader}}\ *\ loader,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ params);}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \ \ WHISPER\_DEPRECATED(}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_from\_file(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model),}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ whisper\_init\_from\_file\_with\_params\ instead"{}}}
+\DoxyCodeLine{00219\ \ \ \ \ );}
+\DoxyCodeLine{00220\ \ \ \ \ WHISPER\_DEPRECATED(}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_from\_buffer(\textcolor{keywordtype}{void}\ *\ buffer,\ \textcolor{keywordtype}{size\_t}\ buffer\_size),}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ whisper\_init\_from\_buffer\_with\_params\ instead"{}}}
+\DoxyCodeLine{00223\ \ \ \ \ );}
+\DoxyCodeLine{00224\ \ \ \ \ WHISPER\_DEPRECATED(}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__model__loader}{whisper\_model\_loader}}\ *\ loader),}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ whisper\_init\_with\_params\ instead"{}}}
+\DoxyCodeLine{00227\ \ \ \ \ );}
+\DoxyCodeLine{00228\ \ \ \ \ WHISPER\_DEPRECATED(}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_from\_file\_no\_state(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model),}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ whisper\_init\_from\_file\_with\_params\_no\_state\ instead"{}}}
+\DoxyCodeLine{00231\ \ \ \ \ );}
+\DoxyCodeLine{00232\ \ \ \ \ WHISPER\_DEPRECATED(}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_from\_buffer\_no\_state(\textcolor{keywordtype}{void}\ *\ buffer,\ \textcolor{keywordtype}{size\_t}\ buffer\_size),}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ whisper\_init\_from\_buffer\_with\_params\_no\_state\ instead"{}}}
+\DoxyCodeLine{00235\ \ \ \ \ );}
+\DoxyCodeLine{00236\ \ \ \ \ WHISPER\_DEPRECATED(}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ whisper\_init\_no\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__model__loader}{whisper\_model\_loader}}\ *\ loader),}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}use\ whisper\_init\_with\_params\_no\_state\ instead"{}}}
+\DoxyCodeLine{00239\ \ \ \ \ );}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ whisper\_init\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{comment}{//\ Given\ a\ context,\ enable\ use\ of\ OpenVINO\ for\ encode\ inference.}}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{comment}{//\ model\_path:\ Optional\ path\ to\ OpenVINO\ encoder\ IR\ model.\ If\ set\ to\ nullptr,}}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ path\ will\ be\ generated\ from\ the\ ggml\ model\ path\ that\ was\ passed}}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in\ to\ whisper\_init\_from\_file.\ For\ example,\ if\ 'path\_model'\ was}}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}/path/to/ggml-\/base.en.bin"{},\ then\ OpenVINO\ IR\ model\ path\ will\ be}}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assumed\ to\ be\ "{}/path/to/ggml-\/base.en-\/encoder-\/openvino.xml"{}.}}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{comment}{//\ device:\ OpenVINO\ device\ to\ run\ inference\ on\ ("{}CPU"{},\ "{}GPU"{},\ etc.)}}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{comment}{//\ cache\_dir:\ Optional\ cache\ directory\ that\ can\ speed\ up\ init\ time,\ especially\ for}}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GPU,\ by\ caching\ compiled\ 'blobs'\ there.}}
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Set\ to\ nullptr\ if\ not\ used.}}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{//\ Returns\ 0\ on\ success.\ If\ OpenVINO\ is\ not\ enabled\ in\ build,\ this\ simply\ returns\ 1.}}
+\DoxyCodeLine{00254\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_ctx\_init\_openvino\_encoder\_with\_state(}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ model\_path,}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ device,}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cache\_dir);}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_ctx\_init\_openvino\_encoder(}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ model\_path,}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ device,}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cache\_dir);}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{comment}{//\ Frees\ all\ allocated\ memory}}
+\DoxyCodeLine{00268\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{void}\ whisper\_free\ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00269\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{void}\ whisper\_free\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state);}
+\DoxyCodeLine{00270\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{void}\ whisper\_free\_params(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ *\ params);}
+\DoxyCodeLine{00271\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{void}\ whisper\_free\_context\_params(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ *\ params);}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{comment}{//\ Convert\ RAW\ PCM\ audio\ to\ log\ mel\ spectrogram.}}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{comment}{//\ The\ resulting\ spectrogram\ is\ stored\ inside\ the\ default\ state\ of\ the\ provided\ whisper\ context.}}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{comment}{//\ Returns\ 0\ on\ success}}
+\DoxyCodeLine{00276\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_pcm\_to\_mel(}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ samples,}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_samples,}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads);}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_pcm\_to\_mel\_with\_state(}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ samples,}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_samples,}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads);}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{comment}{//\ This\ can\ be\ used\ to\ set\ a\ custom\ log\ mel\ spectrogram\ inside\ the\ default\ state\ of\ the\ provided\ whisper\ context.}}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{comment}{//\ Use\ this\ instead\ of\ whisper\_pcm\_to\_mel()\ if\ you\ want\ to\ provide\ your\ own\ log\ mel\ spectrogram.}}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{comment}{//\ n\_mel\ must\ be\ 80}}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{comment}{//\ Returns\ 0\ on\ success}}
+\DoxyCodeLine{00293\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_set\_mel(}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ data,}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_len,}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_mel);}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_set\_mel\_with\_state(}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ data,}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_len,}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_mel);}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{comment}{//\ Run\ the\ Whisper\ encoder\ on\ the\ log\ mel\ spectrogram\ stored\ inside\ the\ default\ state\ in\ the\ provided\ whisper\ context.}}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ to\ call\ whisper\_pcm\_to\_mel()\ or\ whisper\_set\_mel()\ first.}}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{comment}{//\ offset\ can\ be\ used\ to\ specify\ the\ offset\ of\ the\ first\ frame\ in\ the\ spectrogram.}}
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{comment}{//\ Returns\ 0\ on\ success}}
+\DoxyCodeLine{00310\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_encode(}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ offset,}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads);}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_encode\_with\_state(}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ offset,}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads);}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{comment}{//\ Run\ the\ Whisper\ decoder\ to\ obtain\ the\ logits\ and\ probabilities\ for\ the\ next\ token.}}
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ to\ call\ whisper\_encode()\ first.}}
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{comment}{//\ tokens\ +\ n\_tokens\ is\ the\ provided\ context\ for\ the\ decoder.}}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{comment}{//\ n\_past\ is\ the\ number\ of\ tokens\ to\ use\ from\ previous\ decoder\ calls.}}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{comment}{//\ Returns\ 0\ on\ success}}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{comment}{//\ TODO:\ add\ support\ for\ multiple\ decoders}}
+\DoxyCodeLine{00327\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_decode(}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ whisper\_token\ *\ tokens,}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_tokens,}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_past,}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads);}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_decode\_with\_state(}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ whisper\_token\ *\ tokens,}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_tokens,}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_past,}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads);}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{comment}{//\ Convert\ the\ provided\ text\ into\ tokens.}}
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{comment}{//\ The\ tokens\ pointer\ must\ be\ large\ enough\ to\ hold\ the\ resulting\ tokens.}}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ number\ of\ tokens\ on\ success,\ no\ more\ than\ n\_max\_tokens}}
+\DoxyCodeLine{00345\ \ \ \ \ \textcolor{comment}{//\ Returns\ a\ negative\ number\ on\ failure\ -\/\ the\ number\ of\ tokens\ that\ would\ have\ been\ returned}}
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{comment}{//\ TODO:\ not\ sure\ if\ correct}}
+\DoxyCodeLine{00347\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_tokenize(}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ text,}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ whisper\_token\ *\ tokens,}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_max\_tokens);}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ number\ of\ tokens\ in\ the\ provided\ text}}
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{comment}{//\ Equivalent\ to:\ -\/whisper\_tokenize(ctx,\ text,\ NULL,\ 0)}}
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keywordtype}{int}\ whisper\_token\_count(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ text);}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{comment}{//\ Largest\ language\ id\ (i.e.\ number\ of\ available\ languages\ -\/\ 1)}}
+\DoxyCodeLine{00358\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_lang\_max\_id(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ id\ of\ the\ specified\ language,\ returns\ -\/1\ if\ not\ found}}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{comment}{//\ Examples:}}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{comment}{//\ \ \ "{}de"{}\ -\/>\ 2}}
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{comment}{//\ \ \ "{}german"{}\ -\/>\ 2}}
+\DoxyCodeLine{00364\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_lang\_id(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ lang);}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ short\ string\ of\ the\ specified\ language\ id\ (e.g.\ 2\ -\/>\ "{}de"{}),\ returns\ nullptr\ if\ not\ found}}
+\DoxyCodeLine{00367\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_lang\_str(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ short\ string\ of\ the\ specified\ language\ name\ (e.g.\ 2\ -\/>\ "{}german"{}),\ returns\ nullptr\ if\ not\ found}}
+\DoxyCodeLine{00370\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_lang\_str\_full(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{comment}{//\ Use\ mel\ data\ at\ offset\_ms\ to\ try\ and\ auto-\/detect\ the\ spoken\ language}}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ to\ call\ whisper\_pcm\_to\_mel()\ or\ whisper\_set\_mel()\ first}}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{comment}{//\ Returns\ the\ top\ language\ id\ or\ negative\ on\ failure}}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{comment}{//\ If\ not\ null,\ fills\ the\ lang\_probs\ array\ with\ the\ probabilities\ of\ all\ languages}}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{comment}{//\ The\ array\ must\ be\ whisper\_lang\_max\_id()\ +\ 1\ in\ size}}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{comment}{//\ ref:\ https://github.com/openai/whisper/blob/main/whisper/decoding.py\#L18-\/L69}}
+\DoxyCodeLine{00378\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_lang\_auto\_detect(}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ offset\_ms,}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads,}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ lang\_probs);}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_lang\_auto\_detect\_with\_state(}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ offset\_ms,}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads,}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ lang\_probs);}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_n\_len\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);\ \textcolor{comment}{//\ mel\ length}}
+\DoxyCodeLine{00392\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_n\_len\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state);\ \textcolor{comment}{//\ mel\ length}}
+\DoxyCodeLine{00393\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_n\_vocab\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00394\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_n\_text\_ctx\ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00395\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_n\_audio\_ctx\ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00396\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_is\_multilingual\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_vocab\ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00399\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_audio\_ctx\ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00400\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_audio\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00401\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_audio\_head\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00402\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_audio\_layer(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00403\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_text\_ctx\ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00404\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_text\_state\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00405\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_text\_head\ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00406\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_text\_layer\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00407\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_n\_mels\ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00408\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_ftype\ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00409\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_model\_type\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{comment}{//\ Token\ logits\ obtained\ from\ the\ last\ call\ to\ whisper\_decode()}}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{comment}{//\ The\ logits\ for\ the\ last\ token\ are\ stored\ in\ the\ last\ row}}
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{comment}{//\ Rows:\ n\_tokens}}
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{comment}{//\ Cols:\ n\_vocab}}
+\DoxyCodeLine{00415\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{float}\ *\ whisper\_get\_logits\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00416\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{float}\ *\ whisper\_get\_logits\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state);}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \ \ \ \ \textcolor{comment}{//\ Token\ Id\ -\/>\ String.\ Uses\ the\ vocabulary\ in\ the\ provided\ context}}
+\DoxyCodeLine{00419\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_token\_to\_str(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ whisper\_token\ token);}
+\DoxyCodeLine{00420\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_model\_type\_readable(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{comment}{//\ Special\ tokens}}
+\DoxyCodeLine{00424\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_eot\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00425\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_sot\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00426\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_solm(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00427\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_prev(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00428\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_nosp(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00429\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_not\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00430\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_beg\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00431\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_lang(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ lang\_id);}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{comment}{//\ Task\ tokens}}
+\DoxyCodeLine{00434\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_translate\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00435\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_token\_transcribe(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{comment}{//\ Performance\ information\ from\ the\ default\ state.}}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__timings}{whisper\_timings}}\ \{}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ sample\_ms;}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ encode\_ms;}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ decode\_ms;}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ batchd\_ms;}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ prompt\_ms;}
+\DoxyCodeLine{00444\ \ \ \ \ \};}
+\DoxyCodeLine{00445\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__timings}{whisper\_timings}}\ *\ whisper\_get\_timings(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00446\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{void}\ whisper\_print\_timings(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00447\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{void}\ whisper\_reset\_timings(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{comment}{//\ Print\ system\ information}}
+\DoxyCodeLine{00450\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_print\_system\_info(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{comment}{//\ Available\ sampling\ strategies}}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{keyword}{enum}\ whisper\_sampling\_strategy\ \{}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ WHISPER\_SAMPLING\_GREEDY,\ \ \ \ \ \ \textcolor{comment}{//\ similar\ to\ OpenAI's\ GreedyDecoder}}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ WHISPER\_SAMPLING\_BEAM\_SEARCH,\ \textcolor{comment}{//\ similar\ to\ OpenAI's\ BeamSearchDecoder}}
+\DoxyCodeLine{00458\ \ \ \ \ \};}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{comment}{//\ Text\ segment\ callback}}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{comment}{//\ Called\ on\ every\ newly\ generated\ text\ segment}}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{comment}{//\ Use\ the\ whisper\_full\_...()\ functions\ to\ obtain\ the\ text\ segments}}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keyword}{typedef}\ void\ (*whisper\_new\_segment\_callback)(\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ n\_new,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00464\ }
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{comment}{//\ Progress\ callback}}
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{keyword}{typedef}\ void\ (*whisper\_progress\_callback)(\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ progress,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{comment}{//\ Encoder\ begin\ callback}}
+\DoxyCodeLine{00469\ \ \ \ \ \textcolor{comment}{//\ If\ not\ NULL,\ called\ before\ the\ encoder\ starts}}
+\DoxyCodeLine{00470\ \ \ \ \ \textcolor{comment}{//\ If\ it\ returns\ false,\ the\ computation\ is\ aborted}}
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{keyword}{typedef}\ bool\ (*whisper\_encoder\_begin\_callback)(\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \ \ \ \ \textcolor{comment}{//\ Logits\ filter\ callback}}
+\DoxyCodeLine{00474\ \ \ \ \ \textcolor{comment}{//\ Can\ be\ used\ to\ modify\ the\ logits\ before\ sampling}}
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{comment}{//\ If\ not\ NULL,\ called\ after\ applying\ temperature\ to\ logits}}
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{keyword}{typedef}\ void\ (*whisper\_logits\_filter\_callback)(}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structwhisper__token__data}{whisper\_token\_data}}\ *\ tokens,}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_tokens,}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ logits,}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{comment}{//\ Parameters\ for\ the\ whisper\_full()\ function}}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{comment}{//\ If\ you\ change\ the\ order\ or\ add\ new\ parameters,\ make\ sure\ to\ update\ the\ default\ values\ in\ whisper.cpp:}}
+\DoxyCodeLine{00486\ \ \ \ \ \textcolor{comment}{//\ whisper\_full\_default\_params()}}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ \{}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ whisper\_sampling\_strategy\ strategy;}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_threads;}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_max\_text\_ctx;\ \ \ \ \ \textcolor{comment}{//\ max\ tokens\ to\ use\ from\ past\ text\ as\ prompt\ for\ the\ decoder}}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ offset\_ms;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ start\ offset\ in\ ms}}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ duration\_ms;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ audio\ duration\ to\ process\ in\ ms}}
+\DoxyCodeLine{00494\ }
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ translate;}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ no\_context;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ do\ not\ use\ past\ transcription\ (if\ any)\ as\ initial\ prompt\ for\ the\ decoder}}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ no\_timestamps;\ \ \ \ \ \textcolor{comment}{//\ do\ not\ generate\ timestamps}}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ single\_segment;\ \ \ \ \textcolor{comment}{//\ force\ single\ segment\ output\ (useful\ for\ streaming)}}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ print\_special;\ \ \ \ \ \textcolor{comment}{//\ print\ special\ tokens\ (e.g.\ <SOT>,\ <EOT>,\ <BEG>,\ etc.)}}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ print\_progress;\ \ \ \ \textcolor{comment}{//\ print\ progress\ information}}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ print\_realtime;\ \ \ \ \textcolor{comment}{//\ print\ results\ from\ within\ whisper.cpp\ (avoid\ it,\ use\ callback\ instead)}}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ print\_timestamps;\ \ \textcolor{comment}{//\ print\ timestamps\ for\ each\ text\ segment\ when\ printing\ realtime}}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [EXPERIMENTAL]\ token-\/level\ timestamps}}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ token\_timestamps;\ \textcolor{comment}{//\ enable\ token-\/level\ timestamps}}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ thold\_pt;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ timestamp\ token\ probability\ threshold\ (\string~0.01)}}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ thold\_ptsum;\ \ \ \ \ \ \textcolor{comment}{//\ timestamp\ token\ sum\ probability\ threshold\ (\string~0.01)}}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ max\_len;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ max\ segment\ length\ in\ characters}}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ split\_on\_word;\ \ \ \ \textcolor{comment}{//\ split\ on\ word\ rather\ than\ on\ token\ (when\ used\ with\ max\_len)}}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ max\_tokens;\ \ \ \ \ \ \ \textcolor{comment}{//\ max\ tokens\ per\ segment\ (0\ =\ no\ limit)}}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [EXPERIMENTAL]\ speed-\/up\ techniques}}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ note:\ these\ can\ significantly\ reduce\ the\ quality\ of\ the\ output}}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ debug\_mode;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ enable\ debug\_mode\ provides\ extra\ info\ (eg.\ Dump\ log\_mel)}}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ audio\_ctx;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ overwrite\ the\ audio\ context\ size\ (0\ =\ use\ default)}}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [EXPERIMENTAL]\ [TDRZ]\ tinydiarize}}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ tdrz\_enable;\ \ \ \ \ \ \ \textcolor{comment}{//\ enable\ tinydiarize\ speaker\ turn\ detection}}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ regular\ expression\ that\ matches\ tokens\ to\ suppress}}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ suppress\_regex;}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ tokens\ to\ provide\ to\ the\ whisper\ decoder\ as\ initial\ prompt}}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ these\ are\ prepended\ to\ any\ existing\ text\ context\ from\ a\ previous\ call}}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ use\ whisper\_tokenize()\ to\ convert\ text\ to\ tokens}}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ maximum\ of\ whisper\_n\_text\_ctx()/2\ tokens\ are\ used\ (typically\ 224)}}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ initial\_prompt;}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ carry\_initial\_prompt;\ \textcolor{comment}{//\ if\ true,\ always\ prepend\ initial\_prompt\ to\ every\ decode\ window\ (may\ reduce\ conditioning\ on\ previous\ text)}}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ whisper\_token\ *\ prompt\_tokens;}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ prompt\_n\_tokens;}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ auto-\/detection,\ set\ to\ nullptr,\ "{}"{}\ or\ "{}auto"{}}}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ language;}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ detect\_language;}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ common\ decoding\ parameters:}}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ suppress\_blank;\ \textcolor{comment}{//\ ref:\ https://github.com/openai/whisper/blob/f82bc59f5ea234d4b97fb2860842ed38519f7e65/whisper/decoding.py\#L89}}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ suppress\_nst;\ \ \ \textcolor{comment}{//\ non-\/speech\ tokens,\ ref:\ https://github.com/openai/whisper/blob/7858aa9c08d98f75575035ecd6481f462d66ca27/whisper/tokenizer.py\#L224-\/L253}}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ temperature;\ \ \ \ \ \ \textcolor{comment}{//\ initial\ decoding\ temperature,\ ref:\ https://ai.stackexchange.com/a/32478}}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ max\_initial\_ts;\ \ \ \textcolor{comment}{//\ ref:\ https://github.com/openai/whisper/blob/f82bc59f5ea234d4b97fb2860842ed38519f7e65/whisper/decoding.py\#L97}}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ length\_penalty;\ \ \ \textcolor{comment}{//\ ref:\ https://github.com/openai/whisper/blob/f82bc59f5ea234d4b97fb2860842ed38519f7e65/whisper/transcribe.py\#L267}}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fallback\ parameters}}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ref:\ https://github.com/openai/whisper/blob/f82bc59f5ea234d4b97fb2860842ed38519f7e65/whisper/transcribe.py\#L274-\/L278}}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ temperature\_inc;}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ entropy\_thold;\ \ \ \ \textcolor{comment}{//\ similar\ to\ OpenAI's\ "{}compression\_ratio\_threshold"{}}}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ logprob\_thold;}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ no\_speech\_thold;}
+\DoxyCodeLine{00550\ }
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ best\_of;\ \ \ \ \textcolor{comment}{//\ ref:\ https://github.com/openai/whisper/blob/f82bc59f5ea234d4b97fb2860842ed38519f7e65/whisper/transcribe.py\#L264}}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \}\ greedy;}
+\DoxyCodeLine{00554\ }
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ beam\_size;\ \ \textcolor{comment}{//\ ref:\ https://github.com/openai/whisper/blob/f82bc59f5ea234d4b97fb2860842ed38519f7e65/whisper/transcribe.py\#L265}}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ patience;\ \textcolor{comment}{//\ TODO:\ not\ implemented,\ ref:\ https://arxiv.org/pdf/2204.05424.pdf}}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \}\ beam\_search;}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ called\ for\ every\ newly\ generated\ text\ segment}}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ whisper\_new\_segment\_callback\ new\_segment\_callback;}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ new\_segment\_callback\_user\_data;}
+\DoxyCodeLine{00564\ }
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ called\ on\ each\ progress\ update}}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ whisper\_progress\_callback\ progress\_callback;}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ progress\_callback\_user\_data;}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ called\ each\ time\ before\ the\ encoder\ starts}}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ whisper\_encoder\_begin\_callback\ encoder\_begin\_callback;}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ encoder\_begin\_callback\_user\_data;}
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ called\ each\ time\ before\ ggml\ computation\ starts}}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ ggml\_abort\_callback\ abort\_callback;}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ abort\_callback\_user\_data;}
+\DoxyCodeLine{00576\ }
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ called\ by\ each\ decoder\ to\ filter\ obtained\ logits}}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ whisper\_logits\_filter\_callback\ logits\_filter\_callback;}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ logits\_filter\_callback\_user\_data;}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structwhisper__grammar__element}{whisper\_grammar\_element}}\ **\ grammar\_rules;}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_grammar\_rules;}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_start\_rule;}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ grammar\_penalty;}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Voice\ Activity\ Detection\ (VAD)\ params}}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ vad;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Enable\ VAD}}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ vad\_model\_path;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Path\ to\ VAD\ model}}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwhisper__vad__params}{whisper\_vad\_params}}\ vad\_params;}
+\DoxyCodeLine{00591\ \ \ \ \ \};}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ function\ allocates\ memory,\ and\ it\ is\ the\ responsibility\ of\ the\ caller\ to\ free\ the\ pointer\ -\/\ see\ whisper\_free\_context\_params\ \&\ whisper\_free\_params()}}
+\DoxyCodeLine{00594\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ *\ whisper\_context\_default\_params\_by\_ref(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00595\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__context__params}{whisper\_context\_params}}\ \ \ whisper\_context\_default\_params\ \ \ \ \ \ \ (void);}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00597\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ *\ whisper\_full\_default\_params\_by\_ref(\textcolor{keyword}{enum}\ whisper\_sampling\_strategy\ strategy);}
+\DoxyCodeLine{00598\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ \ \ whisper\_full\_default\_params\ \ \ \ \ \ \ (enum\ whisper\_sampling\_strategy\ strategy);}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \ \ \ \ \textcolor{comment}{//\ Run\ the\ entire\ model:\ PCM\ -\/>\ log\ mel\ spectrogram\ -\/>\ encoder\ -\/>\ decoder\ -\/>\ text}}
+\DoxyCodeLine{00601\ \ \ \ \ \textcolor{comment}{//\ Not\ thread\ safe\ for\ same\ context}}
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{comment}{//\ Uses\ the\ specified\ decoding\ strategy\ to\ obtain\ the\ text.}}
+\DoxyCodeLine{00603\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_full(}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ \ \ params,}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ samples,}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_samples);}
+\DoxyCodeLine{00608\ }
+\DoxyCodeLine{00609\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_full\_with\_state(}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ \ \ params,}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ samples,}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_samples);}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{comment}{//\ Split\ the\ input\ audio\ in\ chunks\ and\ process\ each\ chunk\ separately\ using\ whisper\_full\_with\_state()}}
+\DoxyCodeLine{00617\ \ \ \ \ \textcolor{comment}{//\ Result\ is\ stored\ in\ the\ default\ state\ of\ the\ context}}
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{comment}{//\ Not\ thread\ safe\ if\ executed\ in\ parallel\ on\ the\ same\ context.}}
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{comment}{//\ It\ seems\ this\ approach\ can\ offer\ some\ speedup\ in\ some\ cases.}}
+\DoxyCodeLine{00620\ \ \ \ \ \textcolor{comment}{//\ However,\ the\ transcription\ accuracy\ can\ be\ worse\ at\ the\ beginning\ and\ end\ of\ each\ chunk.}}
+\DoxyCodeLine{00621\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_full\_parallel(}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ \ \ params,}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ samples,}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_samples,}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_processors);}
+\DoxyCodeLine{00627\ }
+\DoxyCodeLine{00628\ \ \ \ \ \textcolor{comment}{//\ Number\ of\ generated\ text\ segments}}
+\DoxyCodeLine{00629\ \ \ \ \ \textcolor{comment}{//\ A\ segment\ can\ be\ a\ few\ words,\ a\ sentence,\ or\ even\ a\ paragraph.}}
+\DoxyCodeLine{00630\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_full\_n\_segments\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00631\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_full\_n\_segments\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state);}
+\DoxyCodeLine{00632\ }
+\DoxyCodeLine{00633\ \ \ \ \ \textcolor{comment}{//\ Language\ id\ associated\ with\ the\ context's\ default\ state}}
+\DoxyCodeLine{00634\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_full\_lang\_id(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx);}
+\DoxyCodeLine{00635\ }
+\DoxyCodeLine{00636\ \ \ \ \ \textcolor{comment}{//\ Language\ id\ associated\ with\ the\ provided\ state}}
+\DoxyCodeLine{00637\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_full\_lang\_id\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state);}
+\DoxyCodeLine{00638\ }
+\DoxyCodeLine{00639\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ start\ and\ end\ time\ of\ the\ specified\ segment}}
+\DoxyCodeLine{00640\ \ \ \ \ WHISPER\_API\ int64\_t\ whisper\_full\_get\_segment\_t0\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00641\ \ \ \ \ WHISPER\_API\ int64\_t\ whisper\_full\_get\_segment\_t0\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00643\ \ \ \ \ WHISPER\_API\ int64\_t\ whisper\_full\_get\_segment\_t1\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00644\ \ \ \ \ WHISPER\_API\ int64\_t\ whisper\_full\_get\_segment\_t1\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \ \ \ \ \textcolor{comment}{//\ Get\ whether\ the\ next\ segment\ is\ predicted\ as\ a\ speaker\ turn}}
+\DoxyCodeLine{00647\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{bool}\ whisper\_full\_get\_segment\_speaker\_turn\_next(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00648\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{bool}\ whisper\_full\_get\_segment\_speaker\_turn\_next\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ text\ of\ the\ specified\ segment}}
+\DoxyCodeLine{00651\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_full\_get\_segment\_text\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00652\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_full\_get\_segment\_text\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00653\ }
+\DoxyCodeLine{00654\ \ \ \ \ \textcolor{comment}{//\ Get\ number\ of\ tokens\ in\ the\ specified\ segment}}
+\DoxyCodeLine{00655\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_full\_n\_tokens\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00656\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_full\_n\_tokens\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ token\ text\ of\ the\ specified\ token\ in\ the\ specified\ segment}}
+\DoxyCodeLine{00659\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_full\_get\_token\_text\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment,\ \textcolor{keywordtype}{int}\ i\_token);}
+\DoxyCodeLine{00660\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_full\_get\_token\_text\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment,\ \textcolor{keywordtype}{int}\ i\_token);}
+\DoxyCodeLine{00661\ }
+\DoxyCodeLine{00662\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_full\_get\_token\_id\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment,\ \textcolor{keywordtype}{int}\ i\_token);}
+\DoxyCodeLine{00663\ \ \ \ \ WHISPER\_API\ whisper\_token\ whisper\_full\_get\_token\_id\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment,\ \textcolor{keywordtype}{int}\ i\_token);}
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00665\ \ \ \ \ \textcolor{comment}{//\ Get\ token\ data\ for\ the\ specified\ token\ in\ the\ specified\ segment}}
+\DoxyCodeLine{00666\ \ \ \ \ \textcolor{comment}{//\ This\ contains\ probabilities,\ timestamps,\ etc.}}
+\DoxyCodeLine{00667\ \ \ \ \ WHISPER\_API\ \doxymbox{\hyperlink{structwhisper__token__data}{whisper\_token\_data}}\ whisper\_full\_get\_token\_data\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment,\ \textcolor{keywordtype}{int}\ i\_token);}
+\DoxyCodeLine{00668\ \ \ \ \ WHISPER\_API\ \doxymbox{\hyperlink{structwhisper__token__data}{whisper\_token\_data}}\ whisper\_full\_get\_token\_data\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment,\ \textcolor{keywordtype}{int}\ i\_token);}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00670\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ probability\ of\ the\ specified\ token\ in\ the\ specified\ segment}}
+\DoxyCodeLine{00671\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{float}\ whisper\_full\_get\_token\_p\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment,\ \textcolor{keywordtype}{int}\ i\_token);}
+\DoxyCodeLine{00672\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{float}\ whisper\_full\_get\_token\_p\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment,\ \textcolor{keywordtype}{int}\ i\_token);}
+\DoxyCodeLine{00673\ }
+\DoxyCodeLine{00674\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00675\ \ \ \ \ \textcolor{comment}{//\ Voice\ Activity\ Detection\ (VAD)}}
+\DoxyCodeLine{00676\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00677\ }
+\DoxyCodeLine{00678\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}};}
+\DoxyCodeLine{00679\ }
+\DoxyCodeLine{00680\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__params}{whisper\_vad\_params}}\ whisper\_vad\_default\_params(void);}
+\DoxyCodeLine{00681\ }
+\DoxyCodeLine{00682\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__context__params}{whisper\_vad\_context\_params}}\ \{}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_threads;\ \ \textcolor{comment}{//\ The\ number\ of\ threads\ to\ use\ for\ processing.}}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ use\_gpu;}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ gpu\_device;\ \textcolor{comment}{//\ CUDA\ device}}
+\DoxyCodeLine{00686\ \ \ \ \ \};}
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__context__params}{whisper\_vad\_context\_params}}\ whisper\_vad\_default\_context\_params(void);}
+\DoxyCodeLine{00689\ }
+\DoxyCodeLine{00690\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}}\ *\ whisper\_vad\_init\_from\_file\_with\_params(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path\_model,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__context__params}{whisper\_vad\_context\_params}}\ params);}
+\DoxyCodeLine{00691\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}}\ *\ whisper\_vad\_init\_with\_params\ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__model__loader}{whisper\_model\_loader}}\ *\ loader,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__context__params}{whisper\_vad\_context\_params}}\ params);}
+\DoxyCodeLine{00692\ }
+\DoxyCodeLine{00693\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{bool}\ whisper\_vad\_detect\_speech(}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}}\ *\ vctx,}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ samples,}
+\DoxyCodeLine{00696\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_samples);}
+\DoxyCodeLine{00697\ }
+\DoxyCodeLine{00698\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ \ \ \ \ whisper\_vad\_n\_probs(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}}\ *\ vctx);}
+\DoxyCodeLine{00699\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{float}\ *\ whisper\_vad\_probs\ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}}\ *\ vctx);}
+\DoxyCodeLine{00700\ }
+\DoxyCodeLine{00701\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__segments}{whisper\_vad\_segments}};}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__segments}{whisper\_vad\_segments}}\ *\ whisper\_vad\_segments\_from\_probs(}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}}\ *\ vctx,}
+\DoxyCodeLine{00705\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__params}{whisper\_vad\_params}}\ \ \ \ params);}
+\DoxyCodeLine{00706\ }
+\DoxyCodeLine{00707\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwhisper__vad__segments}{whisper\_vad\_segments}}\ *\ whisper\_vad\_segments\_from\_samples(}
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}}\ *\ vctx,}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__params}{whisper\_vad\_params}}\ \ \ \ params,}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ samples,}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ n\_samples);}
+\DoxyCodeLine{00712\ }
+\DoxyCodeLine{00713\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ whisper\_vad\_segments\_n\_segments(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__segments}{whisper\_vad\_segments}}\ *\ segments);}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00715\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{float}\ whisper\_vad\_segments\_get\_segment\_t0(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__segments}{whisper\_vad\_segments}}\ *\ segments,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00716\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{float}\ whisper\_vad\_segments\_get\_segment\_t1(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__segments}{whisper\_vad\_segments}}\ *\ segments,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00717\ }
+\DoxyCodeLine{00718\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{void}\ whisper\_vad\_free\_segments(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__segments}{whisper\_vad\_segments}}\ *\ segments);}
+\DoxyCodeLine{00719\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{void}\ whisper\_vad\_free\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__vad__context}{whisper\_vad\_context}}\ \ *\ ctx);}
+\DoxyCodeLine{00720\ }
+\DoxyCodeLine{00722\ }
+\DoxyCodeLine{00723\ \ \ \ \ \textcolor{comment}{//\ Temporary\ helpers\ needed\ for\ exposing\ ggml\ interface}}
+\DoxyCodeLine{00724\ }
+\DoxyCodeLine{00725\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ whisper\_bench\_memcpy\ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ n\_threads);}
+\DoxyCodeLine{00726\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_bench\_memcpy\_str\ \ \ \ \ \ (\textcolor{keywordtype}{int}\ n\_threads);}
+\DoxyCodeLine{00727\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ whisper\_bench\_ggml\_mul\_mat\ \ \ \ (\textcolor{keywordtype}{int}\ n\_threads);}
+\DoxyCodeLine{00728\ \ \ \ \ WHISPER\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ whisper\_bench\_ggml\_mul\_mat\_str(\textcolor{keywordtype}{int}\ n\_threads);}
+\DoxyCodeLine{00729\ }
+\DoxyCodeLine{00730\ \ \ \ \ \textcolor{comment}{//\ Control\ logging\ output;\ default\ behavior\ is\ to\ print\ to\ stderr}}
+\DoxyCodeLine{00731\ }
+\DoxyCodeLine{00732\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{void}\ whisper\_log\_set(ggml\_log\_callback\ log\_callback,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00733\ }
+\DoxyCodeLine{00734\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ no\_speech\ probability\ for\ the\ specified\ segment}}
+\DoxyCodeLine{00735\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{float}\ whisper\_full\_get\_segment\_no\_speech\_prob\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00736\ \ \ \ \ WHISPER\_API\ \textcolor{keywordtype}{float}\ whisper\_full\_get\_segment\_no\_speech\_prob\_from\_state(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structwhisper__state}{whisper\_state}}\ *\ state,\ \textcolor{keywordtype}{int}\ i\_segment);}
+\DoxyCodeLine{00737\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00738\ \}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00740\ }
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

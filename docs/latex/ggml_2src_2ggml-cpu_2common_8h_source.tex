@@ -1,0 +1,101 @@
+\doxysection{common.\+h}
+\hypertarget{ggml_2src_2ggml-cpu_2common_8h_source}{}\label{ggml_2src_2ggml-cpu_2common_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/common.h@{whisper.cpp/ggml/src/ggml-\/cpu/common.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}traits.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/cpu-\/impl.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}simd-\/mappings.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ GGML\_FA\_TILE\_Q\ \ 64}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ GGML\_FA\_TILE\_KV\ 64}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ convenience\ functions/macros\ for\ use\ in\ template\ calls}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ note:\ these\ won't\ be\ required\ after\ the\ 'traits'\ lookup\ table\ is\ used.}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ ggml\_fp16\_t\ f32\_to\_f16(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordflow}{return}\ GGML\_CPU\_FP32\_TO\_FP16(x);}
+\DoxyCodeLine{00020\ \}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ f16\_to\_f32(ggml\_fp16\_t\ x)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{return}\ GGML\_CPU\_FP16\_TO\_FP32(x);}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ f32\_to\_bf16(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{return}\ GGML\_FP32\_TO\_BF16(x);}
+\DoxyCodeLine{00028\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ bf16\_to\_f32(\doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ x)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{return}\ GGML\_BF16\_TO\_FP32(x);}
+\DoxyCodeLine{00032\ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ i32\_to\_f32(int32\_t\ x)\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ int32\_t\ f32\_to\_i32(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00040\ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ f32\_to\_f32(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00044\ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ TODO\ -\/\ merge\ this\ into\ the\ traits\ table,\ after\ using\ row-\/based\ conversions}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00048\ \textcolor{keyword}{struct\ }type\_conversion\_table;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00051\ \textcolor{keyword}{struct\ }type\_conversion\_table<ggml\_fp16\_t>\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ float\ (*to\_f32)(ggml\_fp16\_t)\ =\ f16\_to\_f32;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ ggml\_fp16\_t\ (*from\_f32)(float)\ =\ f32\_to\_f16;}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00057\ \textcolor{keyword}{struct\ }type\_conversion\_table<float>\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ float\ (*to\_f32)(float)\ =\ f32\_to\_f32;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ float\ (*from\_f32)(float)\ =\ f32\_to\_f32;}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00063\ \textcolor{keyword}{struct\ }type\_conversion\_table<\doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}>\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ float\ (*to\_f32)(ggml\_bf16\_t)\ =\ bf16\_to\_f32;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ ggml\_bf16\_t\ (*from\_f32)(float)\ =\ f32\_to\_bf16;}
+\DoxyCodeLine{00066\ \};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00069\ \textcolor{keyword}{struct\ }type\_conversion\_table<int32\_t>\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ float\ (*to\_f32)(int32\_t)\ =\ i32\_to\_f32;}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ int32\_t\ (*from\_f32)(float)\ =\ f32\_to\_i32;}
+\DoxyCodeLine{00072\ \};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{static}\ std::pair<int64\_t,\ int64\_t>\ get\_thread\_range(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src0)\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ith\ =\ params-\/>ith;}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ nth\ =\ params-\/>nth;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ nr\ \ =\ ggml\_nrows(src0);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ rows\ per\ thread}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ dr\ =\ (nr\ +\ nth\ -\/\ 1)/nth;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ row\ range\ for\ this\ thread}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ir0\ =\ dr*ith;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ ir1\ =\ MIN(ir0\ +\ dr,\ nr);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordflow}{return}\ \{ir0,\ ir1\};}
+\DoxyCodeLine{00088\ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{struct\ }ggml\_fa\_tile\_config\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ Q\ \ =\ GGML\_FA\_TILE\_Q;}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ KV\ =\ GGML\_FA\_TILE\_KV;}
+\DoxyCodeLine{00093\ \};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

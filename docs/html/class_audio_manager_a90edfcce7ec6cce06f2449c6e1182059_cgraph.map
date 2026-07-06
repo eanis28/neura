@@ -1,0 +1,5 @@
+<map id="AudioManager::init" name="AudioManager::init">
+<area shape="rect" id="Node000001" title="Initializes and starts the PortAudio input stream." alt="" coords="5,5,135,31"/>
+<area shape="rect" id="Node000002" href="$_audio_manager_8cpp.html#aa93b3b87f2190462654a05517a1cc287" title="PortAudio input callback function." alt="" coords="183,5,286,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,16,170,18,164,18,135,21"/>
+</map>

@@ -1,0 +1,48 @@
+\doxysection{whisper.\+cpp/\+examples/\+command.wasm Directory Reference}
+\hypertarget{dir_3002dd2035e960b2f17d02f354b7b1c0}{}\label{dir_3002dd2035e960b2f17d02f354b7b1c0}\index{whisper.cpp/examples/command.wasm Directory Reference@{whisper.cpp/examples/command.wasm Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_3002dd2035e960b2f17d02f354b7b1c0_autotoc_md66}{}\doxysubsection{\texorpdfstring{command.\+wasm}{command.\+wasm}}\label{dir_3002dd2035e960b2f17d02f354b7b1c0_autotoc_md66}
+This is a basic Voice Assistant example that accepts voice commands from the microphone. It runs in fully in the browser via Web\+Aseembly.
+
+Online demo:\+ \href{https://ggml.ai/whisper.cpp/command.wasm/}{\texttt{https:\+/\+/\+ggml.\+ai/\+whisper.\+cpp/\+command.\+wasm/\+}}
+
+Terminal version:\+ \href{/examples/command}{\texttt{examples/\+command}}\hypertarget{dir_3002dd2035e960b2f17d02f354b7b1c0_autotoc_md67}{}\doxysubsection{\texorpdfstring{Build instructions}{Build instructions}}\label{dir_3002dd2035e960b2f17d02f354b7b1c0_autotoc_md67}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ build\ using\ Emscripten\ (v3.1.2)}
+\DoxyCodeLine{git\ clone\ https://github.com/ggerganov/whisper.cpp}
+\DoxyCodeLine{cd\ whisper.cpp}
+\DoxyCodeLine{mkdir\ build-\/em\ \&\&\ cd\ build-\/em}
+\DoxyCodeLine{emcmake\ cmake\ ..}
+\DoxyCodeLine{make\ -\/j\ libcommand}
+
+\end{DoxyCode}
+ \doxylink{requirements_The}{The} example can then be started by running a local HTTP server:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{python3\ examples/server.py}
+
+\end{DoxyCode}
+ And then opening a browser to the following URL:\+ \href{http://localhost:8000/command.wasm/}{\texttt{http:\+/\+/\+localhost:\+8000/\+command.\+wasm/\+}}
+
+To run the example in a different server, you need to copy the following files to the server\textquotesingle{}s HTTP path:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cp\ bin/command.wasm/*\ \ \ \ \ \ \ /path/to/html/}
+\DoxyCodeLine{cp\ bin/libcommand.js\ \ \ \ \ \ \ \ /path/to/html/}
+\DoxyCodeLine{cp\ bin/libcommand.worker.js\ /path/to/html/}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+📝 {\bfseries{Note:\+}} By default this example is built with {\ttfamily WHISPER\+\_\+\+WASM\+\_\+\+SINGLE\+\_\+\+FILE=ON} which means that that a separate .wasm file will not be generated. Instead, the WASM module is embedded in the main JS file as a base64 encoded string. To generate a separate .wasm file, you need to disable this option by passing {\ttfamily -\/DWHISPER\+\_\+\+WASM\+\_\+\+SINGLE\+\_\+\+FILE=OFF}:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{emcmake\ cmake\ ..\ -\/DWHISPER\_WASM\_SINGLE\_FILE=OFF}
+
+\end{DoxyCode}
+ This will generate a {\ttfamily libcommand.\+wasm} file in the build/\+bin directory. \end{quote}
+
+
+\begin{quote}
+📝 {\bfseries{Note:\+}} As of Emscripten 3.\+1.\+58 (April 2024), separate worker.\+js files are no longer generated and the worker is embedded in the main JS file. So the worker file will not be geneated for versions later than {\ttfamily 3.\+1.\+58}. \end{quote}

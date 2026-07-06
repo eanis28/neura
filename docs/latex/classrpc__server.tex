@@ -1,0 +1,93 @@
+\doxysection{rpc\+\_\+server Class Reference}
+\hypertarget{classrpc__server}{}\label{classrpc__server}\index{rpc\_server@{rpc\_server}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structrpc__server_1_1stored__graph}{stored\+\_\+graph}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classrpc__server_a04e27a62a6a240e4ecfb161239a92207}\label{classrpc__server_a04e27a62a6a240e4ecfb161239a92207} 
+{\bfseries rpc\+\_\+server} (std::\+vector$<$ ggml\+\_\+backend\+\_\+t $>$ all\+\_\+backends, const char \texorpdfstring{$\ast$}{*}cache\+\_\+dir)
+\item 
+\Hypertarget{classrpc__server_a9be465cb365d4051fb0d24b79cab5a71}\label{classrpc__server_a9be465cb365d4051fb0d24b79cab5a71} 
+void {\bfseries hello} (\doxymbox{\hyperlink{structrpc__msg__hello__rsp}{rpc\+\_\+msg\+\_\+hello\+\_\+rsp}} \&response)
+\item 
+\Hypertarget{classrpc__server_a654a080924c05cbf64cdf52d5699a1ec}\label{classrpc__server_a654a080924c05cbf64cdf52d5699a1ec} 
+bool {\bfseries alloc\+\_\+buffer} (const \doxymbox{\hyperlink{structrpc__msg__alloc__buffer__req}{rpc\+\_\+msg\+\_\+alloc\+\_\+buffer\+\_\+req}} \&request, \doxymbox{\hyperlink{structrpc__msg__alloc__buffer__rsp}{rpc\+\_\+msg\+\_\+alloc\+\_\+buffer\+\_\+rsp}} \&response)
+\item 
+\Hypertarget{classrpc__server_a3a406af7569c9ff7e1fb62161f26b669}\label{classrpc__server_a3a406af7569c9ff7e1fb62161f26b669} 
+bool {\bfseries get\+\_\+alignment} (const \doxymbox{\hyperlink{structrpc__msg__get__alignment__req}{rpc\+\_\+msg\+\_\+get\+\_\+alignment\+\_\+req}} \&request, \doxymbox{\hyperlink{structrpc__msg__get__alignment__rsp}{rpc\+\_\+msg\+\_\+get\+\_\+alignment\+\_\+rsp}} \&response)
+\item 
+\Hypertarget{classrpc__server_a38abec70d44ce081dd93c6665cabd464}\label{classrpc__server_a38abec70d44ce081dd93c6665cabd464} 
+bool {\bfseries get\+\_\+max\+\_\+size} (const \doxymbox{\hyperlink{structrpc__msg__get__max__size__req}{rpc\+\_\+msg\+\_\+get\+\_\+max\+\_\+size\+\_\+req}} \&request, \doxymbox{\hyperlink{structrpc__msg__get__max__size__rsp}{rpc\+\_\+msg\+\_\+get\+\_\+max\+\_\+size\+\_\+rsp}} \&response)
+\item 
+\Hypertarget{classrpc__server_a0a3d2c4af80cfbe0c8ea5594bb2daee7}\label{classrpc__server_a0a3d2c4af80cfbe0c8ea5594bb2daee7} 
+bool {\bfseries buffer\+\_\+get\+\_\+base} (const \doxymbox{\hyperlink{structrpc__msg__buffer__get__base__req}{rpc\+\_\+msg\+\_\+buffer\+\_\+get\+\_\+base\+\_\+req}} \&request, \doxymbox{\hyperlink{structrpc__msg__buffer__get__base__rsp}{rpc\+\_\+msg\+\_\+buffer\+\_\+get\+\_\+base\+\_\+rsp}} \&response)
+\item 
+\Hypertarget{classrpc__server_af7d646a959330db038693d8669b31cf8}\label{classrpc__server_af7d646a959330db038693d8669b31cf8} 
+bool {\bfseries free\+\_\+buffer} (const \doxymbox{\hyperlink{structrpc__msg__free__buffer__req}{rpc\+\_\+msg\+\_\+free\+\_\+buffer\+\_\+req}} \&request)
+\item 
+\Hypertarget{classrpc__server_a3b939967f815d65376907564777a8426}\label{classrpc__server_a3b939967f815d65376907564777a8426} 
+bool {\bfseries buffer\+\_\+clear} (const \doxymbox{\hyperlink{structrpc__msg__buffer__clear__req}{rpc\+\_\+msg\+\_\+buffer\+\_\+clear\+\_\+req}} \&request)
+\item 
+\Hypertarget{classrpc__server_ac5d53fe524875b15e40109a486536a81}\label{classrpc__server_ac5d53fe524875b15e40109a486536a81} 
+bool {\bfseries set\+\_\+tensor} (const std::\+vector$<$ uint8\+\_\+t $>$ \&input)
+\item 
+\Hypertarget{classrpc__server_ab2c85aa8a77d7fe77b74478ebac3f4ba}\label{classrpc__server_ab2c85aa8a77d7fe77b74478ebac3f4ba} 
+bool {\bfseries set\+\_\+tensor\+\_\+hash} (const \doxymbox{\hyperlink{structrpc__msg__set__tensor__hash__req}{rpc\+\_\+msg\+\_\+set\+\_\+tensor\+\_\+hash\+\_\+req}} \&request, \doxymbox{\hyperlink{structrpc__msg__set__tensor__hash__rsp}{rpc\+\_\+msg\+\_\+set\+\_\+tensor\+\_\+hash\+\_\+rsp}} \&response)
+\item 
+\Hypertarget{classrpc__server_a107ced664c823b25114e8e217d423efb}\label{classrpc__server_a107ced664c823b25114e8e217d423efb} 
+bool {\bfseries get\+\_\+tensor} (const \doxymbox{\hyperlink{structrpc__msg__get__tensor__req}{rpc\+\_\+msg\+\_\+get\+\_\+tensor\+\_\+req}} \&request, std::\+vector$<$ uint8\+\_\+t $>$ \&response)
+\item 
+\Hypertarget{classrpc__server_afffde38f8c7547be7253ef802ad7f191}\label{classrpc__server_afffde38f8c7547be7253ef802ad7f191} 
+bool {\bfseries copy\+\_\+tensor} (const \doxymbox{\hyperlink{structrpc__msg__copy__tensor__req}{rpc\+\_\+msg\+\_\+copy\+\_\+tensor\+\_\+req}} \&request, \doxymbox{\hyperlink{structrpc__msg__copy__tensor__rsp}{rpc\+\_\+msg\+\_\+copy\+\_\+tensor\+\_\+rsp}} \&response)
+\item 
+\Hypertarget{classrpc__server_aaaf5d9f0bc4b5160c4e68f2a40523727}\label{classrpc__server_aaaf5d9f0bc4b5160c4e68f2a40523727} 
+bool {\bfseries graph\+\_\+compute} (const std::\+vector$<$ uint8\+\_\+t $>$ \&input)
+\item 
+\Hypertarget{classrpc__server_a27db7f708bb456aabab078dd6bd8ed53}\label{classrpc__server_a27db7f708bb456aabab078dd6bd8ed53} 
+bool {\bfseries graph\+\_\+recompute} (const \doxymbox{\hyperlink{structrpc__msg__graph__recompute__req}{rpc\+\_\+msg\+\_\+graph\+\_\+recompute\+\_\+req}} \&request)
+\item 
+\Hypertarget{classrpc__server_a9f4c777ea71f4c20d7e0c5936e43aaf4}\label{classrpc__server_a9f4c777ea71f4c20d7e0c5936e43aaf4} 
+bool {\bfseries init\+\_\+tensor} (const \doxymbox{\hyperlink{structrpc__msg__init__tensor__req}{rpc\+\_\+msg\+\_\+init\+\_\+tensor\+\_\+req}} \&request)
+\item 
+\Hypertarget{classrpc__server_aa98c2034207a79789c55d6bd7e28c1d6}\label{classrpc__server_aa98c2034207a79789c55d6bd7e28c1d6} 
+bool {\bfseries get\+\_\+alloc\+\_\+size} (const \doxymbox{\hyperlink{structrpc__msg__get__alloc__size__req}{rpc\+\_\+msg\+\_\+get\+\_\+alloc\+\_\+size\+\_\+req}} \&request, \doxymbox{\hyperlink{structrpc__msg__get__alloc__size__rsp}{rpc\+\_\+msg\+\_\+get\+\_\+alloc\+\_\+size\+\_\+rsp}} \&response)
+\item 
+\Hypertarget{classrpc__server_ac722170a17da3c7206ca23968b7cf302}\label{classrpc__server_ac722170a17da3c7206ca23968b7cf302} 
+bool {\bfseries get\+\_\+device\+\_\+memory} (const \doxymbox{\hyperlink{structrpc__msg__get__device__memory__req}{rpc\+\_\+msg\+\_\+get\+\_\+device\+\_\+memory\+\_\+req}} \&request, \doxymbox{\hyperlink{structrpc__msg__get__device__memory__rsp}{rpc\+\_\+msg\+\_\+get\+\_\+device\+\_\+memory\+\_\+rsp}} \&response)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classrpc__server_a22bebb19207e8947324f171c259969ec}\label{classrpc__server_a22bebb19207e8947324f171c259969ec} 
+bool {\bfseries get\+\_\+cached\+\_\+file} (uint64\+\_\+t hash, std::\+vector$<$ uint8\+\_\+t $>$ \&data)
+\item 
+\Hypertarget{classrpc__server_a0d09683eb8b99f96495956b5ab519e20}\label{classrpc__server_a0d09683eb8b99f96495956b5ab519e20} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries deserialize\+\_\+tensor} (struct \doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, const \doxymbox{\hyperlink{structrpc__tensor}{rpc\+\_\+tensor}} \texorpdfstring{$\ast$}{*}tensor)
+\item 
+\Hypertarget{classrpc__server_a133f75c57e1460aec082096f1036d6ff}\label{classrpc__server_a133f75c57e1460aec082096f1036d6ff} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries create\+\_\+node} (uint64\+\_\+t id, struct \doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, const std::\+unordered\+\_\+map$<$ uint64\+\_\+t, const \doxymbox{\hyperlink{structrpc__tensor}{rpc\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ \&tensor\+\_\+ptrs, std::\+unordered\+\_\+map$<$ uint64\+\_\+t, struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ \&tensor\+\_\+map)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classrpc__server_ac8e5df975ab016d240563dd7b38c4143}\label{classrpc__server_ac8e5df975ab016d240563dd7b38c4143} 
+std::\+vector$<$ ggml\+\_\+backend\+\_\+t $>$ {\bfseries backends}
+\item 
+\Hypertarget{classrpc__server_a5c0b1aeb16c58439a10184c9b94015a6}\label{classrpc__server_a5c0b1aeb16c58439a10184c9b94015a6} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries cache\+\_\+dir}
+\item 
+\Hypertarget{classrpc__server_abf6387c6b11032ee60b1e6049e3f9f00}\label{classrpc__server_abf6387c6b11032ee60b1e6049e3f9f00} 
+std::\+unordered\+\_\+set$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+t $>$ {\bfseries buffers}
+\item 
+\Hypertarget{classrpc__server_aa9379138882f13edd7872028b42a922d}\label{classrpc__server_aa9379138882f13edd7872028b42a922d} 
+std::\+vector$<$ \doxymbox{\hyperlink{structrpc__server_1_1stored__graph}{stored\+\_\+graph}} $>$ {\bfseries stored\+\_\+graphs}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/rpc/\+ggml-\/rpc.\+cpp\end{DoxyCompactItemize}

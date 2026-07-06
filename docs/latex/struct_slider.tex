@@ -1,0 +1,154 @@
+\doxysection{Slider Struct Reference}
+\hypertarget{struct_slider}{}\label{struct_slider}\index{Slider@{Slider}}
+
+
+Horizontal slider UI component.  
+
+
+
+
+{\ttfamily \+\#include $<$UIWidgets.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{struct_slider_ae26b8a588be53c7eab4e9dd73c4b4b28}{init}} (float x, float y, float width, int v)
+\begin{DoxyCompactList}\small\item\em Initializes the slider. \end{DoxyCompactList}\item 
+float \doxymbox{\hyperlink{struct_slider_ac1515b1164f741b9c17fabac7d668f66}{thumbX}} () const
+\begin{DoxyCompactList}\small\item\em Computes the thumb X position. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{struct_slider_a7c5b20536f4ef22708a577c189c4c036}{hit\+Area}} (sf::\+\+Vector2f p) const
+\begin{DoxyCompactList}\small\item\em Checks if a point hits the slider area. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_slider_ad704ec898ffb1f58475479b64c85a48a}{applyX}} (float px)
+\begin{DoxyCompactList}\small\item\em Updates value based on X position. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_slider_aaa76bd46a9c6009b64e031ae997374fa}{draw}} (sf::\+\+Render\+Window \&win) const
+\begin{DoxyCompactList}\small\item\em Draws the slider. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_slider_af0ade0b368e6de0f756bea6d44619e87}\label{struct_slider_af0ade0b368e6de0f756bea6d44619e87} 
+float {\bfseries cx}
+\item 
+\Hypertarget{struct_slider_a3830733e198126ff522da5796d5d5bf6}\label{struct_slider_a3830733e198126ff522da5796d5d5bf6} 
+float {\bfseries cy}
+\item 
+\Hypertarget{struct_slider_a40591826ad5e889396c4d8a42addd102}\label{struct_slider_a40591826ad5e889396c4d8a42addd102} 
+float {\bfseries w}
+\item 
+\Hypertarget{struct_slider_a79e7ed51de2c2d9a70940fc40afa644c}\label{struct_slider_a79e7ed51de2c2d9a70940fc40afa644c} 
+int {\bfseries value} = 0
+\item 
+\Hypertarget{struct_slider_a4d91ee0492fcde7969591943628ca2d9}\label{struct_slider_a4d91ee0492fcde7969591943628ca2d9} 
+bool {\bfseries dragging} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Horizontal slider UI component. 
+
+Allows selection of a value between 0 and 100 via dragging.
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{struct_slider_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_slider_ad704ec898ffb1f58475479b64c85a48a}\index{Slider@{Slider}!applyX@{applyX}}
+\index{applyX@{applyX}!Slider@{Slider}}
+\doxysubsubsection{\texorpdfstring{applyX()}{applyX()}}
+{\footnotesize\ttfamily \label{struct_slider_ad704ec898ffb1f58475479b64c85a48a} 
+void Slider::\+applyX (\begin{DoxyParamCaption}\item[{float}]{px}{}\end{DoxyParamCaption})}
+
+
+
+Updates value based on X position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em px} & Mouse X coordinate. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_slider_aaa76bd46a9c6009b64e031ae997374fa}\index{Slider@{Slider}!draw@{draw}}
+\index{draw@{draw}!Slider@{Slider}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily \label{struct_slider_aaa76bd46a9c6009b64e031ae997374fa} 
+void Slider::\+draw (\begin{DoxyParamCaption}\item[{sf::\+\+Render\+Window \&}]{win}{}\end{DoxyParamCaption}) const}
+
+
+
+Draws the slider. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & Render window. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_slider_a7c5b20536f4ef22708a577c189c4c036}\index{Slider@{Slider}!hitArea@{hitArea}}
+\index{hitArea@{hitArea}!Slider@{Slider}}
+\doxysubsubsection{\texorpdfstring{hitArea()}{hitArea()}}
+{\footnotesize\ttfamily \label{struct_slider_a7c5b20536f4ef22708a577c189c4c036} 
+bool Slider::\+hit\+Area (\begin{DoxyParamCaption}\item[{sf::\+\+Vector2f}]{p}{}\end{DoxyParamCaption}) const}
+
+
+
+Checks if a point hits the slider area. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Mouse position. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if within interaction zone. 
+\end{DoxyReturn}
+\Hypertarget{struct_slider_ae26b8a588be53c7eab4e9dd73c4b4b28}\index{Slider@{Slider}!init@{init}}
+\index{init@{init}!Slider@{Slider}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily \label{struct_slider_ae26b8a588be53c7eab4e9dd73c4b4b28} 
+void Slider::\+init (\begin{DoxyParamCaption}\item[{float}]{x}{, }\item[{float}]{y}{, }\item[{float}]{width}{, }\item[{int}]{v}{}\end{DoxyParamCaption})}
+
+
+
+Initializes the slider. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & X position. \\
+\hline
+{\em y} & Y position. \\
+\hline
+{\em width} & Width of the slider. \\
+\hline
+{\em v} & Initial value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_slider_ac1515b1164f741b9c17fabac7d668f66}\index{Slider@{Slider}!thumbX@{thumbX}}
+\index{thumbX@{thumbX}!Slider@{Slider}}
+\doxysubsubsection{\texorpdfstring{thumbX()}{thumbX()}}
+{\footnotesize\ttfamily \label{struct_slider_ac1515b1164f741b9c17fabac7d668f66} 
+float Slider::\+thumbX (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Computes the thumb X position. 
+
+\begin{DoxyReturn}{Returns}
+float X coordinate of the slider thumb. 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_u_i_widgets_8h}{UIWidgets.\+h}}\item 
+UIWidgets.\+cpp\end{DoxyCompactItemize}

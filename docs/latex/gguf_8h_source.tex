@@ -1,0 +1,210 @@
+\doxysection{gguf.\+h}
+\hypertarget{gguf_8h_source}{}\label{gguf_8h_source}\index{whisper.cpp/ggml/include/gguf.h@{whisper.cpp/ggml/include/gguf.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ This\ file\ contains\ functionality\ related\ to\ "{}GGUF"{}\ files,\ the\ binary\ file\ format\ used\ by\ ggml.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ GGUF\ files\ have\ the\ following\ structure:}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ 1.\ File\ magic\ "{}GGUF"{}\ (4\ bytes).}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ 2.\ File\ version\ (uint32\_t).}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ 3.\ Number\ of\ ggml\ tensors\ in\ file\ (int64\_t).}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ 4.\ Number\ of\ key-\/value-\/pairs\ in\ file\ (int64\_t).}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ 5.\ For\ each\ KV\ pair:}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ \ \ 1.\ The\ key\ (string).}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \ \ 2.\ The\ value\ type\ (gguf\_type).}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ \ \ 3a.\ If\ the\ value\ type\ is\ GGUF\_TYPE\_ARRAY:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \ \ \ \ 1.\ The\ type\ of\ the\ array\ (gguf\_type).}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ \ \ \ \ 2.\ The\ number\ of\ elements\ in\ the\ array\ (uint64\_t).}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ \ \ \ \ 3.\ The\ binary\ representation\ of\ each\ element\ in\ the\ array.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ \ \ 3b.\ Otherwise:}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ \ \ \ \ 1.\ The\ binary\ representation\ of\ the\ value.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ 6.\ For\ each\ ggml\ tensor:}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ \ \ 1.\ The\ tensor\ name\ (string).}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ \ \ 2.\ The\ number\ of\ dimensions\ of\ the\ tensor\ (uint32\_t).}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ \ \ 3.\ For\ each\ dimension:}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ \ \ \ \ 1.\ The\ size\ of\ the\ tensor\ in\ the\ dimension\ (int64\_t).}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ \ \ 4.\ The\ tensor\ data\ type\ (ggml\_type).}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ \ \ 5.\ The\ tensor\ data\ offset\ in\ the\ tensor\ data\ binary\ blob\ (uint64\_t).}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ 7.\ The\ tensor\ data\ binary\ blob\ (optional,\ aligned).}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Strings\ are\ serialized\ as\ the\ string\ length\ (uint64\_t)\ followed\ by\ the\ C\ string\ without\ the\ null\ terminator.}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ All\ enums\ are\ stored\ as\ int32\_t.}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ All\ bool\ values\ are\ stored\ as\ int8\_t.}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ If\ the\ special\ key\ "{}general.alignment"{}\ (uint32\_t)\ is\ defined\ it\ is\ used\ for\ alignment,}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ \ \ otherwise\ GGUF\_DEFAULT\_ALIGNMENT\ is\ used.}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ Module\ maintainer:\ Johannes\ Gäßler\ (@JohannesGaessler,\ johannesg@5d6.de)}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ GGUF\_MAGIC\ \ \ "{}GGUF"{}}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ GGUF\_VERSION\ 3}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ GGUF\_KEY\_GENERAL\_ALIGNMENT\ "{}general.alignment"{}}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ GGUF\_DEFAULT\_ALIGNMENT\ 32}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00049\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//\ types\ that\ can\ be\ stored\ as\ GGUF\ KV\ data}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{enum}\ gguf\_type\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_UINT8\ \ \ =\ 0,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_INT8\ \ \ \ =\ 1,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_UINT16\ \ =\ 2,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_INT16\ \ \ =\ 3,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_UINT32\ \ =\ 4,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_INT32\ \ \ =\ 5,}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_FLOAT32\ =\ 6,}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_BOOL\ \ \ \ =\ 7,}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_STRING\ \ =\ 8,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_ARRAY\ \ \ =\ 9,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_UINT64\ \ =\ 10,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_INT64\ \ \ =\ 11,}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_FLOAT64\ =\ 12,}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ GGUF\_TYPE\_COUNT,\ \ \ \ \ \ \ \textcolor{comment}{//\ marks\ the\ end\ of\ the\ enum}}
+\DoxyCodeLine{00068\ \ \ \ \ \};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgguf__context}{gguf\_context}};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgguf__init__params}{gguf\_init\_params}}\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ no\_alloc;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ not\ NULL,\ create\ a\ ggml\_context\ and\ allocate\ the\ tensor\ data\ in\ it}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ **\ ctx;}
+\DoxyCodeLine{00077\ \ \ \ \ \};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ gguf\_init\_empty(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00080\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ gguf\_init\_from\_file\_ptr(FILE\ *\ file,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__init__params}{gguf\_init\_params}}\ params);}
+\DoxyCodeLine{00081\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ gguf\_init\_from\_file(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ fname,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__init__params}{gguf\_init\_params}}\ params);}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//GGML\_API\ struct\ gguf\_context\ *\ gguf\_init\_from\_buffer(..);}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_free(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ gguf\_type\_name(\textcolor{keyword}{enum}\ gguf\_type\ type);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ GGML\_API\ uint32\_t\ gguf\_get\_version\ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx);}
+\DoxyCodeLine{00089\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ gguf\_get\_alignment\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx);}
+\DoxyCodeLine{00090\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ gguf\_get\_data\_offset(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ GGML\_API\ int64\_t\ \ \ \ \ \ gguf\_get\_n\_kv(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx);}
+\DoxyCodeLine{00093\ \ \ \ \ GGML\_API\ int64\_t\ \ \ \ \ \ gguf\_find\_key(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key);\ \textcolor{comment}{//\ returns\ -\/1\ if\ key\ is\ not\ found}}
+\DoxyCodeLine{00094\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ gguf\_get\_key\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ gguf\_type\ gguf\_get\_kv\_type\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00097\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ gguf\_type\ gguf\_get\_arr\_type(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{comment}{//\ will\ abort\ if\ the\ wrong\ type\ is\ used\ for\ the\ key}}
+\DoxyCodeLine{00100\ \ \ \ \ GGML\_API\ uint8\_t\ \ \ \ \ \ gguf\_get\_val\_u8\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00101\ \ \ \ \ GGML\_API\ int8\_t\ \ \ \ \ \ \ gguf\_get\_val\_i8\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00102\ \ \ \ \ GGML\_API\ uint16\_t\ \ \ \ \ gguf\_get\_val\_u16\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00103\ \ \ \ \ GGML\_API\ int16\_t\ \ \ \ \ \ gguf\_get\_val\_i16\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00104\ \ \ \ \ GGML\_API\ uint32\_t\ \ \ \ \ gguf\_get\_val\_u32\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00105\ \ \ \ \ GGML\_API\ int32\_t\ \ \ \ \ \ gguf\_get\_val\_i32\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00106\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ gguf\_get\_val\_f32\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00107\ \ \ \ \ GGML\_API\ uint64\_t\ \ \ \ \ gguf\_get\_val\_u64\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00108\ \ \ \ \ GGML\_API\ int64\_t\ \ \ \ \ \ gguf\_get\_val\_i64\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00109\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{double}\ \ \ \ \ \ \ gguf\_get\_val\_f64\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00110\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ gguf\_get\_val\_bool(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00111\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ gguf\_get\_val\_str\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00112\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ gguf\_get\_val\_data(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00113\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ gguf\_get\_arr\_n\ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ get\ raw\ pointer\ to\ the\ first\ element\ of\ the\ array\ with\ the\ given\ key\_id}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{comment}{//\ for\ bool\ arrays,\ note\ that\ they\ are\ always\ stored\ as\ int8\ on\ all\ platforms\ (usually\ this\ makes\ no\ difference)}}
+\DoxyCodeLine{00117\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ gguf\_get\_arr\_data(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id);}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ get\ ith\ C\ string\ from\ array\ with\ given\ key\_id}}
+\DoxyCodeLine{00120\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ gguf\_get\_arr\_str\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ key\_id,\ \textcolor{keywordtype}{size\_t}\ i);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ GGML\_API\ int64\_t\ \ \ \ \ \ \ \ gguf\_get\_n\_tensors\ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx);}
+\DoxyCodeLine{00123\ \ \ \ \ GGML\_API\ int64\_t\ \ \ \ \ \ \ \ gguf\_find\_tensor\ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name);\ \textcolor{comment}{//\ returns\ -\/1\ if\ the\ tensor\ is\ not\ found}}
+\DoxyCodeLine{00124\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ gguf\_get\_tensor\_offset(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ tensor\_id);}
+\DoxyCodeLine{00125\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ gguf\_get\_tensor\_name\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ tensor\_id);}
+\DoxyCodeLine{00126\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_type\ gguf\_get\_tensor\_type\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ tensor\_id);}
+\DoxyCodeLine{00127\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ gguf\_get\_tensor\_size\ \ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ int64\_t\ tensor\_id);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{//\ removes\ key\ if\ it\ exists,\ returns\ id\ that\ the\ key\ had\ prior\ to\ removal\ (-\/1\ if\ it\ didn't\ exist)}}
+\DoxyCodeLine{00130\ \ \ \ \ GGML\_API\ int64\_t\ gguf\_remove\_key(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{//\ overrides\ an\ existing\ KV\ pair\ or\ adds\ a\ new\ one,\ the\ new\ KV\ pair\ is\ always\ at\ the\ back}}
+\DoxyCodeLine{00133\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_u8\ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ uint8\_t\ \ \ \ \ \ val);}
+\DoxyCodeLine{00134\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_i8\ \ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ int8\_t\ \ \ \ \ \ \ val);}
+\DoxyCodeLine{00135\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_u16\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ uint16\_t\ \ \ \ \ val);}
+\DoxyCodeLine{00136\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_i16\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ int16\_t\ \ \ \ \ \ val);}
+\DoxyCodeLine{00137\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_u32\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ uint32\_t\ \ \ \ \ val);}
+\DoxyCodeLine{00138\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_i32\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ int32\_t\ \ \ \ \ \ val);}
+\DoxyCodeLine{00139\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_f32\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ val);}
+\DoxyCodeLine{00140\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_u64\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ uint64\_t\ \ \ \ \ val);}
+\DoxyCodeLine{00141\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_i64\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ int64\_t\ \ \ \ \ \ val);}
+\DoxyCodeLine{00142\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_f64\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ \textcolor{keywordtype}{double}\ \ \ \ \ \ \ val);}
+\DoxyCodeLine{00143\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_bool(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ val);}
+\DoxyCodeLine{00144\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_val\_str\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ val);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{comment}{//\ creates\ a\ new\ array\ with\ n\ elements\ of\ the\ given\ type\ and\ copies\ the\ corresponding\ number\ of\ bytes\ from\ data}}
+\DoxyCodeLine{00147\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_arr\_data(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ \textcolor{keyword}{enum}\ gguf\_type\ type,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ n);}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{comment}{//\ creates\ a\ new\ array\ with\ n\ strings\ and\ copies\ the\ corresponding\ strings\ from\ data}}
+\DoxyCodeLine{00150\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_arr\_str\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ key,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **\ data,\ \textcolor{keywordtype}{size\_t}\ n);}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{comment}{//\ set\ or\ add\ KV\ pairs\ from\ another\ context}}
+\DoxyCodeLine{00153\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_kv(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ src);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{comment}{//\ add\ tensor\ to\ GGUF\ context,\ tensor\ name\ must\ be\ unique}}
+\DoxyCodeLine{00156\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_add\_tensor(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{comment}{//\ after\ changing\ a\ tensor's\ type,\ the\ offsets\ of\ all\ tensors\ with\ higher\ indices\ are\ immediately\ recalculated}}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{//\ \ \ in\ such\ a\ way\ that\ the\ tensor\ data\ remains\ as\ one\ contiguous\ block\ (except\ for\ padding)}}
+\DoxyCodeLine{00160\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_tensor\_type(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name,\ \textcolor{keyword}{enum}\ ggml\_type\ type);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{comment}{//\ assumes\ that\ at\ least\ gguf\_get\_tensor\_size\ bytes\ can\ be\ read\ from\ data}}
+\DoxyCodeLine{00163\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_set\_tensor\_data(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data);}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{comment}{//\ writing\ gguf\ files\ can\ be\ done\ in\ 3\ ways:}}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{comment}{//\ -\/\ write\ the\ entire\ gguf\_context\ to\ a\ binary\ file\ in\ a\ single\ pass:}}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{comment}{//\ \ \ gguf\_write\_to\_file(ctx,\ fname,\ /*only\_meta\ =*/\ false);}}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{//\ -\/\ write\ only\ the\ meta\ data\ to\ a\ file,\ then\ re-\/open\ the\ file\ and\ append\ the\ tensor\ data:}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{//\ \ \ gguf\_write\_to\_file(ctx,\ fname,\ /*only\_meta\ =*/\ true);}}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{comment}{//\ \ \ FILE\ *\ f\ =\ fopen(fname,\ "{}ab"{});}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{comment}{//\ \ \ fwrite(f,\ ...);\ //\ write\ tensor\ data}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{comment}{//\ \ \ fclose(f);}}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{comment}{//\ -\/\ first\ prepare\ a\ file\ with\ a\ placeholder\ for\ the\ meta\ data,\ write\ the\ tensor\ data,\ then\ write\ the\ meta\ data:}}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{//\ \ \ FILE\ *\ f\ =\ fopen(fname,\ "{}wb"{});}}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{comment}{//\ \ \ const\ size\_t\ size\_meta\ =\ gguf\_get\_meta\_size(ctx);}}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{comment}{//\ \ \ fseek(f,\ size\_meta,\ SEEK\_SET);}}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{comment}{//\ \ \ fwrite(f,\ ...);\ //\ write\ tensor\ data}}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{comment}{//\ \ \ void\ *\ data\ =\ malloc(size\_meta);}}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{comment}{//\ \ \ gguf\_get\_meta\_data(ctx,\ data);}}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{comment}{//\ \ \ rewind(f);}}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{comment}{//\ \ \ fwrite(data,\ 1,\ data,\ f);}}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{comment}{//\ \ \ free(data);}}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{comment}{//\ \ \ fclose(f);}}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{comment}{//\ write\ the\ entire\ context\ to\ a\ binary\ file}}
+\DoxyCodeLine{00193\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ gguf\_write\_to\_file\_ptr(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ FILE\ *\ file,\ \textcolor{keywordtype}{bool}\ only\_meta);}
+\DoxyCodeLine{00194\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ gguf\_write\_to\_file(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ fname,\ \textcolor{keywordtype}{bool}\ only\_meta);}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{comment}{//\ get\ the\ size\ in\ bytes\ of\ the\ meta\ data\ (header,\ kv\ pairs,\ tensor\ info)\ including\ padding}}
+\DoxyCodeLine{00197\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ gguf\_get\_meta\_size(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx);}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{comment}{//\ writes\ the\ meta\ data\ to\ pointer\ "{}data"{}}}
+\DoxyCodeLine{00200\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ gguf\_get\_meta\_data(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ \textcolor{keywordtype}{void}\ *\ data);}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00203\ \}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

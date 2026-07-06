@@ -1,0 +1,77 @@
+\doxysection{ggml-\/remoting.h}
+\hypertarget{ggml-remoting_8h_source}{}\label{ggml-remoting_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/ggml-\/remoting.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/ggml-\/remoting.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend-\/impl.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}virtgpu.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ GGML\_VIRTGPU\_NAME\ "{}ggml-\/virtgpu"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ GGML\_VIRTGPU\ \ \ \ \ \ "{}ggml-\/virtgpu:\ "{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ USE\_ALWAYS\_TRUE\_SUPPORTS\_OP:\ 1\ is\ fast,\ 0\ avoid\ micro-\/benchmark\ crashes}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ USE\_ALWAYS\_TRUE\_SUPPORTS\_OP\ 1}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ USE\_METAL\_GUEST\_SUPPORTS\_OP\ 0}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ DEV\_TO\_GPU(name)\ ((ggml\_backend\_remoting\_device\_context\ *)\ (name)-\/>context)-\/>gpu}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ BUFFER\_TO\_GGML\_CONTEXT(name)\ ((ggml\_backend\_remoting\_buffer\_context\ *)\ (name)-\/>context)}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ BUFFER\_TO\_APIR\_CONTEXT(name)\ \&((ggml\_backend\_remoting\_buffer\_context\ *)\ (name)-\/>context)-\/>apir\_context}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ BUFFER\_TO\_HOST\_HANDLE(name)\ ((ggml\_backend\_remoting\_buffer\_context\ *)\ (name)-\/>context)-\/>apir\_context.host\_handle}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ GET\_DEVICE\_CONTEXT()\ (ggml\_backend\_remoting\_device\_context\ *)\ ggml\_backend\_remoting\_get\_device(0)-\/>context}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ BUFT\_TO\_GPU(name)\ ((ggml\_backend\_remoting\_device\_context\ *)\ (name)-\/>device-\/>context)-\/>gpu}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__remoting__device__context}{ggml\_backend\_remoting\_device\_context}}\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ device;}
+\DoxyCodeLine{00033\ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00034\ \ \ \ \ std::string\ description;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ std::vector<std::tuple<void\ *,\ size\_t,\ virtgpu\_shmem\ *>>\ shared\_memory;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu;}
+\DoxyCodeLine{00039\ \};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__remoting__buffer__context}{ggml\_backend\_remoting\_buffer\_context}}\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ apir\_context;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \doxymbox{\hyperlink{structvirtgpu}{virtgpu}}\ *\ gpu;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ base;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_from\_ptr;}
+\DoxyCodeLine{00049\ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__backend__buffer__type__i}{ggml\_backend\_buffer\_type\_i}}\ ggml\_backend\_remoting\_buffer\_type\_interface;}
+\DoxyCodeLine{00052\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__backend__device__i}{ggml\_backend\_device\_i}}\ \ \ \ \ \ ggml\_backend\_remoting\_device\_interface;}
+\DoxyCodeLine{00053\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__backend__buffer__i}{ggml\_backend\_buffer\_i}}\ \ \ \ \ \ ggml\_backend\_remoting\_buffer\_interface;}
+\DoxyCodeLine{00054\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__backend__buffer__type__i}{ggml\_backend\_buffer\_type\_i}}\ ggml\_backend\_remoting\_buffer\_from\_ptr\_type\_interface;}
+\DoxyCodeLine{00055\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__backend__buffer__i}{ggml\_backend\_buffer\_i}}\ \ \ \ \ \ ggml\_backend\_remoting\_buffer\_from\_ptr\_interface;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ ggml\_backend\_dev\_t\ \ \ \ \ \ \ \ \ ggml\_backend\_remoting\_get\_device(\textcolor{keywordtype}{size\_t}\ device);}
+\DoxyCodeLine{00058\ ggml\_backend\_t\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_remoting\_device\_init(ggml\_backend\_dev\_t\ dev,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ params);}
+\DoxyCodeLine{00059\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_remoting\_device\_get\_buffer\_type(ggml\_backend\_dev\_t\ dev);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ apir\_buffer\_type\_host\_handle\_t\ ggml\_buffer\_type\_to\_apir\_handle(ggml\_backend\_buffer\_type\_t\ buft)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ in\ the\ backend,\ the\ buffer\ handle\ is\ the\ buffer\ pointer}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{return}\ (apir\_buffer\_type\_host\_handle\_t)\ buft-\/>context;}
+\DoxyCodeLine{00064\ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ apir\_buffer\_host\_handle\_t\ ggml\_buffer\_to\_apir\_handle(ggml\_backend\_buffer\_t\ buffer)\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{if}\ (!buffer-\/>context)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ GGML\_ABORT(GGML\_VIRTGPU\ \textcolor{stringliteral}{"{}\%s:\ no\ context\ available\ :/"{}},\ \_\_func\_\_);}
+\DoxyCodeLine{00069\ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{return}\ BUFFER\_TO\_HOST\_HANDLE(buffer);}
+\DoxyCodeLine{00071\ \}}
+
+\end{DoxyCode}

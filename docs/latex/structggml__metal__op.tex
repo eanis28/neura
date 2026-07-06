@@ -1,0 +1,67 @@
+\doxysection{ggml\+\_\+metal\+\_\+op Struct Reference}
+\hypertarget{structggml__metal__op}{}\label{structggml__metal__op}\index{ggml\_metal\_op@{ggml\_metal\_op}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__metal__op_a54f973ab1bd37ff244c6a485792c2d5d}\label{structggml__metal__op_a54f973ab1bd37ff244c6a485792c2d5d} 
+{\bfseries ggml\+\_\+metal\+\_\+op} (ggml\+\_\+metal\+\_\+device\+\_\+t dev, ggml\+\_\+metal\+\_\+cmd\+\_\+buf\+\_\+t cmd\+\_\+buf, \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*}gf, int idx\+\_\+start, int idx\+\_\+end, bool use\+\_\+fusion, bool use\+\_\+concurrency, bool use\+\_\+capture, int debug\+\_\+graph, int debug\+\_\+fusion)
+\item 
+\Hypertarget{structggml__metal__op_a9a6b817b323667131c68d53ab52d64cc}\label{structggml__metal__op_a9a6b817b323667131c68d53ab52d64cc} 
+int {\bfseries n\+\_\+nodes} () const
+\item 
+\Hypertarget{structggml__metal__op_a94a5ff2b46acf69472fbf2939be2fc9e}\label{structggml__metal__op_a94a5ff2b46acf69472fbf2939be2fc9e} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries node} (int i) const
+\item 
+\Hypertarget{structggml__metal__op_ae1f3cb985be6be02a19c3bf0546e697f}\label{structggml__metal__op_ae1f3cb985be6be02a19c3bf0546e697f} 
+bool {\bfseries can\+\_\+fuse} (int i0, const ggml\+\_\+op \texorpdfstring{$\ast$}{*}ops, int n\+\_\+ops) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__metal__op_a78c0b88726c075deca1b5309e2ec3b5d}\label{structggml__metal__op_a78c0b88726c075deca1b5309e2ec3b5d} 
+ggml\+\_\+metal\+\_\+device\+\_\+t {\bfseries dev}
+\item 
+\Hypertarget{structggml__metal__op_a5c4a95bc5dda285916e2abc1fc002d09}\label{structggml__metal__op_a5c4a95bc5dda285916e2abc1fc002d09} 
+ggml\+\_\+metal\+\_\+library\+\_\+t {\bfseries lib}
+\item 
+\Hypertarget{structggml__metal__op_abe87cb87ebbbb3fd037db8dc46a9f8fc}\label{structggml__metal__op_abe87cb87ebbbb3fd037db8dc46a9f8fc} 
+ggml\+\_\+metal\+\_\+encoder\+\_\+t {\bfseries enc}
+\item 
+\Hypertarget{structggml__metal__op_a2a2f58072e796fade49a1882d7ef56ec}\label{structggml__metal__op_a2a2f58072e796fade49a1882d7ef56ec} 
+ggml\+\_\+mem\+\_\+ranges\+\_\+t {\bfseries mem\+\_\+ranges}
+\item 
+\Hypertarget{structggml__metal__op_af8d86191cfa12eaadbef6ab51d2bf959}\label{structggml__metal__op_af8d86191cfa12eaadbef6ab51d2bf959} 
+bool {\bfseries use\+\_\+fusion}
+\item 
+\Hypertarget{structggml__metal__op_a89ab0ef063dc6077b0f6f11105793cc6}\label{structggml__metal__op_a89ab0ef063dc6077b0f6f11105793cc6} 
+bool {\bfseries use\+\_\+concurrency}
+\item 
+\Hypertarget{structggml__metal__op_a0a104be7ae36c5e1d9605e007deca1c8}\label{structggml__metal__op_a0a104be7ae36c5e1d9605e007deca1c8} 
+bool {\bfseries use\+\_\+capture}
+\item 
+\Hypertarget{structggml__metal__op_a11d2213d07bd44a1b001cd2190f7d782}\label{structggml__metal__op_a11d2213d07bd44a1b001cd2190f7d782} 
+int {\bfseries debug\+\_\+graph}
+\item 
+\Hypertarget{structggml__metal__op_aa41d985e908eb0c40eee505c2194a3e5}\label{structggml__metal__op_aa41d985e908eb0c40eee505c2194a3e5} 
+int {\bfseries debug\+\_\+fusion}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__metal__op_a9cfba3f1ad06aba8c043ce89036245fa}\label{structggml__metal__op_a9cfba3f1ad06aba8c043ce89036245fa} 
+\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*} {\bfseries gf}
+\item 
+\Hypertarget{structggml__metal__op_a03fdfd21185acad9c18de1faa5ac1444}\label{structggml__metal__op_a03fdfd21185acad9c18de1faa5ac1444} 
+int {\bfseries idx\+\_\+start}
+\item 
+\Hypertarget{structggml__metal__op_a1584f346ab40c46597067c5774079dac}\label{structggml__metal__op_a1584f346ab40c46597067c5774079dac} 
+int {\bfseries idx\+\_\+end}
+\item 
+\Hypertarget{structggml__metal__op_a73a6a95ebfb3912173ba4f74024f993f}\label{structggml__metal__op_a73a6a95ebfb3912173ba4f74024f993f} 
+std::\+vector$<$ int $>$ {\bfseries idxs}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/metal/\+ggml-\/metal-\/ops.\+cpp\end{DoxyCompactItemize}

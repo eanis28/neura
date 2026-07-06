@@ -1,0 +1,109 @@
+\doxysection{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+kv\+\_\+iswa Class Reference}
+\hypertarget{classllm__graph__input__attn__kv__iswa}{}\label{classllm__graph__input__attn__kv__iswa}\index{llm\_graph\_input\_attn\_kv\_iswa@{llm\_graph\_input\_attn\_kv\_iswa}}
+Inheritance diagram for llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+kv\+\_\+iswa:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllm__graph__input__attn__kv__iswa}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a1941a56577a8816329c6ea3c568e1ac1}\label{classllm__graph__input__attn__kv__iswa_a1941a56577a8816329c6ea3c568e1ac1} 
+{\bfseries llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+kv\+\_\+iswa} (const \doxymbox{\hyperlink{structllama__hparams}{llama\+\_\+hparams}} \&hparams, const \doxymbox{\hyperlink{structllama__cparams}{llama\+\_\+cparams}} \&cparams, const \doxymbox{\hyperlink{classllama__kv__cache__iswa__context}{llama\+\_\+kv\+\_\+cache\+\_\+iswa\+\_\+context}} \texorpdfstring{$\ast$}{*}mctx)
+\item 
+void \doxymbox{\hyperlink{classllm__graph__input__attn__kv__iswa_aca93dc61e3081ad4b8bcf32c12854c24}{set\+\_\+input}} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) override
+\item 
+bool \doxymbox{\hyperlink{classllm__graph__input__attn__kv__iswa_a6e7b55482c0d142c6654aa077cc5e290}{can\+\_\+reuse}} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params) override
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a034fe9a80f4a59641c3b5627f921d35d}\label{classllm__graph__input__attn__kv__iswa_a034fe9a80f4a59641c3b5627f921d35d} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+k\+\_\+idxs} () const
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a0475c7a2b7698bbe7c2566278c0a32e8}\label{classllm__graph__input__attn__kv__iswa_a0475c7a2b7698bbe7c2566278c0a32e8} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+v\+\_\+idxs} () const
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a29d6ca7a866215bdebd3fafb569cc8a7}\label{classllm__graph__input__attn__kv__iswa_a29d6ca7a866215bdebd3fafb569cc8a7} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+k\+\_\+idxs\+\_\+swa} () const
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a4320ff65da40e374a055bb424a2e1501}\label{classllm__graph__input__attn__kv__iswa_a4320ff65da40e374a055bb424a2e1501} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+v\+\_\+idxs\+\_\+swa} () const
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a422239f0c0412fd844b2fc016148adbf}\label{classllm__graph__input__attn__kv__iswa_a422239f0c0412fd844b2fc016148adbf} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+kq\+\_\+mask} () const
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_aaf7616c2ccf68ebba952c13b0d362d5e}\label{classllm__graph__input__attn__kv__iswa_aaf7616c2ccf68ebba952c13b0d362d5e} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+kq\+\_\+mask\+\_\+swa} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a986973adf0d010643c7a81dc01321a7a}\label{classllm__graph__input__attn__kv__iswa_a986973adf0d010643c7a81dc01321a7a} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries self\+\_\+k\+\_\+idxs} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_ac23632e83950a1922f32832fae29057e}\label{classllm__graph__input__attn__kv__iswa_ac23632e83950a1922f32832fae29057e} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries self\+\_\+v\+\_\+idxs} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a46c93fb34e264babd7ed27ee6d4f68df}\label{classllm__graph__input__attn__kv__iswa_a46c93fb34e264babd7ed27ee6d4f68df} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries self\+\_\+k\+\_\+idxs\+\_\+swa} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_ab468d06df9e0b6f537c560c9f87cb825}\label{classllm__graph__input__attn__kv__iswa_ab468d06df9e0b6f537c560c9f87cb825} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries self\+\_\+v\+\_\+idxs\+\_\+swa} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a443de888e08eb573922d4ed0ca32fac7}\label{classllm__graph__input__attn__kv__iswa_a443de888e08eb573922d4ed0ca32fac7} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries self\+\_\+kq\+\_\+mask} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_aabebfdedaeaa4a23107b219bc27b6a1d}\label{classllm__graph__input__attn__kv__iswa_aabebfdedaeaa4a23107b219bc27b6a1d} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries self\+\_\+kq\+\_\+mask\+\_\+cnv} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_ae600168a08066d863b0a1c58fc758bd0}\label{classllm__graph__input__attn__kv__iswa_ae600168a08066d863b0a1c58fc758bd0} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries self\+\_\+kq\+\_\+mask\+\_\+swa} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_aa3e4def3851bdb7e0bea012f9c5bf7b2}\label{classllm__graph__input__attn__kv__iswa_aa3e4def3851bdb7e0bea012f9c5bf7b2} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries self\+\_\+kq\+\_\+mask\+\_\+swa\+\_\+cnv} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a61060259ce1aeb4b87810c068249afa2}\label{classllm__graph__input__attn__kv__iswa_a61060259ce1aeb4b87810c068249afa2} 
+const \doxymbox{\hyperlink{structllama__hparams}{llama\+\_\+hparams}} {\bfseries hparams}
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a88d9791b3be667569401905618a9ed70}\label{classllm__graph__input__attn__kv__iswa_a88d9791b3be667569401905618a9ed70} 
+const \doxymbox{\hyperlink{structllama__cparams}{llama\+\_\+cparams}} {\bfseries cparams}
+\item 
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a8532615e36c2753bb63d9364bf590f7d}\label{classllm__graph__input__attn__kv__iswa_a8532615e36c2753bb63d9364bf590f7d} 
+const \doxymbox{\hyperlink{classllama__kv__cache__iswa__context}{llama\+\_\+kv\+\_\+cache\+\_\+iswa\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries mctx}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries debug} = 0
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllm__graph__input__attn__kv__iswa_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllm__graph__input__attn__kv__iswa_a6e7b55482c0d142c6654aa077cc5e290}\index{llm\_graph\_input\_attn\_kv\_iswa@{llm\_graph\_input\_attn\_kv\_iswa}!can\_reuse@{can\_reuse}}
+\index{can\_reuse@{can\_reuse}!llm\_graph\_input\_attn\_kv\_iswa@{llm\_graph\_input\_attn\_kv\_iswa}}
+\doxysubsubsection{\texorpdfstring{can\_reuse()}{can\_reuse()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__attn__kv__iswa_a6e7b55482c0d142c6654aa077cc5e290} 
+bool llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+kv\+\_\+iswa::\+can\+\_\+reuse (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&}]{params}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+\Hypertarget{classllm__graph__input__attn__kv__iswa_aca93dc61e3081ad4b8bcf32c12854c24}\index{llm\_graph\_input\_attn\_kv\_iswa@{llm\_graph\_input\_attn\_kv\_iswa}!set\_input@{set\_input}}
+\index{set\_input@{set\_input}!llm\_graph\_input\_attn\_kv\_iswa@{llm\_graph\_input\_attn\_kv\_iswa}}
+\doxysubsubsection{\texorpdfstring{set\_input()}{set\_input()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__attn__kv__iswa_aca93dc61e3081ad4b8bcf32c12854c24} 
+void llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+kv\+\_\+iswa::\+set\+\_\+input (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}}]{ubatch}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+cpp\end{DoxyCompactItemize}

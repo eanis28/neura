@@ -1,0 +1,27 @@
+\doxysection{config.\+h File Reference}
+\hypertarget{config_8h}{}\label{config_8h}\index{config.h@{config.h}}
+
+
+Application configuration:\+ API credentials, feature permissions, and runtime settings.  
+
+
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$map$>$}\newline
+{\ttfamily \+\#include $<$iostream$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_a_p_i_settings}{APISettings}}
+\begin{DoxyCompactList}\small\item\em Holds all third-\/party API credentials and base URLs. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_permissions}{Permissions}}
+\begin{DoxyCompactList}\small\item\em Tracks which optional features the user has granted consent for. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_configuration}{Configuration}}
+\begin{DoxyCompactList}\small\item\em Top-\/level configuration object; owns \doxylink{class_a_p_i_settings}{APISettings} and \doxylink{class_permissions}{Permissions}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Application configuration:\+ API credentials, feature permissions, and runtime settings. 
+
+Google Calendar authentication uses OAuth 2.\+0 with a long-\/lived refresh token. \doxylink{requirements_The}{The} refresh token is obtained once via the OAuth flow and stored permanently in config.\+ini. On every run, the assistant exchanges it for a fresh short-\/lived access token automatically — no user interaction is required after initial setup. \begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}

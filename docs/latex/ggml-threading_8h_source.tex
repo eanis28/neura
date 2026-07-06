@@ -1,0 +1,20 @@
+\doxysection{ggml-\/threading.h}
+\hypertarget{ggml-threading_8h_source}{}\label{ggml-threading_8h_source}\index{whisper.cpp/ggml/src/ggml-\/threading.h@{whisper.cpp/ggml/src/ggml-\/threading.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00006\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_critical\_section\_start(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00010\ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_critical\_section\_end(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00013\ \}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

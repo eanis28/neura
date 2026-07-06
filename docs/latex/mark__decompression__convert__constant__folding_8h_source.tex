@@ -1,0 +1,35 @@
+\doxysection{mark\+\_\+decompression\+\_\+convert\+\_\+constant\+\_\+folding.\+h}
+\hypertarget{mark__decompression__convert__constant__folding_8h_source}{}\label{mark__decompression__convert__constant__folding_8h_source}\index{whisper.cpp/ggml/src/ggml-\/openvino/openvino/pass/mark\_decompression\_convert\_constant\_folding.h@{whisper.cpp/ggml/src/ggml-\/openvino/openvino/pass/mark\_decompression\_convert\_constant\_folding.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}mark\_decompression\_convert\_constant\_folding.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}openvino/pass/matcher\_pass.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}openvino/core/visibility.hpp"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ OPENVINO\_STATIC\_LIBRARY}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#\ \ \ \ define\ TRANSFORMATIONS\_API}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#\ \ \ \ ifdef\ IMPLEMENT\_OPENVINO\_API}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ TRANSFORMATIONS\_API\ OPENVINO\_CORE\_EXPORTS}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ TRANSFORMATIONS\_API\ OPENVINO\_CORE\_IMPORTS}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ \ \ \ endif\ \ }\textcolor{comment}{//\ IMPLEMENT\_OPENVINO\_API}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#endif\ \ \ \ \ \ }\textcolor{comment}{//\ OPENVINO\_STATIC\_LIBRARY}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }ov\ \{}
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }pass\ \{}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{class\ }TRANSFORMATIONS\_API\ \doxymbox{\hyperlink{classov_1_1pass_1_1_mark_compressed_float_constants}{MarkCompressedFloatConstants}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \}\ \ \textcolor{comment}{//\ namespace\ pass}}
+\DoxyCodeLine{00023\ \}\ \ \textcolor{comment}{//\ namespace\ ov}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classov_1_1pass_1_1_mark_compressed_float_constants}{ov::pass::MarkCompressedFloatConstants}}\ :\ \textcolor{keyword}{public}\ MatcherPass\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ OPENVINO\_MATCHER\_PASS\_RTTI(\textcolor{stringliteral}{"{}MarkCompressedFloatConstants"{}})}
+\DoxyCodeLine{00028\ \ \ \ \ MarkCompressedFloatConstants();}
+\DoxyCodeLine{00029\ \};}
+
+\end{DoxyCode}

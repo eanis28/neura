@@ -1,0 +1,64 @@
+\doxysection{apir\+\_\+cs\+\_\+rpc.\+h}
+\hypertarget{apir__cs__rpc_8h_source}{}\label{apir__cs__rpc_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_cs\_rpc.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_cs\_rpc.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend-\/impl.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <unordered\_set>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ ggml\_tensor\ is\ serialized\ into\ apir\_rpc\_tensor}}
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ uint64\_t\ id;}
+\DoxyCodeLine{00016\ \ \ \ \ uint32\_t\ type;}
+\DoxyCodeLine{00017\ \ \ \ \ uint64\_t\ buffer;}
+\DoxyCodeLine{00018\ \ \ \ \ uint32\_t\ ne[GGML\_MAX\_DIMS];}
+\DoxyCodeLine{00019\ \ \ \ \ uint32\_t\ nb[GGML\_MAX\_DIMS];}
+\DoxyCodeLine{00020\ \ \ \ \ uint32\_t\ op;}
+\DoxyCodeLine{00021\ \ \ \ \ int32\_t\ \ op\_params[GGML\_MAX\_OP\_PARAMS\ /\ \textcolor{keyword}{sizeof}(int32\_t)];}
+\DoxyCodeLine{00022\ \ \ \ \ int32\_t\ \ flags;}
+\DoxyCodeLine{00023\ \ \ \ \ uint64\_t\ src[GGML\_MAX\_SRC];}
+\DoxyCodeLine{00024\ \ \ \ \ uint64\_t\ view\_src;}
+\DoxyCodeLine{00025\ \ \ \ \ uint64\_t\ view\_offs;}
+\DoxyCodeLine{00026\ \ \ \ \ uint64\_t\ data;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ \ name[GGML\_MAX\_NAME];}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{char}\ padding[4];}
+\DoxyCodeLine{00030\ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{/*\ frontend\ */}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ apir\_serialize\_tensor(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keywordtype}{void}\ apir\_serialize\_graph(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ std::vector<uint8\_t>\ \&\ output);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{/*\ backend\ */}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_track\_backend\_buffer(ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ apir\_untrack\_backend\_buffer(ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00042\ std::unordered\_set<ggml\_backend\_buffer\_t>\ apir\_get\_track\_backend\_buffers();}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{void}\ apir\_add\_tensor(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tensor,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<apir\_rpc\_tensor>\ \&\ \ \ \ \ \ tensors,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_set<ggml\_tensor\ *>\ \&\ visited);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ apir\_deserialize\_tensor(\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ apir\_create\_node(uint64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{id},}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ctx,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<uint64\_t,\ const\ apir\_rpc\_tensor\ *>\ \&\ tensor\_ptrs,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unordered\_map<uint64\_t,\ ggml\_tensor\ *>\ \&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tensor\_map);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ apir\_deserialize\_graph(uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_nodes,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_tensors,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structapir__rpc__tensor}{apir\_rpc\_tensor}}\ *\ tensors,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ *\ \ \ \ \ \ \ \ nodes);}
+
+\end{DoxyCode}

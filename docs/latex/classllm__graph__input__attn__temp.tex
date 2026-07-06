@@ -1,0 +1,63 @@
+\doxysection{llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+temp Class Reference}
+\hypertarget{classllm__graph__input__attn__temp}{}\label{classllm__graph__input__attn__temp}\index{llm\_graph\_input\_attn\_temp@{llm\_graph\_input\_attn\_temp}}
+Inheritance diagram for llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+temp:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllm__graph__input__attn__temp}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__attn__temp_a8498483be2602c8511a914ede515f1ae}\label{classllm__graph__input__attn__temp_a8498483be2602c8511a914ede515f1ae} 
+{\bfseries llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+temp} (uint32\+\_\+t n\+\_\+attn\+\_\+temp\+\_\+floor\+\_\+scale, float f\+\_\+attn\+\_\+temp\+\_\+scale, float f\+\_\+attn\+\_\+temp\+\_\+offset)
+\item 
+void \doxymbox{\hyperlink{classllm__graph__input__attn__temp_ad7f756dee174d26365c07d2f8dada809}{set\+\_\+input}} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool {\bfseries can\+\_\+reuse} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__attn__temp_a08940b10d7d0dc3de50e3d4928009d15}\label{classllm__graph__input__attn__temp_a08940b10d7d0dc3de50e3d4928009d15} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+scale} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__attn__temp_a2f960051b2870c899e6baf78eec96948}\label{classllm__graph__input__attn__temp_a2f960051b2870c899e6baf78eec96948} 
+const uint32\+\_\+t {\bfseries n\+\_\+attn\+\_\+temp\+\_\+floor\+\_\+scale}
+\item 
+\Hypertarget{classllm__graph__input__attn__temp_abd0ca7393943aea9f24ac0e85f973ae5}\label{classllm__graph__input__attn__temp_abd0ca7393943aea9f24ac0e85f973ae5} 
+const float {\bfseries f\+\_\+attn\+\_\+temp\+\_\+scale}
+\item 
+\Hypertarget{classllm__graph__input__attn__temp_a4a7f95e393ecccf48acd35ce3c9a1c7e}\label{classllm__graph__input__attn__temp_a4a7f95e393ecccf48acd35ce3c9a1c7e} 
+const float {\bfseries f\+\_\+attn\+\_\+temp\+\_\+offset}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries debug} = 0
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllm__graph__input__attn__temp_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllm__graph__input__attn__temp_ad7f756dee174d26365c07d2f8dada809}\index{llm\_graph\_input\_attn\_temp@{llm\_graph\_input\_attn\_temp}!set\_input@{set\_input}}
+\index{set\_input@{set\_input}!llm\_graph\_input\_attn\_temp@{llm\_graph\_input\_attn\_temp}}
+\doxysubsubsection{\texorpdfstring{set\_input()}{set\_input()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__attn__temp_ad7f756dee174d26365c07d2f8dada809} 
+void llm\+\_\+graph\+\_\+input\+\_\+attn\+\_\+temp::\+set\+\_\+input (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}}]{ubatch}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+cpp\end{DoxyCompactItemize}

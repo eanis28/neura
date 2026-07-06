@@ -1,0 +1,21 @@
+\doxysection{virtgpu-\/apir.h}
+\hypertarget{virtgpu-apir_8h_source}{}\label{virtgpu-apir_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu-\/apir.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/virtgpu-\/apir.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}backend/shared/apir\_backend.h"{}}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}ggml-\/alloc.h"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}virtgpu-\/shm.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}virtgpu-\/utils.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structapir__buffer__context__t}{apir\_buffer\_context\_t}}\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ apir\_buffer\_host\_handle\_t\ host\_handle;}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structvirtgpu__shmem}{virtgpu\_shmem}}\ \ \ \ \ \ \ \ \ \ \ shmem;}
+\DoxyCodeLine{00012\ \ \ \ \ apir\_buffer\_type\_host\_handle\_t\ buft\_host\_handle;}
+\DoxyCodeLine{00013\ \};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}virtgpu-\/forward.gen.h"{}}}
+
+\end{DoxyCode}

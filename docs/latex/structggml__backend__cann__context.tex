@@ -1,0 +1,206 @@
+\doxysection{ggml\+\_\+backend\+\_\+cann\+\_\+context Struct Reference}
+\hypertarget{structggml__backend__cann__context}{}\label{structggml__backend__cann__context}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+
+
+Context for managing CANN backend operations.  
+
+
+
+
+{\ttfamily \+\#include $<$common.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{structggml__backend__cann__context_a6e67ed93a0efc566f1c3b25c36293e05}{ggml\+\_\+backend\+\_\+cann\+\_\+context}} (int \doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}})
+\begin{DoxyCompactList}\small\item\em Constructor for initializing the context with a given device. \end{DoxyCompactList}\item 
+\Hypertarget{structggml__backend__cann__context_af346a401df3f8eed8fd83c12587b20d8}\label{structggml__backend__cann__context_af346a401df3f8eed8fd83c12587b20d8} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}ggml\+\_\+backend\+\_\+cann\+\_\+context} ()
+\begin{DoxyCompactList}\small\item\em Destructor for cleaning up resources. \end{DoxyCompactList}\item 
+aclrt\+Stream \doxymbox{\hyperlink{structggml__backend__cann__context_ad4cd0970bfe32feaa1067bda0fe3eb5d}{stream}} (int stream)
+\begin{DoxyCompactList}\small\item\em Get or create a stream for a given index. \end{DoxyCompactList}\item 
+aclrt\+Stream \doxymbox{\hyperlink{structggml__backend__cann__context_a74a4e8ee2ec2100e363c495746b1214a}{stream}} ()
+\begin{DoxyCompactList}\small\item\em Get or create the default stream (index 0). \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} \& \doxymbox{\hyperlink{structggml__backend__cann__context_a74d07c253672e05fa61443cae5e8e047}{pool}} ()
+\begin{DoxyCompactList}\small\item\em Get or create the memory pool for the context. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} $>$ \doxymbox{\hyperlink{structggml__backend__cann__context_a9686a46eaa1eeeadaa099a7f527482b6}{new\+\_\+pool\+\_\+for\+\_\+device}} (int \doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}})
+\begin{DoxyCompactList}\small\item\em Create a new memory pool for a given device. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int32\+\_\+t \doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}}
+\item 
+std::\+string \doxymbox{\hyperlink{structggml__backend__cann__context_a5b6f307333d0318c07b26114a27d4473}{name}}
+\item 
+std::\+string \doxymbox{\hyperlink{structggml__backend__cann__context_acbbbf24cdaf508000445c981f44bf504}{description}}
+\item 
+aclrt\+Event \doxymbox{\hyperlink{structggml__backend__cann__context_a63900e52c1fdc5954945f05ad4f40472}{copy\+\_\+event}} = nullptr
+\item 
+\Hypertarget{structggml__backend__cann__context_afa8e6ca903485dbd68692c25bb872c91}\label{structggml__backend__cann__context_afa8e6ca903485dbd68692c25bb872c91} 
+bool {\bfseries async\+\_\+mode}
+\item 
+\Hypertarget{structggml__backend__cann__context_a8eabf336e32af6cd9bff2777954ca882}\label{structggml__backend__cann__context_a8eabf336e32af6cd9bff2777954ca882} 
+\doxymbox{\hyperlink{structggml__cann__rope__cache}{ggml\+\_\+cann\+\_\+rope\+\_\+cache}} {\bfseries rope\+\_\+cache}
+\item 
+\Hypertarget{structggml__backend__cann__context_ab8efbb8b1408977b1be7fbab71171faa}\label{structggml__backend__cann__context_ab8efbb8b1408977b1be7fbab71171faa} 
+\doxymbox{\hyperlink{structggml__cann__tensor__cache}{ggml\+\_\+cann\+\_\+tensor\+\_\+cache}} {\bfseries rms\+\_\+norm\+\_\+one\+\_\+tensor\+\_\+cache}
+\item 
+\Hypertarget{structggml__backend__cann__context_a9035a1e1c35051491b8884db20adb7c2}\label{structggml__backend__cann__context_a9035a1e1c35051491b8884db20adb7c2} 
+\doxymbox{\hyperlink{structggml__cann__tensor__cache}{ggml\+\_\+cann\+\_\+tensor\+\_\+cache}} {\bfseries rms\+\_\+norm\+\_\+zero\+\_\+tensor\+\_\+cache}
+\item 
+aclrt\+Stream \doxymbox{\hyperlink{structggml__backend__cann__context_ac001d802395593ff05fc8f10ff81ec08}{streams}} \+[GGML\+\_\+\+CANN\+\_\+\+MAX\+\_\+\+STREAMS]\+ = \{ nullptr \}
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} $>$ \doxymbox{\hyperlink{structggml__backend__cann__context_a752cc6612fb02dcf2796a4a29a6c075f}{mem\+\_\+pool}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Context for managing CANN backend operations. 
+
+\label{doc-constructors}
+\Hypertarget{structggml__backend__cann__context_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structggml__backend__cann__context_a6e67ed93a0efc566f1c3b25c36293e05}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{ggml\_backend\_cann\_context()}{ggml\_backend\_cann\_context()}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_a6e67ed93a0efc566f1c3b25c36293e05} 
+ggml\+\_\+backend\+\_\+cann\+\_\+context::\+ggml\+\_\+backend\+\_\+cann\+\_\+context (\begin{DoxyParamCaption}\item[{int}]{device}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Constructor for initializing the context with a given device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}} & Device ID. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{structggml__backend__cann__context_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structggml__backend__cann__context_a9686a46eaa1eeeadaa099a7f527482b6}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!new\_pool\_for\_device@{new\_pool\_for\_device}}
+\index{new\_pool\_for\_device@{new\_pool\_for\_device}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{new\_pool\_for\_device()}{new\_pool\_for\_device()}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_a9686a46eaa1eeeadaa099a7f527482b6} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} $>$ ggml\+\_\+backend\+\_\+cann\+\_\+context::\+new\+\_\+pool\+\_\+for\+\_\+device (\begin{DoxyParamCaption}\item[{int}]{device}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Create a new memory pool for a given device. 
+
+Create a new CANN pool for a specific device.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}} & Device ID. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A unique pointer to the new memory pool.
+\end{DoxyReturn}
+Factory method to create a new CANN pool object based on the device type.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}} & \doxylink{requirements_The}{The} device ID for which to create the pool. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A unique pointer to the created CANN pool. 
+\end{DoxyReturn}
+\Hypertarget{structggml__backend__cann__context_a74d07c253672e05fa61443cae5e8e047}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!pool@{pool}}
+\index{pool@{pool}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{pool()}{pool()}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_a74d07c253672e05fa61443cae5e8e047} 
+\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}} \& ggml\+\_\+backend\+\_\+cann\+\_\+context::\+pool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get or create the memory pool for the context. 
+
+\begin{DoxyReturn}{Returns}
+Reference to the memory pool. 
+\end{DoxyReturn}
+\Hypertarget{structggml__backend__cann__context_a74a4e8ee2ec2100e363c495746b1214a}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!stream@{stream}}
+\index{stream@{stream}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{stream()}{stream()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_a74a4e8ee2ec2100e363c495746b1214a} 
+aclrt\+Stream ggml\+\_\+backend\+\_\+cann\+\_\+context::\+stream (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get or create the default stream (index 0). 
+
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} default stream. 
+\end{DoxyReturn}
+\Hypertarget{structggml__backend__cann__context_ad4cd0970bfe32feaa1067bda0fe3eb5d}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!stream@{stream}}
+\index{stream@{stream}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{stream()}{stream()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_ad4cd0970bfe32feaa1067bda0fe3eb5d} 
+aclrt\+Stream ggml\+\_\+backend\+\_\+cann\+\_\+context::\+stream (\begin{DoxyParamCaption}\item[{int}]{stream}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get or create a stream for a given index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{structggml__backend__cann__context_ad4cd0970bfe32feaa1067bda0fe3eb5d}{stream}} & Index of the stream. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} stream corresponding to the given index. 
+\end{DoxyReturn}
+
+
+\label{doc-variable-members}
+\Hypertarget{structggml__backend__cann__context_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structggml__backend__cann__context_a63900e52c1fdc5954945f05ad4f40472}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!copy\_event@{copy\_event}}
+\index{copy\_event@{copy\_event}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{copy\_event}{copy\_event}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_a63900e52c1fdc5954945f05ad4f40472} 
+aclrt\+Event ggml\+\_\+backend\+\_\+cann\+\_\+context::\+copy\+\_\+event = nullptr}
+
+Event for managing copy operations. \Hypertarget{structggml__backend__cann__context_acbbbf24cdaf508000445c981f44bf504}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!description@{description}}
+\index{description@{description}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{description}{description}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_acbbbf24cdaf508000445c981f44bf504} 
+std::\+string ggml\+\_\+backend\+\_\+cann\+\_\+context::\+description}
+
+Description of the device. \Hypertarget{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!device@{device}}
+\index{device@{device}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{device}{device}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35} 
+int32\+\_\+t ggml\+\_\+backend\+\_\+cann\+\_\+context::\+device}
+
+Device ID. \Hypertarget{structggml__backend__cann__context_a752cc6612fb02dcf2796a4a29a6c075f}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!mem\_pool@{mem\_pool}}
+\index{mem\_pool@{mem\_pool}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{mem\_pool}{mem\_pool}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_a752cc6612fb02dcf2796a4a29a6c075f} 
+std::\+unique\+\_\+ptr$<$\doxymbox{\hyperlink{structggml__cann__pool}{ggml\+\_\+cann\+\_\+pool}}$>$ ggml\+\_\+backend\+\_\+cann\+\_\+context::\+mem\+\_\+pool}
+
+Memory pool for the device. \Hypertarget{structggml__backend__cann__context_a5b6f307333d0318c07b26114a27d4473}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!name@{name}}
+\index{name@{name}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_a5b6f307333d0318c07b26114a27d4473} 
+std::\+string ggml\+\_\+backend\+\_\+cann\+\_\+context::\+name}
+
+Name of the device. \Hypertarget{structggml__backend__cann__context_ac001d802395593ff05fc8f10ff81ec08}\index{ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}!streams@{streams}}
+\index{streams@{streams}!ggml\_backend\_cann\_context@{ggml\_backend\_cann\_context}}
+\doxysubsubsection{\texorpdfstring{streams}{streams}}
+{\footnotesize\ttfamily \label{structggml__backend__cann__context_ac001d802395593ff05fc8f10ff81ec08} 
+aclrt\+Stream ggml\+\_\+backend\+\_\+cann\+\_\+context::\+streams\+[GGML\+\_\+\+CANN\+\_\+\+MAX\+\_\+\+STREAMS]\+ = \{ nullptr \}}
+
+Array of streams for the device. 
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+common.\+h\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+ggml-\/cann.\+cpp\end{DoxyCompactItemize}

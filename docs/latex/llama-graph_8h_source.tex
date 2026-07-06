@@ -1,0 +1,1037 @@
+\doxysection{llama-\/graph.h}
+\hypertarget{llama-graph_8h_source}{}\label{llama-graph_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/graph.h@{whisper.cpp/examples/talk-\/llama/llama-\/graph.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama-\/arch.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}llama-\/batch.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}llama-\/hparams.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}llama-\/adapter.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}};}
+\DoxyCodeLine{00016\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__context}{ggml\_context}};}
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__memory__context__i}{llama\_memory\_context\_i}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classllama__kv__cache__context}{llama\_kv\_cache\_context}};}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classllama__kv__cache__iswa__context}{llama\_kv\_cache\_iswa\_context}};}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classllama__memory__recurrent__context}{llama\_memory\_recurrent\_context}};}
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classllama__memory__hybrid__context}{llama\_memory\_hybrid\_context}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classllama__memory__hybrid__iswa__context}{llama\_memory\_hybrid\_iswa\_context}};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ certain\ models\ (typically\ multi-\/modal)\ can\ produce\ different\ types\ of\ graphs}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{enum}\ llm\_graph\_type\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ LLM\_GRAPH\_TYPE\_DEFAULT,}
+\DoxyCodeLine{00032\ \ \ \ \ LLM\_GRAPH\_TYPE\_ENCODER,}
+\DoxyCodeLine{00033\ \ \ \ \ LLM\_GRAPH\_TYPE\_DECODER,}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{enum}\ llm\_ffn\_op\_type\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ LLM\_FFN\_SILU,}
+\DoxyCodeLine{00038\ \ \ \ \ LLM\_FFN\_GELU,}
+\DoxyCodeLine{00039\ \ \ \ \ LLM\_FFN\_RELU,}
+\DoxyCodeLine{00040\ \ \ \ \ LLM\_FFN\_RELU\_SQR,}
+\DoxyCodeLine{00041\ \ \ \ \ LLM\_FFN\_SWIGLU,}
+\DoxyCodeLine{00042\ \ \ \ \ LLM\_FFN\_GEGLU,}
+\DoxyCodeLine{00043\ \ \ \ \ LLM\_FFN\_REGLU,}
+\DoxyCodeLine{00044\ \ \ \ \ LLM\_FFN\_SWIGLU\_OAI\_MOE,}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{enum}\ llm\_ffn\_gate\_type\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ LLM\_FFN\_SEQ,}
+\DoxyCodeLine{00049\ \ \ \ \ LLM\_FFN\_PAR,\ \textcolor{comment}{//\ ffn\_gate\ is\ parallel\ to\ ffn\_up}}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{enum}\ llm\_norm\_type\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ LLM\_NORM,}
+\DoxyCodeLine{00054\ \ \ \ \ LLM\_NORM\_RMS,}
+\DoxyCodeLine{00055\ \ \ \ \ LLM\_NORM\_GROUP,}
+\DoxyCodeLine{00056\ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ TODO:\ tmp\ -\/\ need\ something\ better\ to\ pass\ the\ data\ from\ the\ encoder\ to\ the\ decoder}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__cross}{llama\_cross}}\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ the\ output\ embeddings\ from\ the\ encoder\ as\ a\ ggml\ tensor}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ TODO:\ this\ needs\ more\ work\ to\ be\ correct,\ for\ now\ copy\ the\ embeddings\ data\ to\ host\ memory}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ ref:\ https://github.com/ggml-\/org/llama.cpp/pull/11213\#discussion\_r1969892524}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//ggml\_tensor\ *\ t\_embd\ =\ nullptr;}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ int64\_t\ n\_embd\ =\ 0;}
+\DoxyCodeLine{00066\ \ \ \ \ int64\_t\ n\_enc\ \ =\ 0;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ embeddings\ data\ copied\ to\ host\ memory\ (tmp)}}
+\DoxyCodeLine{00069\ \ \ \ \ std::vector<float>\ v\_embd;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ needed\ to\ construct\ the\ cross-\/attention\ mask\ in\ the\ decoder}}
+\DoxyCodeLine{00072\ \ \ \ \ std::vector<std::set<llama\_seq\_id>>\ seq\_ids\_enc;}
+\DoxyCodeLine{00073\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{comment}{//}}
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ llm\_graph\_input}}
+\DoxyCodeLine{00079\ \textcolor{comment}{//}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{class\ }llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00082\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00083\ \ \ \ \ llm\_graph\_input\_i()\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ LLAMA\_GRAPH\_INPUT\_DEBUG\ =\ getenv(\textcolor{stringliteral}{"{}LLAMA\_GRAPH\_INPUT\_DEBUG"{}});}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ debug\ =\ LLAMA\_GRAPH\_INPUT\_DEBUG\ ?\ atoi(LLAMA\_GRAPH\_INPUT\_DEBUG)\ :\ 0;}
+\DoxyCodeLine{00086\ \ \ \ \ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_i()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ =\ 0;}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ return\ true\ if\ the\ resulting\ input\ tensors\ using\ the\ provided\ graph\ parameters\ would\ be}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ \ \ the\ same\ as\ the\ previous\ input\ tensors\ that\ we\ have\ currently\ stored\ in\ the\ object}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ returning\ false\ here\ by\ default\ will\ prevent\ from\ reusing\ the\ graph\ if\ the\ check}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ for\ the\ input\ type\ has\ not\ been\ implemented\ yet}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ GGML\_UNUSED(params);}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00099\ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{comment}{//\ env:\ LLAMA\_GRAPH\_INPUT\_DEBUG}}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{int}\ debug\ =\ 0;}
+\DoxyCodeLine{00103\ \};}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{using\ }llm\_graph\_input\_ptr\ =\ std::unique\_ptr<llm\_graph\_input\_i>;}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{class\ }llm\_graph\_input\_embd\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00108\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00109\ \ \ \ \ llm\_graph\_input\_embd(int64\_t\ n\_embd)\ :\ n\_embd(n\_embd)\ \{\}}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_embd()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tokens\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I32\ [n\_batch]}}
+\DoxyCodeLine{00117\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ embd\ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_embd,\ n\_batch]}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_embd\ =\ 0;}
+\DoxyCodeLine{00120\ \};}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{keyword}{class\ }llm\_graph\_input\_pos\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00123\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00124\ \ \ \ \ llm\_graph\_input\_pos(uint32\_t\ n\_pos\_per\_embd)\ :\ n\_pos\_per\_embd(n\_pos\_per\_embd)\ \{\}}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_pos()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ pos\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I32\ [n\_batch]}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ n\_pos\_per\_embd\ =\ 1;}
+\DoxyCodeLine{00134\ \};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{comment}{//\ temperature\ tuning,\ used\ by\ llama4}}
+\DoxyCodeLine{00137\ \textcolor{keyword}{class\ }llm\_graph\_input\_attn\_temp\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00138\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00139\ \ \ \ \ llm\_graph\_input\_attn\_temp(uint32\_t\ n\_attn\_temp\_floor\_scale,\ \textcolor{keywordtype}{float}\ f\_attn\_temp\_scale,\ \textcolor{keywordtype}{float}\ f\_attn\_temp\_offset)}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ :\ n\_attn\_temp\_floor\_scale(n\_attn\_temp\_floor\_scale),\ f\_attn\_temp\_scale(f\_attn\_temp\_scale),\ f\_attn\_temp\_offset(f\_attn\_temp\_offset)\ \{\}}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_attn\_temp()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_scale\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_batch]}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ n\_attn\_temp\_floor\_scale;}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ f\_attn\_temp\_scale;}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ f\_attn\_temp\_offset;}
+\DoxyCodeLine{00150\ \};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{keyword}{class\ }llm\_graph\_input\_pos\_bucket\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00153\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00154\ \ \ \ \ llm\_graph\_input\_pos\_bucket(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \&\ hparams)\ :\ hparams(hparams)\ \{\}}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_pos\_bucket()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ pos\_bucket\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I32\ [n\_batch,\ n\_batch]}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ hparams;}
+\DoxyCodeLine{00162\ \};}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{keyword}{class\ }llm\_graph\_input\_pos\_bucket\_kv\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00165\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00166\ \ \ \ \ llm\_graph\_input\_pos\_bucket\_kv(}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \&\ hparams,}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__context}{llama\_kv\_cache\_context}}\ *\ mctx)\ :\ hparams(hparams),\ mctx(mctx)\ \{\}}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_pos\_bucket\_kv()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ pos\_bucket\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I32\ [n\_kv,\ n\_batch]}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ hparams;}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__context}{llama\_kv\_cache\_context}}\ *\ mctx;}
+\DoxyCodeLine{00178\ \};}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{keyword}{class\ }llm\_graph\_input\_out\_ids\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00181\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00182\ \ \ \ \ llm\_graph\_input\_out\_ids(}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \&\ hparams,}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ n\_outputs)\ :\ hparams(hparams),\ cparams(cparams),\ n\_outputs(n\_outputs)\ \{\}}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_out\_ids()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ out\_ids;\ \textcolor{comment}{//\ I32\ [n\_outputs]}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ hparams;}
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ n\_outputs;}
+\DoxyCodeLine{00198\ \};}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{keyword}{class\ }llm\_graph\_input\_mean\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00201\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00202\ \ \ \ \ llm\_graph\_input\_mean(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams)\ :\ cparams(cparams)\ \{\}}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_mean()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ mean;\ \textcolor{comment}{//\ F32\ [n\_batch,\ n\_batch]}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00210\ \};}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \textcolor{keyword}{class\ }llm\_graph\_input\_cls\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00213\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00214\ \ \ \ \ llm\_graph\_input\_cls(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,\ \textcolor{keyword}{const}\ llm\_arch\ arch)\ :\ cparams(cparams),\ arch(arch)\ \{\}}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_cls()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls;\ \textcolor{comment}{//\ I32\ [n\_batch]}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{const}\ llm\_arch\ arch;}
+\DoxyCodeLine{00223\ \};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{keyword}{class\ }llm\_graph\_input\_rs\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00226\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00227\ \ \ \ \ llm\_graph\_input\_rs(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__memory__recurrent__context}{llama\_memory\_recurrent\_context}}\ *\ mctx)\ :\ mctx(mctx)\ \{\}}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_rs()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ s\_copy;\ \ \textcolor{comment}{//\ I32\ [n\_rs]}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{comment}{//\ views\ of\ s\_copy,\ computed\ once\ per\ graph}}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{comment}{//\ and\ shared\ across\ layers\ which\ use\ build\_rs}}
+\DoxyCodeLine{00238\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ s\_copy\_main;\ \ \ \textcolor{comment}{//\ I32\ [n\_seqs]}}
+\DoxyCodeLine{00239\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ s\_copy\_extra;\ \ \textcolor{comment}{//\ I32\ [n\_rs\ -\/\ n\_seqs]}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__memory__recurrent__context}{llama\_memory\_recurrent\_context}}\ *\ mctx;}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{comment}{//\ used\ in\ view\ offsets,\ need\ to\ match\ for\ valid\ graph\ reuse}}
+\DoxyCodeLine{00244\ \ \ \ \ uint32\_t\ head;}
+\DoxyCodeLine{00245\ \ \ \ \ int32\_t\ rs\_z;}
+\DoxyCodeLine{00246\ \};}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{keyword}{class\ }llm\_graph\_input\_cross\_embd\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00249\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00250\ \ \ \ \ llm\_graph\_input\_cross\_embd(}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cross}{llama\_cross}}\ *\ cross)\ :\ cross(cross)\ \{\}}
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_cross\_embd()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cross\_embd;\ \textcolor{comment}{//\ F32\ [n\_embd,\ n\_outputs\_enc]}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cross}{llama\_cross}}\ *\ cross;}
+\DoxyCodeLine{00259\ \};}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{keyword}{class\ }llm\_graph\_input\_attn\_no\_cache\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00262\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00263\ \ \ \ \ llm\_graph\_input\_attn\_no\_cache(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \&\ hparams,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams)\ :}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ hparams(hparams),}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ cparams(cparams)\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \}}
+\DoxyCodeLine{00267\ \ \ \ \ \string~llm\_graph\_input\_attn\_no\_cache()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_kq\_mask()\textcolor{keyword}{\ \ \ \ \ const\ }\{\ \textcolor{keywordflow}{return}\ self\_kq\_mask\_cnv;\ \}}
+\DoxyCodeLine{00272\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_kq\_mask\_swa()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ self\_kq\_mask\_swa\_cnv;\ \}}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{comment}{//\ n\_tokens\ ==\ n\_batch}}
+\DoxyCodeLine{00275\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_tokens,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00276\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\_cnv\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ \ \ \ \ [n\_tokens,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00277\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\_swa\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_tokens,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00278\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\_swa\_cnv\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ \ \ \ \ [n\_tokens,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ hparams;}
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00282\ \};}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{keyword}{class\ }llm\_graph\_input\_attn\_kv\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00285\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00286\ \ \ \ \ llm\_graph\_input\_attn\_kv(}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \&\ hparams,}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__context}{llama\_kv\_cache\_context}}\ *\ mctx)\ :}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ hparams(hparams),}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ cparams(cparams),}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ mctx(mctx)\ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \}}
+\DoxyCodeLine{00294\ \ \ \ \ \string~llm\_graph\_input\_attn\_kv()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_k\_idxs()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ self\_k\_idxs;\ \}}
+\DoxyCodeLine{00301\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_v\_idxs()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ self\_v\_idxs;\ \}}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_kq\_mask()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ self\_kq\_mask\_cnv;\ \}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_k\_idxs\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I64\ [n\_batch]}}
+\DoxyCodeLine{00306\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_v\_idxs\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I64\ [n\_batch]\ or\ [n\_batch*n\_embd\_v\_gqa]}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_kv,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00309\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\_cnv\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ \ \ \ \ [n\_kv,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{comment}{//\ note:\ these\ have\ to\ be\ copies\ because\ in\ order\ to\ be\ able\ to\ reuse\ a\ graph,\ its\ inputs}}
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ need\ to\ carry\ these\ parameters\ with\ them.\ otherwise,\ they\ can\ point\ to\ freed}}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ llm\_graph\_params\ from\ a\ previous\ batch,\ causing\ stack-\/use-\/after-\/return}}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ hparams;}
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__context}{llama\_kv\_cache\_context}}\ *\ mctx;}
+\DoxyCodeLine{00318\ \};}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \textcolor{comment}{//\ V-\/less\ input\ for\ the\ KV\ cache}}
+\DoxyCodeLine{00321\ \textcolor{comment}{//\ ref:\ https://github.com/ggml-\/org/llama.cpp/pull/19067}}
+\DoxyCodeLine{00322\ \textcolor{keyword}{class\ }llm\_graph\_input\_attn\_k\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00323\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00324\ \ \ \ \ llm\_graph\_input\_attn\_k(}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \&\ hparams,}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__context}{llama\_kv\_cache\_context}}\ *\ mctx)\ :}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ hparams(hparams),}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ cparams(cparams),}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ mctx(mctx)\ \{}
+\DoxyCodeLine{00331\ \ \ \ \ \}}
+\DoxyCodeLine{00332\ \ \ \ \ \string~llm\_graph\_input\_attn\_k()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_k\_idxs()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ self\_k\_idxs;\ \}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_kq\_mask()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ self\_kq\_mask\_cnv;\ \}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_k\_idxs\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I64\ [n\_batch]}}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_kv,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00345\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\_cnv\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ \ \ \ \ [n\_kv,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ hparams;}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__context}{llama\_kv\_cache\_context}}\ *\ mctx;}
+\DoxyCodeLine{00351\ \};}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \textcolor{keyword}{class\ }llm\_graph\_input\_attn\_kv\_iswa\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00354\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00355\ \ \ \ \ llm\_graph\_input\_attn\_kv\_iswa(}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \&\ hparams,}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__iswa__context}{llama\_kv\_cache\_iswa\_context}}\ *\ mctx)\ :}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ hparams(hparams),}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ cparams(cparams),}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ mctx(mctx)\ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \}}
+\DoxyCodeLine{00363\ \ \ \ \ \string~llm\_graph\_input\_attn\_kv\_iswa()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_k\_idxs()\textcolor{keyword}{\ \ \ \ \ const\ }\{\ \textcolor{keywordflow}{return}\ self\_k\_idxs;\ \}}
+\DoxyCodeLine{00370\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_v\_idxs()\textcolor{keyword}{\ \ \ \ \ const\ }\{\ \textcolor{keywordflow}{return}\ self\_v\_idxs;\ \}}
+\DoxyCodeLine{00371\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_k\_idxs\_swa()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ self\_k\_idxs\_swa;\ \}}
+\DoxyCodeLine{00372\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_v\_idxs\_swa()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ self\_v\_idxs\_swa;\ \}}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00374\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_kq\_mask()\textcolor{keyword}{\ \ \ \ \ const\ }\{\ \textcolor{keywordflow}{return}\ self\_kq\_mask\_cnv;\ \}}
+\DoxyCodeLine{00375\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_kq\_mask\_swa()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ self\_kq\_mask\_swa\_cnv;\ \}}
+\DoxyCodeLine{00376\ }
+\DoxyCodeLine{00377\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_k\_idxs\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I64\ [n\_batch]}}
+\DoxyCodeLine{00378\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_v\_idxs\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I64\ [n\_batch]\ or\ [n\_batch*n\_embd\_v\_gqa]}}
+\DoxyCodeLine{00379\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_k\_idxs\_swa\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I64\ [n\_batch]}}
+\DoxyCodeLine{00380\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_v\_idxs\_swa\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ I64\ [n\_batch]\ or\ [n\_batch*n\_embd\_v\_gqa]}}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_kv,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00383\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\_cnv\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ \ \ \ \ [n\_kv,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00384\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\_swa\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_kv,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00385\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ self\_kq\_mask\_swa\_cnv\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ \ \ \ \ [n\_kv,\ n\_batch/n\_stream,\ 1,\ n\_stream]}}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ hparams;}
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__kv__cache__iswa__context}{llama\_kv\_cache\_iswa\_context}}\ *\ mctx;}
+\DoxyCodeLine{00391\ \};}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ \textcolor{keyword}{class\ }llm\_graph\_input\_attn\_cross\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00394\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00395\ \ \ \ \ llm\_graph\_input\_attn\_cross(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cross}{llama\_cross}}\ *\ cross)\ :\ cross(cross)\ \{\}}
+\DoxyCodeLine{00396\ \ \ \ \ \string~llm\_graph\_input\_attn\_cross()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_kq\_mask\_cross()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ cross\_kq\_mask\_cnv;\ \}}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cross\_kq\_mask\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_outputs\_enc,\ n\_batch,\ 1,\ 1]}}
+\DoxyCodeLine{00403\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cross\_kq\_mask\_cnv\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ F32\ [n\_outputs\_enc,\ n\_batch,\ 1,\ 1]}}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cross}{llama\_cross}}\ *\ cross\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00406\ \};}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \textcolor{keyword}{class\ }llm\_graph\_input\_mem\_hybrid\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00409\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00410\ \ \ \ \ llm\_graph\_input\_mem\_hybrid(}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_attn\_kv>\ inp\_attn,}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_rs>\ \ \ \ \ \ inp\_rs,}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__memory__hybrid__context}{llama\_memory\_hybrid\_context}}\ *\ \ \ \ \ \ mctx)\ :}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ inp\_attn(std::move(inp\_attn)),}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ inp\_rs(std::move(inp\_rs)),}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ cparams(cparams),}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ mctx(mctx)\ \{\ \}}
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_mem\_hybrid()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_attn\_kv>\ inp\_attn;}
+\DoxyCodeLine{00426\ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_rs>\ \ \ \ \ \ inp\_rs;}
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__kv}{llm\_graph\_input\_attn\_kv}}\ *\ get\_attn()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ inp\_attn.get();\ \}}
+\DoxyCodeLine{00429\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__rs}{llm\_graph\_input\_rs}}\ \ \ \ \ \ *\ get\_recr()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ inp\_rs.get();\ \}}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__memory__hybrid__context}{llama\_memory\_hybrid\_context}}\ *\ mctx;}
+\DoxyCodeLine{00434\ \};}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \textcolor{keyword}{class\ }llm\_graph\_input\_mem\_hybrid\_k\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00437\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00438\ \ \ \ \ llm\_graph\_input\_mem\_hybrid\_k(}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_attn\_k>\ inp\_attn,}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_rs>\ \ \ \ \ \ inp\_rs,}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__memory__hybrid__context}{llama\_memory\_hybrid\_context}}\ *\ \ \ \ \ \ mctx)\ :}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ inp\_attn(std::move(inp\_attn)),}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ inp\_rs(std::move(inp\_rs)),}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ cparams(cparams),}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ mctx(mctx)\ \{\ \}}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_mem\_hybrid\_k()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00453\ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_attn\_k>\ inp\_attn;}
+\DoxyCodeLine{00454\ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_rs>\ \ \ \ \ \ inp\_rs;}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__k}{llm\_graph\_input\_attn\_k}}\ *\ get\_attn()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ inp\_attn.get();\ \}}
+\DoxyCodeLine{00457\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__rs}{llm\_graph\_input\_rs}}\ \ \ \ \ \ *\ get\_recr()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ inp\_rs.get();\ \}}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__memory__hybrid__context}{llama\_memory\_hybrid\_context}}\ *\ mctx;}
+\DoxyCodeLine{00462\ \};}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \textcolor{keyword}{class\ }llm\_graph\_input\_mem\_hybrid\_iswa\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00465\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00466\ \ \ \ \ llm\_graph\_input\_mem\_hybrid\_iswa(}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams,}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_attn\_kv\_iswa>\ inp\_attn,}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_rs>\ \ \ \ \ \ \ \ \ \ inp\_rs,}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__memory__hybrid__iswa__context}{llama\_memory\_hybrid\_iswa\_context}}\ *\ \ \ \ \ mctx)\ :}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ inp\_attn(std::move(inp\_attn)),}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ inp\_rs(std::move(inp\_rs)),}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ cparams(cparams),}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ mctx(mctx)\ \{\ \}}
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_mem\_hybrid\_iswa()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00481\ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_attn\_kv\_iswa>\ inp\_attn;}
+\DoxyCodeLine{00482\ \ \ \ \ std::unique\_ptr<llm\_graph\_input\_rs>\ \ \ \ \ \ \ \ \ \ inp\_rs;}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__kv__iswa}{llm\_graph\_input\_attn\_kv\_iswa}}\ *\ get\_attn()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ inp\_attn.get();\ \}}
+\DoxyCodeLine{00485\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__rs}{llm\_graph\_input\_rs}}\ \ \ \ \ \ \ \ \ \ \ *\ get\_recr()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ inp\_rs.get();\ \}}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00488\ }
+\DoxyCodeLine{00489\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classllama__memory__hybrid__iswa__context}{llama\_memory\_hybrid\_iswa\_context}}\ *\ mctx;}
+\DoxyCodeLine{00490\ \};}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \textcolor{keyword}{class\ }llm\_graph\_input\_sampling\ :\ \textcolor{keyword}{public}\ llm\_graph\_input\_i\ \{}
+\DoxyCodeLine{00493\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00494\ \ \ \ \ llm\_graph\_input\_sampling(std::map<llama\_seq\_id,\ llama\_sampler\ *>\ samplers)\ :}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ samplers(std::move(samplers))\ \{\ \}}
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_input\_sampling()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_input(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \ \ \ \ std::map<llama\_seq\_id,\ llama\_sampler\ *>\ samplers;}
+\DoxyCodeLine{00502\ \};}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \textcolor{comment}{//}}
+\DoxyCodeLine{00505\ \textcolor{comment}{//\ llm\_graph\_result}}
+\DoxyCodeLine{00506\ \textcolor{comment}{//}}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00508\ \textcolor{comment}{//\ these\ objects\ deliver\ the\ result\ from\ the\ graph\ build\ process\ back\ to\ the\ llama\_context}}
+\DoxyCodeLine{00509\ \textcolor{comment}{//\ note\ that\ the\ input\ tensors\ created\ for\ the\ graph\ are\ referenced\ here\ -\/\ the\ goal\ is\ to\ be\ able\ to\ populate\ their}}
+\DoxyCodeLine{00510\ \textcolor{comment}{//\ \ \ specific\ data,\ by\ calling\ the\ set\_inputs()\ method}}
+\DoxyCodeLine{00511\ \textcolor{comment}{//\ along\ with\ the\ input\ tensors,\ the\ object\ also\ provides\ commonly\ used\ outputs\ tensors,\ such\ as\ logits,\ embeddings,\ etc.}}
+\DoxyCodeLine{00512\ \textcolor{comment}{//\ \ \ these\ are\ used\ by\ the\ llama\_context\ to\ extact\ the\ relevant\ data,\ based\ on\ the\ compute\ parameters}}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00514\ \textcolor{comment}{//\ callback\ that\ allows\ us\ to\ apply\ custom\ logic\ to\ each\ tensor\ (e.g.\ ggml-\/alloc,\ offloading,\ etc.)}}
+\DoxyCodeLine{00515\ \textcolor{keyword}{using\ }llm\_graph\_cb\ =\ std::function<void(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ \&\ ubatch,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name,\ \textcolor{keywordtype}{int}\ il)>;}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classllm__graph__result}{llm\_graph\_result}};}
+\DoxyCodeLine{00518\ }
+\DoxyCodeLine{00519\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \{}
+\DoxyCodeLine{00520\ \ \ \ \ llm\_arch\ arch\ =\ LLM\_ARCH\_UNKNOWN;}
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ \ \ \ \ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ hparams;}
+\DoxyCodeLine{00523\ \ \ \ \ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ cparams;}
+\DoxyCodeLine{00524\ }
+\DoxyCodeLine{00525\ \ \ \ \ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ ubatch;\ \textcolor{comment}{//\ note:\ intentionally\ make\ a\ copy}}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \ \ \ \ llm\_graph\_type\ gtype;}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \ \ \ \ ggml\_backend\_sched\_t\ sched;}
+\DoxyCodeLine{00530\ \ \ \ \ ggml\_backend\_t\ backend\_cpu;}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__adapter__cvec}{llama\_adapter\_cvec}}\ \ \ \ \ *\ cvec;}
+\DoxyCodeLine{00533\ \ \ \ \ \textcolor{keyword}{const}\ llama\_adapter\_loras\ \ \ \ *\ loras;}
+\DoxyCodeLine{00534\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__memory__context__i}{llama\_memory\_context\_i}}\ *\ mctx;}
+\DoxyCodeLine{00535\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cross}{llama\_cross}}\ \ \ \ \ \ \ \ \ \ \ \ *\ cross;}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \ \ \ \ std::map<llama\_seq\_id,\ llama\_sampler\ *>\ samplers;}
+\DoxyCodeLine{00538\ }
+\DoxyCodeLine{00539\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ samplers\_equal(}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::map<llama\_seq\_id,\ llama\_sampler\ *>\ \&\ lhs,}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::map<llama\_seq\_id,\ llama\_sampler\ *>\ \&\ rhs)\ \{}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (lhs.size()\ !=\ rhs.size())\ \{}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ [seq\_id,\ sampler]\ :\ lhs)\ \{}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ rhs.find(seq\_id);}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ rhs.end()\ ||\ it-\/>second\ !=\ sampler)\ \{}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00552\ \ \ \ \ \}}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \ \ \ \ uint32\_t\ n\_outputs;}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \ \ \ \ llm\_graph\_cb\ cb;}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__result}{llm\_graph\_result}}\ *\ res;}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{comment}{//\ return\ true\ if\ the\ "{}other"{}\ params\ would\ result\ in\ a\ graph\ with\ the\ same\ topology\ as\ with\ the\ current\ params}}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{comment}{//\ \ \ having\ the\ same\ topology\ allows\ us\ to\ reuse\ the\ graph\ in\ some\ cases}}
+\DoxyCodeLine{00562\ \ \ \ \ \textcolor{keywordtype}{bool}\ allow\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ first\ check\ the\ ubatch}}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse\_ubatch\ =}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \ \ \ \ ubatch.equal\_seqs()\ ==\ other.ubatch.equal\_seqs()\ \&\&}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \ \ \ \ ubatch.n\_tokens\ \ \ \ \ ==\ other.ubatch.n\_tokens\ \&\&}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \ \ \ \ ubatch.n\_seq\_tokens\ ==\ other.ubatch.n\_seq\_tokens\ \&\&}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ \ \ \ \ ubatch.n\_seqs\ \ \ \ \ \ \ ==\ other.ubatch.n\_seqs\ \&\&}
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \ \ \ \ ubatch.n\_seqs\_unq\ \ \ ==\ other.ubatch.n\_seqs\_unq\ \&\&}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (!ubatch.token\ \&\&\ !other.ubatch.token)\ ||}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (!ubatch.embd\ \ \&\&\ !other.ubatch.embd)}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00574\ }
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ when\ we\ split\ the\ batch\ using\ "{}equal\_seqs"{}\ we\ have\ to\ verify\ that\ the\ participating\ sequences\ are\ the\ same}}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ the\ reason\ is\ because\ the\ set\ of\ attention\ streams\ would\ be\ different\ for\ different\ sequences}}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (can\_reuse\_ubatch\ \&\&\ ubatch.equal\_seqs())\ \{}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ubatch.data)\ \{}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ the\ old\ ubatch\ does\ not\ own\ it's\ data,\ then\ we\ cannot\ guarantee\ that\ it\ is\ still\ alive,\ and}}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ therefore\ we\ cannot\ perform\ the\ sequence\ id\ check.\ normally\ should\ never\ happen}}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ can\_reuse\_ubatch\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (uint32\_t\ s\ =\ 0;\ s\ <\ ubatch.n\_seqs\_unq;\ ++s)\ \{}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ can\_reuse\_ubatch\ \&=\ ubatch.seq\_id\_unq[s]\ ==\ other.ubatch.seq\_id\_unq[s];}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!can\_reuse\_ubatch)\ \{}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (n\_outputs\ !=\ other.n\_outputs)\ \{}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!samplers\_equal(samplers,\ other.samplers))\ \{}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00600\ }
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (samplers.size()\ >\ 0)\ \{}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ubatch.data\ ||\ !other.ubatch.data)\ \{}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00605\ }
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ that\ the\ outputs\ are\ the\ same\ for\ all\ samplers}}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (uint32\_t\ i\ =\ 0;\ i\ <\ ubatch.n\_tokens;\ ++i)\ \{}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ubatch.output[i]\ \ \ \ !=\ other.ubatch.output[i]\ ||}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ubatch.seq\_id[i][0]\ !=\ other.ubatch.seq\_id[i][0])\ \{}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \ \ \ \ cparams.embeddings\ \ ==\ other.cparams.embeddings\ \ \&\&}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \ \ \ \ cparams.causal\_attn\ ==\ other.cparams.causal\_attn\ \&\&}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ arch\ \ ==\ other.arch\ \ \&\&}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \ \ \ \ gtype\ ==\ other.gtype\ \&\&}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \ \ \ \ cvec\ \ ==\ other.cvec\ \ \&\&}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \ \ \ \ loras\ ==\ other.loras\ \&\&}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \ \ \ \ cross\ ==\ other.cross;}
+\DoxyCodeLine{00623\ \ \ \ \ \}}
+\DoxyCodeLine{00624\ \};}
+\DoxyCodeLine{00625\ }
+\DoxyCodeLine{00626\ \textcolor{keyword}{class\ }llm\_graph\_result\ \{}
+\DoxyCodeLine{00627\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00628\ \ \ \ \ llm\_graph\_result(int64\_t\ max\_nodes);}
+\DoxyCodeLine{00629\ }
+\DoxyCodeLine{00630\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_result()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_inp\_tokens()\textcolor{keyword}{\ \ const\ }\{\ \textcolor{keywordflow}{return}\ t\_inp\_tokens;\ \}}
+\DoxyCodeLine{00633\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_logits()\textcolor{keyword}{\ \ \ \ \ \ const\ }\{\ \textcolor{keywordflow}{return}\ t\_logits;\ \}}
+\DoxyCodeLine{00634\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_embd()\textcolor{keyword}{\ \ \ \ \ \ \ \ const\ }\{\ \textcolor{keywordflow}{return}\ t\_embd;\ \}}
+\DoxyCodeLine{00635\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ get\_embd\_pooled()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ t\_embd\_pooled;\ \}}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \ \ \ \ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ \ *\ get\_gf()\textcolor{keyword}{\ \ const\ }\{\ \textcolor{keywordflow}{return}\ gf;\ \}}
+\DoxyCodeLine{00638\ \ \ \ \ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ get\_ctx()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ ctx\_compute.get();\ \}}
+\DoxyCodeLine{00639\ }
+\DoxyCodeLine{00640\ \ \ \ \ int64\_t\ get\_max\_nodes()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \ \ \ \ \textcolor{keywordtype}{void}\ reset();}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_inputs(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ *\ ubatch);}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_outputs();}
+\DoxyCodeLine{00646\ }
+\DoxyCodeLine{00647\ \ \ \ \ \textcolor{comment}{//\ try\ to\ update\ the\ existing\ graph\ result\ using\ the\ new\ graph\ parameters\ in\ order\ to\ reuse\ it}}
+\DoxyCodeLine{00648\ \ \ \ \ \textcolor{comment}{//\ this\ can\ only\ be\ done\ if\ we\ determine\ that\ the\ resulting\ graph\ using\ the\ new\ graph\ parameters}}
+\DoxyCodeLine{00649\ \ \ \ \ \textcolor{comment}{//\ \ \ would\ be\ identical\ to\ the\ existing\ graph.\ in\ that\ case,\ we\ simply\ have\ to\ update\ the\ memory}}
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{comment}{//\ \ \ contexts\ of\ the\ input\ tensors\ of\ the\ graph\ and\ we\ can\ reuse\ it\ for\ another\ computation}}
+\DoxyCodeLine{00651\ \ \ \ \ \textcolor{comment}{//\ return\ true\ if\ the\ graph\ was\ updated\ and\ can\ be\ reused}}
+\DoxyCodeLine{00652\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_reuse(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params);}
+\DoxyCodeLine{00653\ }
+\DoxyCodeLine{00654\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__i}{llm\_graph\_input\_i}}\ *\ add\_input(llm\_graph\_input\_ptr\ input);}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00656\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_params(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params);}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \ \ \ \ \textcolor{comment}{//\ important\ graph\ nodes}}
+\DoxyCodeLine{00659\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t\_inp\_tokens\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00660\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t\_inp\_embd\ \ \ \ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ [n\_embd\_inp,\ n\_tokens]}}
+\DoxyCodeLine{00661\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t\_logits\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00662\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t\_embd\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00663\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t\_embd\_pooled\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00665\ \ \ \ \ std::map<llama\_seq\_id,\ ggml\_tensor*>\ t\_sampled\_logits;}
+\DoxyCodeLine{00666\ \ \ \ \ std::map<llama\_seq\_id,\ ggml\_tensor*>\ t\_candidates;}
+\DoxyCodeLine{00667\ \ \ \ \ std::map<llama\_seq\_id,\ ggml\_tensor*>\ t\_sampled;}
+\DoxyCodeLine{00668\ \ \ \ \ std::map<llama\_seq\_id,\ ggml\_tensor*>\ t\_sampled\_probs;}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00670\ \ \ \ \ std::vector<llm\_graph\_input\_ptr>\ inputs;}
+\DoxyCodeLine{00671\ }
+\DoxyCodeLine{00672\ \ \ \ \ ggml\_context\_ptr\ ctx\_compute;}
+\DoxyCodeLine{00673\ }
+\DoxyCodeLine{00674\ \ \ \ \ \textcolor{comment}{//\ memory\ buffers\ used\ to\ evaluate\ the\ model}}
+\DoxyCodeLine{00675\ \ \ \ \ std::vector<uint8\_t>\ buf\_compute\_meta;}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00677\ \ \ \ \ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ gf;}
+\DoxyCodeLine{00678\ }
+\DoxyCodeLine{00679\ \ \ \ \ int64\_t\ max\_nodes;}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00682\ \ \ \ \ \textcolor{comment}{//\ keep\ a\ copy\ of\ the\ previous\ graph\ parameters}}
+\DoxyCodeLine{00683\ \ \ \ \ \textcolor{comment}{//\ we\ will\ use\ this\ to\ determine\ whether\ the\ graph\ can\ be\ reused\ by\ comparing\ them\ with\ the\ new\ parameters}}
+\DoxyCodeLine{00684\ \ \ \ \ \textcolor{comment}{//\ note:\ these\ are\ updated\ after\ constructing\ the\ new\ graph}}
+\DoxyCodeLine{00685\ \ \ \ \ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ params;}
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ \ \ \ \ \textcolor{comment}{//\ env:\ LLAMA\_GRAPH\_RESULT\_DEBUG}}
+\DoxyCodeLine{00688\ \ \ \ \ \textcolor{keywordtype}{int}\ debug\ =\ 0;}
+\DoxyCodeLine{00689\ \};}
+\DoxyCodeLine{00690\ }
+\DoxyCodeLine{00691\ \textcolor{keyword}{using\ }llm\_graph\_result\_ptr\ =\ std::unique\_ptr<llm\_graph\_result>;}
+\DoxyCodeLine{00692\ }
+\DoxyCodeLine{00693\ \textcolor{comment}{//}}
+\DoxyCodeLine{00694\ \textcolor{comment}{//\ llm\_graph\_context}}
+\DoxyCodeLine{00695\ \textcolor{comment}{//}}
+\DoxyCodeLine{00696\ }
+\DoxyCodeLine{00697\ \textcolor{comment}{//\ used\ in\ build\_rs\ to\ properly\ order\ writes\ and\ avoid\ unnecessary\ copies}}
+\DoxyCodeLine{00698\ \textcolor{keyword}{using\ }llm\_graph\_get\_rows\_fn\ =\ std::function<\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ (\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ states,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ids)>;}
+\DoxyCodeLine{00699\ }
+\DoxyCodeLine{00700\ \textcolor{keyword}{struct\ }llm\_graph\_context\ \{}
+\DoxyCodeLine{00701\ \ \ \ \ \textcolor{keyword}{const}\ llm\_arch\ arch;}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__hparams}{llama\_hparams}}\ \&\ hparams;}
+\DoxyCodeLine{00704\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cparams}{llama\_cparams}}\ \&\ cparams;}
+\DoxyCodeLine{00705\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ \ \&\ ubatch;}
+\DoxyCodeLine{00706\ }
+\DoxyCodeLine{00707\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_embd;}
+\DoxyCodeLine{00708\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_layer;}
+\DoxyCodeLine{00709\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_rot;}
+\DoxyCodeLine{00710\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_ctx;\ \ \ \ \ \ \ \textcolor{comment}{//\ user-\/specified\ context\ size\ (can\ be\ different\ from\ n\_ctx\_train)}}
+\DoxyCodeLine{00711\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_head;}
+\DoxyCodeLine{00712\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_head\_kv;}
+\DoxyCodeLine{00713\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_embd\_head\_k;}
+\DoxyCodeLine{00714\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_embd\_k\_gqa;}
+\DoxyCodeLine{00715\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_embd\_head\_v;}
+\DoxyCodeLine{00716\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_embd\_v\_gqa;}
+\DoxyCodeLine{00717\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_expert;}
+\DoxyCodeLine{00718\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_expert\_used;}
+\DoxyCodeLine{00719\ }
+\DoxyCodeLine{00720\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ freq\_base;}
+\DoxyCodeLine{00721\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ freq\_scale;}
+\DoxyCodeLine{00722\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ ext\_factor;}
+\DoxyCodeLine{00723\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ attn\_factor;}
+\DoxyCodeLine{00724\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ beta\_fast;}
+\DoxyCodeLine{00725\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ beta\_slow;}
+\DoxyCodeLine{00726\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ norm\_eps;}
+\DoxyCodeLine{00727\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ norm\_rms\_eps;}
+\DoxyCodeLine{00728\ }
+\DoxyCodeLine{00729\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_tokens;}
+\DoxyCodeLine{00730\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ n\_outputs;}
+\DoxyCodeLine{00731\ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ n\_ctx\_orig;\ \textcolor{comment}{//\ yarn}}
+\DoxyCodeLine{00732\ }
+\DoxyCodeLine{00733\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{enum}\ llama\_pooling\_type\ pooling\_type;}
+\DoxyCodeLine{00734\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{enum}\ llama\_rope\_type\ \ \ \ rope\_type;}
+\DoxyCodeLine{00735\ }
+\DoxyCodeLine{00736\ \ \ \ \ ggml\_backend\_sched\_t\ sched;}
+\DoxyCodeLine{00737\ }
+\DoxyCodeLine{00738\ \ \ \ \ ggml\_backend\_t\ backend\_cpu;\ \textcolor{comment}{//\ TODO:\ needed\ by\ build\_attn\_mha,\ figure\ out\ a\ way\ to\ remove?}}
+\DoxyCodeLine{00739\ }
+\DoxyCodeLine{00740\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__adapter__cvec}{llama\_adapter\_cvec}}\ \ \ \ \ *\ cvec;}
+\DoxyCodeLine{00741\ \ \ \ \ \textcolor{keyword}{const}\ llama\_adapter\_loras\ \ \ \ *\ loras;}
+\DoxyCodeLine{00742\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__memory__context__i}{llama\_memory\_context\_i}}\ *\ mctx;}
+\DoxyCodeLine{00743\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__cross}{llama\_cross}}\ \ \ \ \ \ \ \ \ \ \ \ *\ cross;}
+\DoxyCodeLine{00744\ }
+\DoxyCodeLine{00745\ \ \ \ \ std::map<llama\_seq\_id,\ llama\_sampler\ *>\ samplers;}
+\DoxyCodeLine{00746\ }
+\DoxyCodeLine{00747\ \ \ \ \ \textcolor{keyword}{const}\ llm\_graph\_cb\ \&\ cb\_func;}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__result}{llm\_graph\_result}}\ *\ res;}
+\DoxyCodeLine{00750\ }
+\DoxyCodeLine{00751\ \ \ \ \ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx0\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00752\ \ \ \ \ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ \ *\ gf\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \ \ \ \ llm\_graph\_context(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllm__graph__params}{llm\_graph\_params}}\ \&\ params);}
+\DoxyCodeLine{00755\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~llm\_graph\_context()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \ \ \ \ \textcolor{keywordtype}{void}\ cb(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name,\ \textcolor{keywordtype}{int}\ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00760\ \ \ \ \ \textcolor{comment}{//\ common}}
+\DoxyCodeLine{00761\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00762\ }
+\DoxyCodeLine{00763\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_cvec(}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00766\ }
+\DoxyCodeLine{00767\ \ \ \ \ \textcolor{comment}{//\ do\ mat\_mul,\ while\ optionally\ apply\ lora\ and\ per-\/tensor\ scale}}
+\DoxyCodeLine{00768\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_lora\_mm(}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ w,}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ w\_s\ =\ \textcolor{keyword}{nullptr})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00772\ }
+\DoxyCodeLine{00773\ \ \ \ \ \textcolor{comment}{//\ do\ mat\_mul\_id,\ while\ optionally\ apply\ lora}}
+\DoxyCodeLine{00774\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_lora\_mm\_id(}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ w,\ \ \ \textcolor{comment}{//\ ggml\_tensor\ *\ as}}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,\ \textcolor{comment}{//\ ggml\_tensor\ *\ b}}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ids)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00778\ }
+\DoxyCodeLine{00779\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_norm(}
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ mw,}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ mb,}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \ \ \ llm\_norm\_type\ \ \ type,}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00785\ }
+\DoxyCodeLine{00786\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_ffn(}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ up,}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ up\_b,}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ up\_s,}
+\DoxyCodeLine{00791\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate,}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_b,}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_s,}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ down,}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ down\_b,}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ down\_s,}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ act\_scales,}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \ llm\_ffn\_op\_type\ \ \ type\_op,}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ llm\_ffn\_gate\_type\ \ \ type\_gate,}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \ \ \ \ \textcolor{comment}{//\ build\ MoE\ FFN\ without\ bias\ tensors}}
+\DoxyCodeLine{00803\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_moe\_ffn(}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_inp,}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ up\_exps,}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_exps,}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ down\_exps,}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ exp\_probs\_b,}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ n\_expert,}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ n\_expert\_used,}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ \ llm\_ffn\_op\_type\ \ \ type\_op,}
+\DoxyCodeLine{00813\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ norm\_w,}
+\DoxyCodeLine{00814\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ w\_scale,}
+\DoxyCodeLine{00815\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_expert\_gating\_func\_type\ gating\_op,}
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il,}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ probs\_in\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_up\_exps\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ up\_exps\_s\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_exps\_s\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ down\_exps\_s\ =\ \textcolor{keyword}{nullptr})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00822\ }
+\DoxyCodeLine{00823\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_moe\_ffn(}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cur,}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_inp,}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_inp\_b,}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ up\_exps,}
+\DoxyCodeLine{00828\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ up\_exps\_b,}
+\DoxyCodeLine{00829\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_exps,}
+\DoxyCodeLine{00830\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_exps\_b,}
+\DoxyCodeLine{00831\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ down\_exps,}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ down\_exps\_b,}
+\DoxyCodeLine{00833\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ exp\_probs\_b,}
+\DoxyCodeLine{00834\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ n\_expert,}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ n\_expert\_used,}
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ \ llm\_ffn\_op\_type\ \ \ type\_op,}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ norm\_w,}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ w\_scale,}
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \ \ \ \ \ \ llama\_expert\_gating\_func\_type\ gating\_op,}
+\DoxyCodeLine{00840\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il,}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ probs\_in\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00842\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_up\_exps\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_up\_exps\_b\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00844\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ up\_exps\_s\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00845\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ gate\_exps\_s\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ down\_exps\_s\ =\ \textcolor{keyword}{nullptr})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00847\ }
+\DoxyCodeLine{00848\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00849\ \ \ \ \ \textcolor{comment}{//\ inputs}}
+\DoxyCodeLine{00850\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00851\ }
+\DoxyCodeLine{00852\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_inp\_embd(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tok\_embd)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00853\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_inp\_pos()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00854\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_inp\_attn\_scale()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00855\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_inp\_out\_ids()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00856\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_inp\_mean()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00857\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_inp\_cls()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00858\ }
+\DoxyCodeLine{00859\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_inp\_cross\_embd()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00860\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_inp\_pos\_bucket\_enc()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00861\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_inp\_pos\_bucket\_dec()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00862\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_pos\_bias(\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ pos\_bucket,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ attn\_rel\_b)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00863\ }
+\DoxyCodeLine{00864\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00865\ \ \ \ \ \textcolor{comment}{//\ attention}}
+\DoxyCodeLine{00866\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00867\ }
+\DoxyCodeLine{00868\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_attn\_mha(}
+\DoxyCodeLine{00869\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ q,\ \ \ \ \ \ \ \textcolor{comment}{//\ [n\_embd\_head\_q,\ n\_head\_q,\ n\_tokens]}}
+\DoxyCodeLine{00870\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ k,\ \ \ \ \ \ \ \textcolor{comment}{//\ [n\_embd\_head\_k,\ n\_head\_k,\ n\_tokens]}}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v,\ \ \ \ \ \ \ \textcolor{comment}{//\ [n\_embd\_head\_v,\ n\_head\_v,\ n\_tokens]\ (v\_trans\ ==\ false)}}
+\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ kq\_b,}
+\DoxyCodeLine{00873\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ kq\_mask,}
+\DoxyCodeLine{00874\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ sinks,\ \ \ \textcolor{comment}{//\ [n\_head\_q]}}
+\DoxyCodeLine{00875\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_mla,\ \ \ \textcolor{comment}{//\ [n\_embd\_head\_v\_mla,\ n\_embd\_head\_v,\ n\_head\_v]}}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ kq\_scale,}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00878\ }
+\DoxyCodeLine{00879\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__no__cache}{llm\_graph\_input\_attn\_no\_cache}}\ *\ build\_attn\_inp\_no\_cache()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00880\ }
+\DoxyCodeLine{00881\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_attn(}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__no__cache}{llm\_graph\_input\_attn\_no\_cache}}\ *\ inp,}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo,}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo\_b,}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ q\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_q,\ n\_head\_q,\ n\_tokens]}}
+\DoxyCodeLine{00886\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ k\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_k,\ n\_head\_k,\ n\_tokens]}}
+\DoxyCodeLine{00887\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_v,\ n\_head\_v,\ n\_tokens]}}
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ kq\_b,}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ sinks,\ \textcolor{comment}{//\ [n\_head\_q]}}
+\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_mla,\ \textcolor{comment}{//\ [n\_embd\_head\_v\_mla,\ n\_embd\_head\_v,\ n\_head\_v]}}
+\DoxyCodeLine{00891\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ kq\_scale,}
+\DoxyCodeLine{00892\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00893\ }
+\DoxyCodeLine{00894\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__kv}{llm\_graph\_input\_attn\_kv}}\ *\ build\_attn\_inp\_kv()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00895\ }
+\DoxyCodeLine{00896\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_attn(}
+\DoxyCodeLine{00897\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__kv}{llm\_graph\_input\_attn\_kv}}\ *\ inp,}
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo,}
+\DoxyCodeLine{00899\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo\_b,}
+\DoxyCodeLine{00900\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ q\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_q,\ n\_head\_q,\ n\_tokens]}}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ k\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_k,\ n\_head\_k,\ n\_tokens]}}
+\DoxyCodeLine{00902\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_v,\ n\_head\_v,\ n\_tokens]}}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ kq\_b,}
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ sinks,\ \textcolor{comment}{//\ [n\_head\_q]}}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_mla,\ \textcolor{comment}{//\ [n\_embd\_head\_v\_mla,\ n\_embd\_head\_v,\ n\_head\_v]\ //\ TODO:\ remove}}
+\DoxyCodeLine{00906\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ kq\_scale,}
+\DoxyCodeLine{00907\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00908\ }
+\DoxyCodeLine{00909\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__k}{llm\_graph\_input\_attn\_k}}\ \ *\ build\_attn\_inp\_k()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00910\ }
+\DoxyCodeLine{00911\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_attn(}
+\DoxyCodeLine{00912\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__k}{llm\_graph\_input\_attn\_k}}\ *\ inp,}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo,}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo\_b,}
+\DoxyCodeLine{00915\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ q\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_q,\ n\_head\_q,\ n\_tokens]}}
+\DoxyCodeLine{00916\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ k\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_k,\ n\_head\_k,\ n\_tokens]}}
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_v,\ n\_head\_v,\ n\_tokens]}}
+\DoxyCodeLine{00918\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ kq\_b,}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ sinks,\ \textcolor{comment}{//\ [n\_head\_q]}}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_mla,\ \textcolor{comment}{//\ [n\_embd\_head\_v\_mla,\ n\_embd\_head\_v,\ n\_head\_v]}}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ kq\_scale,}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00923\ }
+\DoxyCodeLine{00924\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__kv__iswa}{llm\_graph\_input\_attn\_kv\_iswa}}\ *\ build\_attn\_inp\_kv\_iswa()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00925\ }
+\DoxyCodeLine{00926\ \ \ \ \ \textcolor{comment}{//\ note:\ if\ k\_cur\ or\ v\_cur\ are\ not\ provided,\ they\ will\ not\ be\ stored\ in\ the\ memory}}
+\DoxyCodeLine{00927\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_attn(}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__kv__iswa}{llm\_graph\_input\_attn\_kv\_iswa}}\ *\ inp,}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo,}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo\_b,}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ q\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_q,\ n\_head\_q,\ n\_tokens]}}
+\DoxyCodeLine{00932\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ k\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_k,\ n\_head\_k,\ n\_tokens]\ optional}}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_v,\ n\_head\_v,\ n\_tokens]\ optional}}
+\DoxyCodeLine{00934\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ kq\_b,}
+\DoxyCodeLine{00935\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ sinks,\ \textcolor{comment}{//\ [n\_head\_q]}}
+\DoxyCodeLine{00936\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_mla,\ \textcolor{comment}{//\ [n\_embd\_head\_v\_mla,\ n\_embd\_head\_v,\ n\_head\_v]}}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ kq\_scale,}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00939\ }
+\DoxyCodeLine{00940\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__cross}{llm\_graph\_input\_attn\_cross}}\ *\ build\_attn\_inp\_cross()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00941\ }
+\DoxyCodeLine{00942\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_attn(}
+\DoxyCodeLine{00943\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__attn__cross}{llm\_graph\_input\_attn\_cross}}\ *\ inp,}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo,}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ wo\_b,}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ q\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_q,\ n\_head\_q,\ n\_tokens]}}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ k\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_k,\ n\_head\_k,\ n\_tokens]}}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_cur,\ \textcolor{comment}{//\ [n\_embd\_head\_v,\ n\_head\_v,\ n\_tokens]}}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ kq\_b,}
+\DoxyCodeLine{00950\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ sinks,\ \textcolor{comment}{//\ [n\_head\_q]}}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ v\_mla,\ \textcolor{comment}{//\ [n\_embd\_head\_v\_mla,\ n\_embd\_head\_v,\ n\_head\_v]}}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ kq\_scale,}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00954\ }
+\DoxyCodeLine{00955\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00956\ \ \ \ \ \textcolor{comment}{//\ recurrent}}
+\DoxyCodeLine{00957\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00958\ }
+\DoxyCodeLine{00959\ \ \ \ \ \textcolor{comment}{//\ TODO:\ move\ this\ implementation\ to\ llama\_memory\_recurrent.}}
+\DoxyCodeLine{00960\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ this\ is\ analogous\ to\ llama\_kv\_cache::cpy\_k\ /\ cpy\_v}}
+\DoxyCodeLine{00961\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ when\ moving,\ avoid\ passing\ \`{}ggml\_cgraph`\ -\/\ only\ pass\ \`{}ggml\_context`.\ would\ likely\ need\ to\ split\ the}}
+\DoxyCodeLine{00962\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ implementation\ in\ 2\ separate\ methods.\ the\ goal\ is\ to\ avoid\ calling\ \`{}ggml\_build\_forward\_expand`\ in}}
+\DoxyCodeLine{00963\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \`{}llama\_memory\_recurrent`}}
+\DoxyCodeLine{00964\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_rs(}
+\DoxyCodeLine{00965\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ s,}
+\DoxyCodeLine{00966\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ state\_copy\_main,}
+\DoxyCodeLine{00967\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ state\_copy\_extra,}
+\DoxyCodeLine{00968\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ state\_size,}
+\DoxyCodeLine{00969\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_seqs,}
+\DoxyCodeLine{00970\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ n\_rs,}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ rs\_head,}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ \ \ rs\_size,}
+\DoxyCodeLine{00973\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ rs\_zero,}
+\DoxyCodeLine{00974\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llm\_graph\_get\_rows\_fn\ \&\ get\_state\_rows\ =\ ggml\_get\_rows)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00975\ }
+\DoxyCodeLine{00976\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__rs}{llm\_graph\_input\_rs}}\ *\ build\_rs\_inp()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00977\ }
+\DoxyCodeLine{00978\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_rs(}
+\DoxyCodeLine{00979\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__rs}{llm\_graph\_input\_rs}}\ *\ inp,}
+\DoxyCodeLine{00980\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ s,}
+\DoxyCodeLine{00981\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ state\_size,}
+\DoxyCodeLine{00982\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \ \ n\_seqs,}
+\DoxyCodeLine{00983\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ llm\_graph\_get\_rows\_fn\ \&\ get\_state\_rows\ =\ ggml\_get\_rows)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00984\ }
+\DoxyCodeLine{00985\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_rwkv\_token\_shift\_load(}
+\DoxyCodeLine{00986\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__rs}{llm\_graph\_input\_rs}}\ *\ inp,}
+\DoxyCodeLine{00987\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ \&\ ubatch,}
+\DoxyCodeLine{00988\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00989\ }
+\DoxyCodeLine{00990\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ build\_rwkv\_token\_shift\_store(}
+\DoxyCodeLine{00991\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ token\_shift,}
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ \&\ ubatch,}
+\DoxyCodeLine{00993\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ il)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00994\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00995\ \ \ \ \ \textcolor{comment}{//\ hybrid}}
+\DoxyCodeLine{00996\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00997\ }
+\DoxyCodeLine{00998\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__mem__hybrid}{llm\_graph\_input\_mem\_hybrid}}\ *\ build\_inp\_mem\_hybrid()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00999\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__mem__hybrid__k}{llm\_graph\_input\_mem\_hybrid\_k}}\ *\ build\_inp\_mem\_hybrid\_k()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{01000\ }
+\DoxyCodeLine{01001\ \ \ \ \ \doxymbox{\hyperlink{classllm__graph__input__mem__hybrid__iswa}{llm\_graph\_input\_mem\_hybrid\_iswa}}\ *\ build\_inp\_mem\_hybrid\_iswa()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{01002\ }
+\DoxyCodeLine{01003\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01004\ \ \ \ \ \textcolor{comment}{//\ pooling}}
+\DoxyCodeLine{01005\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01006\ }
+\DoxyCodeLine{01007\ \ \ \ \ \textcolor{keywordtype}{void}\ build\_pooling(}
+\DoxyCodeLine{01008\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls,}
+\DoxyCodeLine{01009\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls\_b,}
+\DoxyCodeLine{01010\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls\_out,}
+\DoxyCodeLine{01011\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls\_out\_b,}
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ cls\_norm)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{01013\ }
+\DoxyCodeLine{01014\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01015\ \ \ \ \ \textcolor{comment}{//\ sampling\ (backend\ sampling)}}
+\DoxyCodeLine{01016\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01017\ }
+\DoxyCodeLine{01018\ \ \ \ \ \textcolor{keywordtype}{void}\ build\_sampling()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{01019\ }
+\DoxyCodeLine{01020\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01021\ \ \ \ \ \textcolor{comment}{//\ dense\ (out)}}
+\DoxyCodeLine{01022\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01023\ }
+\DoxyCodeLine{01024\ \ \ \ \ \textcolor{keywordtype}{void}\ build\_dense\_out(}
+\DoxyCodeLine{01025\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dense\_2,}
+\DoxyCodeLine{01026\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dense\_2\_b,}
+\DoxyCodeLine{01027\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dense\_3)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{01028\ \};}
+\DoxyCodeLine{01029\ }
+\DoxyCodeLine{01030\ \textcolor{comment}{//\ TODO:\ better\ name}}
+\DoxyCodeLine{01031\ int32\_t\ llama\_relative\_position\_bucket(llama\_pos\ x,\ llama\_pos\ y,\ uint64\_t\ n\_buckets,\ \textcolor{keywordtype}{bool}\ bidirectional);}
+
+\end{DoxyCode}

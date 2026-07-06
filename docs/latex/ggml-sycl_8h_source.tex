@@ -1,0 +1,55 @@
+\doxysection{ggml-\/sycl.h}
+\hypertarget{ggml-sycl_8h_source}{}\label{ggml-sycl_8h_source}\index{whisper.cpp/ggml/include/ggml-\/sycl.h@{whisper.cpp/ggml/include/ggml-\/sycl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ \ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ \ Copyright\ (C)\ 2024\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ \ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_NAME\ "{}SYCL"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_MAX\_DEVICES\ 48}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ backend\ API}}
+\DoxyCodeLine{00020\ GGML\_BACKEND\_API\ ggml\_backend\_t\ ggml\_backend\_sycl\_init(\textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_is\_sycl(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ devide\ buffer}}
+\DoxyCodeLine{00025\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_sycl\_buffer\_type(\textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ split\ tensor\ buffer\ that\ splits\ matrices\ by\ rows\ across\ multiple\ devices}}
+\DoxyCodeLine{00028\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_sycl\_split\_buffer\_type(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ tensor\_split);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ pinned\ host\ buffer\ for\ use\ with\ the\ CPU\ backend\ for\ faster\ copies\ between\ CPU\ and\ GPU}}
+\DoxyCodeLine{00031\ GGML\_BACKEND\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_sycl\_host\_buffer\_type(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_sycl\_print\_sycl\_devices(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00034\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_sycl\_get\_gpu\_list(\textcolor{keywordtype}{int}\ *id\_list,\ \textcolor{keywordtype}{int}\ max\_len);}
+\DoxyCodeLine{00035\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_sycl\_get\_device\_description(\textcolor{keywordtype}{int}\ device,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *description,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ description\_size);}
+\DoxyCodeLine{00038\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{int}\ \ ggml\_backend\_sycl\_get\_device\_count();}
+\DoxyCodeLine{00039\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_sycl\_get\_device\_memory(\textcolor{keywordtype}{int}\ device,\ \textcolor{keywordtype}{size\_t}\ *free,\ \textcolor{keywordtype}{size\_t}\ *total);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ SYCL\ doesn't\ support\ registering\ host\ memory,\ keep\ here\ for\ reference}}
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ GGML\_BACKEND\_API\ bool\ ggml\_backend\_sycl\_register\_host\_buffer(void\ *\ buffer,\ size\_t\ size);}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ GGML\_BACKEND\_API\ void\ ggml\_backend\_sycl\_unregister\_host\_buffer(void\ *\ buffer);}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_sycl\_reg(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

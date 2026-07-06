@@ -1,0 +1,31 @@
+\doxysection{naive\+\_\+trie Struct Reference}
+\hypertarget{structnaive__trie}{}\label{structnaive__trie}\index{naive\_trie@{naive\_trie}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structnaive__trie_aa955acced389a36ca8de756b755ea74c}\label{structnaive__trie_aa955acced389a36ca8de756b755ea74c} 
+void {\bfseries insert} (const char \texorpdfstring{$\ast$}{*}key, size\+\_\+t len, int32\+\_\+t value=0)
+\item 
+\Hypertarget{structnaive__trie_ae2506e01ac86baa50dabff315f944203}\label{structnaive__trie_ae2506e01ac86baa50dabff315f944203} 
+std::\+pair$<$ const char \texorpdfstring{$\ast$}{*}, size\+\_\+t $>$ {\bfseries get\+\_\+longest\+\_\+prefix} (const char \texorpdfstring{$\ast$}{*}key, size\+\_\+t len, size\+\_\+t offset=0) const
+\item 
+\Hypertarget{structnaive__trie_ae34379638802c95e0023bb97d68067ca}\label{structnaive__trie_ae34379638802c95e0023bb97d68067ca} 
+const struct \doxymbox{\hyperlink{structnaive__trie}{naive\+\_\+trie}} \texorpdfstring{$\ast$}{*} {\bfseries traverse} (const char c) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structnaive__trie_a1916b44113c489803cafa89dc6c31901}\label{structnaive__trie_a1916b44113c489803cafa89dc6c31901} 
+std::\+map$<$ char, struct \doxymbox{\hyperlink{structnaive__trie}{naive\+\_\+trie}} $>$ {\bfseries children}
+\item 
+\Hypertarget{structnaive__trie_af5c58676e27feb891acc19afcb39d748}\label{structnaive__trie_af5c58676e27feb891acc19afcb39d748} 
+bool {\bfseries has\+\_\+value}
+\item 
+\Hypertarget{structnaive__trie_ae5069032e8bf039dfe585d04e728501c}\label{structnaive__trie_ae5069032e8bf039dfe585d04e728501c} 
+llama\+\_\+token {\bfseries value}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/vocab.\+cpp\end{DoxyCompactItemize}

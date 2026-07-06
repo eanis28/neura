@@ -1,0 +1,117 @@
+\doxysection{unicode.\+h}
+\hypertarget{unicode_8h_source}{}\label{unicode_8h_source}\index{whisper.cpp/examples/talk-\/llama/unicode.h@{whisper.cpp/examples/talk-\/llama/unicode.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ TODO:\ reimplement\ this\ structure\ in\ endian-\/independent\ way}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }unicode\_cpt\_flags\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ UNDEFINED\ \ \ \ \ \ \ =\ 0x0001,}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ NUMBER\ \ \ \ \ \ \ \ \ \ =\ 0x0002,\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{N\}}}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ LETTER\ \ \ \ \ \ \ \ \ \ =\ 0x0004,\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{L\}}}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ SEPARATOR\ \ \ \ \ \ \ =\ 0x0008,\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{Z\}}}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ ACCENT\_MARK\ \ \ \ \ =\ 0x0010,\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{M\}}}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ PUNCTUATION\ \ \ \ \ =\ 0x0020,\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{P\}}}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ SYMBOL\ \ \ \ \ \ \ \ \ \ =\ 0x0040,\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{S\}}}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ CONTROL\ \ \ \ \ \ \ \ \ =\ 0x0080,\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{C\}}}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ MASK\_CATEGORIES\ =\ 0x00FF,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ WHITESPACE\ \ \ \ \ \ =\ 0x0100,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ LOWERCASE\ \ \ \ \ \ \ =\ 0x0200,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ UPPERCASE\ \ \ \ \ \ \ =\ 0x0400,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ NFD\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x0800,}
+\DoxyCodeLine{00023\ \ \ \ \ \};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ codepoint\ type}}
+\DoxyCodeLine{00026\ \ \ \ \ uint16\_t\ is\_undefined\ \ \ :\ 1;}
+\DoxyCodeLine{00027\ \ \ \ \ uint16\_t\ is\_number\ \ \ \ \ \ :\ 1;\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{N\}}}
+\DoxyCodeLine{00028\ \ \ \ \ uint16\_t\ is\_letter\ \ \ \ \ \ :\ 1;\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{L\}}}
+\DoxyCodeLine{00029\ \ \ \ \ uint16\_t\ is\_separator\ \ \ :\ 1;\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{Z\}}}
+\DoxyCodeLine{00030\ \ \ \ \ uint16\_t\ is\_accent\_mark\ :\ 1;\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{M\}}}
+\DoxyCodeLine{00031\ \ \ \ \ uint16\_t\ is\_punctuation\ :\ 1;\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{P\}}}
+\DoxyCodeLine{00032\ \ \ \ \ uint16\_t\ is\_symbol\ \ \ \ \ \ :\ 1;\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{S\}}}
+\DoxyCodeLine{00033\ \ \ \ \ uint16\_t\ is\_control\ \ \ \ \ :\ 1;\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)p\{C\}}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ helper\ flags}}
+\DoxyCodeLine{00035\ \ \ \ \ uint16\_t\ is\_whitespace\ \ :\ 1;\ \ \textcolor{comment}{//\ regex:\ \(\backslash\)s}}
+\DoxyCodeLine{00036\ \ \ \ \ uint16\_t\ is\_lowercase\ \ \ :\ 1;}
+\DoxyCodeLine{00037\ \ \ \ \ uint16\_t\ is\_uppercase\ \ \ :\ 1;}
+\DoxyCodeLine{00038\ \ \ \ \ uint16\_t\ is\_nfd\ \ \ \ \ \ \ \ \ :\ 1;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ decode\ from\ uint16}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{inline}\ unicode\_cpt\_flags(\textcolor{keyword}{const}\ uint16\_t\ flags\ =\ 0)\ \{}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#if\ \_\_BYTE\_ORDER\_\_\ ==\ \_\_ORDER\_LITTLE\_ENDIAN\_\_}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{reinterpret\_cast<}uint16\_t*\textcolor{keyword}{>}(\textcolor{keyword}{this})\ =\ flags;}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#elif\ \_\_BYTE\_ORDER\_\_\ ==\ \_\_ORDER\_BIG\_ENDIAN\_\_}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ is\_undefined\ \ \ =\ (flags\ \&\ UNDEFINED)\ \ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ is\_number\ \ \ \ \ \ =\ (flags\ \&\ NUMBER)\ \ \ \ \ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ is\_letter\ \ \ \ \ \ =\ (flags\ \&\ LETTER)\ \ \ \ \ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ is\_separator\ \ \ =\ (flags\ \&\ SEPARATOR)\ \ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ is\_accent\_mark\ =\ (flags\ \&\ ACCENT\_MARK)\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ is\_punctuation\ =\ (flags\ \&\ PUNCTUATION)\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ is\_symbol\ \ \ \ \ \ =\ (flags\ \&\ SYMBOL)\ \ \ \ \ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ is\_control\ \ \ \ \ =\ (flags\ \&\ CONTROL)\ \ \ \ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ is\_whitespace\ \ =\ (flags\ \&\ WHITESPACE)\ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ is\_lowercase\ \ \ =\ (flags\ \&\ LOWERCASE)\ \ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ is\_uppercase\ \ \ =\ (flags\ \&\ UPPERCASE)\ \ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ is\_nfd\ \ \ \ \ \ \ \ \ =\ (flags\ \&\ NFD)\ \ \ \ \ \ \ \ \ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#error\ Unexpected\ or\ undefined\ \_\_BYTE\_ORDER\_\_}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{inline}\ uint16\_t\ as\_uint()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#if\ \_\_BYTE\_ORDER\_\_\ ==\ \_\_ORDER\_LITTLE\_ENDIAN\_\_}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }uint16\_t*\textcolor{keyword}{>}(\textcolor{keyword}{this});}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#elif\ \_\_BYTE\_ORDER\_\_\ ==\ \_\_ORDER\_BIG\_ENDIAN\_\_}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ uint16\_t\ result\ =}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_undefined\ \ \ *\ UNDEFINED}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_number\ \ \ \ \ \ *\ NUMBER}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_letter\ \ \ \ \ \ *\ LETTER}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_separator\ \ \ *\ SEPARATOR}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_accent\_mark\ *\ ACCENT\_MARK}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_punctuation\ *\ PUNCTUATION}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_symbol\ \ \ \ \ \ *\ SYMBOL}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_control\ \ \ \ \ *\ CONTROL}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_whitespace\ \ *\ WHITESPACE}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_lowercase\ \ \ *\ LOWERCASE}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_uppercase\ \ \ *\ UPPERCASE}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ +\ is\_nfd\ \ \ \ \ \ \ \ \ *\ NFD}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ ;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#error\ Unexpected\ or\ undefined\ \_\_BYTE\_ORDER\_\_}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{inline}\ uint16\_t\ category\_flag()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>as\_uint()\ \&\ MASK\_CATEGORIES;}
+\DoxyCodeLine{00089\ \ \ \ \ \}}
+\DoxyCodeLine{00090\ \};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keywordtype}{size\_t}\ unicode\_len\_utf8(\textcolor{keywordtype}{char}\ src);}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ std::string\ unicode\_cpt\_to\_utf8\ \ (uint32\_t\ cpt);}
+\DoxyCodeLine{00095\ uint32\_t\ \ \ \ unicode\_cpt\_from\_utf8(\textcolor{keyword}{const}\ std::string\ \&\ utf8,\ \textcolor{keywordtype}{size\_t}\ \&\ offset);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ std::vector<uint32\_t>\ unicode\_cpts\_from\_utf8(\textcolor{keyword}{const}\ std::string\ \&\ utf8);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ std::vector<uint32\_t>\ unicode\_cpts\_normalize\_nfd(\textcolor{keyword}{const}\ std::vector<uint32\_t>\ \&\ cpts);}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \doxymbox{\hyperlink{structunicode__cpt__flags}{unicode\_cpt\_flags}}\ unicode\_cpt\_flags\_from\_cpt\ (uint32\_t\ cpt);}
+\DoxyCodeLine{00102\ \doxymbox{\hyperlink{structunicode__cpt__flags}{unicode\_cpt\_flags}}\ unicode\_cpt\_flags\_from\_utf8(\textcolor{keyword}{const}\ std::string\ \&\ utf8);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ std::string\ unicode\_byte\_to\_utf8(uint8\_t\ \textcolor{keywordtype}{byte});}
+\DoxyCodeLine{00105\ uint8\_t\ \ \ \ \ unicode\_utf8\_to\_byte(\textcolor{keyword}{const}\ std::string\ \&\ utf8);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ uint32\_t\ unicode\_tolower(uint32\_t\ cpt);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{keywordtype}{bool}\ unicode\_cpt\_is\_han(uint32\_t\ cpt);}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ std::vector<std::string>\ unicode\_regex\_split(\textcolor{keyword}{const}\ std::string\ \&\ text,\ \textcolor{keyword}{const}\ std::vector<std::string>\ \&\ regex\_exprs);}
+
+\end{DoxyCode}

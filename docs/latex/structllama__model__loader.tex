@@ -1,0 +1,218 @@
+\doxysection{llama\+\_\+model\+\_\+loader Struct Reference}
+\hypertarget{structllama__model__loader}{}\label{structllama__model__loader}\index{llama\_model\_loader@{llama\_model\_loader}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structllama__model__loader_1_1llama__tensor__weight}{llama\+\_\+tensor\+\_\+weight}}
+\item 
+struct \doxymbox{\hyperlink{structllama__model__loader_1_1weight__name__comparer}{weight\+\_\+name\+\_\+comparer}}
+\item 
+struct \doxymbox{\hyperlink{structllama__model__loader_1_1ggml__backend__buft__comparator}{ggml\+\_\+backend\+\_\+buft\+\_\+comparator}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__model__loader_ae60ec51ff05b441297b054cb79699efb}\label{structllama__model__loader_ae60ec51ff05b441297b054cb79699efb} 
+{\bfseries llama\+\_\+model\+\_\+loader} (struct \doxymbox{\hyperlink{structgguf__context}{gguf\+\_\+context}} \texorpdfstring{$\ast$}{*}metadata, llama\+\_\+model\+\_\+set\+\_\+tensor\+\_\+data\+\_\+t set\+\_\+tensor\+\_\+data, void \texorpdfstring{$\ast$}{*}set\+\_\+tensor\+\_\+data\+\_\+ud, const std::\+string \&fname, std::\+vector$<$ std::\+string $>$ \&splits, bool use\+\_\+mmap, bool use\+\_\+direct\+\_\+io, bool check\+\_\+tensors, bool no\+\_\+alloc, const \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} \texorpdfstring{$\ast$}{*}param\+\_\+overrides\+\_\+p, const \doxymbox{\hyperlink{structllama__model__tensor__buft__override}{llama\+\_\+model\+\_\+tensor\+\_\+buft\+\_\+override}} \texorpdfstring{$\ast$}{*}param\+\_\+tensor\+\_\+buft\+\_\+overrides\+\_\+p)
+\item 
+\Hypertarget{structllama__model__loader_af32edf5525a1d47d28b4accb863fe41b}\label{structllama__model__loader_af32edf5525a1d47d28b4accb863fe41b} 
+{\footnotesize template$<$typename T$>$ }\\std::\+enable\+\_\+if$<$ std::\+is\+\_\+integral$<$ T $>$::\+value, bool $>$::\+type {\bfseries get\+\_\+arr\+\_\+n} (const std::\+string \&key, T \&result, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_ab5049337f7bb22cdb506eeeeea652a85}\label{structllama__model__loader_ab5049337f7bb22cdb506eeeeea652a85} 
+{\footnotesize template$<$typename T$>$ }\\std::\+enable\+\_\+if$<$ std::\+is\+\_\+integral$<$ T $>$::\+value, bool $>$::\+type {\bfseries get\+\_\+arr\+\_\+n} (enum llm\+\_\+kv kid, T \&result, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_ab37d759c07f9f005b1965854869e5396}\label{structllama__model__loader_ab37d759c07f9f005b1965854869e5396} 
+{\footnotesize template$<$typename T$>$ }\\bool {\bfseries get\+\_\+arr} (const std::\+string \&key, std::\+vector$<$ T $>$ \&result, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_a5eae7d862781d077e5ae13f60bd4185a}\label{structllama__model__loader_a5eae7d862781d077e5ae13f60bd4185a} 
+{\footnotesize template$<$typename T, size\+\_\+t N\+\_\+\+MAX$>$ }\\bool {\bfseries get\+\_\+arr} (const std::\+string \&key, std::\+array$<$ T, N\+\_\+\+MAX $>$ \&result, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_a7519e793a0073acb55783fb9ea237be1}\label{structllama__model__loader_a7519e793a0073acb55783fb9ea237be1} 
+{\footnotesize template$<$typename T$>$ }\\bool {\bfseries get\+\_\+arr} (enum llm\+\_\+kv kid, T \&result, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_a2c57f881e404c096944970eecb4279bd}\label{structllama__model__loader_a2c57f881e404c096944970eecb4279bd} 
+{\footnotesize template$<$typename T$>$ }\\bool {\bfseries get\+\_\+key} (const std::\+string \&key, T \&result, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_a1746ba90c02e49ddc33f1777d9c5bf2e}\label{structllama__model__loader_a1746ba90c02e49ddc33f1777d9c5bf2e} 
+{\footnotesize template$<$typename T$>$ }\\bool {\bfseries get\+\_\+key} (enum llm\+\_\+kv kid, T \&result, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_ad0204efccf85d9f6fc3c3a2eb71ba6b3}\label{structllama__model__loader_ad0204efccf85d9f6fc3c3a2eb71ba6b3} 
+{\footnotesize template$<$typename T, size\+\_\+t N\+\_\+\+MAX$>$ }\\bool {\bfseries get\+\_\+key\+\_\+or\+\_\+arr} (const std::\+string \&key, std::\+array$<$ T, N\+\_\+\+MAX $>$ \&result, uint32\+\_\+t n, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_a1529dab80b3f41dd8a2d845ea17b7986}\label{structllama__model__loader_a1529dab80b3f41dd8a2d845ea17b7986} 
+{\footnotesize template$<$typename T$>$ }\\bool {\bfseries get\+\_\+key\+\_\+or\+\_\+arr} (enum llm\+\_\+kv kid, T \&result, uint32\+\_\+t n, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_a283c959dfc6fc3a3abc7a72f054dbd1b}\label{structllama__model__loader_a283c959dfc6fc3a3abc7a72f054dbd1b} 
+bool {\bfseries get\+\_\+key\+\_\+or\+\_\+arr} (enum llm\+\_\+kv kid, uint32\+\_\+t \&result, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_a8c1206613feee8b174160db6fa22ccc2}\label{structllama__model__loader_a8c1206613feee8b174160db6fa22ccc2} 
+std::\+string {\bfseries get\+\_\+arch\+\_\+name} () const
+\item 
+\Hypertarget{structllama__model__loader_a9cfcdcbee687db2bbce5ad66c612e36e}\label{structllama__model__loader_a9cfcdcbee687db2bbce5ad66c612e36e} 
+enum llm\+\_\+arch {\bfseries get\+\_\+arch} () const
+\item 
+\Hypertarget{structllama__model__loader_ae9878a57a4ea72fd3f49af60dad9ecac}\label{structllama__model__loader_ae9878a57a4ea72fd3f49af60dad9ecac} 
+const \doxymbox{\hyperlink{structllama__model__loader_1_1llama__tensor__weight}{llama\+\_\+tensor\+\_\+weight}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+weight} (const char \texorpdfstring{$\ast$}{*}name) const
+\item 
+\Hypertarget{structllama__model__loader_a49f7d7114c9c9adf5a7b07a7f1c05a5b}\label{structllama__model__loader_a49f7d7114c9c9adf5a7b07a7f1c05a5b} 
+const \doxymbox{\hyperlink{structllama__model__loader_1_1llama__tensor__weight}{llama\+\_\+tensor\+\_\+weight}} \& {\bfseries require\+\_\+weight} (const char \texorpdfstring{$\ast$}{*}name) const
+\item 
+\Hypertarget{structllama__model__loader_a0a08925d45a890a0aad9dd0ba1222b2f}\label{structllama__model__loader_a0a08925d45a890a0aad9dd0ba1222b2f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+tensor\+\_\+meta} (const char \texorpdfstring{$\ast$}{*}name) const
+\item 
+\Hypertarget{structllama__model__loader_abf2d0c9a11ab8e354231b09504be2aaf}\label{structllama__model__loader_abf2d0c9a11ab8e354231b09504be2aaf} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries require\+\_\+tensor\+\_\+meta} (const std::\+string \&name) const
+\item 
+\Hypertarget{structllama__model__loader_ac6aa8b0b4965c54101ac5c9f0114318e}\label{structllama__model__loader_ac6aa8b0b4965c54101ac5c9f0114318e} 
+const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries check\+\_\+tensor\+\_\+dims} (const std::\+string \&name, const std::\+vector$<$ int64\+\_\+t $>$ \&ne, bool required) const
+\item 
+\Hypertarget{structllama__model__loader_a9846367d72f4bfd0354f49db306b5312}\label{structllama__model__loader_a9846367d72f4bfd0354f49db306b5312} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries create\+\_\+tensor} (const \doxymbox{\hyperlink{structllama__hparams}{llama\+\_\+hparams}} \&hparams, const buft\+\_\+list\+\_\+t \texorpdfstring{$\ast$}{*}buft\+\_\+list\+\_\+cpu, const buft\+\_\+list\+\_\+t \texorpdfstring{$\ast$}{*}buft\+\_\+list\+\_\+input, const buft\+\_\+list\+\_\+t \texorpdfstring{$\ast$}{*}buft\+\_\+list\+\_\+output, const buft\+\_\+list\+\_\+t \texorpdfstring{$\ast$}{*}buft\+\_\+list\+\_\+layer, const \doxymbox{\hyperlink{struct_l_l_m___t_n___i_m_p_l}{LLM\+\_\+\+TN\+\_\+\+IMPL}} \&tn, const std::\+initializer\+\_\+list$<$ int64\+\_\+t $>$ \&ne, int flags)
+\item 
+\Hypertarget{structllama__model__loader_a59511e431d78f3deeb2e45a1809d8e7f}\label{structllama__model__loader_a59511e431d78f3deeb2e45a1809d8e7f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries create\+\_\+tensor\+\_\+as\+\_\+view} (struct \doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}base, const std::\+string \&name, const std::\+initializer\+\_\+list$<$ int64\+\_\+t $>$ \&ne, size\+\_\+t offset, bool required=true)
+\item 
+\Hypertarget{structllama__model__loader_a4e11f80c1586cc9465e549a6151ef2de}\label{structllama__model__loader_a4e11f80c1586cc9465e549a6151ef2de} 
+void {\bfseries done\+\_\+getting\+\_\+tensors} () const
+\item 
+\Hypertarget{structllama__model__loader_ac078bc8315a16ea3c4d068da40de23b5}\label{structllama__model__loader_ac078bc8315a16ea3c4d068da40de23b5} 
+void {\bfseries init\+\_\+mappings} (bool prefetch=true, llama\+\_\+mlocks \texorpdfstring{$\ast$}{*}mlock\+\_\+mmaps=nullptr)
+\item 
+\Hypertarget{structllama__model__loader_a30bac866fe53884bfc4f57085becd454}\label{structllama__model__loader_a30bac866fe53884bfc4f57085becd454} 
+void {\bfseries get\+\_\+mapping\+\_\+range} (size\+\_\+t \texorpdfstring{$\ast$}{*}first, size\+\_\+t \texorpdfstring{$\ast$}{*}last, void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}addr, int idx, \doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx) const
+\item 
+\Hypertarget{structllama__model__loader_a930fdff2f9b770bf0af9ef7ddcc3bfe3}\label{structllama__model__loader_a930fdff2f9b770bf0af9ef7ddcc3bfe3} 
+void {\bfseries load\+\_\+data\+\_\+for} (struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}cur) const
+\item 
+\Hypertarget{structllama__model__loader_afa1d76ae419f63b26127a458062717ba}\label{structllama__model__loader_afa1d76ae419f63b26127a458062717ba} 
+bool {\bfseries load\+\_\+all\+\_\+data} (struct \doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, llama\+\_\+buf\+\_\+map \&bufs, llama\+\_\+mlocks \texorpdfstring{$\ast$}{*}lmlocks, llama\+\_\+progress\+\_\+callback progress\+\_\+callback, void \texorpdfstring{$\ast$}{*}progress\+\_\+callback\+\_\+user\+\_\+data)
+\item 
+\Hypertarget{structllama__model__loader_afa78ae93934617f62fc137f3745c14eb}\label{structllama__model__loader_afa78ae93934617f62fc137f3745c14eb} 
+std::\+string {\bfseries ftype\+\_\+name} () const
+\item 
+\Hypertarget{structllama__model__loader_a2668b2cd5ba1b2abcbb640209188c202}\label{structllama__model__loader_a2668b2cd5ba1b2abcbb640209188c202} 
+void {\bfseries print\+\_\+info} () const
+\item 
+\Hypertarget{structllama__model__loader_a3ebd36e077c468dd71fcd4aef158f983}\label{structllama__model__loader_a3ebd36e077c468dd71fcd4aef158f983} 
+template$<$$>$ bool {\bfseries get\+\_\+key} (enum llm\+\_\+kv kid, enum llama\+\_\+pooling\+\_\+type \&result, bool required)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__model__loader_a3ed64cad88baf8ea94a5628588a44c67}\label{structllama__model__loader_a3ed64cad88baf8ea94a5628588a44c67} 
+int {\bfseries n\+\_\+kv} = 0
+\item 
+\Hypertarget{structllama__model__loader_aad147dd912d4a150c28eeb20c5087c02}\label{structllama__model__loader_aad147dd912d4a150c28eeb20c5087c02} 
+int {\bfseries n\+\_\+tensors} = 0
+\item 
+\Hypertarget{structllama__model__loader_a1a51da4bcb6f7042afe13de9f7cc2a6a}\label{structllama__model__loader_a1a51da4bcb6f7042afe13de9f7cc2a6a} 
+int {\bfseries n\+\_\+created} = 0
+\item 
+\Hypertarget{structllama__model__loader_a64c1aa3e41ae88bbbf75d153d7b6a256}\label{structllama__model__loader_a64c1aa3e41ae88bbbf75d153d7b6a256} 
+uint64\+\_\+t {\bfseries n\+\_\+elements} = 0
+\item 
+\Hypertarget{structllama__model__loader_a57282f8081ee722c44ca82b0f6922c1b}\label{structllama__model__loader_a57282f8081ee722c44ca82b0f6922c1b} 
+size\+\_\+t {\bfseries n\+\_\+bytes} = 0
+\item 
+\Hypertarget{structllama__model__loader_a74f30580f2e6a16516318f0c2483ec79}\label{structllama__model__loader_a74f30580f2e6a16516318f0c2483ec79} 
+bool {\bfseries use\+\_\+mmap} = false
+\item 
+\Hypertarget{structllama__model__loader_ab4a6c19bc3ffad812505c42504ad5311}\label{structllama__model__loader_ab4a6c19bc3ffad812505c42504ad5311} 
+bool {\bfseries use\+\_\+direct\+\_\+io} = false
+\item 
+\Hypertarget{structllama__model__loader_a1f933e43e91eb688cb747c763f5ef8a2}\label{structllama__model__loader_a1f933e43e91eb688cb747c763f5ef8a2} 
+bool {\bfseries check\+\_\+tensors}
+\item 
+\Hypertarget{structllama__model__loader_a72e37dd3f2a364a0d2a933f930884c22}\label{structllama__model__loader_a72e37dd3f2a364a0d2a933f930884c22} 
+bool {\bfseries no\+\_\+alloc}
+\item 
+\Hypertarget{structllama__model__loader_a1cdb0986559aedefa94e862dade8a6a6}\label{structllama__model__loader_a1cdb0986559aedefa94e862dade8a6a6} 
+llama\+\_\+files {\bfseries files}
+\item 
+\Hypertarget{structllama__model__loader_a9121f4a56972616aa00ed99b95f3474b}\label{structllama__model__loader_a9121f4a56972616aa00ed99b95f3474b} 
+llama\+\_\+ftype {\bfseries ftype}
+\item 
+\Hypertarget{structllama__model__loader_ac7ff658279b5599ffdd52c7a31d02a0c}\label{structllama__model__loader_ac7ff658279b5599ffdd52c7a31d02a0c} 
+llama\+\_\+fver {\bfseries fver}
+\item 
+\Hypertarget{structllama__model__loader_aceb2843e917a2c8621608d14eb349c69}\label{structllama__model__loader_aceb2843e917a2c8621608d14eb349c69} 
+llama\+\_\+mmaps {\bfseries mappings}
+\item 
+\Hypertarget{structllama__model__loader_aff8d87ff0e1b4942addb7669a07b3bc1}\label{structllama__model__loader_aff8d87ff0e1b4942addb7669a07b3bc1} 
+std::\+map$<$ std::\+string, \doxymbox{\hyperlink{structllama__model__loader_1_1llama__tensor__weight}{llama\+\_\+tensor\+\_\+weight}}, \doxymbox{\hyperlink{structllama__model__loader_1_1weight__name__comparer}{weight\+\_\+name\+\_\+comparer}} $>$ {\bfseries weights\+\_\+map}
+\item 
+\Hypertarget{structllama__model__loader_a54861acbd3676a13094c2e4fc3afd613}\label{structllama__model__loader_a54861acbd3676a13094c2e4fc3afd613} 
+std::\+unordered\+\_\+map$<$ std::\+string, \doxymbox{\hyperlink{structllama__model__kv__override}{llama\+\_\+model\+\_\+kv\+\_\+override}} $>$ {\bfseries kv\+\_\+overrides}
+\item 
+\Hypertarget{structllama__model__loader_a60be30ba8d84b0bd3d65be91cbf1207d}\label{structllama__model__loader_a60be30ba8d84b0bd3d65be91cbf1207d} 
+const \doxymbox{\hyperlink{structllama__model__tensor__buft__override}{llama\+\_\+model\+\_\+tensor\+\_\+buft\+\_\+override}} \texorpdfstring{$\ast$}{*} {\bfseries tensor\+\_\+buft\+\_\+overrides}
+\item 
+\Hypertarget{structllama__model__loader_a141b8d2022ee6106c5933a3ece16a990}\label{structllama__model__loader_a141b8d2022ee6106c5933a3ece16a990} 
+gguf\+\_\+context\+\_\+ptr {\bfseries metadata\+\_\+ptr}
+\item 
+\Hypertarget{structllama__model__loader_a378dcefc7f40016814894e1219dec4dd}\label{structllama__model__loader_a378dcefc7f40016814894e1219dec4dd} 
+struct \doxymbox{\hyperlink{structgguf__context}{gguf\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries metadata}
+\item 
+\Hypertarget{structllama__model__loader_a6ca18bb7204d5ea807e1daedda6bf6f9}\label{structllama__model__loader_a6ca18bb7204d5ea807e1daedda6bf6f9} 
+llama\+\_\+model\+\_\+set\+\_\+tensor\+\_\+data\+\_\+t {\bfseries set\+\_\+tensor\+\_\+data}
+\item 
+\Hypertarget{structllama__model__loader_af9ddccc6501c3e8adfcb7dc1e4a94a8f}\label{structllama__model__loader_af9ddccc6501c3e8adfcb7dc1e4a94a8f} 
+void \texorpdfstring{$\ast$}{*} {\bfseries set\+\_\+tensor\+\_\+data\+\_\+ud}
+\item 
+\Hypertarget{structllama__model__loader_abc11e251a33bd15f2317f8034997181d}\label{structllama__model__loader_abc11e251a33bd15f2317f8034997181d} 
+std::\+vector$<$ ggml\+\_\+context\+\_\+ptr $>$ {\bfseries contexts}
+\item 
+\Hypertarget{structllama__model__loader_a82444fc510db80a1a4f02e00038e0b4e}\label{structllama__model__loader_a82444fc510db80a1a4f02e00038e0b4e} 
+std::\+string {\bfseries arch\+\_\+name}
+\item 
+\Hypertarget{structllama__model__loader_ae20f4c0ff48e4dfc6488dd43d7097442}\label{structllama__model__loader_ae20f4c0ff48e4dfc6488dd43d7097442} 
+\doxymbox{\hyperlink{struct_l_l_m___k_v}{LLM\+\_\+\+KV}} {\bfseries llm\+\_\+kv} = \doxymbox{\hyperlink{struct_l_l_m___k_v}{LLM\+\_\+\+KV}}(LLM\+\_\+\+ARCH\+\_\+\+UNKNOWN)
+\item 
+\Hypertarget{structllama__model__loader_a4c416603b573be106640da17049163e8}\label{structllama__model__loader_a4c416603b573be106640da17049163e8} 
+size\+\_\+t {\bfseries size\+\_\+done} = 0
+\item 
+\Hypertarget{structllama__model__loader_a6a27c58e3bdef01ad690809c34a602a4}\label{structllama__model__loader_a6a27c58e3bdef01ad690809c34a602a4} 
+size\+\_\+t {\bfseries size\+\_\+data} = 0
+\item 
+\Hypertarget{structllama__model__loader_aa4976d6cddf14db1c5f091353cfd8324}\label{structllama__model__loader_aa4976d6cddf14db1c5f091353cfd8324} 
+std::\+vector$<$ std::\+pair$<$ size\+\_\+t, size\+\_\+t $>$ $>$ {\bfseries mmaps\+\_\+used}
+\item 
+\Hypertarget{structllama__model__loader_ad3dd5f63df360246ebb274bb82b1add9}\label{structllama__model__loader_ad3dd5f63df360246ebb274bb82b1add9} 
+std::\+map$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t, ggml\+\_\+context\+\_\+ptr, \doxymbox{\hyperlink{structllama__model__loader_1_1ggml__backend__buft__comparator}{ggml\+\_\+backend\+\_\+buft\+\_\+comparator}} $>$ {\bfseries ctx\+\_\+map}
+\item 
+\Hypertarget{structllama__model__loader_a157952260a2d77b1da2b2b4b51f82cb8}\label{structllama__model__loader_a157952260a2d77b1da2b2b4b51f82cb8} 
+size\+\_\+t {\bfseries n\+\_\+tensors\+\_\+moved} = 0
+\item 
+\Hypertarget{structllama__model__loader_ab50ebbc1379ec324482acccd343d21b2}\label{structllama__model__loader_ab50ebbc1379ec324482acccd343d21b2} 
+std::\+string {\bfseries first\+\_\+tensor\+\_\+moved\+\_\+name}
+\item 
+\Hypertarget{structllama__model__loader_a212abbe8af3ea342fd7c0df4c8787279}\label{structllama__model__loader_a212abbe8af3ea342fd7c0df4c8787279} 
+std::\+string {\bfseries first\+\_\+tensor\+\_\+moved\+\_\+type\+\_\+name}
+\item 
+\Hypertarget{structllama__model__loader_a90dfc459e1011a54c02b6827342dc1ac}\label{structllama__model__loader_a90dfc459e1011a54c02b6827342dc1ac} 
+ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t {\bfseries first\+\_\+moved\+\_\+from\+\_\+buft} = nullptr
+\item 
+\Hypertarget{structllama__model__loader_a20126fdc60432b8e9143c3c71c13fe02}\label{structllama__model__loader_a20126fdc60432b8e9143c3c71c13fe02} 
+ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t {\bfseries first\+\_\+moved\+\_\+to\+\_\+buft} = nullptr
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__model__loader_a220dfc09f0aedd09dde5f7c961292073}\label{structllama__model__loader_a220dfc09f0aedd09dde5f7c961292073} 
+static const int {\bfseries TENSOR\+\_\+\+NOT\+\_\+\+REQUIRED} = 1 $<$$<$ 0
+\item 
+\Hypertarget{structllama__model__loader_a6314cb0a19ea0478636d26560fd6d4a4}\label{structllama__model__loader_a6314cb0a19ea0478636d26560fd6d4a4} 
+static const int {\bfseries TENSOR\+\_\+\+DUPLICATED} = 1 $<$$<$ 1
+\item 
+\Hypertarget{structllama__model__loader_a52a5951eb1e1e7706ae8d3627da00c20}\label{structllama__model__loader_a52a5951eb1e1e7706ae8d3627da00c20} 
+static const int {\bfseries TENSOR\+\_\+\+SKIP} = 1 $<$$<$ 2
+\item 
+\Hypertarget{structllama__model__loader_a5967edb7b49a99c95301882b5682552f}\label{structllama__model__loader_a5967edb7b49a99c95301882b5682552f} 
+static const int {\bfseries TENSOR\+\_\+\+SKIP\+\_\+\+IF\+\_\+\+VIRTUAL} = 1 $<$$<$ 3
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/model-\/loader.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/model-\/loader.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,118 @@
+\doxysection{whisper.\+cpp/\+examples/\+addon.node Directory Reference}
+\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615}{}\label{dir_15a9c0c5b3cedb04fa94f55689506615}\index{whisper.cpp/examples/addon.node Directory Reference@{whisper.cpp/examples/addon.node Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md51}{}\doxysubsection{\texorpdfstring{whisper.\+cpp Node.\+js addon}{whisper.\+cpp Node.\+js addon}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md51}
+This is an addon demo that can {\bfseries{perform whisper model reasoning in {\ttfamily node} and {\ttfamily electron} environments}}, based on \href{https://github.com/cmake-js/cmake-js}{\texttt{cmake-\/js}}. It can be used as a reference for using the whisper.\+cpp project in other node projects.
+
+This addon now supports {\bfseries{Voice Activity Detection (VAD)}} for improved transcription performance.\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md52}{}\doxysubsection{\texorpdfstring{Install}{Install}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md52}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install}
+
+\end{DoxyCode}
+\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md53}{}\doxysubsection{\texorpdfstring{Compile}{Compile}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md53}
+Make sure it is in the project root directory and compiled with make-\/js.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npx\ cmake-\/js\ compile\ -\/T\ addon.node\ -\/B\ Release}
+
+\end{DoxyCode}
+
+
+For Electron addon and cmake-\/js options, you can see \href{https://github.com/cmake-js/cmake-js}{\texttt{cmake-\/js}} and make very few configuration changes.
+
+\begin{quote}
+Such as appointing special cmake path:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npx\ cmake-\/js\ compile\ -\/c\ 'xxx/cmake'\ -\/T\ addon.node\ -\/B\ Release}
+
+\end{DoxyCode}
+ \end{quote}
+\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md54}{}\doxysubsection{\texorpdfstring{Run}{Run}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md54}
+\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md55}{}\doxysubsubsection{\texorpdfstring{Basic Usage}{Basic Usage}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md55}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ examples/addon.node}
+\DoxyCodeLine{}
+\DoxyCodeLine{node\ index.js\ -\/-\/language='language'\ -\/-\/model='model-\/path'\ -\/-\/fname\_inp='file-\/path'}
+
+\end{DoxyCode}
+\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md56}{}\doxysubsubsection{\texorpdfstring{VAD (Voice Activity Detection) Usage}{VAD (Voice Activity Detection) Usage}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md56}
+Run the VAD example with performance comparison:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ vad-\/example.js}
+
+\end{DoxyCode}
+\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md57}{}\doxysubsection{\texorpdfstring{Voice Activity Detection (VAD) Support}{Voice Activity Detection (VAD) Support}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md57}
+VAD can significantly improve transcription performance by only processing speech segments, which is especially beneficial for audio files with long periods of silence.\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md58}{}\doxysubsubsection{\texorpdfstring{VAD Model Setup}{VAD Model Setup}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md58}
+Before using VAD, download a VAD model:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ From\ the\ whisper.cpp\ root\ directory}
+\DoxyCodeLine{./models/download-\/vad-\/model.sh\ silero-\/v6.2.0}
+
+\end{DoxyCode}
+\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md59}{}\doxysubsubsection{\texorpdfstring{VAD Parameters}{VAD Parameters}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md59}
+All VAD parameters are optional and have sensible defaults:\+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily vad}:\+ Enable VAD (default:\+ false)
+\item {\ttfamily vad\+\_\+model}:\+ Path to VAD model file (required when VAD enabled)
+\item {\ttfamily vad\+\_\+threshold}:\+ Speech detection threshold 0.\+0-\/1.\+0 (default:\+ 0.\+5)
+\item {\ttfamily vad\+\_\+min\+\_\+speech\+\_\+duration\+\_\+ms}:\+ Min speech duration in ms (default:\+ 250)
+\item {\ttfamily vad\+\_\+min\+\_\+silence\+\_\+duration\+\_\+ms}:\+ Min silence duration in ms (default:\+ 100)
+\item {\ttfamily vad\+\_\+max\+\_\+speech\+\_\+duration\+\_\+s}:\+ Max speech duration in seconds (default:\+ FLT\+\_\+\+MAX)
+\item {\ttfamily vad\+\_\+speech\+\_\+pad\+\_\+ms}:\+ Speech padding in ms (default:\+ 30)
+\item {\ttfamily vad\+\_\+samples\+\_\+overlap}:\+ Sample overlap 0.\+0-\/1.\+0 (default:\+ 0.\+1)
+\end{DoxyItemize}\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md60}{}\doxysubsubsection{\texorpdfstring{Java\+Script API Example}{Java\+Script API Example}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md60}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ path\ =\ require("{}path"{});}
+\DoxyCodeLine{const\ \{\ whisper\ \}\ =\ require(path.join(\_\_dirname,\ "{}../../build/Release/addon.node"{}));}
+\DoxyCodeLine{const\ \{\ promisify\ \}\ =\ require("{}util"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ whisperAsync\ =\ promisify(whisper);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ With\ VAD\ enabled}
+\DoxyCodeLine{const\ vadParams\ =\ \{}
+\DoxyCodeLine{\ \ language:\ "{}en"{},}
+\DoxyCodeLine{\ \ model:\ path.join(\_\_dirname,\ "{}../../models/ggml-\/base.en.bin"{}),}
+\DoxyCodeLine{\ \ fname\_inp:\ path.join(\_\_dirname,\ "{}../../samples/jfk.wav"{}),}
+\DoxyCodeLine{\ \ vad:\ true,}
+\DoxyCodeLine{\ \ vad\_model:\ path.join(\_\_dirname,\ "{}../../models/ggml-\/silero-\/v6.2.0.bin"{}),}
+\DoxyCodeLine{\ \ vad\_threshold:\ 0.5,}
+\DoxyCodeLine{\ \ progress\_callback:\ (progress)\ =>\ console.log(`Progress:\ \$\{progress\}\%`)}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{whisperAsync(vadParams).then(result\ =>\ console.log(result));}
+
+\end{DoxyCode}
+\hypertarget{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md61}{}\doxysubsection{\texorpdfstring{Supported Parameters}{Supported Parameters}}\label{dir_15a9c0c5b3cedb04fa94f55689506615_autotoc_md61}
+Both traditional whisper.\+cpp parameters and new VAD parameters are supported:\+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily language}:\+ Language code (e.\+g., "{}en"{}, "{}es"{}, "{}fr"{})
+\item {\ttfamily model}:\+ Path to whisper model file
+\item {\ttfamily fname\+\_\+inp}:\+ Path to input audio file
+\item {\ttfamily use\+\_\+gpu}:\+ Enable GPU acceleration (default:\+ true)
+\item {\ttfamily flash\+\_\+attn}:\+ Enable flash attention (default:\+ false)
+\item {\ttfamily no\+\_\+prints}:\+ Disable console output (default:\+ false)
+\item {\ttfamily no\+\_\+timestamps}:\+ Disable timestamps (default:\+ false)
+\item {\ttfamily detect\+\_\+language}:\+ Auto-\/detect language (default:\+ false)
+\item {\ttfamily audio\+\_\+ctx}:\+ Audio context size (default:\+ 0)
+\item {\ttfamily max\+\_\+len}:\+ Maximum segment length (default:\+ 0)
+\item {\ttfamily max\+\_\+context}:\+ Maximum context size (default:\+ -\/1)
+\item {\ttfamily prompt}:\+ Initial prompt for decoder
+\item {\ttfamily comma\+\_\+in\+\_\+time}:\+ Use comma in timestamps (default:\+ true)
+\item {\ttfamily print\+\_\+progress}:\+ Print progress info (default:\+ false)
+\item {\ttfamily progress\+\_\+callback}:\+ Progress callback function
+\item VAD parameters (see above section) 
+\end{DoxyItemize}

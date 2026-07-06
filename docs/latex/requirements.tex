@@ -1,0 +1,22 @@
+\chapter{Requirements }
+\hypertarget{requirements}{}\label{requirements}\index{Requirements@{Requirements}}
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{bg=\tableheadbgcolor,font=\bfseries}ID&\SetCell{bg=\tableheadbgcolor,font=\bfseries}\\
+\SetCell{h}\label{requirements_The}%
+\Hypertarget{requirements_The}%
+\doxylink{requirements_The}{The} &class satisfies the following concept requirements:\+a template for a bidirectional iterator for the \doxylink{classbasic__json}{basic\+\_\+json} class This class implements a both iterators (iterator and const\+\_\+iterator) for the \doxylink{classbasic__json}{basic\+\_\+json} class. ~\newline
+\begin{DoxyNote}{Note}
+An iterator is called {\itshape initialized} when a pointer to a JSON value has been set (e.\+g., by a constructor or a copy assignment). If the iterator is default-\/constructed, it is {\itshape uninitialized} and most methods are undefined. \doxylink{requirements_The}{The} library uses assertions to detect calls on uninitialized iterators.\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}
+\end{DoxyNote}
+
+\begin{DoxyItemize}
+\item \href{https://en.cppreference.com/w/cpp/named_req/BidirectionalIterator}{\texttt{Bidirectional\+Iterator}}:\+ \doxylink{requirements_The}{The} iterator that can be moved can be moved in both directions (i.\+e. incremented and decremented). \begin{DoxySince}{Since}
+version 1.\+0.\+0, simplified in version 2.\+0.\+9, change to bidirectional iterators in version 3.\+0.\+0 (see \href{https://github.com/nlohmann/json/issues/593}{\texttt{https:\+/\+/\+github.\+com/\+nlohmann/\+json/\+issues/\+593}}) 
+\end{DoxySince}
+
+\end{DoxyItemize}\\
+\end{DoxyTable}
+ \hypertarget{requirements_missing_satisfies}{}\doxysection{\texorpdfstring{Unsatisfied Requirements}{Unsatisfied Requirements}}\label{requirements_missing_satisfies}
+ \doxylink{requirements_The}{The} requirement \doxylink{requirements_The}{The} does not have a \textquotesingle{}satisfies\textquotesingle{} relation.   \hypertarget{requirements_missing_verifies}{}\doxysection{\texorpdfstring{Unverified Requirements}{Unverified Requirements}}\label{requirements_missing_verifies}
+ \doxylink{requirements_The}{The} requirement \doxylink{requirements_The}{The} does not have a \textquotesingle{}verifies\textquotesingle{} relation.  

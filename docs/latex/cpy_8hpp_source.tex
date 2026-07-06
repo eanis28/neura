@@ -1,0 +1,229 @@
+\doxysection{cpy.\+hpp}
+\hypertarget{cpy_8hpp_source}{}\label{cpy_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/cpy.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/cpy.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_CPY\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_CPY\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}common.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <float.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{typedef}\ void\ (*cpy\_kernel\_t)(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cx,\ \textcolor{keywordtype}{char}\ *\ cdst);}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ best\_index\_int8(\textcolor{keywordtype}{int}\ n,\ \textcolor{keyword}{const}\ int8\_t\ *\ val,\ \textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ <=\ val[0])\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00012\ \ \ \ \ \}}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ >=\ val[n\ -\/\ 1])\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ n\ -\/\ 1;}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{int}\ ml\ =\ 0,\ mu\ =\ n\ -\/\ 1;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordflow}{while}\ (mu\ -\/\ ml\ >\ 1)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ mav\ =\ (ml\ +\ mu)\ /\ 2;}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ <\ val[mav])\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ mu\ =\ mav;}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ ml\ =\ mav;}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{return}\ x\ -\/\ val[mu\ -\/\ 1]\ <\ val[mu]\ -\/\ x\ ?\ mu\ -\/\ 1\ :\ mu;}
+\DoxyCodeLine{00026\ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ cpy\_blck\_f32\_q8\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cxi,\ \textcolor{keywordtype}{char}\ *\ cdsti)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ xi\ \ \ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ cxi;}
+\DoxyCodeLine{00030\ \ \ \ \ block\_q8\_0\ *\ \ dsti\ =\ (block\_q8\_0\ *)\ cdsti;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{float}\ amax\ =\ 0.0f;\ \ \textcolor{comment}{//\ absolute\ max}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK8\_0;\ j++)\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v\ =\ xi[j];}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ amax\ \ \ \ \ \ \ \ \ \ =\ sycl::fmax(amax,\ sycl::fabs((\textcolor{keywordtype}{float})\ v));}
+\DoxyCodeLine{00037\ \ \ \ \ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ \ =\ amax\ /\ ((1\ <<\ 7)\ -\/\ 1);}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \textcolor{keywordtype}{id}\ =\ d\ ?\ 1.0f\ /\ d\ :\ 0.0f;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ dsti-\/>d\ =\ d;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK8\_0;\ ++j)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x0\ =\ xi[j]\ *\ id;}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ dsti-\/>qs[j]\ =\ sycl::round((\textcolor{keywordtype}{float})\ x0);}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ cpy\_blck\_f32\_q4\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cxi,\ \textcolor{keywordtype}{char}\ *\ cdsti)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ xi\ \ \ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ cxi;}
+\DoxyCodeLine{00053\ \ \ \ \ block\_q4\_0\ *\ \ dsti\ =\ (block\_q4\_0\ *)\ cdsti;}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{float}\ amax\ =\ 0.0f;}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{float}\ vmax\ =\ 0.0f;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK4\_0;\ ++j)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v\ =\ xi[j];}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (amax\ <\ sycl::fabs((\textcolor{keywordtype}{float})\ v))\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ amax\ =\ sycl::fabs((\textcolor{keywordtype}{float})\ v);}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ vmax\ =\ v;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ \ =\ vmax\ /\ -\/8;}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \textcolor{keywordtype}{id}\ =\ d\ ?\ 1.0f\ /\ d\ :\ 0.0f;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ dsti-\/>d\ =\ d;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK4\_0\ /\ 2;\ ++j)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x0\ =\ xi[0\ +\ j]\ *\ id;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x1\ =\ xi[QK4\_0\ /\ 2\ +\ j]\ *\ id;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi0\ =\ dpct::min(15,\ (int8\_t)\ (x0\ +\ 8.5f));}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi1\ =\ dpct::min(15,\ (int8\_t)\ (x1\ +\ 8.5f));}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ dsti-\/>qs[j]\ =\ xi0;}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ dsti-\/>qs[j]\ |=\ xi1\ <<\ 4;}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ cpy\_blck\_f32\_q4\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cxi,\ \textcolor{keywordtype}{char}\ *\ cdsti)\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ xi\ \ \ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ cxi;}
+\DoxyCodeLine{00085\ \ \ \ \ block\_q4\_1\ *\ \ dsti\ =\ (block\_q4\_1\ *)\ cdsti;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{float}\ vmin\ =\ FLT\_MAX;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{float}\ vmax\ =\ -\/FLT\_MAX;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK4\_1;\ ++j)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v\ =\ xi[j];}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ vmin\ =\ sycl::min(v,\ vmin);}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ vmax\ =\ sycl::max(v,\ vmax);}
+\DoxyCodeLine{00095\ \ \ \ \ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ \ =\ (vmax\ -\/\ vmin)\ /\ ((1\ <<\ 4)\ -\/\ 1);}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \textcolor{keywordtype}{id}\ =\ d\ ?\ 1.0f\ /\ d\ :\ 0.0f;}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ dsti-\/>dm.x()\ =\ d;}
+\DoxyCodeLine{00101\ \ \ \ \ dsti-\/>dm.y()\ =\ vmin;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK4\_1\ /\ 2;\ ++j)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x0\ =\ (xi[0\ +\ j]\ -\/\ vmin)\ *\ \textcolor{keywordtype}{id};}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x1\ =\ (xi[QK4\_1\ /\ 2\ +\ j]\ -\/\ vmin)\ *\ \textcolor{keywordtype}{id};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi0\ =\ dpct::min(15,\ (int8\_t)\ (x0\ +\ 0.5f));}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi1\ =\ dpct::min(15,\ (int8\_t)\ (x1\ +\ 0.5f));}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ dsti-\/>qs[j]\ =\ xi0;}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ dsti-\/>qs[j]\ |=\ xi1\ <<\ 4;}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ \}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ cpy\_blck\_f32\_q5\_0(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cxi,\ \textcolor{keywordtype}{char}\ *\ cdsti)\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ xi\ \ \ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ cxi;}
+\DoxyCodeLine{00117\ \ \ \ \ block\_q5\_0\ *\ \ dsti\ =\ (block\_q5\_0\ *)\ cdsti;}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{float}\ amax\ =\ 0.0f;}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{float}\ vmax\ =\ 0.0f;}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK5\_0;\ ++j)\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v\ =\ xi[j];}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (amax\ <\ sycl::fabs((\textcolor{keywordtype}{float})\ v))\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ amax\ =\ sycl::fabs((\textcolor{keywordtype}{float})\ v);}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ vmax\ =\ v;}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00128\ \ \ \ \ \}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ \ =\ vmax\ /\ -\/16;}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \textcolor{keywordtype}{id}\ =\ d\ ?\ 1.0f\ /\ d\ :\ 0.0f;}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ dsti-\/>d\ =\ d;}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ uint32\_t\ qh\ =\ 0;}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK5\_0\ /\ 2;\ ++j)\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x0\ =\ xi[0\ +\ j]\ *\ id;}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x1\ =\ xi[QK5\_0\ /\ 2\ +\ j]\ *\ id;}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi0\ =\ dpct::min(31,\ (int8\_t)\ (x0\ +\ 16.5f));}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi1\ =\ dpct::min(31,\ (int8\_t)\ (x1\ +\ 16.5f));}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ dsti-\/>qs[j]\ =\ (xi0\ \&\ 0xf)\ |\ ((xi1\ \&\ 0xf)\ <<\ 4);}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ qh\ |=\ ((xi0\ \&\ 0x10u)\ >>\ 4)\ <<\ (j\ +\ 0);}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ qh\ |=\ ((xi1\ \&\ 0x10u)\ >>\ 4)\ <<\ (j\ +\ QK5\_0\ /\ 2);}
+\DoxyCodeLine{00146\ \ \ \ \ \}}
+\DoxyCodeLine{00147\ \ \ \ \ memcpy(dsti-\/>qh,\ \&qh,\ \textcolor{keyword}{sizeof}(qh));}
+\DoxyCodeLine{00148\ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ cpy\_blck\_f32\_q5\_1(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cxi,\ \textcolor{keywordtype}{char}\ *\ cdsti)\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ xi\ \ \ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ cxi;}
+\DoxyCodeLine{00152\ \ \ \ \ block\_q5\_1\ *\ \ dsti\ =\ (block\_q5\_1\ *)\ cdsti;}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordtype}{float}\ min\ =\ xi[0];}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{float}\ max\ =\ xi[0];}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 1;\ j\ <\ QK5\_1;\ ++j)\ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v\ =\ xi[j];}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ min\ \ \ \ \ \ \ \ \ \ \ =\ v\ <\ min\ ?\ v\ :\ min;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ max\ \ \ \ \ \ \ \ \ \ \ =\ v\ >\ max\ ?\ v\ :\ max;}
+\DoxyCodeLine{00161\ \ \ \ \ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ d\ \ =\ (max\ -\/\ min)\ /\ 31;}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \textcolor{keywordtype}{id}\ =\ d\ ?\ 1.0f\ /\ d\ :\ 0.0f;}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ dsti-\/>dm.x()\ =\ d;}
+\DoxyCodeLine{00167\ \ \ \ \ dsti-\/>dm.y()\ =\ min;}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ uint32\_t\ qh\ =\ 0;}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK5\_1\ /\ 2;\ ++j)\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x0\ =\ (xi[0\ +\ j]\ -\/\ min)\ *\ \textcolor{keywordtype}{id};}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ x1\ =\ (xi[QK5\_1\ /\ 2\ +\ j]\ -\/\ min)\ *\ \textcolor{keywordtype}{id};}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi0\ =\ (uint8\_t)\ (x0\ +\ 0.5f);}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi1\ =\ (uint8\_t)\ (x1\ +\ 0.5f);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ dsti-\/>qs[j]\ =\ (xi0\ \&\ 0xf)\ |\ ((xi1\ \&\ 0xf)\ <<\ 4);}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ qh\ |=\ ((xi0\ \&\ 0x10u)\ >>\ 4)\ <<\ (j\ +\ 0);}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ qh\ |=\ ((xi1\ \&\ 0x10u)\ >>\ 4)\ <<\ (j\ +\ QK5\_1\ /\ 2);}
+\DoxyCodeLine{00180\ \ \ \ \ \}}
+\DoxyCodeLine{00181\ \ \ \ \ memcpy(dsti-\/>qh,\ \&qh,\ \textcolor{keyword}{sizeof}(qh));}
+\DoxyCodeLine{00182\ \}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ cpy\_blck\_f32\_iq4\_nl(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ cxi,\ \textcolor{keywordtype}{char}\ *\ cdsti)\ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ \ xi\ \ \ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ cxi;}
+\DoxyCodeLine{00186\ \ \ \ \ block\_iq4\_nl\ *\ dsti\ =\ (block\_iq4\_nl\ *)\ cdsti;}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keywordtype}{float}\ amax\ =\ 0.0f;}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keywordtype}{float}\ vmax\ =\ 0.0f;}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK4\_NL;\ ++j)\ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v\ =\ xi[j];}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (amax\ <\ sycl::fabs((\textcolor{keywordtype}{float})\ v))\ \{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ amax\ =\ sycl::fabs((\textcolor{keywordtype}{float})\ v);}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ vmax\ =\ v;}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00197\ \ \ \ \ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ d\ \ =\ vmax\ /\ kvalues\_iq4nl[0];}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \textcolor{keywordtype}{id}\ =\ d\ ?\ 1.0f\ /\ d\ :\ 0.0f;}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keywordtype}{float}\ sumqx\ =\ 0,\ sumq2\ =\ 0;}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ QK4\_NL\ /\ 2;\ ++j)\ \{}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ x0\ \ =\ xi[0\ +\ j]\ *\ id;}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ x1\ \ =\ xi[QK4\_NL\ /\ 2\ +\ j]\ *\ id;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi0\ =\ best\_index\_int8(16,\ kvalues\_iq4nl,\ x0);}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ xi1\ =\ best\_index\_int8(16,\ kvalues\_iq4nl,\ x1);}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ dsti-\/>qs[j]\ \ \ \ \ \ \ =\ xi0\ |\ (xi1\ <<\ 4);}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v0\ \ \ \ =\ kvalues\_iq4nl[xi0];}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v1\ \ \ \ =\ kvalues\_iq4nl[xi1];}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ w0\ \ \ \ =\ xi[0\ +\ j]\ *\ xi[0\ +\ j];}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ w1\ \ \ \ =\ xi[QK4\_NL\ /\ 2\ +\ j]\ *\ xi[QK4\_NL\ /\ 2\ +\ j];}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ sumqx\ +=\ w0\ *\ v0\ *\ xi[j]\ +\ w1\ *\ v1\ *\ xi[QK4\_NL\ /\ 2\ +\ j];}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ sumq2\ +=\ w0\ *\ v0\ *\ v0\ +\ w1\ *\ v1\ *\ v1;}
+\DoxyCodeLine{00215\ \ \ \ \ \}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ dsti-\/>d\ =\ sumq2\ >\ 0\ ?\ sumqx\ /\ sumq2\ :\ d;}
+\DoxyCodeLine{00218\ \}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \textcolor{keywordtype}{void}\ ggml\_sycl\_cpy(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src0,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src1);}
+\DoxyCodeLine{00221\ \textcolor{keywordtype}{void}\ ggml\_sycl\_dup(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GGML\_SYCL\_CPY\_HPP}}
+
+\end{DoxyCode}

@@ -1,0 +1,262 @@
+\doxysection{ggml-\/opt.h}
+\hypertarget{ggml-opt_8h_source}{}\label{ggml-opt_8h_source}\index{whisper.cpp/ggml/include/ggml-\/opt.h@{whisper.cpp/ggml/include/ggml-\/opt.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ This\ file\ contains\ functionality\ for\ training\ models\ using\ GGML.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ It\ is\ not\ strictly\ needed\ vs.\ just\ vanilla\ GGML\ but\ it\ provides\ a\ more\ high-\/level\ interface\ for\ common\ needs\ such\ as\ datasets.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ At\ the\ bottom\ of\ this\ file\ especially\ there\ are\ relatively\ high-\/level\ functions\ that\ are\ suitable\ use\ or\ adaptation\ in\ user\ code.}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ Module\ maintainer:\ Johannes\ Gäßler\ (@JohannesGaessler,\ johannesg@5d6.de)}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__dataset}{ggml\_opt\_dataset}};}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__context}{ggml\_opt\_context}};}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__result}{ggml\_opt\_result}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__dataset}{ggml\_opt\_dataset}}\ *\ ggml\_opt\_dataset\_t;}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__context}{ggml\_opt\_context}}\ *\ ggml\_opt\_context\_t;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__result}{ggml\_opt\_result}}\ \ *\ ggml\_opt\_result\_t;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ ======\ Loss\ ======}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ built-\/in\ loss\ types,\ i.e.\ the\ built-\/in\ quantities\ minimized\ by\ the\ optimizer}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ custom\ loss\ types\ can\ be\ defined\ via\ mean\ or\ sum\ which\ simply\ reduce\ the\ outputs\ for\ all\ datapoints\ to\ a\ single\ value}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_opt\_loss\_type\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ GGML\_OPT\_LOSS\_TYPE\_MEAN,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ GGML\_OPT\_LOSS\_TYPE\_SUM,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ GGML\_OPT\_LOSS\_TYPE\_CROSS\_ENTROPY,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ GGML\_OPT\_LOSS\_TYPE\_MEAN\_SQUARED\_ERROR,}
+\DoxyCodeLine{00035\ \ \ \ \ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ ======\ Dataset\ ======}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ GGML\_API\ ggml\_opt\_dataset\_t\ ggml\_opt\_dataset\_init(}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_type\ type\_data,\ \ \ \ \textcolor{comment}{//\ the\ type\ for\ the\ internal\ data\ tensor}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_type\ type\_label,\ \ \ \textcolor{comment}{//\ the\ type\ for\ the\ internal\ labels\ tensor}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ ne\_datapoint,\ \textcolor{comment}{//\ number\ of\ elements\ per\ datapoint}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ ne\_label,\ \ \ \ \ \textcolor{comment}{//\ number\ of\ elements\ per\ label}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ ndata,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ total\ number\ of\ datapoints/labels}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ ndata\_shard);\ \textcolor{comment}{//\ number\ of\ datapoints/labels\ per\ shard\ (unit\ at\ which\ the\ dataset\ is\ shuffled/copied)}}
+\DoxyCodeLine{00046\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_dataset\_free(ggml\_opt\_dataset\_t\ dataset);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ get\ underlying\ tensors\ that\ store\ the\ data}}
+\DoxyCodeLine{00049\ \ \ \ \ GGML\_API\ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_ndata\ (ggml\_opt\_dataset\_t\ dataset);}
+\DoxyCodeLine{00050\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_opt\_dataset\_data\ \ (ggml\_opt\_dataset\_t\ dataset);\ \textcolor{comment}{//\ shape\ =\ [ne\_datapoint,\ ndata]}}
+\DoxyCodeLine{00051\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_opt\_dataset\_labels(ggml\_opt\_dataset\_t\ dataset);\ \textcolor{comment}{//\ shape\ =\ [nd\_label,\ \ \ \ \ ndata]}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ shuffle\ idata\ first\ datapoints\ from\ dataset\ with\ RNG\ from\ opt\_ctx,\ shuffle\ all\ datapoints\ if\ idata\ is\ negative}}
+\DoxyCodeLine{00054\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_dataset\_shuffle(ggml\_opt\_context\_t\ opt\_ctx,\ ggml\_opt\_dataset\_t\ dataset,\ int64\_t\ idata);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ get\ batch\ at\ position\ ibatch\ from\ dataset\ and\ copy\ the\ data\ to\ data\_batch\ and\ labels\_batch}}
+\DoxyCodeLine{00057\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_dataset\_get\_batch(}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_t\ \ \ dataset,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ data\_batch,\ \ \ \textcolor{comment}{//\ shape\ =\ [ne\_datapoint,\ ndata\_batch]}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ labels\_batch,\ \textcolor{comment}{//\ shape\ =\ [ne\_label,\ \ \ \ \ ndata\_batch]}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ ibatch);}
+\DoxyCodeLine{00062\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_dataset\_get\_batch\_host(}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_t\ \ \ dataset,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ data\_batch,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb\_data\_batch,}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ labels\_batch,}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ ibatch);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ ======\ Model\ /\ Context\ ======}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_opt\_build\_type\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ GGML\_OPT\_BUILD\_TYPE\_FORWARD\ =\ 10,}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ GGML\_OPT\_BUILD\_TYPE\_GRAD\ \ \ \ =\ 20,}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ GGML\_OPT\_BUILD\_TYPE\_OPT\ \ \ \ \ =\ 30,}
+\DoxyCodeLine{00075\ \ \ \ \ \};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_opt\_optimizer\_type\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ GGML\_OPT\_OPTIMIZER\_TYPE\_ADAMW,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ GGML\_OPT\_OPTIMIZER\_TYPE\_SGD,}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ GGML\_OPT\_OPTIMIZER\_TYPE\_COUNT}
+\DoxyCodeLine{00082\ \ \ \ \ \};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ parameters\ that\ control\ which\ optimizer\ is\ used\ and\ how\ said\ optimizer\ tries\ to\ find\ the\ minimal\ loss}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__optimizer__params}{ggml\_opt\_optimizer\_params}}\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ alpha;\ \textcolor{comment}{//\ learning\ rate}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ beta1;\ \textcolor{comment}{//\ first\ AdamW\ momentum}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ beta2;\ \textcolor{comment}{//\ second\ AdamW\ momentum}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ eps;\ \ \ \textcolor{comment}{//\ epsilon\ for\ numerical\ stability}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ wd;\ \ \ \ \textcolor{comment}{//\ weight\ decay\ -\/\ 0.0f\ to\ disable}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \}\ adamw;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ alpha;\ \textcolor{comment}{//\ learning\ rate}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ wd;\ \ \ \ \textcolor{comment}{//\ weight\ decay}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \}\ sgd;}
+\DoxyCodeLine{00097\ \ \ \ \ \};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{comment}{//\ callback\ to\ calculate\ optimizer\ parameters\ prior\ to\ a\ backward\ pass}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{comment}{//\ userdata\ can\ be\ used\ to\ pass\ arbitrary\ data}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__optimizer__params}{ggml\_opt\_optimizer\_params}}\ (*ggml\_opt\_get\_optimizer\_params)(\textcolor{keywordtype}{void}\ *\ userdata);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ returns\ the\ default\ optimizer\ params\ (constant,\ hard-\/coded\ values)}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{comment}{//\ userdata\ is\ not\ used}}
+\DoxyCodeLine{00105\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__optimizer__params}{ggml\_opt\_optimizer\_params}}\ ggml\_opt\_get\_default\_optimizer\_params(void\ *\ userdata);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ casts\ userdata\ to\ ggml\_opt\_optimizer\_params\ and\ returns\ it}}
+\DoxyCodeLine{00108\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__optimizer__params}{ggml\_opt\_optimizer\_params}}\ ggml\_opt\_get\_constant\_optimizer\_params(void\ *\ userdata);}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{//\ parameters\ for\ initializing\ a\ new\ optimization\ context}}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__params}{ggml\_opt\_params}}\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_t\ backend\_sched;\ \textcolor{comment}{//\ defines\ which\ backends\ are\ used\ to\ construct\ the\ compute\ graphs}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ by\ default\ the\ forward\ graph\ needs\ to\ be\ reconstructed\ for\ each\ eval}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ ctx\_compute,\ inputs,\ and\ outputs\ are\ set\ the\ graphs\ are\ instead\ allocated\ statically}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx\_compute;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ \ *\ inputs;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ \ *\ outputs;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_opt\_loss\_type\ \ loss\_type;}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_opt\_build\_type\ build\_type;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ int32\_t\ opt\_period;\ \textcolor{comment}{//\ after\ how\ many\ gradient\ accumulation\ steps\ an\ optimizer\ step\ should\ be\ done}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ ggml\_opt\_get\_optimizer\_params\ get\_opt\_pars;\ \ \ \ \textcolor{comment}{//\ callback\ for\ calculating\ optimizer\ parameters}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ get\_opt\_pars\_ud;\ \textcolor{comment}{//\ userdata\ for\ calculating\ optimizer\ parameters}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ only\ GGML\_OPT\_OPTIMIZER\_TYPE\_ADAMW\ needs\ m,\ v\ momenta\ per\ parameter\ tensor}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_opt\_optimizer\_type\ optimizer;}
+\DoxyCodeLine{00130\ \ \ \ \ \};}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{//\ get\ parameters\ for\ an\ optimization\ context\ with\ defaults\ set\ where\ possible}}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{comment}{//\ parameters\ for\ which\ no\ sensible\ defaults\ exist\ are\ supplied\ as\ arguments\ to\ this\ function}}
+\DoxyCodeLine{00134\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__opt__params}{ggml\_opt\_params}}\ ggml\_opt\_default\_params(}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_t\ \ \ \ backend\_sched,}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ enum\ ggml\_opt\_loss\_type\ loss\_type);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ GGML\_API\ ggml\_opt\_context\_t\ ggml\_opt\_init(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__opt__params}{ggml\_opt\_params}}\ params);}
+\DoxyCodeLine{00139\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_free(ggml\_opt\_context\_t\ opt\_ctx);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{//\ set\ gradients\ to\ zero,\ initialize\ loss,\ and\ optionally\ reset\ the\ optimizer}}
+\DoxyCodeLine{00142\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_reset(ggml\_opt\_context\_t\ opt\_ctx,\ \textcolor{keywordtype}{bool}\ optimizer);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_opt\_static\_graphs(ggml\_opt\_context\_t\ opt\_ctx);\ \textcolor{comment}{//\ whether\ the\ graphs\ are\ allocated\_statically}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{comment}{//\ get\ underlying\ tensors\ that\ store\ data}}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{comment}{//\ if\ not\ using\ static\ graphs\ these\ pointers\ become\ invalid\ with\ the\ next\ call\ to\ ggml\_opt\_alloc}}
+\DoxyCodeLine{00148\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_opt\_inputs(\ \ ggml\_opt\_context\_t\ opt\_ctx);\ \textcolor{comment}{//\ forward\ graph\ input\ tensor}}
+\DoxyCodeLine{00149\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_opt\_outputs(\ ggml\_opt\_context\_t\ opt\_ctx);\ \textcolor{comment}{//\ forward\ graph\ output\ tensor}}
+\DoxyCodeLine{00150\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_opt\_labels(\ \ ggml\_opt\_context\_t\ opt\_ctx);\ \textcolor{comment}{//\ labels\ to\ compare\ outputs\ against}}
+\DoxyCodeLine{00151\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_opt\_loss(\ \ \ \ ggml\_opt\_context\_t\ opt\_ctx);\ \textcolor{comment}{//\ scalar\ tensor\ that\ contains\ the\ loss}}
+\DoxyCodeLine{00152\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_opt\_pred(\ \ \ \ ggml\_opt\_context\_t\ opt\_ctx);\ \textcolor{comment}{//\ predictions\ made\ by\ outputs}}
+\DoxyCodeLine{00153\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_opt\_ncorrect(ggml\_opt\_context\_t\ opt\_ctx);\ \textcolor{comment}{//\ number\ of\ matching\ predictions\ between\ outputs\ and\ labels}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{comment}{//\ get\ the\ gradient\ accumulator\ for\ a\ node\ from\ the\ forward\ graph}}
+\DoxyCodeLine{00156\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ ggml\_opt\_grad\_acc(ggml\_opt\_context\_t\ opt\_ctx,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ node);}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_opt\_optimizer\_type\ ggml\_opt\_context\_optimizer\_type(ggml\_opt\_context\_t);\ \textcolor{comment}{//TODO\ consistent\ naming\ scheme}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ ggml\_opt\_optimizer\_name(\textcolor{keyword}{enum}\ ggml\_opt\_optimizer\_type);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{comment}{//\ ======\ Optimization\ Result\ ======}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ GGML\_API\ ggml\_opt\_result\_t\ ggml\_opt\_result\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00165\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_result\_free(ggml\_opt\_result\_t\ result);}
+\DoxyCodeLine{00166\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_result\_reset(ggml\_opt\_result\_t\ result);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{comment}{//\ get\ data\ from\ result,\ uncertainties\ are\ optional\ and\ can\ be\ ignored\ by\ passing\ NULL}}
+\DoxyCodeLine{00169\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_result\_ndata(\ \ \ ggml\_opt\_result\_t\ result,\ int64\_t\ *\ ndata);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ writes\ 1\ value,\ number\ of\ datapoints}}
+\DoxyCodeLine{00170\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_result\_loss(\ \ \ \ ggml\_opt\_result\_t\ result,\ \textcolor{keywordtype}{double}\ \ *\ loss,\ \ \ \ \ \textcolor{keywordtype}{double}\ *\ unc);\ \textcolor{comment}{//\ writes\ 1\ value}}
+\DoxyCodeLine{00171\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_result\_pred(\ \ \ \ ggml\_opt\_result\_t\ result,\ int32\_t\ *\ pred);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ writes\ ndata\ values}}
+\DoxyCodeLine{00172\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_result\_accuracy(ggml\_opt\_result\_t\ result,\ \textcolor{keywordtype}{double}\ \ *\ accuracy,\ \textcolor{keywordtype}{double}\ *\ unc);\ \textcolor{comment}{//\ writes\ 1\ value}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{comment}{//\ ======\ Computation\ ======}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{comment}{//\ if\ not\ using\ static\ graphs,\ this\ function\ must\ be\ called\ prior\ to\ ggml\_opt\_alloc}}
+\DoxyCodeLine{00177\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_prepare\_alloc(}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ ggml\_opt\_context\_t\ \ \ \ opt\_ctx,}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx\_compute,}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ \ *\ gf,}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ \ *\ inputs,}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ \ *\ outputs);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{comment}{//\ allocate\ the\ next\ graph\ for\ evaluation,\ either\ forward\ or\ forward\ +\ backward}}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{comment}{//\ must\ be\ called\ exactly\ once\ prior\ to\ calling\ ggml\_opt\_eval}}
+\DoxyCodeLine{00186\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_alloc(ggml\_opt\_context\_t\ opt\_ctx,\ \textcolor{keywordtype}{bool}\ backward);}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{comment}{//\ do\ forward\ pass,\ increment\ result\ if\ not\ NULL,\ do\ backward\ pass\ if\ allocated}}
+\DoxyCodeLine{00189\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_eval(ggml\_opt\_context\_t\ opt\_ctx,\ ggml\_opt\_result\_t\ result);}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{comment}{//\ \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{comment}{//\ \#\#\ The\ high-\/level\ functions\ start\ here.\ They\ do\ not\ depend\ on\ any\ private\ \#\#}}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{comment}{//\ \#\#\ functions\ or\ structs\ and\ can\ be\ copied\ to\ and\ adapted\ for\ user\ code.\ \ \ \#\#}}
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{comment}{//\ \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{comment}{//\ ======\ Intended\ Usage\ ======}}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{//\ 1.\ Select\ the\ appropriate\ loss\ for\ your\ problem.}}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{comment}{//\ 2.\ Create\ a\ dataset\ and\ set\ the\ data\ for\ the\ "{}data"{}\ tensor.\ Also\ set\ the\ "{}labels"{}\ tensor\ if\ your\ loss\ needs\ them.}}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{comment}{//\ \ \ \ Setting\ the\ shard\ size\ to\ 1\ will\ be\ fine,\ it's\ the\ granularity\ with\ which\ data\ is\ shuffled/loaded\ (bigger\ values\ are\ faster).}}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{comment}{//\ 3.\ Create\ a\ GGML\ graph\ for\ your\ model\ with\ no\_alloc\ ==\ true.\ Use\ two\ separate\ contexts\ for\ the\ tensors.}}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{comment}{//\ \ \ \ The\ first\ context\ should\ contain\ the\ model\ parameters\ and\ inputs\ and\ be\ allocated\ statically\ in\ user\ code.}}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ \ \ \ The\ second\ context\ should\ contain\ all\ other\ tensors\ and\ will\ be\ (re)allocated\ automatically.}}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{comment}{//\ \ \ \ Due\ to\ this\ automated\ allocation\ the\ data\ of\ the\ second\ context\ is\ not\ defined\ when\ accessed\ in\ user\ code.}}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{comment}{//\ \ \ \ Note\ that\ the\ second\ dimension\ of\ the\ inputs/outputs\ are\ interpreted\ as\ the\ number\ of\ datapoints\ in\ those\ tensors.}}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{comment}{//\ 4.\ Call\ ggml\_opt\_fit.\ If\ you\ need\ more\ control\ you\ can\ use\ ggml\_opt\_epoch\ instead.}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{comment}{//\ signature\ for\ a\ callback\ while\ evaluating\ opt\_ctx\ on\ dataset,\ called\ after\ an\ evaluation}}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keyword}{typedef}\ void\ (*ggml\_opt\_epoch\_callback)(}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ train,\ \ \ \ \ \ \ \textcolor{comment}{//\ true\ after\ training\ evaluation,\ false\ after\ validation\ evaluation}}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_context\_t\ opt\_ctx,}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_t\ dataset,}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_result\_t\ \ result,\ \ \ \ \ \ \textcolor{comment}{//\ result\ associated\ with\ the\ dataset\ subsection}}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ ibatch,\ \ \ \ \ \ \textcolor{comment}{//\ number\ of\ batches\ that\ have\ been\ evaluated\ so\ far}}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ ibatch\_max,\ \ \textcolor{comment}{//\ total\ number\ of\ batches\ in\ this\ dataset\ subsection}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ t\_start\_us);\ \textcolor{comment}{//\ time\ at\ which\ the\ evaluation\ on\ the\ dataset\ subsection\ was\ started}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{comment}{//\ do\ training\ on\ front\ of\ dataset,\ do\ evaluation\ only\ on\ back\ of\ dataset}}
+\DoxyCodeLine{00219\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_epoch(}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_context\_t\ \ \ \ \ \ opt\_ctx,}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_t\ \ \ \ \ \ dataset,}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_result\_t\ \ \ \ \ \ \ result\_train,\ \ \ \textcolor{comment}{//\ result\ to\ increment\ during\ training,\ ignored\ if\ NULL}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_result\_t\ \ \ \ \ \ \ result\_eval,\ \ \ \ \textcolor{comment}{//\ result\ to\ increment\ during\ evaluation,\ ignored\ if\ NULL}}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ idata\_split,\ \ \ \ \textcolor{comment}{//\ data\ index\ at\ which\ to\ split\ training\ and\ evaluation}}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_epoch\_callback\ callback\_train,}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_epoch\_callback\ callback\_eval);}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ callback\ that\ prints\ a\ progress\ bar\ on\ stderr}}
+\DoxyCodeLine{00229\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_epoch\_callback\_progress\_bar(}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ train,}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_context\_t\ opt\_ctx,}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_t\ dataset,}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_result\_t\ \ result,}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ ibatch,}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ ibatch\_max,}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ t\_start\_us);}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{comment}{//\ fit\ model\ defined\ by\ inputs\ and\ outputs\ to\ dataset}}
+\DoxyCodeLine{00239\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_opt\_fit(}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_t\ \ \ \ \ \ \ \ \ \ \ \ backend\_sched,\ \ \textcolor{comment}{//\ backend\ scheduler\ for\ constructing\ the\ compute\ graphs}}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ \ \ \ \ \ \ \ \ \ \ *\ ctx\_compute,\ \ \ \ \textcolor{comment}{//\ context\ with\ temporarily\ allocated\ tensors\ to\ calculate\ the\ outputs}}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ \ \ \ \ \ \ \ \ \ \ \ *\ inputs,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ input\ tensor\ with\ shape\ [ne\_datapoint,\ ndata\_batch]}}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ \ \ \ \ \ \ \ \ \ \ \ *\ outputs,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ output\ tensor,\ must\ have\ shape\ [ne\_label,\ ndata\_batch]\ if\ labels\ are\ used}}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_dataset\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ dataset,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ dataset\ with\ data\ and\ optionally\ also\ labels}}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_opt\_loss\_type\ \ \ \ \ \ \ \ \ loss\_type,\ \ \ \ \ \ \textcolor{comment}{//\ loss\ to\ minimize}}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_opt\_optimizer\_type\ \ \ \ optimizer,\ \ \ \ \ \ \textcolor{comment}{//\ sgd\ or\ adamw}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_opt\_get\_optimizer\_params\ \ \ get\_opt\_pars,\ \ \ \textcolor{comment}{//\ callback\ to\ get\ optimizer\ params,\ userdata\ is\ pointer\ to\ epoch\ (of\ type\ int64\_t)}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nepoch,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ how\ many\ times\ the\ dataset\ should\ be\ iterated\ over}}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nbatch\_logical,\ \textcolor{comment}{//\ datapoints\ optimizer\ step,\ must\ be\ a\ multiple\ of\ ndata\_batch\ in\ inputs/outputs}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\_split,\ \ \ \ \ \ \textcolor{comment}{//\ fraction\ of\ the\ dataset\ to\ use\ for\ validation,\ must\ be\ in\ [0.0f,\ 1.0f)}}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ silent);\ \ \ \ \ \ \ \ \textcolor{comment}{//\ whether\ or\ not\ info\ prints\ to\ stderr\ should\ be\ suppressed}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00255\ \}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

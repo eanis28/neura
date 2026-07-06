@@ -1,0 +1,107 @@
+\doxysection{llm\+\_\+graph\+\_\+result Class Reference}
+\hypertarget{classllm__graph__result}{}\label{classllm__graph__result}\index{llm\_graph\_result@{llm\_graph\_result}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__result_acfa6739c048b1963bb4c9d001989e26e}\label{classllm__graph__result_acfa6739c048b1963bb4c9d001989e26e} 
+{\bfseries llm\+\_\+graph\+\_\+result} (int64\+\_\+t max\+\_\+nodes)
+\item 
+\Hypertarget{classllm__graph__result_a703f7341824b6ab02b99f01737f7483c}\label{classllm__graph__result_a703f7341824b6ab02b99f01737f7483c} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+inp\+\_\+tokens} () const
+\item 
+\Hypertarget{classllm__graph__result_ac7f3053de454593accc86185ed834a47}\label{classllm__graph__result_ac7f3053de454593accc86185ed834a47} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+logits} () const
+\item 
+\Hypertarget{classllm__graph__result_a835394623ca5d3d04863184af2d68cfe}\label{classllm__graph__result_a835394623ca5d3d04863184af2d68cfe} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+embd} () const
+\item 
+\Hypertarget{classllm__graph__result_a6f3dcf2e8cf017c2d929ce66b54cc6db}\label{classllm__graph__result_a6f3dcf2e8cf017c2d929ce66b54cc6db} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+embd\+\_\+pooled} () const
+\item 
+\Hypertarget{classllm__graph__result_afe68912b4a66b7eb17125bdd406b4c81}\label{classllm__graph__result_afe68912b4a66b7eb17125bdd406b4c81} 
+\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+gf} () const
+\item 
+\Hypertarget{classllm__graph__result_afe537b930d3adc8b8486903971f8d45d}\label{classllm__graph__result_afe537b930d3adc8b8486903971f8d45d} 
+\doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+ctx} () const
+\item 
+\Hypertarget{classllm__graph__result_a9586ab2753435234dfbef6a2d75730c0}\label{classllm__graph__result_a9586ab2753435234dfbef6a2d75730c0} 
+int64\+\_\+t {\bfseries get\+\_\+max\+\_\+nodes} () const
+\item 
+\Hypertarget{classllm__graph__result_a4762890b5fcf1358667085f53ae3efb0}\label{classllm__graph__result_a4762890b5fcf1358667085f53ae3efb0} 
+void {\bfseries reset} ()
+\item 
+\Hypertarget{classllm__graph__result_a369db9463fbebbc926405df6b355a87d}\label{classllm__graph__result_a369db9463fbebbc926405df6b355a87d} 
+void {\bfseries set\+\_\+inputs} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch)
+\item 
+\Hypertarget{classllm__graph__result_abb8135553bfe675501a5fede635e136f}\label{classllm__graph__result_abb8135553bfe675501a5fede635e136f} 
+void {\bfseries set\+\_\+outputs} ()
+\item 
+\Hypertarget{classllm__graph__result_a29777a8e24c350731be467d59614bef9}\label{classllm__graph__result_a29777a8e24c350731be467d59614bef9} 
+bool {\bfseries can\+\_\+reuse} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params)
+\item 
+\Hypertarget{classllm__graph__result_afebf179e3d5b594e4a202a0896a55ba5}\label{classllm__graph__result_afebf179e3d5b594e4a202a0896a55ba5} 
+\doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}} \texorpdfstring{$\ast$}{*} {\bfseries add\+\_\+input} (llm\+\_\+graph\+\_\+input\+\_\+ptr input)
+\item 
+\Hypertarget{classllm__graph__result_a2cbb94369645e14ec380ac146c3cda11}\label{classllm__graph__result_a2cbb94369645e14ec380ac146c3cda11} 
+void {\bfseries set\+\_\+params} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__result_a15d438c306736f45e828bd1c7d960e59}\label{classllm__graph__result_a15d438c306736f45e828bd1c7d960e59} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries t\+\_\+inp\+\_\+tokens} = nullptr
+\item 
+\Hypertarget{classllm__graph__result_ac19cbf134d1cbdc4aca501f1148f6f61}\label{classllm__graph__result_ac19cbf134d1cbdc4aca501f1148f6f61} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries t\+\_\+inp\+\_\+embd} = nullptr
+\item 
+\Hypertarget{classllm__graph__result_a01dec016056403aad3545a5f320321b6}\label{classllm__graph__result_a01dec016056403aad3545a5f320321b6} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries t\+\_\+logits} = nullptr
+\item 
+\Hypertarget{classllm__graph__result_a09104078fc86b815edb509fe6c6584a2}\label{classllm__graph__result_a09104078fc86b815edb509fe6c6584a2} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries t\+\_\+embd} = nullptr
+\item 
+\Hypertarget{classllm__graph__result_ace07d02052d1b03f2b217539d154c6ca}\label{classllm__graph__result_ace07d02052d1b03f2b217539d154c6ca} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries t\+\_\+embd\+\_\+pooled} = nullptr
+\item 
+\Hypertarget{classllm__graph__result_a508907e418a77ce33c9fc12a27d31c7a}\label{classllm__graph__result_a508907e418a77ce33c9fc12a27d31c7a} 
+std::\+map$<$ llama\+\_\+seq\+\_\+id, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries t\+\_\+sampled\+\_\+logits}
+\item 
+\Hypertarget{classllm__graph__result_ad359e8e04304d2e49557f72d77793f7a}\label{classllm__graph__result_ad359e8e04304d2e49557f72d77793f7a} 
+std::\+map$<$ llama\+\_\+seq\+\_\+id, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries t\+\_\+candidates}
+\item 
+\Hypertarget{classllm__graph__result_a2f416c5b157b9ba2f11850cfc1a6d485}\label{classllm__graph__result_a2f416c5b157b9ba2f11850cfc1a6d485} 
+std::\+map$<$ llama\+\_\+seq\+\_\+id, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries t\+\_\+sampled}
+\item 
+\Hypertarget{classllm__graph__result_aebe79ea3770ce7f7dd09d06460996c9b}\label{classllm__graph__result_aebe79ea3770ce7f7dd09d06460996c9b} 
+std::\+map$<$ llama\+\_\+seq\+\_\+id, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries t\+\_\+sampled\+\_\+probs}
+\item 
+\Hypertarget{classllm__graph__result_a005c0070adef2dd1bae2d6cefd7cae83}\label{classllm__graph__result_a005c0070adef2dd1bae2d6cefd7cae83} 
+std::\+vector$<$ llm\+\_\+graph\+\_\+input\+\_\+ptr $>$ {\bfseries inputs}
+\item 
+\Hypertarget{classllm__graph__result_ab8d6b312af7452f95b46df6434c6063b}\label{classllm__graph__result_ab8d6b312af7452f95b46df6434c6063b} 
+ggml\+\_\+context\+\_\+ptr {\bfseries ctx\+\_\+compute}
+\item 
+\Hypertarget{classllm__graph__result_a278645320712f7dc2b5cfd1cf4bd3605}\label{classllm__graph__result_a278645320712f7dc2b5cfd1cf4bd3605} 
+std::\+vector$<$ uint8\+\_\+t $>$ {\bfseries buf\+\_\+compute\+\_\+meta}
+\item 
+\Hypertarget{classllm__graph__result_a4197453fde2b62a102bab0b7255c3744}\label{classllm__graph__result_a4197453fde2b62a102bab0b7255c3744} 
+\doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*} {\bfseries gf}
+\item 
+\Hypertarget{classllm__graph__result_a68feeae452e53bf71067f52615dde58f}\label{classllm__graph__result_a68feeae452e53bf71067f52615dde58f} 
+int64\+\_\+t {\bfseries max\+\_\+nodes}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__result_a81baab3ed774172b3c5e234658498ce2}\label{classllm__graph__result_a81baab3ed774172b3c5e234658498ce2} 
+\doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} {\bfseries params}
+\item 
+\Hypertarget{classllm__graph__result_a9f6628dee460f56240a38bc4fed29a92}\label{classllm__graph__result_a9f6628dee460f56240a38bc4fed29a92} 
+int {\bfseries debug} = 0
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+cpp\end{DoxyCompactItemize}

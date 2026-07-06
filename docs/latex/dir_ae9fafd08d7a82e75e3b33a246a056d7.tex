@@ -1,0 +1,127 @@
+\doxysection{whisper.\+cpp/\+bindings/\+go Directory Reference}
+\hypertarget{dir_ae9fafd08d7a82e75e3b33a246a056d7}{}\label{dir_ae9fafd08d7a82e75e3b33a246a056d7}\index{whisper.cpp/bindings/go Directory Reference@{whisper.cpp/bindings/go Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_ae9fafd08d7a82e75e3b33a246a056d7_autotoc_md20}{}\doxysubsection{\texorpdfstring{Go bindings for Whisper}{Go bindings for Whisper}}\label{dir_ae9fafd08d7a82e75e3b33a246a056d7_autotoc_md20}
+This package provides Go bindings for whisper.\+cpp. They have been tested on:\+
+
+
+\begin{DoxyItemize}
+\item Darwin (OS X) 12.\+6 on x64\+\_\+64
+\item Debian Linux on arm64
+\item Fedora Linux on x86\+\_\+64
+\end{DoxyItemize}
+
+\doxylink{requirements_The}{The} "{}low level"{} bindings are in the {\ttfamily bindings/\+go} directory and there is a more Go-\/style package in the {\ttfamily bindings/\+go/\+pkg/\+whisper} directory. \doxylink{requirements_The}{The} most simple usage is as follows:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ (}
+\DoxyCodeLine{\ \ \ \ "{}github.com/ggerganov/whisper.cpp/bindings/go/pkg/whisper"{}}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{func\ main()\ \{}
+\DoxyCodeLine{\ \ \ \ var\ modelpath\ string\ //\ Path\ to\ the\ model}
+\DoxyCodeLine{\ \ \ \ var\ samples\ []float32\ //\ Samples\ to\ process}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Load\ the\ model}
+\DoxyCodeLine{\ \ \ \ model,\ err\ :=\ whisper.New(modelpath)}
+\DoxyCodeLine{\ \ \ \ if\ err\ !=\ nil\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ panic(err)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ defer\ model.Close()}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Process\ samples}
+\DoxyCodeLine{\ \ \ \ context,\ err\ :=\ model.NewContext()}
+\DoxyCodeLine{\ \ \ \ if\ err\ !=\ nil\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ panic(err)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ if\ err\ :=\ context.Process(samples,\ nil,\ nil,\ nil);\ err\ !=\ nil\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ err}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Print\ out\ the\ results}
+\DoxyCodeLine{\ \ \ \ for\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ segment,\ err\ :=\ context.NextSegment()}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ err\ !=\ nil\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ break}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ fmt.Printf("{}[\%6s-\/>\%6s]\ \%s\(\backslash\)n"{},\ segment.Start,\ segment.End,\ segment.Text)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{dir_ae9fafd08d7a82e75e3b33a246a056d7_autotoc_md21}{}\doxysubsection{\texorpdfstring{Building \& Testing}{Building \& Testing}}\label{dir_ae9fafd08d7a82e75e3b33a246a056d7_autotoc_md21}
+In order to build, you need to have the Go compiler installed. You can get it from \href{https://golang.org/dl/}{\texttt{here}}. Run the tests with:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/ggml-\/org/whisper.cpp.git}
+\DoxyCodeLine{cd\ whisper.cpp/bindings/go}
+\DoxyCodeLine{make\ test}
+
+\end{DoxyCode}
+
+
+This will compile a static {\ttfamily libwhisper.\+a} in a {\ttfamily build} folder, download a model file, then run the tests. To build the examples:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ examples}
+
+\end{DoxyCode}
+
+
+To build using cuda support add {\ttfamily GGML\+\_\+\+CUDA=1}:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{GGML\_CUDA=1\ make\ examples}
+
+\end{DoxyCode}
+
+
+\doxylink{requirements_The}{The} examples are placed in the {\ttfamily build} directory. Once built, you can download all the models with the following command:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/go-\/model-\/download\ -\/out\ models}
+
+\end{DoxyCode}
+
+
+And you can then test a model against samples with the following command:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/go-\/whisper\ -\/model\ models/ggml-\/tiny.en.bin\ samples/jfk.wav}
+
+\end{DoxyCode}
+\hypertarget{dir_ae9fafd08d7a82e75e3b33a246a056d7_autotoc_md22}{}\doxysubsection{\texorpdfstring{Using the bindings}{Using the bindings}}\label{dir_ae9fafd08d7a82e75e3b33a246a056d7_autotoc_md22}
+To use the bindings in your own software,
+
+
+\begin{DoxyEnumerate}
+\item Import {\ttfamily github.\+com/\+ggerganov/\+whisper.cpp/\+bindings/\+go/\+pkg/\+whisper} (or {\ttfamily github.\+com/\+ggerganov/\+whisper.cpp/\+bindings/\+go} into your package;
+\item Compile {\ttfamily libwhisper.\+a} (you can use {\ttfamily make whisper} in the {\ttfamily bindings/\+go} directory);
+\item Link your go binary against whisper by setting the environment variables {\ttfamily C\+\_\+\+INCLUDE\+\_\+\+PATH} and {\ttfamily LIBRARY\+\_\+\+PATH} to point to the {\ttfamily \doxylink{whisper_8h_source}{whisper.\+h}} file directory and {\ttfamily libwhisper.\+a} file directory respectively.
+\end{DoxyEnumerate}
+
+Look at the {\ttfamily Makefile} in the {\ttfamily bindings/\+go} directory for an example.
+
+\doxylink{requirements_The}{The} API Documentation:\+
+
+
+\begin{DoxyItemize}
+\item \href{https://pkg.go.dev/github.com/ggerganov/whisper.cpp/bindings/go}{\texttt{https:\+/\+/\+pkg.\+go.\+dev/\+github.\+com/\+ggerganov/\+whisper.\+cpp/\+bindings/\+go}}
+\item \href{https://pkg.go.dev/github.com/ggerganov/whisper.cpp/bindings/go/pkg/whisper}{\texttt{https:\+/\+/\+pkg.\+go.\+dev/\+github.\+com/\+ggerganov/\+whisper.\+cpp/\+bindings/\+go/\+pkg/\+whisper}}
+\end{DoxyItemize}
+
+Getting help:\+
+
+
+\begin{DoxyItemize}
+\item Follow the discussion for the go bindings \href{https://github.com/ggml-org/whisper.cpp/discussions/312}{\texttt{here}}
+\end{DoxyItemize}\hypertarget{dir_ae9fafd08d7a82e75e3b33a246a056d7_autotoc_md23}{}\doxysubsection{\texorpdfstring{License}{License}}\label{dir_ae9fafd08d7a82e75e3b33a246a056d7_autotoc_md23}
+\doxylink{requirements_The}{The} license for the Go bindings is the same as the license for the rest of the whisper.\+cpp project, which is the MIT License. See the {\ttfamily LICENSE} file for more details. 

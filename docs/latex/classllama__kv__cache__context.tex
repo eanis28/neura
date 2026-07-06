@@ -1,0 +1,157 @@
+\doxysection{llama\+\_\+kv\+\_\+cache\+\_\+context Class Reference}
+\hypertarget{classllama__kv__cache__context}{}\label{classllama__kv__cache__context}\index{llama\_kv\_cache\_context@{llama\_kv\_cache\_context}}
+Inheritance diagram for llama\+\_\+kv\+\_\+cache\+\_\+context:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllama__kv__cache__context}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__kv__cache__context_aac13a6997ebb2df01ed0151ecf882008}\label{classllama__kv__cache__context_aac13a6997ebb2df01ed0151ecf882008} 
+using {\bfseries slot\+\_\+info\+\_\+vec\+\_\+t} = llama\+\_\+kv\+\_\+cache::\+slot\+\_\+info\+\_\+vec\+\_\+t
+\item 
+\Hypertarget{classllama__kv__cache__context_aea1529fcacf4b58c0f714c1369f4eded}\label{classllama__kv__cache__context_aea1529fcacf4b58c0f714c1369f4eded} 
+using {\bfseries stream\+\_\+copy\+\_\+info} = \doxymbox{\hyperlink{structllama__kv__cache_1_1stream__copy__info}{llama\+\_\+kv\+\_\+cache::\+stream\+\_\+copy\+\_\+info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__kv__cache__context_a1175ede14cdde4f3ab6f1d34727c86ee}\label{classllama__kv__cache__context_a1175ede14cdde4f3ab6f1d34727c86ee} 
+{\bfseries llama\+\_\+kv\+\_\+cache\+\_\+context} (llama\+\_\+memory\+\_\+status status)
+\item 
+\Hypertarget{classllama__kv__cache__context_a6d5c8d7e4b967045a953319121471d6b}\label{classllama__kv__cache__context_a6d5c8d7e4b967045a953319121471d6b} 
+{\bfseries llama\+\_\+kv\+\_\+cache\+\_\+context} (\doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} \texorpdfstring{$\ast$}{*}kv)
+\item 
+\Hypertarget{classllama__kv__cache__context_ac9b35cef59a17b9499836d05e9022cd4}\label{classllama__kv__cache__context_ac9b35cef59a17b9499836d05e9022cd4} 
+{\bfseries llama\+\_\+kv\+\_\+cache\+\_\+context} (\doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} \texorpdfstring{$\ast$}{*}kv, \doxymbox{\hyperlink{structllama__context}{llama\+\_\+context}} \texorpdfstring{$\ast$}{*}lctx, bool do\+\_\+shift, stream\+\_\+copy\+\_\+info sc\+\_\+info)
+\item 
+\Hypertarget{classllama__kv__cache__context_a45b016028fbad21f0c03775c46b4a362}\label{classllama__kv__cache__context_a45b016028fbad21f0c03775c46b4a362} 
+{\bfseries llama\+\_\+kv\+\_\+cache\+\_\+context} (\doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} \texorpdfstring{$\ast$}{*}kv, slot\+\_\+info\+\_\+vec\+\_\+t sinfos, std::\+vector$<$ \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} $>$ ubatches)
+\item 
+bool \doxymbox{\hyperlink{classllama__kv__cache__context_a5d0d65084060a697510cfa1873ca7fbc}{next}} () override
+\item 
+bool \doxymbox{\hyperlink{classllama__kv__cache__context_ac9cef4ac4828ca70e5d778541cb9ed9c}{apply}} () override
+\item 
+llama\+\_\+memory\+\_\+status \doxymbox{\hyperlink{classllama__kv__cache__context_a5a21c790bc0f2345ed015b30fbb7af42}{get\+\_\+status}} () const override
+\item 
+const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \& \doxymbox{\hyperlink{classllama__kv__cache__context_afdb2f1fa559e217cdfae9d952541bed2}{get\+\_\+ubatch}} () const override
+\item 
+\Hypertarget{classllama__kv__cache__context_a38c9fc004ff7f303d569b750f1c89334}\label{classllama__kv__cache__context_a38c9fc004ff7f303d569b750f1c89334} 
+uint32\+\_\+t {\bfseries get\+\_\+n\+\_\+kv} () const
+\item 
+\Hypertarget{classllama__kv__cache__context_a671f56c6e591956fec1a8ea09ebbd489}\label{classllama__kv__cache__context_a671f56c6e591956fec1a8ea09ebbd489} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+k} (\doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, int32\+\_\+t il) const
+\item 
+\Hypertarget{classllama__kv__cache__context_a0cd315a3a24a20f40b655b1a46f07a2a}\label{classllama__kv__cache__context_a0cd315a3a24a20f40b655b1a46f07a2a} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+v} (\doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, int32\+\_\+t il) const
+\item 
+\Hypertarget{classllama__kv__cache__context_aba9adccc14ac3bbb118237eb3e44cb92}\label{classllama__kv__cache__context_aba9adccc14ac3bbb118237eb3e44cb92} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries cpy\+\_\+k} (\doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}k\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}k\+\_\+idxs, int32\+\_\+t il) const
+\item 
+\Hypertarget{classllama__kv__cache__context_a46d9220ab4e383a550454a7a51dc9982}\label{classllama__kv__cache__context_a46d9220ab4e383a550454a7a51dc9982} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries cpy\+\_\+v} (\doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+cur, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}v\+\_\+idxs, int32\+\_\+t il) const
+\item 
+\Hypertarget{classllama__kv__cache__context_aff13baef743bf366d5dcc6a0b4748e0e}\label{classllama__kv__cache__context_aff13baef743bf366d5dcc6a0b4748e0e} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+input\+\_\+k\+\_\+idxs} (\doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \&ubatch) const
+\item 
+\Hypertarget{classllama__kv__cache__context_aeaa4680a53f95686bc4a3bcea95ebd97}\label{classllama__kv__cache__context_aeaa4680a53f95686bc4a3bcea95ebd97} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries build\+\_\+input\+\_\+v\+\_\+idxs} (\doxymbox{\hyperlink{structggml__context}{ggml\+\_\+context}} \texorpdfstring{$\ast$}{*}ctx, const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \&ubatch) const
+\item 
+\Hypertarget{classllama__kv__cache__context_a9bfd934e54d7a36d2fd2871fa80e2429}\label{classllama__kv__cache__context_a9bfd934e54d7a36d2fd2871fa80e2429} 
+void {\bfseries set\+\_\+input\+\_\+k\+\_\+idxs} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}dst, const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) const
+\item 
+\Hypertarget{classllama__kv__cache__context_a19921168a2564a0983ca5cb83acb3e31}\label{classllama__kv__cache__context_a19921168a2564a0983ca5cb83acb3e31} 
+void {\bfseries set\+\_\+input\+\_\+v\+\_\+idxs} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}dst, const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) const
+\item 
+\Hypertarget{classllama__kv__cache__context_a568ba67dcc3a25338ad840a5117fa807}\label{classllama__kv__cache__context_a568ba67dcc3a25338ad840a5117fa807} 
+void {\bfseries set\+\_\+input\+\_\+k\+\_\+shift} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}dst) const
+\item 
+\Hypertarget{classllama__kv__cache__context_ac2998a68c0c38afe9e53c38ebeb54afa}\label{classllama__kv__cache__context_ac2998a68c0c38afe9e53c38ebeb54afa} 
+void {\bfseries set\+\_\+input\+\_\+kq\+\_\+mask} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}dst, const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch, bool causal\+\_\+attn) const
+\item 
+\Hypertarget{classllama__kv__cache__context_a91d2d9bec6963adce513f248c76532bc}\label{classllama__kv__cache__context_a91d2d9bec6963adce513f248c76532bc} 
+void {\bfseries set\+\_\+input\+\_\+pos\+\_\+bucket} (\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}dst, const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__kv__cache__context_a0558e042337f4b2a4e992d7cf9f8d579}\label{classllama__kv__cache__context_a0558e042337f4b2a4e992d7cf9f8d579} 
+llama\+\_\+memory\+\_\+status {\bfseries status}
+\item 
+\Hypertarget{classllama__kv__cache__context_af5eb48ff8de5aa0f7ee5e35a56818cfd}\label{classllama__kv__cache__context_af5eb48ff8de5aa0f7ee5e35a56818cfd} 
+\doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} \texorpdfstring{$\ast$}{*} {\bfseries kv}
+\item 
+\Hypertarget{classllama__kv__cache__context_ab27176e7ffc54f9c391eb585c6cf0455}\label{classllama__kv__cache__context_ab27176e7ffc54f9c391eb585c6cf0455} 
+\doxymbox{\hyperlink{structllama__context}{llama\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries lctx}
+\item 
+\Hypertarget{classllama__kv__cache__context_aff9946590869414ca5ded804710c0410}\label{classllama__kv__cache__context_aff9946590869414ca5ded804710c0410} 
+bool {\bfseries do\+\_\+shift} = false
+\item 
+\Hypertarget{classllama__kv__cache__context_aebd93f29f6acb58d81406c9ad4fce90b}\label{classllama__kv__cache__context_aebd93f29f6acb58d81406c9ad4fce90b} 
+stream\+\_\+copy\+\_\+info {\bfseries sc\+\_\+info}
+\item 
+\Hypertarget{classllama__kv__cache__context_a31b81cdb224d3783bc9b229014b49246}\label{classllama__kv__cache__context_a31b81cdb224d3783bc9b229014b49246} 
+size\+\_\+t {\bfseries i\+\_\+cur} = 0
+\item 
+\Hypertarget{classllama__kv__cache__context_ae61f38bb95e3c528334315defa2654af}\label{classllama__kv__cache__context_ae61f38bb95e3c528334315defa2654af} 
+slot\+\_\+info\+\_\+vec\+\_\+t {\bfseries sinfos}
+\item 
+\Hypertarget{classllama__kv__cache__context_acf5e4a0b10aabaff092265ada9fee500}\label{classllama__kv__cache__context_acf5e4a0b10aabaff092265ada9fee500} 
+std::\+vector$<$ \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} $>$ {\bfseries ubatches}
+\item 
+\Hypertarget{classllama__kv__cache__context_a1d5b05fa4a781c990899519a26354a75}\label{classllama__kv__cache__context_a1d5b05fa4a781c990899519a26354a75} 
+int32\+\_\+t {\bfseries n\+\_\+kv}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllama__kv__cache__context_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllama__kv__cache__context_ac9cef4ac4828ca70e5d778541cb9ed9c}\index{llama\_kv\_cache\_context@{llama\_kv\_cache\_context}!apply@{apply}}
+\index{apply@{apply}!llama\_kv\_cache\_context@{llama\_kv\_cache\_context}}
+\doxysubsubsection{\texorpdfstring{apply()}{apply()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__context_ac9cef4ac4828ca70e5d778541cb9ed9c} 
+bool llama\+\_\+kv\+\_\+cache\+\_\+context::\+apply (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__context_a5a21c790bc0f2345ed015b30fbb7af42}\index{llama\_kv\_cache\_context@{llama\_kv\_cache\_context}!get\_status@{get\_status}}
+\index{get\_status@{get\_status}!llama\_kv\_cache\_context@{llama\_kv\_cache\_context}}
+\doxysubsubsection{\texorpdfstring{get\_status()}{get\_status()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__context_a5a21c790bc0f2345ed015b30fbb7af42} 
+llama\+\_\+memory\+\_\+status llama\+\_\+kv\+\_\+cache\+\_\+context::\+get\+\_\+status (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__context_afdb2f1fa559e217cdfae9d952541bed2}\index{llama\_kv\_cache\_context@{llama\_kv\_cache\_context}!get\_ubatch@{get\_ubatch}}
+\index{get\_ubatch@{get\_ubatch}!llama\_kv\_cache\_context@{llama\_kv\_cache\_context}}
+\doxysubsubsection{\texorpdfstring{get\_ubatch()}{get\_ubatch()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__context_afdb2f1fa559e217cdfae9d952541bed2} 
+const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \& llama\+\_\+kv\+\_\+cache\+\_\+context::\+get\+\_\+ubatch (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__context_a5d0d65084060a697510cfa1873ca7fbc}\index{llama\_kv\_cache\_context@{llama\_kv\_cache\_context}!next@{next}}
+\index{next@{next}!llama\_kv\_cache\_context@{llama\_kv\_cache\_context}}
+\doxysubsubsection{\texorpdfstring{next()}{next()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__context_a5d0d65084060a697510cfa1873ca7fbc} 
+bool llama\+\_\+kv\+\_\+cache\+\_\+context::\+next (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/kv-\/cache.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/kv-\/cache.\+cpp\end{DoxyCompactItemize}

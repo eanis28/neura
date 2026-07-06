@@ -1,0 +1,36 @@
+\doxysection{llm\+\_\+bigram\+\_\+spm Struct Reference}
+\hypertarget{structllm__bigram__spm}{}\label{structllm__bigram__spm}\index{llm\_bigram\_spm@{llm\_bigram\_spm}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structllm__bigram__spm_1_1comparator}{comparator}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__bigram__spm_a1cd45045c8394b8e72363b433ecbb837}\label{structllm__bigram__spm_a1cd45045c8394b8e72363b433ecbb837} 
+using {\bfseries queue\+\_\+storage} = std::\+vector$<$\doxymbox{\hyperlink{structllm__bigram__spm}{llm\+\_\+bigram\+\_\+spm}}$>$
+\item 
+\Hypertarget{structllm__bigram__spm_a86da1c8cc97b311a110c26f13956e594}\label{structllm__bigram__spm_a86da1c8cc97b311a110c26f13956e594} 
+using {\bfseries queue} = std::\+priority\+\_\+queue$<$\doxymbox{\hyperlink{structllm__bigram__spm}{llm\+\_\+bigram\+\_\+spm}}, queue\+\_\+storage, \doxymbox{\hyperlink{structllm__bigram__spm_1_1comparator}{comparator}}$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__bigram__spm_aa5a6b16d89f82c889c28d58767f8e073}\label{structllm__bigram__spm_aa5a6b16d89f82c889c28d58767f8e073} 
+llm\+\_\+symbol::\+index {\bfseries left}
+\item 
+\Hypertarget{structllm__bigram__spm_ab9ad85b3b6dd4b5ae568c5a6d07102eb}\label{structllm__bigram__spm_ab9ad85b3b6dd4b5ae568c5a6d07102eb} 
+llm\+\_\+symbol::\+index {\bfseries right}
+\item 
+\Hypertarget{structllm__bigram__spm_ae3bf8ffca3ce236ac9526a916757f22d}\label{structllm__bigram__spm_ae3bf8ffca3ce236ac9526a916757f22d} 
+float {\bfseries score}
+\item 
+\Hypertarget{structllm__bigram__spm_ab95dfeefd3da23e8c63eee2145c3947f}\label{structllm__bigram__spm_ab95dfeefd3da23e8c63eee2145c3947f} 
+size\+\_\+t {\bfseries size}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/vocab.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,73 @@
+\doxysection{pre\+\_\+wgsl::\+Expr\+Parser Class Reference}
+\hypertarget{classpre__wgsl_1_1_expr_parser}{}\label{classpre__wgsl_1_1_expr_parser}\index{pre\_wgsl::ExprParser@{pre\_wgsl::ExprParser}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a6d0e1cc793c26f46140f789079d5fb07}\label{classpre__wgsl_1_1_expr_parser_a6d0e1cc793c26f46140f789079d5fb07} 
+{\bfseries Expr\+Parser} (std::\+string\+\_\+view expr, const std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ \&macros, std::\+unordered\+\_\+set$<$ std::\+string $>$ \&visiting)
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a94f4e594a40ab746ef6cba1d56a93ec9}\label{classpre__wgsl_1_1_expr_parser_a94f4e594a40ab746ef6cba1d56a93ec9} 
+int {\bfseries parse} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a1db9e64c3388388622e6027669f50de4}\label{classpre__wgsl_1_1_expr_parser_a1db9e64c3388388622e6027669f50de4} 
+void {\bfseries advance} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a2da05e0418f2ac1fe4c7aba7aafe5192}\label{classpre__wgsl_1_1_expr_parser_a2da05e0418f2ac1fe4c7aba7aafe5192} 
+bool {\bfseries accept\+Op} (const std::\+string \&s)
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_ade604bb2b46c4ac6beae6716d7d9aa28}\label{classpre__wgsl_1_1_expr_parser_ade604bb2b46c4ac6beae6716d7d9aa28} 
+bool {\bfseries accept\+Kind} (Expr\+Lexer::\+\+Kind k)
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a346bfb7e6b6dce500242b93b49b6fb16}\label{classpre__wgsl_1_1_expr_parser_a346bfb7e6b6dce500242b93b49b6fb16} 
+int {\bfseries parse\+Logical\+Or} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_ada494c2d2dd7ba67c91628e8f2ee6d62}\label{classpre__wgsl_1_1_expr_parser_ada494c2d2dd7ba67c91628e8f2ee6d62} 
+int {\bfseries parse\+Logical\+And} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_af217f5032a03be1d53da3430d58ec71c}\label{classpre__wgsl_1_1_expr_parser_af217f5032a03be1d53da3430d58ec71c} 
+int {\bfseries parse\+Equality} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a92ad751cf4508c3f647deadfb3c35b57}\label{classpre__wgsl_1_1_expr_parser_a92ad751cf4508c3f647deadfb3c35b57} 
+int {\bfseries parse\+Relational} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_ab9029a639ea35c7740d11541a1defc8c}\label{classpre__wgsl_1_1_expr_parser_ab9029a639ea35c7740d11541a1defc8c} 
+int {\bfseries parse\+Shift} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a7f13f7b34048505aef7bc8cd53301a35}\label{classpre__wgsl_1_1_expr_parser_a7f13f7b34048505aef7bc8cd53301a35} 
+int {\bfseries parse\+Add} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a9fb55e980ed09e29bc3549efa9af407e}\label{classpre__wgsl_1_1_expr_parser_a9fb55e980ed09e29bc3549efa9af407e} 
+int {\bfseries parse\+Mult} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_ad9ce9b37c828da183a748c5f17685c74}\label{classpre__wgsl_1_1_expr_parser_ad9ce9b37c828da183a748c5f17685c74} 
+int {\bfseries parse\+Unary} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a06c426697738270ecab533471b109af3}\label{classpre__wgsl_1_1_expr_parser_a06c426697738270ecab533471b109af3} 
+int {\bfseries parse\+Primary} ()
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a901205aa4c2e53c0fb631f6f14761665}\label{classpre__wgsl_1_1_expr_parser_a901205aa4c2e53c0fb631f6f14761665} 
+int {\bfseries eval\+Macro\+Expression} (const std::\+string \&name, const std::\+string \&value)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_aa873dd78081283ace8a13a2492509e31}\label{classpre__wgsl_1_1_expr_parser_aa873dd78081283ace8a13a2492509e31} 
+\doxymbox{\hyperlink{classpre__wgsl_1_1_expr_lexer}{Expr\+Lexer}} {\bfseries lex}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a914d12901c245ccf2dcde3240a8800d6}\label{classpre__wgsl_1_1_expr_parser_a914d12901c245ccf2dcde3240a8800d6} 
+\doxymbox{\hyperlink{structpre__wgsl_1_1_expr_lexer_1_1_tok}{Expr\+Lexer::\+\+Tok}} {\bfseries tok}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a718778c72ceb7d0ef02434ac7a78e7d4}\label{classpre__wgsl_1_1_expr_parser_a718778c72ceb7d0ef02434ac7a78e7d4} 
+const std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ \& {\bfseries macros}
+\item 
+\Hypertarget{classpre__wgsl_1_1_expr_parser_a73438cf1ede943224722d084f93d3a0f}\label{classpre__wgsl_1_1_expr_parser_a73438cf1ede943224722d084f93d3a0f} 
+std::\+unordered\+\_\+set$<$ std::\+string $>$ \& {\bfseries visiting}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/webgpu/\+pre\+\_\+wgsl.\+hpp\end{DoxyCompactItemize}

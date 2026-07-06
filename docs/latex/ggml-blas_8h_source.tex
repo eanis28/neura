@@ -1,0 +1,31 @@
+\doxysection{ggml-\/blas.h}
+\hypertarget{ggml-blas_8h_source}{}\label{ggml-blas_8h_source}\index{whisper.cpp/ggml/include/ggml-\/blas.h@{whisper.cpp/ggml/include/ggml-\/blas.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ backend\ API}}
+\DoxyCodeLine{00012\ GGML\_BACKEND\_API\ ggml\_backend\_t\ ggml\_backend\_blas\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_is\_blas(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ number\ of\ threads\ used\ for\ conversion\ to\ float}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ for\ openblas\ and\ blis,\ this\ will\ also\ set\ the\ number\ of\ threads\ used\ for\ blas\ operations}}
+\DoxyCodeLine{00018\ GGML\_BACKEND\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_blas\_set\_n\_threads(ggml\_backend\_t\ backend\_blas,\ \textcolor{keywordtype}{int}\ n\_threads);}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ GGML\_BACKEND\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_blas\_reg(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

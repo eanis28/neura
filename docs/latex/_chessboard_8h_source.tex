@@ -1,0 +1,39 @@
+\doxysection{Chessboard.\+h}
+\hypertarget{_chessboard_8h_source}{}\label{_chessboard_8h_source}\index{whisper.cpp/examples/wchess/libwchess/Chessboard.h@{whisper.cpp/examples/wchess/libwchess/Chessboard.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ just\ basic\ validation}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ fixme:\ missing\ en\ passant,\ castling,\ promotion,\ etc.}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_state}{State}};}
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_piece}{Piece}};}
+\DoxyCodeLine{00010\ \textcolor{keyword}{class\ }Chessboard\ \{}
+\DoxyCodeLine{00011\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00012\ \ \ \ \ Chessboard();}
+\DoxyCodeLine{00013\ \ \ \ \ \string~Chessboard();}
+\DoxyCodeLine{00014\ \ \ \ \ std::string\ process(\textcolor{keyword}{const}\ std::string\&\ \doxymbox{\hyperlink{structcommand}{command}});}
+\DoxyCodeLine{00015\ \ \ \ \ std::string\ stringifyBoard();}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ grammar()\ \{\ \textcolor{keywordflow}{return}\ m\_grammar;\ \}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ prompt()\ \{\ \textcolor{keywordflow}{return}\ m\_prompt;\ \}}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{void}\ setPrompt(\textcolor{keyword}{const}\ std::string\&\ prompt);}
+\DoxyCodeLine{00019\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{bool}\ parseCommand(\textcolor{keyword}{const}\ std::string\&\ \doxymbox{\hyperlink{structcommand}{command}},\ \doxymbox{\hyperlink{class_piece}{Piece}}*\&\ piece,\ \textcolor{keywordtype}{char}\&\ pos\_to);}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{bool}\ move(\doxymbox{\hyperlink{class_piece}{Piece}}\&\ piece,\ \textcolor{keywordtype}{char}\ pos);}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{void}\ flagUpdates(\textcolor{keywordtype}{char}\ pos\_from,\ \textcolor{keywordtype}{char}\ pos\_to);}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ updatePins(\doxymbox{\hyperlink{class_piece}{Piece}}\&\ piece);}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ detectChecks();}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ setGrammar();}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ std::unique\_ptr<State>\ m\_state;}
+\DoxyCodeLine{00028\ \ \ \ \ std::set<char>\ m\_allowedInCheck;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_inCheck\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_moveCounter\ =\ 0;}
+\DoxyCodeLine{00031\ \ \ \ \ std::string\ m\_grammar;}
+\DoxyCodeLine{00032\ \ \ \ \ std::string\ m\_prompt;}
+\DoxyCodeLine{00033\ \};}
+
+\end{DoxyCode}

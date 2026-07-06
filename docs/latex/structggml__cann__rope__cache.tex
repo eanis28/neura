@@ -1,0 +1,76 @@
+\doxysection{ggml\+\_\+cann\+\_\+rope\+\_\+cache Struct Reference}
+\hypertarget{structggml__cann__rope__cache}{}\label{structggml__cann__rope__cache}\index{ggml\_cann\_rope\_cache@{ggml\_cann\_rope\_cache}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__rope__cache_a4ce0ef37c1ea869cb7ccb618264c5932}\label{structggml__cann__rope__cache_a4ce0ef37c1ea869cb7ccb618264c5932} 
+bool {\bfseries equal} (int64\+\_\+t theta\+\_\+scale\+\_\+length, int64\+\_\+t position\+\_\+length, float ext\+\_\+factor, float theta\+\_\+scale, float freq\+\_\+scale, float attn\+\_\+factor, bool is\+\_\+neox, bool indep\+\_\+sects, bool mrope\+\_\+used, bool is\+\_\+imrope, int sections\+[4]\+)
+\item 
+\Hypertarget{structggml__cann__rope__cache_a216d7d90287b10b88e489d59ef966b9e}\label{structggml__cann__rope__cache_a216d7d90287b10b88e489d59ef966b9e} 
+void {\bfseries set} (int64\+\_\+t theta\+\_\+scale\+\_\+length, int64\+\_\+t position\+\_\+length, float ext\+\_\+factor, float theta\+\_\+scale, float freq\+\_\+scale, float attn\+\_\+factor, bool is\+\_\+neox, bool indep\+\_\+sects, bool mrope\+\_\+used, bool is\+\_\+imrope, int sections\+[4]\+)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__cann__rope__cache_a03079e10f2b1923af58cf811db0164c4}\label{structggml__cann__rope__cache_a03079e10f2b1923af58cf811db0164c4} 
+void \texorpdfstring{$\ast$}{*} {\bfseries theta\+\_\+scale\+\_\+cache} = nullptr
+\item 
+\Hypertarget{structggml__cann__rope__cache_aea384803644e69d84fd11cc8a1b28078}\label{structggml__cann__rope__cache_aea384803644e69d84fd11cc8a1b28078} 
+float \texorpdfstring{$\ast$}{*} {\bfseries theta\+\_\+scale\+\_\+exp\+\_\+host} = nullptr
+\item 
+\Hypertarget{structggml__cann__rope__cache_a4ff0e2a31599a929a6edde23310199c3}\label{structggml__cann__rope__cache_a4ff0e2a31599a929a6edde23310199c3} 
+int \texorpdfstring{$\ast$}{*} {\bfseries position\+\_\+select\+\_\+index\+\_\+host} = nullptr
+\item 
+\Hypertarget{structggml__cann__rope__cache_a1a7f9f8f0d81347e6345c29ecfde24c3}\label{structggml__cann__rope__cache_a1a7f9f8f0d81347e6345c29ecfde24c3} 
+void \texorpdfstring{$\ast$}{*} {\bfseries position\+\_\+select\+\_\+index} = nullptr
+\item 
+\Hypertarget{structggml__cann__rope__cache_a225320dcc9cec1c619f9d0c82bc19393}\label{structggml__cann__rope__cache_a225320dcc9cec1c619f9d0c82bc19393} 
+void \texorpdfstring{$\ast$}{*} {\bfseries yarn\+\_\+ramp\+\_\+cache} = nullptr
+\item 
+\Hypertarget{structggml__cann__rope__cache_a567f19a946555deffef007427a104ba1}\label{structggml__cann__rope__cache_a567f19a946555deffef007427a104ba1} 
+void \texorpdfstring{$\ast$}{*} {\bfseries sin\+\_\+cache} = nullptr
+\item 
+\Hypertarget{structggml__cann__rope__cache_a5ec9e36dae771d88896f863d3dce9561}\label{structggml__cann__rope__cache_a5ec9e36dae771d88896f863d3dce9561} 
+void \texorpdfstring{$\ast$}{*} {\bfseries cos\+\_\+cache} = nullptr
+\item 
+\Hypertarget{structggml__cann__rope__cache_abf826f0a621e71addafe1f1dfcade71c}\label{structggml__cann__rope__cache_abf826f0a621e71addafe1f1dfcade71c} 
+int64\+\_\+t {\bfseries theta\+\_\+scale\+\_\+length} = 0
+\item 
+\Hypertarget{structggml__cann__rope__cache_a28bb253e854fe4d0e258855e8375713f}\label{structggml__cann__rope__cache_a28bb253e854fe4d0e258855e8375713f} 
+int64\+\_\+t {\bfseries position\+\_\+length} = 0
+\item 
+\Hypertarget{structggml__cann__rope__cache_afc4d6598298f6b62bc7bd304ef28cda0}\label{structggml__cann__rope__cache_afc4d6598298f6b62bc7bd304ef28cda0} 
+bool {\bfseries cached} = false
+\item 
+\Hypertarget{structggml__cann__rope__cache_a6ce6851a64230b8855f9225909dc868d}\label{structggml__cann__rope__cache_a6ce6851a64230b8855f9225909dc868d} 
+float {\bfseries ext\+\_\+factor} = 0.\+0f
+\item 
+\Hypertarget{structggml__cann__rope__cache_af9aa4558f1c7e59bab8ff39e7e535d42}\label{structggml__cann__rope__cache_af9aa4558f1c7e59bab8ff39e7e535d42} 
+float {\bfseries theta\+\_\+scale} = 0.\+0f
+\item 
+\Hypertarget{structggml__cann__rope__cache_aeb2129a78d234ac470888238d6d6d8c0}\label{structggml__cann__rope__cache_aeb2129a78d234ac470888238d6d6d8c0} 
+float {\bfseries freq\+\_\+scale} = 0.\+0f
+\item 
+\Hypertarget{structggml__cann__rope__cache_a1ae94b1c7eb2d45f7d625b26c83174b6}\label{structggml__cann__rope__cache_a1ae94b1c7eb2d45f7d625b26c83174b6} 
+float {\bfseries attn\+\_\+factor} = 0.\+0f
+\item 
+\Hypertarget{structggml__cann__rope__cache_a170dc0b34b3f703ef1f8709afbcd9b68}\label{structggml__cann__rope__cache_a170dc0b34b3f703ef1f8709afbcd9b68} 
+bool {\bfseries is\+\_\+neox} = false
+\item 
+\Hypertarget{structggml__cann__rope__cache_ade5553599f9ad1e81ed1a898abe72869}\label{structggml__cann__rope__cache_ade5553599f9ad1e81ed1a898abe72869} 
+bool {\bfseries indep\+\_\+sects} = false
+\item 
+\Hypertarget{structggml__cann__rope__cache_a8cbd9d75839438111671ab84b86b5aa3}\label{structggml__cann__rope__cache_a8cbd9d75839438111671ab84b86b5aa3} 
+bool {\bfseries mrope\+\_\+used} = false
+\item 
+\Hypertarget{structggml__cann__rope__cache_ace17dc3338466a7e6a8dd732dc53aa89}\label{structggml__cann__rope__cache_ace17dc3338466a7e6a8dd732dc53aa89} 
+int {\bfseries sections} \+[4]\+ = \{ 0, 0, 0, 0 \}
+\item 
+\Hypertarget{structggml__cann__rope__cache_aa2386ec8e02bf63607ff412ca66ec91a}\label{structggml__cann__rope__cache_aa2386ec8e02bf63607ff412ca66ec91a} 
+bool {\bfseries is\+\_\+imrope} = false
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cann/\+common.\+h\end{DoxyCompactItemize}

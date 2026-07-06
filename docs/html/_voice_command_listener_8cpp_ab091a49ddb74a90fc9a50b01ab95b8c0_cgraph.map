@@ -1,0 +1,7 @@
+<map id="normalizeTranscript" name="normalizeTranscript">
+<area shape="rect" id="Node000001" title="Normalizes a Whisper transcript for easier command matching." alt="" coords="5,31,141,56"/>
+<area shape="rect" id="Node000002" href="$_voice_command_listener_8cpp.html#a82e3ba74a85eb30b3d56fcf19e723720" title="Converts a string to lowercase." alt="" coords="189,5,256,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,29,176,26,171,27,142,35"/>
+<area shape="rect" id="Node000003" href="$_voice_command_listener_8cpp.html#ab5dcb5ce95b02dd9b4fd019c54847303" title="Removes leading and trailing whitespace from a string." alt="" coords="201,55,244,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="141,52,188,61,183,62,141,57"/>
+</map>

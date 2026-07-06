@@ -1,0 +1,279 @@
+\doxysection{hvx-\/base.h}
+\hypertarget{hvx-base_8h_source}{}\label{hvx-base_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/base.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/base.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HVX\_BASE\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HVX\_BASE\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}hex-\/utils.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}hvx-\/types.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ hvx\_vmem(A)\ \ \ *((HVX\_Vector\ *)(A))}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ hvx\_vmemu(A)\ \ *((HVX\_UVector\ *)(A))}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hvx\_vec\_store\_u(\textcolor{keywordtype}{void}\ *\ restrict\ dst,\ uint32\_t\ n,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//\ Rotate\ as\ needed.}}
+\DoxyCodeLine{00017\ \ \ \ \ v\ =\ Q6\_V\_vlalign\_VVR(v,\ v,\ (\textcolor{keywordtype}{size\_t})\ dst);}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ uint32\_t\ left\_off\ \ =\ (size\_t)\ dst\ \&\ 127;}
+\DoxyCodeLine{00020\ \ \ \ \ uint32\_t\ right\_off\ =\ left\_off\ +\ n;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ HVX\_VectorPred\ ql\_not\ =\ Q6\_Q\_vsetq\_R((\textcolor{keywordtype}{size\_t})\ dst);}
+\DoxyCodeLine{00023\ \ \ \ \ HVX\_VectorPred\ qr\ \ \ \ \ =\ Q6\_Q\_vsetq2\_R(right\_off);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{if}\ (right\_off\ >\ 128)\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ Q6\_vmem\_QRIV(qr,\ (HVX\_Vector\ *)\ dst\ +\ 1,\ v);}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ all\ 1's}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ qr\ =\ Q6\_Q\_vcmp\_eq\_VbVb(v,\ v);}
+\DoxyCodeLine{00029\ \ \ \ \ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ ql\_not\ =\ Q6\_Q\_or\_QQn(ql\_not,\ qr);}
+\DoxyCodeLine{00032\ \ \ \ \ Q6\_vmem\_QnRIV(ql\_not,\ (HVX\_Vector\ *)\ dst,\ v);}
+\DoxyCodeLine{00033\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hvx\_vec\_store\_a(\textcolor{keywordtype}{void}\ *\ restrict\ dst,\ uint32\_t\ n,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ assert((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ dst\ \%\ 128\ ==\ 0);}
+\DoxyCodeLine{00037\ \ \ \ \ HVX\_VectorPred\ m\ =\ Q6\_Q\_or\_QQn(Q6\_Q\_vsetq\_R((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\ dst),\ Q6\_Q\_vsetq2\_R(n));}
+\DoxyCodeLine{00038\ \ \ \ \ Q6\_vmem\_QnRIV(m,\ (HVX\_Vector\ *)\ dst,\ v);}
+\DoxyCodeLine{00039\ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_splat\_f32(\textcolor{keywordtype}{float}\ v)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{union\ }\{\ \textcolor{keywordtype}{float}\ \ f;\ uint32\_t\ i;\ \}\ u\ =\ \{\ .f\ =\ v\ \};}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_V\_vsplat\_R(u.i);}
+\DoxyCodeLine{00044\ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_splat\_f16(\_Float16\ v)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{union\ }\{\ \_\_fp16\ f;\ uint16\_t\ i;\ \}\ u\ =\ \{\ .f\ =\ v\ \};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vh\_vsplat\_R(u.i);}
+\DoxyCodeLine{00049\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_repl4(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//\ vdelta\ control\ to\ replicate\ first\ 4\ bytes\ across\ all\ elements}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint8\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((aligned(128)))\ repl[128]\ =\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ 0x00,\ 0x00,\ 0x00,\ 0x00,\ 0x04,\ 0x04,\ 0x04,\ 0x04,\ 0x08,\ 0x08,\ 0x08,\ 0x08,\ 0x04,\ 0x04,\ 0x04,\ 0x04,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ 0x10,\ 0x10,\ 0x10,\ 0x10,\ 0x04,\ 0x04,\ 0x04,\ 0x04,\ 0x08,\ 0x08,\ 0x08,\ 0x08,\ 0x04,\ 0x04,\ 0x04,\ 0x04,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ 0x20,\ 0x20,\ 0x20,\ 0x20,\ 0x04,\ 0x04,\ 0x04,\ 0x04,\ 0x08,\ 0x08,\ 0x08,\ 0x08,\ 0x04,\ 0x04,\ 0x04,\ 0x04,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ 0x10,\ 0x10,\ 0x10,\ 0x10,\ 0x04,\ 0x04,\ 0x04,\ 0x04,\ 0x08,\ 0x08,\ 0x08,\ 0x08,\ 0x04,\ 0x04,\ 0x04,\ 0x04,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ 0x40,\ 0x40,\ 0x40,\ 0x40,\ 0x04,\ 0x04,\ 0x04,\ 0x04,\ 0x08,\ 0x08,\ 0x08,\ 0x08,\ 0x04,\ 0x04,\ 0x04,\ 0x04,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ 0x10,\ 0x10,\ 0x10,\ 0x10,\ 0x04,\ 0x04,\ 0x04,\ 0x04,\ 0x08,\ 0x08,\ 0x08,\ 0x08,\ 0x04,\ 0x04,\ 0x04,\ 0x04,}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ 0x20,\ 0x20,\ 0x20,\ 0x20,\ 0x04,\ 0x04,\ 0x04,\ 0x04,\ 0x08,\ 0x08,\ 0x08,\ 0x08,\ 0x04,\ 0x04,\ 0x04,\ 0x04,}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ 0x10,\ 0x10,\ 0x10,\ 0x10,\ 0x04,\ 0x04,\ 0x04,\ 0x04,\ 0x08,\ 0x08,\ 0x08,\ 0x08,\ 0x04,\ 0x04,\ 0x04,\ 0x04,}
+\DoxyCodeLine{00062\ \ \ \ \ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ HVX\_Vector\ ctrl\ =\ *(HVX\_Vector\ *)\ repl;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_V\_vdelta\_VV(v,\ ctrl);}
+\DoxyCodeLine{00066\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ hvx\_vec\_get\_f32(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((aligned(128)))\ x;}
+\DoxyCodeLine{00070\ \ \ \ \ hvx\_vec\_store\_a(\&x,\ 4,\ v);}
+\DoxyCodeLine{00071\ \ \ \ \ return\ x;}
+\DoxyCodeLine{00072\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ static\ inline\ int32\_t\ hvx\_vec\_get\_i32(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ int32\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((aligned(128)))\ x;}
+\DoxyCodeLine{00076\ \ \ \ \ hvx\_vec\_store\_a(\&x,\ 4,\ v);}
+\DoxyCodeLine{00077\ \ \ \ \ return\ x;}
+\DoxyCodeLine{00078\ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ static\ inline\ HVX\_Vector\ hvx\_vec\_abs\_f16(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ abs\ by\ clearing\ the\ fp16\ sign\ bit}}
+\DoxyCodeLine{00082\ \ \ \ \ HVX\_Vector\ mask\ =\ Q6\_Vh\_vsplat\_R(0x7fff);}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_V\_vand\_VV(v,\ mask);}
+\DoxyCodeLine{00084\ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_neg\_f16(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ neg\ by\ setting\ the\ fp16\ sign\ bit}}
+\DoxyCodeLine{00088\ \ \ \ \ HVX\_Vector\ mask\ =\ Q6\_Vh\_vsplat\_R(0x8000);}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_V\_vxor\_VV(v,\ mask);}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_abs\_f32(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ abs\ by\ clearing\ the\ fp32\ sign\ bit}}
+\DoxyCodeLine{00094\ \ \ \ \ HVX\_Vector\ mask\ =\ Q6\_V\_vsplat\_R(0x7fffffff);}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_V\_vand\_VV(v,\ mask);}
+\DoxyCodeLine{00096\ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_neg\_f32(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ >\ 75}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vsf\_vfneg\_Vsf(v);}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ neg\ by\ setting\ the\ fp32\ sign\ bit}}
+\DoxyCodeLine{00103\ \ \ \ \ HVX\_Vector\ mask\ =\ Q6\_V\_vsplat\_R(0x80000000);}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_V\_vxor\_VV(v,\ mask);}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ \_\_HVX\_ARCH\_\_\ >\ 75}}
+\DoxyCodeLine{00106\ \}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_VectorPred\ hvx\_vec\_is\_nan\_f16(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ vnan\_exp\ \ =\ Q6\_Vh\_vsplat\_R(0x7C00);}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ vnan\_frac\ =\ Q6\_Vh\_vsplat\_R(0x7FFF);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ get\ pred\ of\ which\ are\ NaN,\ i.e.,\ exponent\ bits\ all\ 1s\ and\ fraction\ bits\ non\ 0s}}
+\DoxyCodeLine{00113\ \ \ \ \ HVX\_VectorPred\ p\_exp\ \ =\ Q6\_Q\_vcmp\_eq\_VhVh(Q6\_V\_vand\_VV(v,\ vnan\_exp),\ vnan\_exp);}
+\DoxyCodeLine{00114\ \ \ \ \ HVX\_VectorPred\ p\_frac\ =\ Q6\_Q\_not\_Q(Q6\_Q\_vcmp\_eq\_VhVh(Q6\_V\_vand\_VV(v,\ vnan\_frac),\ vnan\_exp));}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Q\_and\_QQ(p\_exp,\ p\_frac);}
+\DoxyCodeLine{00116\ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_f32\_to\_f16\_shuff(HVX\_Vector\ v0,\ HVX\_Vector\ v1)\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ zero\ =\ Q6\_V\_vzero();}
+\DoxyCodeLine{00120\ \ \ \ \ HVX\_Vector\ q0\ =\ Q6\_Vqf32\_vadd\_VsfVsf(v0,\ zero);}
+\DoxyCodeLine{00121\ \ \ \ \ HVX\_Vector\ q1\ =\ Q6\_Vqf32\_vadd\_VsfVsf(v1,\ zero);}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vhf\_equals\_Wqf32(Q6\_W\_vcombine\_VV(q1,\ q0));}
+\DoxyCodeLine{00123\ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_f32\_to\_f16(HVX\_Vector\ v0,\ HVX\_Vector\ v1)\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ HVX\_Vector\ v\ =\ Q6\_Vh\_vdeal\_Vh(hvx\_vec\_f32\_to\_f16\_shuff(v0,\ v1));}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ <\ 79}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{//\ replace\ NaNs\ with\ -\/INF,\ older\ arches\ produce\ NaNs\ for\ (-\/INF\ +\ 0.0)}}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ neg\_inf\ =\ hvx\_vec\_splat\_f16(-\/INFINITY);}
+\DoxyCodeLine{00131\ \ \ \ \ HVX\_VectorPred\ nan\ =\ hvx\_vec\_is\_nan\_f16(v);}
+\DoxyCodeLine{00132\ \ \ \ \ v\ =\ Q6\_V\_vmux\_QVV(nan,\ neg\_inf,\ v);}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00136\ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ >=\ 79}}
+\DoxyCodeLine{00139\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_VectorPair\ hvx\_vec\_f16\_to\_f32\_shuff(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ one\ =\ hvx\_vec\_splat\_f16(1.0);}
+\DoxyCodeLine{00141\ \ \ \ \ HVX\_VectorPair\ p\ =\ Q6\_Wsf\_vmpy\_VhfVhf(v,\ one);}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_W\_vcombine\_VV(Q6\_V\_hi\_W(p),\ Q6\_V\_lo\_W(p));}
+\DoxyCodeLine{00143\ \}}
+\DoxyCodeLine{00144\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_VectorPair\ hvx\_vec\_f16\_to\_f32(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ one\ =\ hvx\_vec\_splat\_f16(1.0);}
+\DoxyCodeLine{00146\ \ \ \ \ HVX\_VectorPair\ p\ =\ Q6\_Wsf\_vmpy\_VhfVhf(Q6\_Vh\_vshuff\_Vh(v),\ one);}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_W\_vcombine\_VV(Q6\_V\_hi\_W(p),\ Q6\_V\_lo\_W(p));}
+\DoxyCodeLine{00148\ \}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00150\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_VectorPair\ hvx\_vec\_f16\_to\_f32\_shuff(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ one\ =\ hvx\_vec\_splat\_f16(1.0);}
+\DoxyCodeLine{00152\ \ \ \ \ HVX\_VectorPair\ p\ =\ Q6\_Wqf32\_vmpy\_VhfVhf(v,\ one);}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_W\_vcombine\_VV(Q6\_Vsf\_equals\_Vqf32(Q6\_V\_hi\_W(p)),\ Q6\_Vsf\_equals\_Vqf32(Q6\_V\_lo\_W(p)));}
+\DoxyCodeLine{00154\ \}}
+\DoxyCodeLine{00155\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_VectorPair\ hvx\_vec\_f16\_to\_f32(HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ one\ =\ hvx\_vec\_splat\_f16(1.0);}
+\DoxyCodeLine{00157\ \ \ \ \ HVX\_VectorPair\ p\ =\ Q6\_Wqf32\_vmpy\_VhfVhf(Q6\_Vh\_vshuff\_Vh(v),\ one);}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_W\_vcombine\_VV(Q6\_Vsf\_equals\_Vqf32(Q6\_V\_hi\_W(p)),\ Q6\_Vsf\_equals\_Vqf32(Q6\_V\_lo\_W(p)));}
+\DoxyCodeLine{00159\ \}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{comment}{/*\ Q6\_Vsf\_equals\_Vw\ is\ only\ available\ on\ v73+.*/}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ <\ 73}}
+\DoxyCodeLine{00164\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_i32\_to\_qf32(HVX\_Vector\ \textcolor{keyword}{const}\ in)}
+\DoxyCodeLine{00165\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ HVX\_Vector\ \textcolor{keyword}{const}\ vzero\ =\ Q6\_V\_vzero();}
+\DoxyCodeLine{00167\ \ \ \ \ HVX\_VectorPred\ is\_zero\ =\ Q6\_Q\_vcmp\_eq\_VwVw(in,\ vzero);}
+\DoxyCodeLine{00168\ \ \ \ \ HVX\_Vector\ lshift\ =\ Q6\_Vw\_vnormamt\_Vw(in);}
+\DoxyCodeLine{00169\ \ \ \ \ HVX\_Vector\ normalized\ =\ Q6\_Vw\_vasl\_VwVw(in,\ lshift);}
+\DoxyCodeLine{00170\ \ \ \ \ HVX\_Vector\ vexp\ =\ Q6\_Vw\_vsub\_VwVw(Q6\_V\_vsplat\_R(0x7f\ +\ 30),\ lshift);}
+\DoxyCodeLine{00171\ \ \ \ \ HVX\_Vector\ mant\ =\ Q6\_V\_vand\_VV(Q6\_V\_vsplat\_R(0xFFFFFF00),\ normalized);}
+\DoxyCodeLine{00172\ \ \ \ \ HVX\_Vector\ ret\ =\ Q6\_V\_vmux\_QVV(is\_zero,\ vzero,\ Q6\_Vw\_vadd\_VwVw(mant,\ vexp));}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{00174\ \}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ Q6\_Vsf\_equals\_Vw(HVX\_Vector\ \textcolor{keyword}{const}\ in)}
+\DoxyCodeLine{00177\ \{}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vsf\_equals\_Vqf32(hvx\_vec\_i32\_to\_qf32(in));}
+\DoxyCodeLine{00179\ \}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_i16\_from\_hf\_rnd\_sat(HVX\_Vector\ vin)\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{comment}{//\ This\ looks\ complicated.}}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{comment}{//\ Ideally\ should\ just\ be\ Q6\_Vh\_equals\_Vhf(vin)}}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{comment}{//\ but\ that\ instruction\ does\ not\ do\ proper\ rounding.}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{comment}{//\ convert\ to\ qf32,\ multiplying\ by\ 1.0\ in\ the\ process.}}
+\DoxyCodeLine{00188\ \ \ \ \ HVX\_VectorPair\ v32\ =\ Q6\_Wqf32\_vmpy\_VhfVhf(vin,\ Q6\_Vh\_vsplat\_R(0x3C00));}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{comment}{//\ 'in-\/range'\ values\ are\ +/32752.}}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{comment}{//\ add\ 192K\ to\ it,\ convert\ to\ sf}}
+\DoxyCodeLine{00192\ \ \ \ \ HVX\_Vector\ v192K\ =\ Q6\_V\_vsplat\_R(0x48400000);}
+\DoxyCodeLine{00193\ \ \ \ \ HVX\_Vector\ vsf\_0\ =\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vadd\_Vqf32Vsf(Q6\_V\_lo\_W(v32),\ v192K));}
+\DoxyCodeLine{00194\ \ \ \ \ HVX\_Vector\ vsf\_1\ =\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vadd\_Vqf32Vsf(Q6\_V\_hi\_W(v32),\ v192K));}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{comment}{//\ for\ in-\/range\ cases,\ result\ is\ \{163858...\ 229360\}\ so\ the\ exponent\ is\ always\ 144.}}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{comment}{//\ if\ we\ extract\ bits\ 21..0\ as\ a\ signed\ quantity,\ and\ round\ 6\ bits\ off,\ that\ will\ be\ the\ answer.}}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{//\ Start\ by\ <<10\ to\ get\ the\ final\ 'sign'\ bit\ in\ bit\ 15...}}
+\DoxyCodeLine{00199\ \ \ \ \ vsf\_0\ =\ Q6\_Vw\_vasl\_VwR(vsf\_0,\ 10);}
+\DoxyCodeLine{00200\ \ \ \ \ vsf\_1\ =\ Q6\_Vw\_vasl\_VwR(vsf\_1,\ 10);}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{comment}{//\ now\ round\ down\ to\ 16}}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vh\_vround\_VwVw\_sat(vsf\_1,\ vsf\_0);}
+\DoxyCodeLine{00204\ \}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ <\ 79}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_VectorPair\ hvx\_vec\_mpyacc\_f32\_f16(HVX\_VectorPair\ acc,\ HVX\_Vector\ x,\ HVX\_Vector\ y)}
+\DoxyCodeLine{00209\ \{}
+\DoxyCodeLine{00210\ \ \ \ \ HVX\_VectorPair\ m\ =\ Q6\_Wqf32\_vmpy\_VhfVhf(x,\ y);}
+\DoxyCodeLine{00211\ \ \ \ \ HVX\_Vector\ a0\ =\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vadd\_Vqf32Vsf(Q6\_V\_lo\_W(m),\ Q6\_V\_lo\_W(acc)));}
+\DoxyCodeLine{00212\ \ \ \ \ HVX\_Vector\ a1\ =\ Q6\_Vsf\_equals\_Vqf32(Q6\_Vqf32\_vadd\_Vqf32Vsf(Q6\_V\_hi\_W(m),\ Q6\_V\_hi\_W(acc)));}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_W\_vcombine\_VV(a1,\ a0);}
+\DoxyCodeLine{00214\ \}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_VectorPair\ hvx\_vec\_mpyacc\_f32\_f16(HVX\_VectorPair\ acc,\ HVX\_Vector\ x,\ HVX\_Vector\ y)}
+\DoxyCodeLine{00219\ \{}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Wsf\_vmpyacc\_WsfVhfVhf(acc,\ x,\ y);}
+\DoxyCodeLine{00221\ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#if\ \_\_HVX\_ARCH\_\_\ <\ 79}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_add\_f16\_f16(HVX\_Vector\ a,\ HVX\_Vector\ b)}
+\DoxyCodeLine{00228\ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ negone\ =\ Q6\_Vh\_vsplat\_R(0xBC00);\ \textcolor{comment}{//\ -\/1.0\ in\ IEEE\ FP16}}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ one\ \ \ \ =\ Q6\_Vh\_vsplat\_R(0x3C00);\ \textcolor{comment}{//\ \ 1.0\ in\ IEEE\ FP16}}
+\DoxyCodeLine{00231\ \ \ \ \ HVX\_VectorPair\ a\_p\ =\ Q6\_Wqf32\_vmpy\_VhfVhf(a,\ one);}
+\DoxyCodeLine{00232\ \ \ \ \ HVX\_VectorPair\ b\_p\ =\ Q6\_Wqf32\_vmpy\_VhfVhf(b,\ negone);}
+\DoxyCodeLine{00233\ \ \ \ \ HVX\_Vector\ a0\ =\ Q6\_Vqf32\_vsub\_Vqf32Vqf32(Q6\_V\_lo\_W(a\_p),\ Q6\_V\_lo\_W(b\_p));}
+\DoxyCodeLine{00234\ \ \ \ \ HVX\_Vector\ a1\ =\ Q6\_Vqf32\_vsub\_Vqf32Vqf32(Q6\_V\_hi\_W(a\_p),\ Q6\_V\_hi\_W(b\_p));}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vhf\_equals\_Wqf32(Q6\_W\_vcombine\_VV(a1,\ a0));}
+\DoxyCodeLine{00236\ \}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_sub\_f16\_f16(HVX\_Vector\ a,\ HVX\_Vector\ b)}
+\DoxyCodeLine{00239\ \{}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ negone\ =\ Q6\_Vh\_vsplat\_R(0xBC00);\ \textcolor{comment}{//\ -\/1.0\ in\ IEEE\ FP16}}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keyword}{const}\ HVX\_Vector\ one\ \ \ \ =\ Q6\_Vh\_vsplat\_R(0x3C00);\ \textcolor{comment}{//\ \ 1.0\ in\ IEEE\ FP16}}
+\DoxyCodeLine{00242\ \ \ \ \ HVX\_VectorPair\ a\_p\ =\ Q6\_Wqf32\_vmpy\_VhfVhf(a,\ one);}
+\DoxyCodeLine{00243\ \ \ \ \ HVX\_VectorPair\ b\_p\ =\ Q6\_Wqf32\_vmpy\_VhfVhf(b,\ negone);}
+\DoxyCodeLine{00244\ \ \ \ \ HVX\_Vector\ a0\ =\ Q6\_Vqf32\_vadd\_Vqf32Vqf32(Q6\_V\_lo\_W(a\_p),\ Q6\_V\_lo\_W(b\_p));}
+\DoxyCodeLine{00245\ \ \ \ \ HVX\_Vector\ a1\ =\ Q6\_Vqf32\_vadd\_Vqf32Vqf32(Q6\_V\_hi\_W(a\_p),\ Q6\_V\_hi\_W(b\_p));}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vhf\_equals\_Wqf32(Q6\_W\_vcombine\_VV(a1,\ a0));}
+\DoxyCodeLine{00247\ \}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_mul\_f16\_f16(HVX\_Vector\ a,\ HVX\_Vector\ b)}
+\DoxyCodeLine{00250\ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vhf\_equals\_Wqf32(Q6\_Wqf32\_vmpy\_VhfVhf(a,\ b));}
+\DoxyCodeLine{00252\ \}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_add\_f16\_f16(HVX\_Vector\ a,\ HVX\_Vector\ b)}
+\DoxyCodeLine{00257\ \{}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vhf\_vadd\_VhfVhf(a,\ b);}
+\DoxyCodeLine{00259\ \}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_sub\_f16\_f16(HVX\_Vector\ a,\ HVX\_Vector\ b)}
+\DoxyCodeLine{00262\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vhf\_vsub\_VhfVhf(a,\ b);}
+\DoxyCodeLine{00264\ \}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_mul\_f16\_f16(HVX\_Vector\ a,\ HVX\_Vector\ b)}
+\DoxyCodeLine{00267\ \{}
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{keywordflow}{return}\ Q6\_Vhf\_vmpy\_VhfVhf(a,\ b);}
+\DoxyCodeLine{00269\ \}}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_HVX\_ARCH\_\_\ <\ 79}}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HVX\_BASE\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,91 @@
+\doxysection{ggml-\/alloc.h}
+\hypertarget{ggml-alloc_8h_source}{}\label{ggml-alloc_8h_source}\index{whisper.cpp/ggml/include/ggml-\/alloc.h@{whisper.cpp/ggml/include/ggml-\/alloc.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00006\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__buffer__type}{ggml\_backend\_buffer\_type}}\ *\ ggml\_backend\_buffer\_type\_t;}
+\DoxyCodeLine{00010\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ \ \ \ \ \ }\doxymbox{\hyperlink{structggml__backend__buffer}{ggml\_backend\_buffer}}\ *\ ggml\_backend\_buffer\_t;}
+\DoxyCodeLine{00011\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ \ \ \ \ \ \ \ \ \ \ \ \ }\doxymbox{\hyperlink{structggml__backend}{ggml\_backend}}\ *\ ggml\_backend\_t;}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ Tensor\ allocator}}
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tallocr}{ggml\_tallocr}}\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ ggml\_backend\_buffer\_t\ buffer;}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ base;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ alignment;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ offset;}
+\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tallocr}{ggml\_tallocr}}\ ggml\_tallocr\_new(ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00022\ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_status\ \ \ \ ggml\_tallocr\_alloc(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tallocr}{ggml\_tallocr}}\ *\ talloc,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ Graph\ allocator}}
+\DoxyCodeLine{00025\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ \ Example\ usage:}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ \ \ \ ggml\_gallocr\_t\ galloc\ =\ ggml\_gallocr\_new(ggml\_backend\_cpu\_buffer\_type());}}
+\DoxyCodeLine{00028\ \textcolor{comment}{}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ \ \ \ //\ optional:\ create\ a\ worst-\/case\ graph\ and\ reserve\ the\ buffers\ to\ avoid\ reallocations}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ \ \ ggml\_gallocr\_reserve(galloc,\ build\_graph(max\_batch));}}
+\DoxyCodeLine{00031\ \textcolor{comment}{}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ \ \ \ //\ allocate\ the\ graph}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ \ struct\ ggml\_cgraph\ *\ graph\ =\ build\_graph(batch);}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ \ \ \ ggml\_gallocr\_alloc\_graph(galloc,\ graph);}}
+\DoxyCodeLine{00035\ \textcolor{comment}{}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ \ \ \ printf("{}compute\ buffer\ size:\ \%zu\ bytes\(\backslash\)n"{},\ ggml\_gallocr\_get\_buffer\_size(galloc,\ 0));}}
+\DoxyCodeLine{00037\ \textcolor{comment}{}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ \ \ \ //\ evaluate\ the\ graph}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ \ \ \ ggml\_backend\_graph\_compute(backend,\ graph);}}
+\DoxyCodeLine{00040\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ special\ tensor\ flags\ for\ use\ with\ the\ graph\ allocator:}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ \ \ ggml\_set\_input():\ all\ input\ tensors\ are\ allocated\ at\ the\ beginning\ of\ the\ graph\ in\ non-\/overlapping\ addresses}}
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ \ \ ggml\_set\_output():\ output\ tensors\ are\ never\ freed\ and\ never\ overwritten}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__gallocr}{ggml\_gallocr}}\ *\ ggml\_gallocr\_t;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ GGML\_API\ ggml\_gallocr\_t\ ggml\_gallocr\_new(ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00049\ GGML\_API\ ggml\_gallocr\_t\ ggml\_gallocr\_new\_n(ggml\_backend\_buffer\_type\_t\ *\ bufts,\ \textcolor{keywordtype}{int}\ n\_bufs);}
+\DoxyCodeLine{00050\ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ ggml\_gallocr\_free(ggml\_gallocr\_t\ galloc);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ pre-\/allocate\ buffers\ from\ a\ measure\ graph\ -\/\ does\ not\ allocate\ or\ modify\ the\ graph}}
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ call\ with\ a\ worst-\/case\ graph\ to\ avoid\ buffer\ reallocations}}
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ not\ strictly\ required\ for\ single\ buffer\ usage:\ ggml\_gallocr\_alloc\_graph\ will\ reallocate\ the\ buffers\ automatically\ if\ needed}}
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ returns\ false\ if\ the\ buffer\ allocation\ failed}}
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ ggml\_gallocr\_resrve\_n\_size\ writes\ the\ buffer\ sizes\ per\ galloc\ buffer\ that\ would\ be\ allocated\ by\ ggml\_gallocr\_reserve\_n\ to\ sizes}}
+\DoxyCodeLine{00057\ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_gallocr\_reserve(ggml\_gallocr\_t\ galloc,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph);}
+\DoxyCodeLine{00058\ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_gallocr\_reserve\_n\_size(}
+\DoxyCodeLine{00059\ \ \ \ \ ggml\_gallocr\_t\ galloc,}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph,}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ node\_buffer\_ids,}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ leaf\_buffer\_ids,}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *\ sizes);}
+\DoxyCodeLine{00064\ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_gallocr\_reserve\_n(}
+\DoxyCodeLine{00065\ \ \ \ \ ggml\_gallocr\_t\ galloc,}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph,}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ node\_buffer\_ids,}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ leaf\_buffer\_ids);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ automatic\ reallocation\ if\ the\ topology\ changes\ when\ using\ a\ single\ buffer}}
+\DoxyCodeLine{00071\ \textcolor{comment}{//\ returns\ false\ if\ using\ multiple\ buffers\ and\ a\ re-\/allocation\ is\ needed\ (call\ ggml\_gallocr\_reserve\_n\ first\ to\ set\ the\ node\ buffers)}}
+\DoxyCodeLine{00072\ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_gallocr\_alloc\_graph(ggml\_gallocr\_t\ galloc,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ ggml\_gallocr\_get\_buffer\_size(ggml\_gallocr\_t\ galloc,\ \textcolor{keywordtype}{int}\ buffer\_id);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ Utils}}
+\DoxyCodeLine{00077\ \textcolor{comment}{//\ Create\ a\ buffer\ and\ allocate\ all\ the\ tensors\ in\ a\ ggml\_context}}
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ ggml\_backend\_alloc\_ctx\_tensors\_from\_buft\_size\ returns\ the\ size\ of\ the\ buffer\ that\ would\ be\ allocated\ by\ ggml\_backend\_alloc\_ctx\_tensors\_from\_buft}}
+\DoxyCodeLine{00079\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_alloc\_ctx\_tensors\_from\_buft\_size(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx,\ ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00080\ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__buffer}{ggml\_backend\_buffer}}\ *\ ggml\_backend\_alloc\_ctx\_tensors\_from\_buft(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx,\ ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00081\ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__buffer}{ggml\_backend\_buffer}}\ *\ ggml\_backend\_alloc\_ctx\_tensors(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx,\ ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00084\ \}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

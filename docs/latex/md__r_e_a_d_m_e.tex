@@ -1,0 +1,127 @@
+\chapter{Group 25 – Neura Personal Assistant }
+\hypertarget{md__r_e_a_d_m_e}{}\label{md__r_e_a_d_m_e}\index{Group 25 – Neura Personal Assistant@{Group 25 – Neura Personal Assistant}}
+\label{md__r_e_a_d_m_e_autotoc_md0}%
+\Hypertarget{md__r_e_a_d_m_e_autotoc_md0}%
+
+
+Neura is compatible with Unix-\/based systems like Mac-\/\+OS.\hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysection{\texorpdfstring{Setup (First Time)}{Setup (First Time)}}\label{md__r_e_a_d_m_e_autotoc_md1}
+Run this one command to install all dependencies:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ setup}
+
+\end{DoxyCode}
+
+
+Then compile and run:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ clean}
+\DoxyCodeLine{make}
+\DoxyCodeLine{./mainAssistant}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysection{\texorpdfstring{Returning to the Project}{Returning to the Project}}\label{md__r_e_a_d_m_e_autotoc_md3}
+Open a new terminal session, recompile and run:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ clean}
+\DoxyCodeLine{make}
+\DoxyCodeLine{./mainAssistant}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysection{\texorpdfstring{Platform-\/\+Specific Setup Notes}{Platform-\/\+Specific Setup Notes}}\label{md__r_e_a_d_m_e_autotoc_md5}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysubsection{\texorpdfstring{mac\+OS}{mac\+OS}}\label{md__r_e_a_d_m_e_autotoc_md6}
+
+\begin{DoxyItemize}
+\item Uses Homebrew for dependencies (opencv, sfml, portaudio, etc.)
+\item Metal acceleration is enabled for Whisper
+\item Requires system permissions for camera and microphone
+\end{DoxyItemize}
+
+{\bfseries{Camera Issue (Important)}} mac\+OS may default your camera to your i\+Phone (Continuity Camera) instead of your built-\/in webcam.
+
+If vision features are not working:\+
+\begin{DoxyEnumerate}
+\item Open a camera-\/based app (Photo Booth or Face\+Time)
+\item Check which camera is selected
+\item On laptop, in System Settings switch from i\+Phone camera to built-\/in webcam
+\item Restart {\ttfamily main\+Assistant}
+\end{DoxyEnumerate}\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsection{\texorpdfstring{Linux (WSL)}{Linux (WSL)}}\label{md__r_e_a_d_m_e_autotoc_md7}
+Note:\+ Neura works flawlessly with Mac\+OS. However, if you are using Neura on Linux/\+\+Windows through WSL, certain commands may not work as WSL cannot access certain system features (eg. hardware brightness, Windows applications, Open\+CV Camera) without significant work in your powershell. Windows/\+\+WSL functionality has not been fully integrated and is meant as a bonus addition to the base requirements of the project. If you are curious and would like to see how some of the features work in WSL, you must at least do the following:\+
+
+Microphone:\+
+\begin{DoxyItemize}
+\item In your WSL, use the following command to check your microphone status (look for RDPSource) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pactl\ list\ sources\ short}
+
+\end{DoxyCode}
+
+\item Ensure that RDPSource appears
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md9}{}\doxysection{\texorpdfstring{Required Permissions (All Systems)}{Required Permissions (All Systems)}}\label{md__r_e_a_d_m_e_autotoc_md9}
+If camera, microphone, or vision features fail, verify:\+
+
+
+\begin{DoxyItemize}
+\item Camera access is enabled
+\item Microphone access is enabled
+\item Terminal or IDE has permission to access devices
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md10}{}\doxysubsection{\texorpdfstring{mac\+OS:\+}{mac\+OS:\+}}\label{md__r_e_a_d_m_e_autotoc_md10}
+System Settings → Privacy \& Security → Camera /\+ Microphone\hypertarget{md__r_e_a_d_m_e_autotoc_md11}{}\doxysubsection{\texorpdfstring{Linux:\+}{Linux:\+}}\label{md__r_e_a_d_m_e_autotoc_md11}
+Depends on distribution (Pulse\+Audio or Pipe\+Wire configuration)
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md13}{}\doxysection{\texorpdfstring{API Token Setup for Google Calendar}{API Token Setup for Google Calendar}}\label{md__r_e_a_d_m_e_autotoc_md13}
+
+\begin{DoxyEnumerate}
+\item If you have completed the API Token Setup for Google Calendar, skip to step 4. Otherwise, go to \href{https://console.cloud.google.com}{\texttt{https:\+/\+/\+console.\+cloud.\+google.\+com}} and sign in using your desired account
+\item Click on the Project Picker ("{}\+Select a Project"{}) button at the top of the screen
+\item Click "{}\+New Project"{} button, name the project whatever you\textquotesingle{}d like ("{}eg. Voice Assistant) and ignore the parent resource box. Click "{}Create"{}. 4. Using the Project Picker button, select the project you have just created/\+want to use. Go to https:\+/\+/\+console.\+cloud.\+google.\+com/\+apis/\+library/\+calendar-\/json.\+googleapis.\+com and click the "{}Enable"{} button. Then, click on the "{}APIs \& Services"{} tab from the quick select menu or the sidebar of the left side of the screen. 5. On the APIs \& Services page, click on the "{}Credentials"{} tab on the left sidebar. CLick the "{}Create credentials"{} button and select "{}OAuth client ID."{} Click the "{}Configure consent screen button.
+\item You will be redirected to the Branding page. Click the "{}\+Get Started"{} button. For step one, enter a name for the virtual assistant (You can name it whatever you wish) and your email as the user support email. Select "{}\+External"{} for the second "{}\+Audience"{} step. Input your own email again for the third Contact Information step. Click the "{}\+Agree"{} button in the final finishing step to agree to the User Data Policy Google API has, and click create to finish.
+\item Click on the Audience tab in the left sidebar. Scroll down to Test users and click Add users. Input your email in the textbox and click Save.
+\item Click on the Overview tab in the left sidebar. You\textquotesingle{}ll be returned to the OAuth Overview page. Click "{}\+Create OAuth client."{}
+\item On the "{}\+Create OAuth client ID"{} page, select Web application for the Application type and give it any name you want.
+\item Scroll down to the "{}\+Authorized redirect URIs"{} section and click on the "{}\+Add URI"{} button. Paste in \href{https://developers.google.com/oauthplayground}{\texttt{https:\+/\+/\+developers.\+google.\+com/\+oauthplayground}} and hit the blue Create button at the bottom of the screen.
+\item On the OAuth client creation popup, you will see two important credentials, the Client ID and Client Secret. Copy and save these two credentials somwhere safe, or click the Download JSON button at the bottom to save a file containing these two credentials, as you will not be able to access the Client Secret once the popup is closed.
+\item Go to the sidebar and hover over APIs \& Services. Then select OAuth consent screen.
+\item Go to \href{https://developers.google.com/oauthplayground}{\texttt{https:\+/\+/\+developers.\+google.\+com/\+oauthplayground}} and log in. Click on the settings (gear button) at the top right. Check the "{}\+Use your own Oauth credentials"{} checkbox. Then, paste in the Client ID and Client Secret you obtained in the previous step.
+\item On the left half of the page, search for "{}\+Google Calendar API v3"{} in the "{}\+Step 1 Select \& authorize APIs"{} section. Click the dropdown and check off the "{}https:\+/\+/\+www.\+googleapis.\+com/\+auth/\+calendar.\+events"{} scope. Then, click on the blue Authorize APIs button.
+\item Click Exchange authorization code for tokens and copy the Refresh token value from the "{}\+Step 2 Exchange authorization code for tokens"{} section.
+\item Open Neura and navigate to the settings page. Paste in your saved Client ID, Client Secret, and the Refresh Token obtained in the last step. Click the save button. Now, you are all set up to add calendar events to your Google Calendar with the help of Neura!
+\end{DoxyEnumerate}
+
+NOTE:\+ Refresh tokens will eventually expire. For example, if your Google Cloud project is in the "{}\+Testing"{} publishing status, refresh tokens expire in 7 days. If the token is inactive for over 6 months, it may also expire. Ensure that you get a new refresh token using your credentials by following steps 11 to 14 once it expires!
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md15}{}\doxysection{\texorpdfstring{API Token Setup for You\+Tube}{API Token Setup for You\+Tube}}\label{md__r_e_a_d_m_e_autotoc_md15}
+
+\begin{DoxyEnumerate}
+\item If you have completed the API Token Setup for Google Calendar, go to \href{https://console.cloud.google.com}{\texttt{https:\+/\+/\+console.\+cloud.\+google.\+com}} and skip to step 4.
+\item Click on the Project Picker ("{}\+Select a Project"{}) button at the top of the screen
+\item Click "{}\+New Project"{} button, name the project whatever you\textquotesingle{}d like ("{}eg. Voice Assistant) and ignore the parent resource box. Click "{}Create"{}. 4. Using the Project Picker button, select the project you have just created/\+want to use. Go to https:\+/\+/\+console.\+cloud.\+google.\+com/\+apis/\+library/\+youtube.\+googleapis.\+com and click the "{}Enable"{} button. Then, click on the "{}APIs \& Services"{} tab from the quick select menu or the sidebar of the left side of the screen. 5. On the APIs \& Services page, click on the "{}Credentials"{} tab on the left sidebar. Click the "{}Create credentials"{} button and select "{}API key."{}  6. Name your API Key (eg. You\+Tube API Key) and select You\+Tube Data API v3 from the "{}APIs that can be acessed using this key"{} dropdown. Then, scroll down and click the blue create button
+\item Open Neura and navigate to the settings page. Copy the created API key and paste it in to the appropriate textbook. Now you\textquotesingle{}re all set up!
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md17}{}\doxysection{\texorpdfstring{Gesture Actions}{Gesture Actions}}\label{md__r_e_a_d_m_e_autotoc_md17}
+
+\begin{DoxyItemize}
+\item 1 finger (👆) :\+ Move cursor
+\item 2 fingers (✌️) :\+ Click and Drag
+\begin{DoxyItemize}
+\item For a single click:\+ Show 2 fingers briefly, then switch to another gesture
+\item For click and drag:\+ Hold 2 fingers and move your hand
+\end{DoxyItemize}
+\item Open Palm (🖐️):\+ Cancels Neura speaking and other gestures
+\item Thumbs Down (👎):\+ No
+\item Thumbs Up (👍):\+ Yes
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md18}{}\doxysection{\texorpdfstring{Voice Actions}{Voice Actions}}\label{md__r_e_a_d_m_e_autotoc_md18}
+Please see in-\/app tutorial or in-\/app Quick Reference Sheet (Question mark button).\hypertarget{md__r_e_a_d_m_e_autotoc_md19}{}\doxysection{\texorpdfstring{Extra Notes}{Extra Notes}}\label{md__r_e_a_d_m_e_autotoc_md19}
+Updated UML Diagram Here:\+ \href{https://gitlab.sci.uwo.ca/courses/2026/01/COMPSCI3307/group25/-/wikis/Stage-4-Final-Project-Submission}{\texttt{https:\+/\+/\+gitlab.\+sci.\+uwo.\+ca/\+courses/\+2026/\+01/\+\+COMPSCI3307/\+group25/\+-\//\+wikis/\+\+Stage-\/4-\/\+Final-\/\+Project-\/\+Submission}} 

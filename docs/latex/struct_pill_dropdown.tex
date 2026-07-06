@@ -1,0 +1,209 @@
+\doxysection{Pill\+Dropdown Struct Reference}
+\hypertarget{struct_pill_dropdown}{}\label{struct_pill_dropdown}\index{PillDropdown@{PillDropdown}}
+
+
+Dropdown UI component styled as a pill shape.  
+
+
+
+
+{\ttfamily \+\#include $<$UIWidgets.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{struct_pill_dropdown_a23945557b639f33af9c68c0a66ef64e3}{init}} (float x, float y, float width, float height, const std::\+vector$<$ std::\+string $>$ \&opts, int idx)
+\begin{DoxyCompactList}\small\item\em Initializes the dropdown. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{struct_pill_dropdown_aff05348451e2e31264dab77017380689}{hit\+Header}} (sf::\+\+Vector2f p) const
+\begin{DoxyCompactList}\small\item\em Checks if a point hits the dropdown header. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{struct_pill_dropdown_a812690aa406dca41df947c11627ed9e0}{on\+Release}} (sf::\+\+Vector2f p)
+\begin{DoxyCompactList}\small\item\em Handles mouse release events. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_dropdown_ace2e23997387b505254ecafae9e2d6c8}{on\+Scroll}} (sf::\+\+Vector2f p, float delta)
+\begin{DoxyCompactList}\small\item\em Handles scroll input for dropdown list. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_dropdown_a05079fbf048c7c67e25d902f200ba78d}{draw\+Header}} (sf::\+\+Render\+Window \&win, const sf::\+\+Font \&font) const
+\begin{DoxyCompactList}\small\item\em Draws the dropdown header. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_dropdown_a7547d992fb96c125d4dd2a24d3814131}{draw\+List}} (sf::\+\+Render\+Window \&win, const sf::\+\+Font \&font) const
+\begin{DoxyCompactList}\small\item\em Draws the dropdown list when open. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_pill_dropdown_ab7885e27a3e2171d19e9b12dc4ef10de}\label{struct_pill_dropdown_ab7885e27a3e2171d19e9b12dc4ef10de} 
+float {\bfseries cx}
+\item 
+\Hypertarget{struct_pill_dropdown_af818731ab9a468de70141bcb653f26eb}\label{struct_pill_dropdown_af818731ab9a468de70141bcb653f26eb} 
+float {\bfseries cy}
+\item 
+\Hypertarget{struct_pill_dropdown_a0ef9b26f1c90acfbc98713df91f3b16f}\label{struct_pill_dropdown_a0ef9b26f1c90acfbc98713df91f3b16f} 
+float {\bfseries w}
+\item 
+\Hypertarget{struct_pill_dropdown_ad3d0e8d3288b462fb4d7c87703ea0945}\label{struct_pill_dropdown_ad3d0e8d3288b462fb4d7c87703ea0945} 
+float {\bfseries h}
+\item 
+\Hypertarget{struct_pill_dropdown_a73d0865b777320e47cfb03110c03242e}\label{struct_pill_dropdown_a73d0865b777320e47cfb03110c03242e} 
+std::\+vector$<$ std::\+string $>$ {\bfseries options}
+\item 
+\Hypertarget{struct_pill_dropdown_a3cf40dda852654731bda29793ba07737}\label{struct_pill_dropdown_a3cf40dda852654731bda29793ba07737} 
+int {\bfseries index} = 0
+\item 
+\Hypertarget{struct_pill_dropdown_ae1eeb81ba85c19e80dc28c10e411f853}\label{struct_pill_dropdown_ae1eeb81ba85c19e80dc28c10e411f853} 
+int {\bfseries scroll\+Offset} = 0
+\item 
+\Hypertarget{struct_pill_dropdown_af00e07108f5822d00ca22aad6bc5d648}\label{struct_pill_dropdown_af00e07108f5822d00ca22aad6bc5d648} 
+bool {\bfseries open} = false
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_pill_dropdown_a00bbdc83187958e1d8e7e9d5369fa1c6}\label{struct_pill_dropdown_a00bbdc83187958e1d8e7e9d5369fa1c6} 
+static constexpr int {\bfseries MAX\+\_\+\+VIS} = 5
+\item 
+\Hypertarget{struct_pill_dropdown_a606acbc882469afc4de380518ecd8b81}\label{struct_pill_dropdown_a606acbc882469afc4de380518ecd8b81} 
+static constexpr float {\bfseries ITEM\+\_\+H} = 36.f
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Dropdown UI component styled as a pill shape. 
+
+Provides a selectable list of options with a collapsible interface. Supports scrolling when the number of options exceeds visible capacity.
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{struct_pill_dropdown_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_pill_dropdown_a05079fbf048c7c67e25d902f200ba78d}\index{PillDropdown@{PillDropdown}!drawHeader@{drawHeader}}
+\index{drawHeader@{drawHeader}!PillDropdown@{PillDropdown}}
+\doxysubsubsection{\texorpdfstring{drawHeader()}{drawHeader()}}
+{\footnotesize\ttfamily \label{struct_pill_dropdown_a05079fbf048c7c67e25d902f200ba78d} 
+void Pill\+Dropdown::\+draw\+Header (\begin{DoxyParamCaption}\item[{sf::\+\+Render\+Window \&}]{win}{, }\item[{const sf::\+\+Font \&}]{font}{}\end{DoxyParamCaption}) const}
+
+
+
+Draws the dropdown header. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & Render window. \\
+\hline
+{\em font} & Font used for text. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_dropdown_a7547d992fb96c125d4dd2a24d3814131}\index{PillDropdown@{PillDropdown}!drawList@{drawList}}
+\index{drawList@{drawList}!PillDropdown@{PillDropdown}}
+\doxysubsubsection{\texorpdfstring{drawList()}{drawList()}}
+{\footnotesize\ttfamily \label{struct_pill_dropdown_a7547d992fb96c125d4dd2a24d3814131} 
+void Pill\+Dropdown::\+draw\+List (\begin{DoxyParamCaption}\item[{sf::\+\+Render\+Window \&}]{win}{, }\item[{const sf::\+\+Font \&}]{font}{}\end{DoxyParamCaption}) const}
+
+
+
+Draws the dropdown list when open. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & Render window. \\
+\hline
+{\em font} & Font used for text. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_dropdown_aff05348451e2e31264dab77017380689}\index{PillDropdown@{PillDropdown}!hitHeader@{hitHeader}}
+\index{hitHeader@{hitHeader}!PillDropdown@{PillDropdown}}
+\doxysubsubsection{\texorpdfstring{hitHeader()}{hitHeader()}}
+{\footnotesize\ttfamily \label{struct_pill_dropdown_aff05348451e2e31264dab77017380689} 
+bool Pill\+Dropdown::\+hit\+Header (\begin{DoxyParamCaption}\item[{sf::\+\+Vector2f}]{p}{}\end{DoxyParamCaption}) const}
+
+
+
+Checks if a point hits the dropdown header. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Mouse position. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if header is clicked. 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_dropdown_a23945557b639f33af9c68c0a66ef64e3}\index{PillDropdown@{PillDropdown}!init@{init}}
+\index{init@{init}!PillDropdown@{PillDropdown}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily \label{struct_pill_dropdown_a23945557b639f33af9c68c0a66ef64e3} 
+void Pill\+Dropdown::\+init (\begin{DoxyParamCaption}\item[{float}]{x}{, }\item[{float}]{y}{, }\item[{float}]{width}{, }\item[{float}]{height}{, }\item[{const std::\+vector$<$ std::\+string $>$ \&}]{opts}{, }\item[{int}]{idx}{}\end{DoxyParamCaption})}
+
+
+
+Initializes the dropdown. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Center X position. \\
+\hline
+{\em y} & Center Y position. \\
+\hline
+{\em width} & Width of the dropdown. \\
+\hline
+{\em height} & Height of the dropdown. \\
+\hline
+{\em opts} & List of options. \\
+\hline
+{\em idx} & Initial selected index. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_dropdown_a812690aa406dca41df947c11627ed9e0}\index{PillDropdown@{PillDropdown}!onRelease@{onRelease}}
+\index{onRelease@{onRelease}!PillDropdown@{PillDropdown}}
+\doxysubsubsection{\texorpdfstring{onRelease()}{onRelease()}}
+{\footnotesize\ttfamily \label{struct_pill_dropdown_a812690aa406dca41df947c11627ed9e0} 
+bool Pill\+Dropdown::\+on\+Release (\begin{DoxyParamCaption}\item[{sf::\+\+Vector2f}]{p}{}\end{DoxyParamCaption})}
+
+
+
+Handles mouse release events. 
+
+Selects an option or toggles dropdown state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Mouse position. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if interaction occurred. 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_dropdown_ace2e23997387b505254ecafae9e2d6c8}\index{PillDropdown@{PillDropdown}!onScroll@{onScroll}}
+\index{onScroll@{onScroll}!PillDropdown@{PillDropdown}}
+\doxysubsubsection{\texorpdfstring{onScroll()}{onScroll()}}
+{\footnotesize\ttfamily \label{struct_pill_dropdown_ace2e23997387b505254ecafae9e2d6c8} 
+void Pill\+Dropdown::\+on\+Scroll (\begin{DoxyParamCaption}\item[{sf::\+\+Vector2f}]{p}{, }\item[{float}]{delta}{}\end{DoxyParamCaption})}
+
+
+
+Handles scroll input for dropdown list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Mouse position. \\
+\hline
+{\em delta} & Scroll delta value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_u_i_widgets_8h}{UIWidgets.\+h}}\item 
+UIWidgets.\+cpp\end{DoxyCompactItemize}

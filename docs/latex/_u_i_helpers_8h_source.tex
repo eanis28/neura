@@ -1,0 +1,41 @@
+\doxysection{UIHelpers.\+h}
+\hypertarget{_u_i_helpers_8h_source}{}\label{_u_i_helpers_8h_source}\doxymbox{\hyperlink{_u_i_helpers_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <SFML/Graphics.hpp>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00023\ sf::Vector2f\ \doxymbox{\hyperlink{_u_i_helpers_8h_ad764333ef4deff1074b9c73429364608}{centeredOrigin}}(\textcolor{keyword}{const}\ sf::Text\&\ t);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00039\ sf::ConvexShape\ \doxymbox{\hyperlink{_u_i_helpers_8h_a3d6a4bf0af6b64802c891c7743e3c96b}{makePill}}(\textcolor{keywordtype}{float}\ cx,\ \textcolor{keywordtype}{float}\ cy,\ \textcolor{keywordtype}{float}\ w,\ \textcolor{keywordtype}{float}\ h);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00056\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{_u_i_helpers_8h_ae2da3c47d75dba716599b9f63eb664c0}{pillHit}}(\textcolor{keywordtype}{float}\ cx,\ \textcolor{keywordtype}{float}\ cy,\ \textcolor{keywordtype}{float}\ w,\ \textcolor{keywordtype}{float}\ h,\ sf::Vector2f\ p);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00075\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_u_i_helpers_8h_a3fd68d865f79c0ce33d956099ed125ce}{drawPill}}(sf::RenderWindow\&\ win,}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cx,\ \textcolor{keywordtype}{float}\ cy,\ \textcolor{keywordtype}{float}\ w,\ \textcolor{keywordtype}{float}\ h,}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sf::Color\ fill,}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ outlineThick\ =\ 0.f,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sf::Color\ outlineCol\ =\ sf::Color::White);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00099\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_u_i_helpers_8h_ae5ebc172fed77a91f7bb72516b3d5333}{drawPillLabel}}(sf::RenderWindow\&\ win,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sf::Font\&\ font,}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cx,\ \textcolor{keywordtype}{float}\ cy,\ \textcolor{keywordtype}{float}\ h,}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ txt,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sf::Color\ col,}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ letterSpacing\ =\ 1.f);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00125\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_u_i_helpers_8h_aa77c42c5de55bf531a3047519dba503b}{drawTextLeft}}(sf::RenderWindow\&\ win,\ \textcolor{keyword}{const}\ sf::Font\&\ font,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ txt,\ \textcolor{keywordtype}{unsigned}\ size,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ sf::Color\ col,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sf::Text::Style\ style\ =\ sf::Text::Regular,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ letterSpacing\ =\ 1.f);}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00150\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_u_i_helpers_8h_af3b7f20e2eb9ad02ee22a4ea3c28850b}{drawTextCenter}}(sf::RenderWindow\&\ win,\ \textcolor{keyword}{const}\ sf::Font\&\ font,}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ txt,\ \textcolor{keywordtype}{unsigned}\ size,}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ cx,\ \textcolor{keywordtype}{float}\ y,\ sf::Color\ col,}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sf::Text::Style\ style\ =\ sf::Text::Regular,}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ letterSpacing\ =\ 1.f);}
+
+\end{DoxyCode}

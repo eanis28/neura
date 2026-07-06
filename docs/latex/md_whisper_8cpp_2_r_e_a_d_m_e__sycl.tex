@@ -1,0 +1,292 @@
+\chapter{whisper.\+cpp for SYCL }
+\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl}{}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl}\index{whisper.cpp for SYCL@{whisper.cpp for SYCL}}
+\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md179}%
+\Hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md179}%
+
+
+Background
+
+OS
+
+Intel GPU
+
+Linux
+
+Environment Variable
+
+Known Issue
+
+Todo\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md180}{}\doxysection{\texorpdfstring{Background}{Background}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md180}
+SYCL is a higher-\/level programming model to improve programming productivity on various hardware accelerators—such as CPUs, GPUs, and FPGAs. It is a single-\/source embedded domain-\/specific language based on pure C++17.
+
+one\+API is a specification that is open and standards-\/based, supporting multiple architecture types including but not limited to GPU, CPU, and FPGA. \doxylink{requirements_The}{The} spec has both direct programming and API-\/based programming paradigms.
+
+Intel uses the SYCL as direct programming language to support CPU, GPUs and FPGAs.
+
+To avoid re-\/inventing the wheel, this code refers other code paths in llama.\+cpp (like Open\+BLAS, cu\+BLAS, CLBlast). We use a open-\/source tool \href{https://github.com/oneapi-src/SYCLomatic}{\texttt{SYCLomatic}} (Commercial release \href{https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compatibility-tool.html}{\texttt{Intel® DPC++ Compatibility Tool}}) migrate to SYCL.
+
+\doxylink{requirements_The}{The} whisper.\+cpp for SYCL is used to support Intel GPUs.
+
+For Intel CPU, recommend to use whisper.\+cpp for X86 (Intel MKL build).\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md181}{}\doxysection{\texorpdfstring{OS}{OS}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md181}
+
+\begin{DoxyTable}{3}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}OS  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Status  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Verified  \\
+Linux  &Support  &Ubuntu 22.\+04  \\
+Windows  &Ongoing  &\\
+\end{DoxyTable}
+\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md182}{}\doxysection{\texorpdfstring{Intel GPU}{Intel GPU}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md182}
+
+\begin{DoxyTable}{3}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Intel GPU  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Status  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Verified Model  \\
+Intel Data Center Max Series  &Support  &Max 1550  \\
+Intel Data Center Flex Series  &Support  &Flex 170  \\
+Intel Arc Series  &Support  &Arc 770  \\
+Intel built-\/in Arc GPU  &Support  &built-\/in Arc GPU in Meteor Lake  \\
+Intel i\+GPU  &Support  &i\+GPU in i5-\/1250P, i7-\/1165\+G7  \\
+\end{DoxyTable}
+\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md183}{}\doxysection{\texorpdfstring{Linux}{Linux}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md183}
+\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md184}{}\doxysubsection{\texorpdfstring{Setup Environment}{Setup Environment}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md184}
+
+\begin{DoxyEnumerate}
+\item Install Intel GPU driver.
+\end{DoxyEnumerate}
+
+a. Please install Intel GPU driver by official guide:\+ \href{https://dgpu-docs.intel.com/driver/installation.html}{\texttt{Install GPU Drivers}}.
+
+Note:\+ for i\+GPU, please install the client GPU driver.
+
+b. \doxylink{struct_add}{Add} user to group:\+ video, render.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo\ usermod\ -\/aG\ render\ username}
+\DoxyCodeLine{sudo\ usermod\ -\/aG\ video\ username}
+
+\end{DoxyCode}
+
+
+Note:\+ re-\/login to enable it.
+
+c. Check
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo\ apt\ install\ clinfo}
+\DoxyCodeLine{sudo\ clinfo\ -\/l}
+
+\end{DoxyCode}
+
+
+Output (example):\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Platform\ \#0:\ Intel(R)\ OpenCL\ Graphics}
+\DoxyCodeLine{\ \`{}-\/-\/\ Device\ \#0:\ Intel(R)\ Arc(TM)\ A770\ Graphics}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{Platform\ \#0:\ Intel(R)\ OpenCL\ HD\ Graphics}
+\DoxyCodeLine{\ \`{}-\/-\/\ Device\ \#0:\ Intel(R)\ Iris(R)\ Xe\ Graphics\ [0x9a49]}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Install Intel® one\+API Base toolkit.
+\end{DoxyEnumerate}
+
+a. Please follow the procedure in \href{https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html}{\texttt{Get the Intel® one\+API Base Toolkit}}.
+
+Recommend to install to default folder:\+ \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}/\+opt/\+intel/\+oneapi\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}.
+
+Following guide use the default folder as example. If you use other folder, please modify the following guide info with your folder.
+
+b. Check
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{source\ /opt/intel/oneapi/setvars.sh}
+\DoxyCodeLine{}
+\DoxyCodeLine{sycl-\/ls}
+
+\end{DoxyCode}
+
+
+There should be one or more level-\/zero devices. Like {\bfseries{\+[ext\+\_\+oneapi\+\_\+level\+\_\+zero:\+gpu:\+0]\+}}.
+
+Output (example):\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[opencl:acc:0]\ Intel(R)\ FPGA\ Emulation\ Platform\ for\ OpenCL(TM),\ Intel(R)\ FPGA\ Emulation\ Device\ OpenCL\ 1.2\ \ [2023.16.10.0.17\_160000]}
+\DoxyCodeLine{[opencl:cpu:1]\ Intel(R)\ OpenCL,\ 13th\ Gen\ Intel(R)\ Core(TM)\ i7-\/13700K\ OpenCL\ 3.0\ (Build\ 0)\ [2023.16.10.0.17\_160000]}
+\DoxyCodeLine{[opencl:gpu:2]\ Intel(R)\ OpenCL\ Graphics,\ Intel(R)\ Arc(TM)\ A770\ Graphics\ OpenCL\ 3.0\ NEO\ \ [23.30.26918.50]}
+\DoxyCodeLine{[ext\_oneapi\_level\_zero:gpu:0]\ Intel(R)\ Level-\/Zero,\ Intel(R)\ Arc(TM)\ A770\ Graphics\ 1.3\ [1.3.26918]}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Build locally:\+
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ -\/p\ build}
+\DoxyCodeLine{cd\ build}
+\DoxyCodeLine{source\ /opt/intel/oneapi/setvars.sh}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#for\ FP16}
+\DoxyCodeLine{\#cmake\ ..\ -\/DWHISPER\_SYCL=ON\ -\/DCMAKE\_C\_COMPILER=icx\ -\/DCMAKE\_CXX\_COMPILER=icpx\ -\/DWHISPER\_SYCL\_F16=ON\ }
+\DoxyCodeLine{}
+\DoxyCodeLine{\#for\ FP32}
+\DoxyCodeLine{cmake\ ..\ -\/DWHISPER\_SYCL=ON\ -\/DCMAKE\_C\_COMPILER=icx\ -\/DCMAKE\_CXX\_COMPILER=icpx}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#build\ example/main\ only}
+\DoxyCodeLine{\#cmake\ -\/-\/build\ .\ -\/-\/config\ Release\ -\/-\/target\ main}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#build\ all\ binary}
+\DoxyCodeLine{cmake\ -\/-\/build\ .\ -\/-\/config\ Release\ -\/v}
+
+\end{DoxyCode}
+
+
+or
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./examples/sycl/build.sh}
+
+\end{DoxyCode}
+
+
+Note:\+
+
+
+\begin{DoxyItemize}
+\item By default, it will build for all binary files. It will take more time. To reduce the time, we recommend to build for {\bfseries{example/\+main}} only.
+\end{DoxyItemize}\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md185}{}\doxysubsection{\texorpdfstring{Run}{Run}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md185}
+
+\begin{DoxyEnumerate}
+\item Put model file to folder {\bfseries{models}}
+\item Enable one\+API running environment
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{source\ /opt/intel/oneapi/setvars.sh}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item List device ID
+\end{DoxyEnumerate}
+
+Run without parameter:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/bin/ls-\/sycl-\/device}
+\DoxyCodeLine{}
+\DoxyCodeLine{or}
+\DoxyCodeLine{}
+\DoxyCodeLine{./build/bin/main}
+
+\end{DoxyCode}
+
+
+Check the ID in startup log, like:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{found\ 4\ SYCL\ devices:}
+\DoxyCodeLine{\ \ Device\ 0:\ Intel(R)\ Arc(TM)\ A770\ Graphics,\ compute\ capability\ 1.3,}
+\DoxyCodeLine{\ \ \ \ max\ compute\_units\ 512,\ \ max\ work\ group\ size\ 1024,\ \ \ max\ sub\ group\ size\ 32,\ \ global\ mem\ size\ 16225243136}
+\DoxyCodeLine{\ \ Device\ 1:\ Intel(R)\ FPGA\ Emulation\ Device,\ compute\ capability\ 1.2,}
+\DoxyCodeLine{\ \ \ \ max\ compute\_units\ 24,\ \ \ max\ work\ group\ size\ 67108864,\ \ \ max\ sub\ group\ size\ 64,\ \ global\ mem\ size\ 67065057280}
+\DoxyCodeLine{\ \ Device\ 2:\ 13th\ Gen\ Intel(R)\ Core(TM)\ i7-\/13700K,\ \ \ compute\ capability\ 3.0,}
+\DoxyCodeLine{\ \ \ \ max\ compute\_units\ 24,\ \ \ max\ work\ group\ size\ 8192,\ \ \ max\ sub\ group\ size\ 64,\ \ global\ mem\ size\ 67065057280}
+\DoxyCodeLine{\ \ Device\ 3:\ Intel(R)\ Arc(TM)\ A770\ Graphics,\ compute\ capability\ 3.0,}
+\DoxyCodeLine{\ \ \ \ max\ compute\_units\ 512,\ \ max\ work\ group\ size\ 1024,\ \ \ max\ sub\ group\ size\ 32,\ \ global\ mem\ size\ 16225243136}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Attribute  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Note  \\
+compute capability 1.\+3  &Level-\/zero running time, recommended  \\
+compute capability 3.\+0  &Open\+CL running time, slower than level-\/zero in most cases  \\
+\end{DoxyTable}
+
+
+
+\begin{DoxyEnumerate}
+\item Set device ID and execute whisper.\+cpp
+\end{DoxyEnumerate}
+
+Set device ID = 0 by {\bfseries{GGML\+\_\+\+SYCL\+\_\+\+DEVICE=0}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{GGML\_SYCL\_DEVICE=0\ ./build/bin/main\ -\/m\ models/ggml-\/base.en.bin\ -\/f\ samples/jfk.wav}
+
+\end{DoxyCode}
+ or run by script:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./examples/sycl/run\_whisper.sh}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Check the device ID in output
+\end{DoxyEnumerate}
+
+Like:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Using\ device\ **0**\ (Intel(R)\ Arc(TM)\ A770\ Graphics)\ as\ main\ device}
+
+\end{DoxyCode}
+\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md186}{}\doxysection{\texorpdfstring{Environment Variable}{Environment Variable}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md186}
+\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md187}{}\doxysubsubsection{\texorpdfstring{Build}{Build}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md187}
+
+\begin{DoxyTable}{3}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Name  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Value  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Function  \\
+WHISPER\+\_\+\+SYCL  &ON (mandatory)  &Enable build with SYCL code path. ~\newline
+For FP32/\+\+FP16, WHISPER\+\_\+\+SYCL=ON is mandatory.  \\
+WHISPER\+\_\+\+SYCL\+\_\+\+F16  &ON (optional)  &Enable FP16 build with SYCL code path.\+For FP32, do not set it.  \\
+CMAKE\+\_\+\+C\+\_\+\+COMPILER  &icx  &Use icx compiler for SYCL code path  \\
+CMAKE\+\_\+\+CXX\+\_\+\+COMPILER  &icpx  &use icpx for SYCL code path  \\
+\end{DoxyTable}
+\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md188}{}\doxysubsubsection{\texorpdfstring{Running}{Running}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md188}
+
+\begin{DoxyTable}{3}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Name  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Value  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Function  \\
+GGML\+\_\+\+SYCL\+\_\+\+DEVICE  &0 (default) or 1  &Set the device id used. Check the device ids by default running output  \\
+GGML\+\_\+\+SYCL\+\_\+\+DEBUG  &0 (default) or 1  &Enable log function by macro:\+ GGML\+\_\+\+SYCL\+\_\+\+DEBUG  \\
+\end{DoxyTable}
+\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md189}{}\doxysection{\texorpdfstring{Known Issue}{Known Issue}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md189}
+
+\begin{DoxyItemize}
+\item Error:\+ {\ttfamily error while loading shared libraries:\+ libsycl.\+so.\+7:\+ cannot open shared object file:\+ No such file or directory}.
+
+Miss to enable one\+API running environment.
+
+Install one\+API base toolkit and enable it by:\+ {\ttfamily source /\+opt/\+intel/\+oneapi/\+setvars.sh}.
+\item Hang during startup
+
+llama.\+cpp use mmap as default way to read model file and copy to GPU. In some system, memcpy will be abnormal and block.
+
+Solution:\+ add {\bfseries{--no-\/mmap}}.
+\end{DoxyItemize}\hypertarget{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md190}{}\doxysection{\texorpdfstring{Todo}{Todo}}\label{md_whisper_8cpp_2_r_e_a_d_m_e__sycl_autotoc_md190}
+
+\begin{DoxyItemize}
+\item Support to build in Windows.
+\item Support multiple cards. 
+\end{DoxyItemize}

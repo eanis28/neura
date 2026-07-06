@@ -1,0 +1,30 @@
+\doxysection{common-\/whisper.h}
+\hypertarget{common-whisper_8h_source}{}\label{common-whisper_8h_source}\index{whisper.cpp/examples/common-\/whisper.h@{whisper.cpp/examples/common-\/whisper.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Read\ WAV\ audio\ file\ and\ store\ the\ PCM\ data\ into\ pcmf32}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ fname\ can\ be\ a\ buffer\ of\ WAV\ data\ instead\ of\ a\ filename}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ The\ sample\ rate\ of\ the\ audio\ must\ be\ equal\ to\ COMMON\_SAMPLE\_RATE}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ If\ stereo\ flag\ is\ set\ and\ the\ audio\ has\ 2\ channels,\ the\ pcmf32s\ will\ contain\ 2\ channel\ PCM}}
+\DoxyCodeLine{00011\ \textcolor{keywordtype}{bool}\ read\_audio\_data(}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&\ fname,}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ std::vector<float>\ \&\ pcmf32,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ std::vector<std::vector<float>>\ \&\ pcmf32s,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ stereo);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ convert\ timestamp\ to\ string,\ 6000\ -\/>\ 01:00.000}}
+\DoxyCodeLine{00018\ std::string\ to\_timestamp(int64\_t\ t,\ \textcolor{keywordtype}{bool}\ comma\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ given\ a\ timestamp\ get\ the\ sample}}
+\DoxyCodeLine{00021\ \textcolor{keywordtype}{int}\ timestamp\_to\_sample(int64\_t\ t,\ \textcolor{keywordtype}{int}\ n\_samples,\ \textcolor{keywordtype}{int}\ whisper\_sample\_rate);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ write\ text\ to\ file,\ and\ call\ system("{}command\ voice\_id\ file"{})}}
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{bool}\ speak\_with\_file(\textcolor{keyword}{const}\ std::string\ \&\ \doxymbox{\hyperlink{structcommand}{command}},\ \textcolor{keyword}{const}\ std::string\ \&\ text,\ \textcolor{keyword}{const}\ std::string\ \&\ path,\ \textcolor{keywordtype}{int}\ voice\_id);}
+
+\end{DoxyCode}

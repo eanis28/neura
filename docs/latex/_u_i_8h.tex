@@ -1,0 +1,193 @@
+\doxysection{UI.\+h File Reference}
+\hypertarget{_u_i_8h}{}\label{_u_i_8h}\index{UI.h@{UI.h}}
+
+
+Main UI interface declaration and rendering loop.  
+
+
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$mutex$>$}\newline
+{\ttfamily \+\#include $<$atomic$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_shared_response}{Shared\+Response}}
+\begin{DoxyCompactList}\small\item\em Thread-\/safe container for passing responses between threads. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{_u_i_8h_a905fedeb5770f8837d40985e171c0b31}{start\+Tutorial}} ()
+\begin{DoxyCompactList}\small\item\em Starts the tutorial overlay sequence. Initializes and displays the step-\/by-\/step tutorial UI. \doxylink{requirements_The}{The} tutorial walks the user through gestures and controls. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{_u_i_8h_a0ae575ee988f2fb18ef854dffec145c8}{cancel\+Speech}} ()
+\begin{DoxyCompactList}\small\item\em Cancels any ongoing speech output. Stops text-\/to-\/speech playback and terminates any associated system-\/level audio processes across supported platforms. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{_u_i_8h_a3ee23ffe58ed9860deea5ee8702d8b01}{run\+UI}} ()
+\begin{DoxyCompactList}\small\item\em Runs the main UI loop. Initializes all UI components including window rendering, audio input, camera feed, gesture handling, and voice commands. This function blocks until the UI window is closed. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{_u_i_8h_a8aed6530260fb5b1ed73156b85545965}{run\+Quick\+Reference}} ()
+\begin{DoxyCompactList}\small\item\em Opens the Neura Quick Reference window. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_shared_response}{Shared\+Response}} \doxymbox{\hyperlink{_u_i_8h_aa85ab0efdaa5a84fa68a936daa3ed3df}{shared\+Response}}
+\begin{DoxyCompactList}\small\item\em Global shared response object. \end{DoxyCompactList}\item 
+std::\+atomic$<$ bool $>$ \doxymbox{\hyperlink{_u_i_8h_a20a391153c3253127ab89e902ac2d6fd}{g\+\_\+neura\+Speak}}
+\begin{DoxyCompactList}\small\item\em Indicates whether Neura is currently speaking. \end{DoxyCompactList}\item 
+\Hypertarget{_u_i_8h_a327c3d5d5e7f63421ab46fe52d7197c5}\label{_u_i_8h_a327c3d5d5e7f63421ab46fe52d7197c5} 
+std::\+atomic$<$ int $>$ {\bfseries g\+\_\+gesture\+State}
+\begin{DoxyCompactList}\small\item\em Represents the current gesture state detected by the system. Values:\+ 0 = None, 1 = Moving, 2 = Selecting, 3 = Cancel, 4 = Yes, 5 = No. \end{DoxyCompactList}\item 
+\Hypertarget{_u_i_8h_ad9c55b47f6511ddc88fd6acfcd7f9499}\label{_u_i_8h_ad9c55b47f6511ddc88fd6acfcd7f9499} 
+std::\+atomic$<$ bool $>$ {\bfseries g\+\_\+cancel\+Speech}
+\begin{DoxyCompactList}\small\item\em Flag used to cancel ongoing speech. When set to true, text-\/to-\/speech output will be interrupted. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Main UI interface declaration and rendering loop. 
+
+\begin{DoxyAuthor}{Author}
+Erina 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{_u_i_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_u_i_8h_a0ae575ee988f2fb18ef854dffec145c8}\index{UI.h@{UI.h}!cancelSpeech@{cancelSpeech}}
+\index{cancelSpeech@{cancelSpeech}!UI.h@{UI.h}}
+\doxysubsubsection{\texorpdfstring{cancelSpeech()}{cancelSpeech()}}
+{\footnotesize\ttfamily \label{_u_i_8h_a0ae575ee988f2fb18ef854dffec145c8} 
+void cancel\+Speech (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Cancels any ongoing speech output. Stops text-\/to-\/speech playback and terminates any associated system-\/level audio processes across supported platforms. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Jasnav 
+\end{DoxyAuthor}
+\Hypertarget{_u_i_8h_a8aed6530260fb5b1ed73156b85545965}\index{UI.h@{UI.h}!runQuickReference@{runQuickReference}}
+\index{runQuickReference@{runQuickReference}!UI.h@{UI.h}}
+\doxysubsubsection{\texorpdfstring{runQuickReference()}{runQuickReference()}}
+{\footnotesize\ttfamily \label{_u_i_8h_a8aed6530260fb5b1ed73156b85545965} 
+void run\+Quick\+Reference (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Opens the Neura Quick Reference window. 
+
+Creates and displays a separate UI window that presents a structured, aesthetically formatted overview of all assistant capabilities.
+
+This includes:\+
+\begin{DoxyItemize}
+\item Voice commands (e.\+g., screenshot, timer, volume, brightness)
+\item System controls (tab switching, window switching, recording, time)
+\item Gesture controls (cursor movement, drag, cancel, yes/\+no)
+\item Advanced features (weather, media playback, calendar events, search)
+\item General usage tips
+\end{DoxyItemize}
+
+\doxylink{requirements_The}{The} window runs independently of the main UI and does not block or interrupt the primary application flow.
+
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Erina
+\end{DoxyAuthor}
+Opens the Neura Quick Reference window.
+
+Creates a scrollable SFML window displaying categorized voice commands and gesture controls for Neura. \doxylink{requirements_The}{The} content is rendered as a vertical list with section headers and command descriptions.
+
+Features:\+
+\begin{DoxyItemize}
+\item Platform-\/specific font loading
+\item Scrollable content using mouse wheel
+\item Automatic layout generation from item list
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Note}
+\doxylink{requirements_The}{The} window runs its own event loop and blocks until closed. 
+\end{DoxyNote}
+Main application window
+
+Font used for all UI text
+
+List of all UI items (headers + commands)
+
+Pre-\/built drawable text objects for rendering
+
+Current vertical layout position
+
+Build text elements from item list.
+
+Converts each \doxylink{struct_item}{Item} into one or two sf::\+\+Text objects depending on type. Handles spacing and layout positioning.
+
+Align description next to command text
+
+Total height of all content (used for scrolling bounds)
+
+Current vertical scroll offset
+
+Main render and event loop.
+
+Handles window events, scrolling, and drawing UI elements.
+
+Clamp scroll range\Hypertarget{_u_i_8h_a3ee23ffe58ed9860deea5ee8702d8b01}\index{UI.h@{UI.h}!runUI@{runUI}}
+\index{runUI@{runUI}!UI.h@{UI.h}}
+\doxysubsubsection{\texorpdfstring{runUI()}{runUI()}}
+{\footnotesize\ttfamily \label{_u_i_8h_a3ee23ffe58ed9860deea5ee8702d8b01} 
+bool run\+UI (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Runs the main UI loop. Initializes all UI components including window rendering, audio input, camera feed, gesture handling, and voice commands. This function blocks until the UI window is closed. 
+
+\begin{DoxyReturn}{Returns}
+bool Returns true if the user clicked the "{}back"{} button, otherwise false. 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Erina 
+\end{DoxyAuthor}
+\Hypertarget{_u_i_8h_a905fedeb5770f8837d40985e171c0b31}\index{UI.h@{UI.h}!startTutorial@{startTutorial}}
+\index{startTutorial@{startTutorial}!UI.h@{UI.h}}
+\doxysubsubsection{\texorpdfstring{startTutorial()}{startTutorial()}}
+{\footnotesize\ttfamily \label{_u_i_8h_a905fedeb5770f8837d40985e171c0b31} 
+void start\+Tutorial (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Starts the tutorial overlay sequence. Initializes and displays the step-\/by-\/step tutorial UI. \doxylink{requirements_The}{The} tutorial walks the user through gestures and controls. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Erina 
+\end{DoxyAuthor}
+
+
+\label{doc-var-members}
+\Hypertarget{_u_i_8h_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{_u_i_8h_a20a391153c3253127ab89e902ac2d6fd}\index{UI.h@{UI.h}!g\_neuraSpeak@{g\_neuraSpeak}}
+\index{g\_neuraSpeak@{g\_neuraSpeak}!UI.h@{UI.h}}
+\doxysubsubsection{\texorpdfstring{g\_neuraSpeak}{g\_neuraSpeak}}
+{\footnotesize\ttfamily \label{_u_i_8h_a20a391153c3253127ab89e902ac2d6fd} 
+std::\+atomic$<$bool$>$ g\+\_\+neura\+Speak\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Indicates whether Neura is currently speaking. 
+
+This flag is used to synchronize UI visuals and audio state. \Hypertarget{_u_i_8h_aa85ab0efdaa5a84fa68a936daa3ed3df}\index{UI.h@{UI.h}!sharedResponse@{sharedResponse}}
+\index{sharedResponse@{sharedResponse}!UI.h@{UI.h}}
+\doxysubsubsection{\texorpdfstring{sharedResponse}{sharedResponse}}
+{\footnotesize\ttfamily \label{_u_i_8h_aa85ab0efdaa5a84fa68a936daa3ed3df} 
+\doxymbox{\hyperlink{struct_shared_response}{Shared\+Response}} shared\+Response\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Global shared response object. 
+
+Used across multiple modules to communicate responses safely. 

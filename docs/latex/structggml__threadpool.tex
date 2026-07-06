@@ -1,0 +1,58 @@
+\doxysection{ggml\+\_\+threadpool Struct Reference}
+\hypertarget{structggml__threadpool}{}\label{structggml__threadpool}\index{ggml\_threadpool@{ggml\_threadpool}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__threadpool_ac8bc128e693cbadee5ee7ebac0506e30}\label{structggml__threadpool_ac8bc128e693cbadee5ee7ebac0506e30} 
+ggml\+\_\+mutex\+\_\+t {\bfseries mutex}
+\item 
+\Hypertarget{structggml__threadpool_a45c5a70d59162000699f6bb652f19717}\label{structggml__threadpool_a45c5a70d59162000699f6bb652f19717} 
+ggml\+\_\+cond\+\_\+t {\bfseries cond}
+\item 
+\Hypertarget{structggml__threadpool_abd98b8c70ff78edaa34f7c5a32995d9f}\label{structggml__threadpool_abd98b8c70ff78edaa34f7c5a32995d9f} 
+struct \doxymbox{\hyperlink{structggml__cgraph}{ggml\+\_\+cgraph}} \texorpdfstring{$\ast$}{*} {\bfseries cgraph}
+\item 
+\Hypertarget{structggml__threadpool_a964e756a1a729e7d350c530cff1b2733}\label{structggml__threadpool_a964e756a1a729e7d350c530cff1b2733} 
+struct \doxymbox{\hyperlink{structggml__cplan}{ggml\+\_\+cplan}} \texorpdfstring{$\ast$}{*} {\bfseries cplan}
+\item 
+\Hypertarget{structggml__threadpool_a0ce8b838d013e0ac345f5432dc3da222}\label{structggml__threadpool_a0ce8b838d013e0ac345f5432dc3da222} 
+atomic\+\_\+int {\bfseries n\+\_\+graph}
+\item 
+\Hypertarget{structggml__threadpool_a7ecda2ae0e069843b93d04523036afa4}\label{structggml__threadpool_a7ecda2ae0e069843b93d04523036afa4} 
+atomic\+\_\+int GGML\+\_\+\+CACHE\+\_\+\+ALIGN {\bfseries n\+\_\+barrier}
+\item 
+\Hypertarget{structggml__threadpool_ae0d81c0be11cee851464d5e2b1cd4b03}\label{structggml__threadpool_ae0d81c0be11cee851464d5e2b1cd4b03} 
+atomic\+\_\+int GGML\+\_\+\+CACHE\+\_\+\+ALIGN {\bfseries n\+\_\+barrier\+\_\+passed}
+\item 
+\Hypertarget{structggml__threadpool_ad6894d07071e97cb888d9eac0d888ddc}\label{structggml__threadpool_ad6894d07071e97cb888d9eac0d888ddc} 
+atomic\+\_\+int GGML\+\_\+\+CACHE\+\_\+\+ALIGN {\bfseries current\+\_\+chunk}
+\item 
+\Hypertarget{structggml__threadpool_a2553c712d51259bffea1b613f367ed9d}\label{structggml__threadpool_a2553c712d51259bffea1b613f367ed9d} 
+atomic\+\_\+bool {\bfseries stop}
+\item 
+\Hypertarget{structggml__threadpool_aa09c4e9733fe1f7281a3bca01a35e10f}\label{structggml__threadpool_aa09c4e9733fe1f7281a3bca01a35e10f} 
+atomic\+\_\+bool {\bfseries pause}
+\item 
+\Hypertarget{structggml__threadpool_a75f47c4185abb70d041e87eec6a50118}\label{structggml__threadpool_a75f47c4185abb70d041e87eec6a50118} 
+atomic\+\_\+int {\bfseries abort}
+\item 
+\Hypertarget{structggml__threadpool_a129197790da10a8e5643cc8a83cbc734}\label{structggml__threadpool_a129197790da10a8e5643cc8a83cbc734} 
+struct \doxymbox{\hyperlink{structggml__compute__state}{ggml\+\_\+compute\+\_\+state}} \texorpdfstring{$\ast$}{*} {\bfseries workers}
+\item 
+\Hypertarget{structggml__threadpool_a58fb34e73d6d3ecd857e6f4f0236cef5}\label{structggml__threadpool_a58fb34e73d6d3ecd857e6f4f0236cef5} 
+int {\bfseries n\+\_\+threads}
+\item 
+\Hypertarget{structggml__threadpool_a39147a28fba321e3cf71634417927381}\label{structggml__threadpool_a39147a28fba321e3cf71634417927381} 
+int32\+\_\+t {\bfseries prio}
+\item 
+\Hypertarget{structggml__threadpool_a8d164b1b43f201bf4b932148e4fe3c73}\label{structggml__threadpool_a8d164b1b43f201bf4b932148e4fe3c73} 
+uint32\+\_\+t {\bfseries poll}
+\item 
+\Hypertarget{structggml__threadpool_ae21b1bfe8f5ee3bd426f8008f9d2a61d}\label{structggml__threadpool_ae21b1bfe8f5ee3bd426f8008f9d2a61d} 
+enum ggml\+\_\+status {\bfseries ec}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cpu/\+ggml-\/cpu.\+c\end{DoxyCompactItemize}

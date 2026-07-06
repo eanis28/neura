@@ -1,0 +1,973 @@
+\doxysection{common.\+hpp}
+\hypertarget{ggml-sycl_2common_8hpp_source}{}\label{ggml-sycl_2common_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/common.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/common.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2024\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_COMMON\_HPP}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_COMMON\_HPP}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}dpct/helper.hpp"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}ggml-\/sycl.h"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}presets.hpp"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}sycl\_hw.hpp"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }syclexp\ =\ sycl::ext::oneapi::experimental;}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#if\ GGML\_SYCL\_DNNL}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ "{}dnnl.hpp"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}dnnl\_sycl.hpp"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ GGML\_COMMON\_DECL\_SYCL}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ GGML\_COMMON\_IMPL\_SYCL}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ SYCL\_FLASH\_ATTN\ }\textcolor{comment}{//remove\ it\ to\ disable\ FLASH\_ATTENTION\ in\ building.}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ SYCL\_FAST\_FP16\ \ }\textcolor{comment}{//don't\ change.\ remove\ it\ will\ break\ fattn-\/tile.hpp\ building}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{/*\ suppress\ warning\ spam\ */}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wnested-\/anon-\/types"{}}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ "{}ggml-\/common.h"{}}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{void}*\ ggml\_sycl\_host\_malloc(\textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{void}\ ggml\_sycl\_host\_free(\textcolor{keywordtype}{void}*\ ptr);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ g\_ggml\_sycl\_debug;}
+\DoxyCodeLine{00052\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ g\_ggml\_sycl\_disable\_optimize;}
+\DoxyCodeLine{00053\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ g\_ggml\_sycl\_prioritize\_dmmv;}
+\DoxyCodeLine{00054\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ g\_ggml\_sycl\_enable\_flash\_attention;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#if\ defined(\_\_clang\_\_)\ \&\&\ \_\_has\_builtin(\_\_builtin\_expect)}}
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ Hint\ the\ optimizer\ to\ pipeline\ the\ more\ likely\ following\ instruction\ in\ branches}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIKELY(expr)\ \ \ \_\_builtin\_expect(expr,\ true)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#\ \ \ \ define\ UNLIKELY(expr)\ \_\_builtin\_expect(expr,\ false)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIKELY(expr)\ \ \ (expr)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#\ \ \ \ define\ UNLIKELY(expr)\ (expr)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_DEBUG(...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (UNLIKELY(g\_ggml\_sycl\_debug))\ \ \(\backslash\)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ fprintf(stderr,\ \_\_VA\_ARGS\_\_);\ \(\backslash\)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ CHECK\_TRY\_ERROR(expr)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\ \ [\&]()\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ \ \ try\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\ \ \ \ \ \ expr;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ \ \ \ \ return\ dpct::success;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\ \ \ \ \}\ catch\ (std::exception\ const\&\ e)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\ \ \ \ \ \ std::cerr\ <<\ e.what()\ <<\ "{}\(\backslash\)nException\ caught\ at\ file:"{}\ <<\ \_\_FILE\_\_\ \(\backslash\)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ "{},\ line:"{}\ <<\ \_\_LINE\_\_\ <<\ "{},\ func:"{}\ <<\ \_\_func\_\_\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\ \ \ \ \ \ return\ dpct::default\_error;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\ \ \}()}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ \_\_SYCL\_ARCH\_\_\ DPCT\_COMPATIBILITY\_TEMP}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ VER\_4VEC\ 610\ }\textcolor{comment}{//\ todo\ for\ hardware\ optimize.}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ VER\_GEN9\ 700\ }\textcolor{comment}{//\ todo\ for\ hardware\ optimize.}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ VER\_GEN12\ 1000000\ }\textcolor{comment}{//\ todo\ for\ hardware\ optimize.}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ VER\_GEN13\ (VER\_GEN12\ +\ 1030)\ }\textcolor{comment}{//\ todo\ for\ hardware\ optimize.}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_MAX\_NODES\ 8192\ }\textcolor{comment}{//\ TODO:\ adapt\ to\ hardwares}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ define\ for\ XMX\ in\ Intel\ GPU}}
+\DoxyCodeLine{00095\ \textcolor{comment}{//\ TODO:\ currently,\ it's\ not\ used\ for\ XMX\ really.}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#if\ !defined(GGML\_SYCL\_FORCE\_MMQ)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\ \ \ \ \#define\ SYCL\_USE\_XMX}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{comment}{//\ max\ batch\ size\ to\ use\ MMQ\ kernels\ when\ tensor\ cores\ are\ available}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ MMQ\_MAX\_BATCH\_SIZE\ 32}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{comment}{//\ dmmv\ =\ dequantize\_mul\_mat\_vec}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_DMMV\_X}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_DMMV\_X\ 32}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_MMV\_Y}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_MMV\_Y\ 1}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{keyword}{typedef}\ sycl::queue\ *queue\_ptr;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{enum}\ ggml\_sycl\_backend\_gpu\_mode\ \{}
+\DoxyCodeLine{00114\ \ \ SYCL\_UNSET\_GPU\_MODE\ =\ -\/1,}
+\DoxyCodeLine{00115\ \ \ SYCL\_SINGLE\_GPU\_MODE\ =\ 0,}
+\DoxyCodeLine{00116\ \ \ SYCL\_MUL\_GPU\_MODE}
+\DoxyCodeLine{00117\ \};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{static\_assert}(\textcolor{keyword}{sizeof}(sycl::half)\ ==\ \textcolor{keyword}{sizeof}(ggml\_fp16\_t),\ \textcolor{stringliteral}{"{}wrong\ fp16\ size"{}});}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ crash()\ \{}
+\DoxyCodeLine{00122\ \ \ \textcolor{keywordtype}{int}*\ ptr\ =\ NULL;}
+\DoxyCodeLine{00123\ \ \ *ptr\ =\ 0;}
+\DoxyCodeLine{00124\ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ [[noreturn]]\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_sycl\_error(}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ stmt,}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ func,}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ msg)\ \{}
+\DoxyCodeLine{00132\ \ \ fprintf(stderr,\ \textcolor{stringliteral}{"{}SYCL\ error:\ \%s:\ \%s\(\backslash\)n"{}},\ stmt,\ msg);}
+\DoxyCodeLine{00133\ \ \ fprintf(stderr,\ \textcolor{stringliteral}{"{}\ \ in\ function\ \%s\ at\ \%s:\%d\(\backslash\)n"{}},\ func,\ file,\ line);}
+\DoxyCodeLine{00134\ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}SYCL\ error"{}});}
+\DoxyCodeLine{00135\ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ SYCL\_CHECK(err)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ auto\ err\_\ =\ (err);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (err\_\ !=\ 0)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_error(\#err,\ \_\_func\_\_,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ "{}Exception\ caught\ in\ this\ line\ of\ code."{});\ \(\backslash\)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#if\ DPCT\_COMPAT\_RT\_VERSION\ >=\ 11100}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_ASSUME(x)\ \_\_builtin\_assume(x)}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_ASSUME(x)}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DPCT\_COMPAT\_RT\_VERSION\ >=\ 11100}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00151\ \textcolor{keyword}{typedef}\ sycl::half\ dfloat;\ \textcolor{comment}{//\ dequantize\ float}}
+\DoxyCodeLine{00152\ \textcolor{keyword}{typedef}\ sycl::half2\ dfloat2;}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00154\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ dfloat;\ \textcolor{comment}{//\ dequantize\ float}}
+\DoxyCodeLine{00155\ \textcolor{keyword}{typedef}\ sycl::float2\ dfloat2;}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ MMVQ\_MAX\_BATCH\_SIZE\ \ 8}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ g\_all\_sycl\_device\_count\ =\ -\/1;}
+\DoxyCodeLine{00161\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ g\_ggml\_backend\_sycl\_buffer\_type\_initialized\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{keyword}{static}\ ggml\_sycl\_backend\_gpu\_mode\ g\_ggml\_sycl\_backend\_gpu\_mode\ =}
+\DoxyCodeLine{00164\ \ \ \ \ SYCL\_UNSET\_GPU\_MODE;}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}*\ g\_scratch\_buffer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00167\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ g\_scratch\_size\ =\ 0;\ \textcolor{comment}{//\ disabled\ by\ default}}
+\DoxyCodeLine{00168\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ g\_scratch\_offset\ =\ 0;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ [[noreturn]]\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ bad\_arch(\textcolor{keyword}{const}\ sycl::stream\&\ stream\_ct1)\ \{}
+\DoxyCodeLine{00171\ \ \ stream\_ct1\ <<\ \textcolor{stringliteral}{"{}ERROR:\ ggml-\/sycl\ was\ compiled\ without\ support\ for\ the\ "{}}}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}current\ GPU\ architecture.\(\backslash\)n"{}};}
+\DoxyCodeLine{00173\ \ \ \textcolor{comment}{//\ \_\_trap();}}
+\DoxyCodeLine{00174\ \ \ std::exit(1);}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ (void)bad\_arch;\ \textcolor{comment}{//\ suppress\ unused\ function\ warning}}
+\DoxyCodeLine{00177\ \}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{keywordtype}{int}\ get\_current\_device\_id();}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_get\_device()\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_current\_device\_id();}
+\DoxyCodeLine{00183\ \}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{keyword}{inline}\ dpct::err0\ ggml\_sycl\_set\_device(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ device)\ \textcolor{keyword}{try}\ \{}
+\DoxyCodeLine{00186\ \ \ \textcolor{keywordtype}{int}\ current\_device\_id;}
+\DoxyCodeLine{00187\ \ \ SYCL\_CHECK(CHECK\_TRY\_ERROR(current\_device\_id\ =\ get\_current\_device\_id()));}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \textcolor{comment}{//\ GGML\_SYCL\_DEBUG("{}ggml\_sycl\_set\_device\ device\_id=\%d,}}
+\DoxyCodeLine{00190\ \ \ \textcolor{comment}{//\ current\_device\_id=\%d\(\backslash\)n"{},\ device,\ current\_device);}}
+\DoxyCodeLine{00191\ \ \ \textcolor{keywordflow}{if}\ (device\ ==\ current\_device\_id)\ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00193\ \ \ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \textcolor{keywordflow}{return}\ CHECK\_TRY\_ERROR(dpct::select\_device(device));}
+\DoxyCodeLine{00196\ \}\ \textcolor{keywordflow}{catch}\ (sycl::exception\ \textcolor{keyword}{const}\&\ exc)\ \{}
+\DoxyCodeLine{00197\ \ \ std::cerr\ <<\ exc.what()\ <<\ \textcolor{stringliteral}{"{}Exception\ caught\ at\ file:"{}}\ <<\ \_\_FILE\_\_}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ line:"{}}\ <<\ \_\_LINE\_\_\ <<\ std::endl;}
+\DoxyCodeLine{00199\ \ \ crash();}
+\DoxyCodeLine{00200\ \ \ std::exit(1);}
+\DoxyCodeLine{00201\ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00204\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structoptimize__feature}{optimize\_feature}}\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordtype}{bool}\ reorder=\textcolor{keyword}{false};}
+\DoxyCodeLine{00206\ \};}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structsycl__device__info}{sycl\_device\_info}}\ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keywordtype}{int}\ cc;\ \ \textcolor{comment}{//\ compute\ capability}}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keywordtype}{int}\ nsm;\ \textcolor{comment}{//\ number\ of\ streaming\ multiprocessors\ (CUDA)\ maps\ to\ the\ maximum}}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ number\ of\ compute\ units\ on\ a\ SYCL\ device.}}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{comment}{//\ size\_t\ \ smpb;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ max.\ shared\ memory\ per\ block}}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ smpbo;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ max.\ shared\ memory\ per\ block\ (with\ opt-\/in)}}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keywordtype}{int}\ warp\_size;\ \ \ \ \ \textcolor{comment}{//\ WARP\_SIZE(16)|WARP\_32\_SIZE(32)|WARP\_16\_SIZE(16).\ For\ Intel\ GPU,\ 16\ is\ better\ in\ most\ cases.\ Some\ OP\ support\ 32\ only.}}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keywordtype}{int}\ max\_wg\_per\_cu;\ \textcolor{comment}{//\ max\ work\ groups\ per\ compute\ unit\ -\/\ refer\ to}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ cudaOccupancyMaxActiveBlocksPerMultiprocessor}}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ vmm;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ virtual\ memory\ support}}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ total\_vram;}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{comment}{//sycl\_hw\_info\ hw\_info;\ \ \ \ \ \(\backslash\)\(\backslash\)\ device\ id\ and\ aarch,\ currently\ not\ used}}
+\DoxyCodeLine{00220\ \ \ \ \ \doxymbox{\hyperlink{structoptimize__feature}{optimize\_feature}}\ opt\_feature;}
+\DoxyCodeLine{00221\ \};}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__device__info}{ggml\_sycl\_device\_info}}\ \{}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keywordtype}{int}\ device\_count;}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \doxymbox{\hyperlink{structsycl__device__info}{sycl\_device\_info}}\ devices[GGML\_SYCL\_MAX\_DEVICES]\ =\ \{\};}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ std::array<float,\ GGML\_SYCL\_MAX\_DEVICES>\ default\_tensor\_split\ =\ \{\};}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keywordtype}{int}\ max\_work\_group\_sizes[GGML\_SYCL\_MAX\_DEVICES]\ =\ \{0\};}
+\DoxyCodeLine{00232\ \};}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__sycl__device__info}{ggml\_sycl\_device\_info}}\ \&\ ggml\_sycl\_info();}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__pool}{ggml\_sycl\_pool}}\ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{structggml__sycl__pool}{\string~ggml\_sycl\_pool}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ *\ alloc(\textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{size\_t}\ *\ actual\_size)\ =\ 0;}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ free(\textcolor{keywordtype}{void}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ size)\ =\ 0;}
+\DoxyCodeLine{00241\ \};}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00244\ \textcolor{keyword}{struct\ }ggml\_sycl\_pool\_alloc\ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\_sycl\_pool}}\ *\ pool\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00246\ \ \ \ \ T\ *\ ptr\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ actual\_size\ =\ 0;}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keyword}{explicit}\ ggml\_sycl\_pool\_alloc(\doxymbox{\hyperlink{structggml__sycl__pool}{ggml\_sycl\_pool}}\ \&\ pool)\ :\ pool(\&pool)\ \{}
+\DoxyCodeLine{00250\ \ \ \ \ \}}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ ggml\_sycl\_pool\_alloc(\doxymbox{\hyperlink{structggml__sycl__pool}{ggml\_sycl\_pool}}\ \&\ pool,\ \textcolor{keywordtype}{size\_t}\ size)\ :\ pool(\&pool)\ \{}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ alloc(size);}
+\DoxyCodeLine{00254\ \ \ \ \ \}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ \string~ggml\_sycl\_pool\_alloc()\ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ptr\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ pool-\/>free(ptr,\ actual\_size);}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00260\ \ \ \ \ \}}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ T\ *\ realloc(\textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ GGML\_ASSERT(pool\ !=\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ptr)}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ pool-\/>free(ptr,\ actual\_size);}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ ptr\ =\ (T\ *)\ pool-\/>alloc(size\ *\ \textcolor{keyword}{sizeof}(T),\ \&this-\/>actual\_size);}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ptr;}
+\DoxyCodeLine{00268\ \ \ \ \ \}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{comment}{//\ size\ is\ in\ number\ of\ elements}}
+\DoxyCodeLine{00271\ \ \ \ \ T\ *\ alloc(\textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ GGML\_ASSERT(pool\ !=\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ GGML\_ASSERT(ptr\ ==\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ ptr\ =\ (T\ *)\ pool-\/>alloc(size\ *\ \textcolor{keyword}{sizeof}(T),\ \&this-\/>actual\_size);}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ptr;}
+\DoxyCodeLine{00276\ \ \ \ \ \}}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ T\ *\ alloc(\doxymbox{\hyperlink{structggml__sycl__pool}{ggml\_sycl\_pool}}\ \&\ pool,\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ this-\/>pool\ =\ \&pool;}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ alloc(size);}
+\DoxyCodeLine{00281\ \ \ \ \ \}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ T\ *\ get()\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ptr;}
+\DoxyCodeLine{00285\ \ \ \ \ \}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ ggml\_sycl\_pool\_alloc()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00288\ \ \ \ \ ggml\_sycl\_pool\_alloc(\textcolor{keyword}{const}\ ggml\_sycl\_pool\_alloc\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00289\ \ \ \ \ ggml\_sycl\_pool\_alloc(ggml\_sycl\_pool\_alloc\ \&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00290\ \ \ \ \ ggml\_sycl\_pool\_alloc\&\ operator=(\textcolor{keyword}{const}\ ggml\_sycl\_pool\_alloc\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00291\ \ \ \ \ ggml\_sycl\_pool\_alloc\&\ operator=(ggml\_sycl\_pool\_alloc\ \&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00292\ \};}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \textcolor{comment}{//\ backend\ interface}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor__extra__gpu}{ggml\_tensor\_extra\_gpu}}\ \{}
+\DoxyCodeLine{00297\ \ \ \textcolor{keywordtype}{void}*\ data\_device[GGML\_SYCL\_MAX\_DEVICES];\ \textcolor{comment}{//\ 1\ pointer\ for\ each\ device\ for\ split}}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ tensors}}
+\DoxyCodeLine{00299\ \ \ dpct::event\_ptr\ events[GGML\_SYCL\_MAX\_DEVICES]}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [GGML\_SYCL\_MAX\_STREAMS];\ \textcolor{comment}{//\ events\ for\ synchronizing\ multiple\ GPUs}}
+\DoxyCodeLine{00301\ \ \ \doxymbox{\hyperlink{structoptimize__feature}{optimize\_feature}}\ optimized\_feature;}
+\DoxyCodeLine{00302\ \};}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \textcolor{keywordtype}{void}\ release\_extra\_gpu(\doxymbox{\hyperlink{structggml__tensor__extra__gpu}{ggml\_tensor\_extra\_gpu}}\ *\ extra,\ std::vector<queue\_ptr>\ streams=\{\});}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \textcolor{keyword}{namespace\ }sycl\_ex\ =\ sycl::ext::oneapi::experimental;}
+\DoxyCodeLine{00307\ \textcolor{keyword}{struct\ }ggml\_backend\_sycl\_context\ \{}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{keywordtype}{int}\ device;}
+\DoxyCodeLine{00309\ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00310\ \ \ \ \ \doxymbox{\hyperlink{structoptimize__feature}{optimize\_feature}}\ opt\_feature;}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ queue\_ptr\ qptrs[GGML\_SYCL\_MAX\_DEVICES][GGML\_SYCL\_MAX\_STREAMS]\ =\ \{\ \{\ \textcolor{keyword}{nullptr}\ \}\ \};}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keyword}{explicit}\ ggml\_backend\_sycl\_context(\textcolor{keywordtype}{int}\ device)\ :}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ device(device),}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ name(GGML\_SYCL\_NAME\ +\ std::to\_string(device))\ \{}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ opt\_feature\ =\ ggml\_sycl\_info().devices[device].opt\_feature;}
+\DoxyCodeLine{00318\ \ \ \ \ \}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ queue\_ptr\ stream(\textcolor{keywordtype}{int}\ device,\ \textcolor{keywordtype}{int}\ stream)\ \{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (qptrs[device][stream]\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ qptrs[device][stream]\ =\ \&(dpct::get\_device(device).default\_queue());}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qptrs[device][stream];}
+\DoxyCodeLine{00325\ \ \ \ \ \}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ queue\_ptr\ stream()\ \{}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ stream(device,\ 0);}
+\DoxyCodeLine{00329\ \ \ \ \ \}}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#if\ GGML\_SYCL\_DNNL}}
+\DoxyCodeLine{00332\ \ \ \ \ dnnl::engine\ make\_engine(sycl::queue*\ q)\ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ device\ associated\ with\ the\ queue}}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ sycl::device\ dev\ =\ q-\/>get\_device();}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ context\ associated\ with\ the\ queue}}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ sycl::context\ ctx\ =\ q-\/>get\_context();}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ dnnl::engine\ eng\ =\ dnnl::sycl\_interop::make\_engine(dev,\ ctx);}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ eng;}
+\DoxyCodeLine{00339\ \ \ \ \ \}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ std::unordered\_map<sycl::queue*,\ dnnl::stream>\ stream\_map;}
+\DoxyCodeLine{00342\ \ \ \ \ std::unordered\_map<sycl::queue*,\ dnnl::engine>\ engine\_map;}
+\DoxyCodeLine{00343\ \ \ \ \ dnnl::stream\ stream\_dnnl(\textcolor{keywordtype}{int}\ device,\ \textcolor{keywordtype}{int}\ \_stream)\ \{}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ q\ =\ stream(device,\ \_stream);}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ stream\_dnnl(q);}
+\DoxyCodeLine{00346\ \ \ \ \ \}}
+\DoxyCodeLine{00347\ \ \ \ \ dnnl::engine\ engine\_dnnl(sycl::queue*\ qptr)\ \{}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ engine\_map.find(qptr);}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ engine\_map.end())\ \{}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ eng\ =\ make\_engine(qptr);}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ engine\_map[qptr]\ =\ eng;}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ eng;}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00358\ \ \ \ \ \}}
+\DoxyCodeLine{00359\ \ \ \ \ dnnl::stream\ stream\_dnnl(sycl::queue*\ qptr)\ \{}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ stream\_map.find(qptr);}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ stream\_map.end())\ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ eng\ =\ engine\_dnnl(qptr);}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ stream\ =\ dnnl::sycl\_interop::make\_stream(eng,\ *qptr);}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ stream\_map[qptr]\ =\ stream;}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ stream;}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00371\ \ \ \ \ \}}
+\DoxyCodeLine{00372\ \ \ \ \ dnnl::stream\ stream\_dnnl()\ \{}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ stream\_dnnl(device,\ 0);}
+\DoxyCodeLine{00374\ \ \ \ \ \}}
+\DoxyCodeLine{00375\ \ \ \ \ dnnl::memory\ get\_scratchpad\_mem(\textcolor{keyword}{const}\ dnnl::memory::desc\ \&\ scratchpad\_md,}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ dnnl::engine\ \&\ eng,\ \textcolor{keyword}{const}\ queue\_ptr\ q)\ \{}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__sycl__pool__alloc}{ggml\_sycl\_pool\_alloc<uint8\_t>}}\ *\ pool;}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ scratchpad\_map.find(q);}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ scratchpad\_map.end())\ \{}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ scratchpad\_map[q]\ =\ std::make\_unique<ggml\_sycl\_pool\_alloc<uint8\_t>>(this-\/>pool());}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ pool\ =\ scratchpad\_map[q].get();}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ pool\ =\ it-\/>second.get();}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ scratchpad\_size\ =\ scratchpad\_md.get\_size();}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (scratchpad\_size\ >\ pool-\/>actual\_size)\ \{}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ pool-\/>realloc(scratchpad\_size);}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ mem\_ptr\ =\ pool-\/>get();}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dnnl::memory(scratchpad\_md,\ eng,\ mem\_ptr);}
+\DoxyCodeLine{00392\ \ \ \ \ \}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{comment}{//\ pool}}
+\DoxyCodeLine{00396\ \ \ \ \ std::unique\_ptr<ggml\_sycl\_pool>\ pools[GGML\_SYCL\_MAX\_DEVICES];}
+\DoxyCodeLine{00397\ \ \ \ \ std::unordered\_map<sycl::queue\ *,\ std::unique\_ptr<ggml\_sycl\_pool\_alloc<uint8\_t>>>\ scratchpad\_map;}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \ \ \ \ std::unique\_ptr<ggml\_sycl\_pool>\ host\_pools[GGML\_SYCL\_MAX\_DEVICES];}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<ggml\_sycl\_pool>\ new\_pool\_for\_device(queue\_ptr\ qptr,\ \textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<ggml\_sycl\_pool>\ new\_pool\_for\_host(queue\_ptr\ qptr,\ \textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \ \ \ \ \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\_sycl\_pool}}\ \&\ pool(\textcolor{keywordtype}{int}\ device)\ \{}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pools[device]\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ pools[device]\ =\ new\_pool\_for\_device(stream(device,0),\ device);}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *pools[device];}
+\DoxyCodeLine{00410\ \ \ \ \ \}}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \ \ \ \ \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\_sycl\_pool}}\ \&\ pool()\ \{}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pool(device);}
+\DoxyCodeLine{00414\ \ \ \ \ \}}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_GRAPH}}
+\DoxyCodeLine{00417\ \ \ \ \ std::unique\_ptr<sycl\_ex::command\_graph<sycl\_ex::graph\_state::executable>>\ exec\_graph\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \ \ \ \ \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\_sycl\_pool}}\ \&\ host\_pool(\textcolor{keywordtype}{int}\ device)\ \{}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (host\_pools[device]\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ host\_pools[device]\ =\ new\_pool\_for\_host(stream(device,\ 0),\ device);}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *host\_pools[device];}
+\DoxyCodeLine{00425\ \ \ \ \ \}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \ \ \ \ \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\_sycl\_pool}}\ \&\ host\_pool()\ \{\ \textcolor{keywordflow}{return}\ host\_pool(device);\ \}}
+\DoxyCodeLine{00428\ \};}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \textcolor{comment}{//\ common\ device\ functions}}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ warp\_reduce\_sum(\textcolor{keywordtype}{float}\ x,}
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\&\ item\_ct1)\ \{}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ mask\ =\ WARP\_SIZE\ /\ 2;\ mask\ >\ 0;\ mask\ >>=\ 1)\ \{}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ x\ +=\ dpct::permute\_sub\_group\_by\_xor(item\_ct1.get\_sub\_group(),\ x,\ mask);}
+\DoxyCodeLine{00437\ \ \ \ \ \}}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00439\ \}}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ sycl::float2}
+\DoxyCodeLine{00442\ warp\_reduce\_sum(sycl::float2\ a,\ \textcolor{keyword}{const}\ sycl::nd\_item<3>\&\ item\_ct1)\ \{}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ mask\ =\ WARP\_SIZE\ /\ 2;\ mask\ >\ 0;\ mask\ >>=\ 1)\ \{}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ a.x()\ +=\ dpct::permute\_sub\_group\_by\_xor(item\_ct1.get\_sub\_group(),\ a.x(),}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ mask);}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ a.y()\ +=\ dpct::permute\_sub\_group\_by\_xor(item\_ct1.get\_sub\_group(),\ a.y(),}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ mask);}
+\DoxyCodeLine{00449\ \ \ \ \ \}}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00451\ \}}
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00453\ \textcolor{comment}{/*\ use\ WARP\_SIZE\ or\ WARP\_32\_SIZE*/}}
+\DoxyCodeLine{00454\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ w\textcolor{keywordtype}{id}th>}
+\DoxyCodeLine{00455\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ warp\_reduce\_sum(\textcolor{keywordtype}{int}\ x)\ \{}
+\DoxyCodeLine{00456\ \ \ \textcolor{keywordflow}{return}\ sycl::reduce\_over\_group(}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),\ x,\ sycl::plus<>());}
+\DoxyCodeLine{00458\ \}}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \textcolor{comment}{/*\ use\ WARP\_SIZE\ or\ WARP\_32\_SIZE*/}}
+\DoxyCodeLine{00461\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ w\textcolor{keywordtype}{id}th>}
+\DoxyCodeLine{00462\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ warp\_reduce\_sum(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00464\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ offset\ =\ width\ /\ 2;\ offset\ >\ 0;\ offset\ >>=\ 1)\ \{}
+\DoxyCodeLine{00465\ \ \ \ \ x\ +=\ dpct::permute\_sub\_group\_by\_xor(}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),\ x,\ offset,\ width);}
+\DoxyCodeLine{00467\ \ \ \}}
+\DoxyCodeLine{00468\ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00469\ \}}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \textcolor{comment}{/*\ use\ WARP\_SIZE\ or\ WARP\_32\_SIZE*/}}
+\DoxyCodeLine{00472\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ w\textcolor{keywordtype}{id}th>}
+\DoxyCodeLine{00473\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ warp\_reduce\_sum(\textcolor{keywordtype}{float}\ x,\ \textcolor{keyword}{const}\ sycl::nd\_item<3>\&\ item\_ct1)\ \{}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00475\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ offset\ =\ width\ /\ 2;\ offset\ >\ 0;\ offset\ >>=\ 1)\ \{}
+\DoxyCodeLine{00476\ \ \ \ \ x\ +=\ dpct::permute\_sub\_group\_by\_xor(}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ item\_ct1.get\_sub\_group(),\ x,\ offset);}
+\DoxyCodeLine{00478\ \ \ \}}
+\DoxyCodeLine{00479\ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00480\ \}}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00482\ \textcolor{comment}{/*\ use\ WARP\_SIZE\ or\ WARP\_32\_SIZE*/}}
+\DoxyCodeLine{00483\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ w\textcolor{keywordtype}{id}th>}
+\DoxyCodeLine{00484\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ sycl::float2\ warp\_reduce\_sum(sycl::float2\ a)\ \{}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00486\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ offset\ =\ width\ /\ 2;\ offset\ >\ 0;\ offset\ >>=\ 1)\ \{}
+\DoxyCodeLine{00487\ \ \ \ \ a.x()\ +=\ dpct::permute\_sub\_group\_by\_xor(}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),\ a.x(),\ offset,}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ width);}
+\DoxyCodeLine{00490\ \ \ \ \ a.y()\ +=\ dpct::permute\_sub\_group\_by\_xor(}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),\ a.y(),\ offset,}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ width);}
+\DoxyCodeLine{00493\ \ \ \}}
+\DoxyCodeLine{00494\ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00495\ \}}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \textcolor{comment}{/*\ use\ WARP\_SIZE\ or\ WARP\_32\_SIZE*/}}
+\DoxyCodeLine{00498\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ w\textcolor{keywordtype}{id}th>}
+\DoxyCodeLine{00499\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ sycl::half2\ warp\_reduce\_sum(sycl::half2\ a)\ \{}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00501\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ offset\ =\ width\ /\ 2;\ offset\ >\ 0;\ offset\ >>=\ 1)\ \{}
+\DoxyCodeLine{00502\ \ \ \ \ a\ =\ a\ +\ dpct::permute\_sub\_group\_by\_xor(}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),\ a,\ offset,}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ width);}
+\DoxyCodeLine{00505\ \ \ \}}
+\DoxyCodeLine{00506\ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00507\ \}}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_get\_physical\_warp\_size()\ \{}
+\DoxyCodeLine{00510\ \ \ \textcolor{comment}{//\ todo:\ for\ old\ iGPU\ +\ dGPU\ case,\ need\ to\ be\ changed.}}
+\DoxyCodeLine{00511\ \ \ \textcolor{keywordflow}{return}\ WARP\_SIZE;}
+\DoxyCodeLine{00512\ \}}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00514\ \textcolor{comment}{/*\ use\ WARP\_SIZE\ or\ WARP\_32\_SIZE*/}}
+\DoxyCodeLine{00515\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ w\textcolor{keywordtype}{id}th>}
+\DoxyCodeLine{00516\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ warp\_reduce\_all(\textcolor{keywordtype}{int}\ x)\ \{}
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{keywordflow}{if}\ (width\ ==\ ggml\_sycl\_get\_physical\_warp\_size())\ \{}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sycl::all\_of\_group(}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \ \ \ \ (\string~0xffffffff\ \&}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \ \ \ \ \ (0x1\ <<\ sycl::ext::oneapi::this\_work\_item::get\_sub\_group()}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .get\_local\_linear\_id()))\ ||}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x);}
+\DoxyCodeLine{00524\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ offset\ =\ width\ /\ 2;\ offset\ >\ 0;\ offset\ >>=\ 1)\ \{}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ dpct::permute\_sub\_group\_by\_xor(}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),\ x,}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ offset,\ width)\ \&\&}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x;}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00533\ \ \ \ \ \}}
+\DoxyCodeLine{00534\ \}}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \textcolor{comment}{/*\ use\ WARP\_SIZE\ or\ WARP\_32\_SIZE*/}}
+\DoxyCodeLine{00537\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ w\textcolor{keywordtype}{id}th>}
+\DoxyCodeLine{00538\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ warp\_reduce\_any(\textcolor{keywordtype}{int}\ x)\ \{}
+\DoxyCodeLine{00539\ \ \ \ \ \textcolor{keywordflow}{if}\ (width\ ==\ ggml\_sycl\_get\_physical\_warp\_size())\ \{}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sycl::any\_of\_group(}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \ \ \ \ (0xffffffff\ \&}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ (0x1\ <<\ sycl::ext::oneapi::this\_work\_item::get\_sub\_group()}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .get\_local\_linear\_id()))\ \&\&}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x);}
+\DoxyCodeLine{00546\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ offset\ =\ width\ /\ 2;\ offset\ >\ 0;\ offset\ >>=\ 1)\ \{}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ dpct::permute\_sub\_group\_by\_xor(}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),\ x,}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ offset,\ width)\ ||}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x;}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00555\ \ \ \ \ \}}
+\DoxyCodeLine{00556\ \}}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \textcolor{comment}{/*\ use\ WARP\_SIZE\ or\ WARP\_32\_SIZE*/}}
+\DoxyCodeLine{00559\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ w\textcolor{keywordtype}{id}th>}
+\DoxyCodeLine{00560\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ warp\_reduce\_max(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00561\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00562\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ offset\ =\ width\ /\ 2;\ offset\ >\ 0;\ offset\ >>=\ 1)\ \{}
+\DoxyCodeLine{00563\ \ \ \ \ x\ =\ sycl::fmax(x,\ dpct::permute\_sub\_group\_by\_xor(}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::ext::oneapi::this\_work\_item::get\_sub\_group(),\ x,}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ offset,\ width));}
+\DoxyCodeLine{00566\ \ \ \}}
+\DoxyCodeLine{00567\ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00568\ \}}
+\DoxyCodeLine{00569\ }
+\DoxyCodeLine{00570\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ warp\_reduce\_max(\textcolor{keywordtype}{float}\ x,}
+\DoxyCodeLine{00571\ \ \ \ \ \textcolor{keyword}{const}\ sycl::nd\_item<3>\&\ item\_ct1)\ \{}
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00573\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ mask\ =\ WARP\_SIZE\ /\ 2;\ mask\ >\ 0;\ mask\ >>=\ 1)\ \{}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ x\ =\ sycl::fmax(x,\ dpct::permute\_sub\_group\_by\_xor(}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \ \ \ \ item\_ct1.get\_sub\_group(),\ x,\ mask));}
+\DoxyCodeLine{00576\ \ \ \ \ \}}
+\DoxyCodeLine{00577\ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00578\ \}}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \textcolor{comment}{/*\ Helper\ for\ Computing\ the\ linear\ offset\ of\ a\ ggml\_tensor\ given}}
+\DoxyCodeLine{00581\ \textcolor{comment}{per-\/dimension\ sizes,\ strides,\ and\ indices\ */}}
+\DoxyCodeLine{00582\ \textcolor{keyword}{template}<\textcolor{keywordtype}{int}\ N>}
+\DoxyCodeLine{00583\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{size\_t}\ calculate\_offset(\textcolor{keyword}{const}\ std::array<int,\ N>\ \&\ strides,\ \textcolor{keyword}{const}\ std::array<int,\ N>\ \&\ indices)\ \{}
+\DoxyCodeLine{00584\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ offset\ =\ 0;}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ N;\ i++)\ \{}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ index\_i\ =\ indices[i];}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ offset\ +=\ strides[i]\ *\ index\_i;}
+\DoxyCodeLine{00589\ \ \ \ \ \}}
+\DoxyCodeLine{00590\ \ \ \ \ \textcolor{keywordflow}{return}\ offset;}
+\DoxyCodeLine{00591\ \}}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \textcolor{comment}{//\ Helper\ for\ vec\ loading\ aligned\ data}}
+\DoxyCodeLine{00594\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Tp,\ \textcolor{keywordtype}{int}\ n>}
+\DoxyCodeLine{00595\ \textcolor{keyword}{inline}\ sycl::vec<Tp,\ n>\ vec\_aligned\_load(\textcolor{keyword}{const}\ Tp*\ aligned\_ptr)\ \{}
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }sycl::vec<Tp,\ n>*\textcolor{keyword}{>}(aligned\_ptr);}
+\DoxyCodeLine{00597\ \}}
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00599\ \textcolor{comment}{//\ Helper\ for\ accessing\ pointers\ with\ no\ warnings}}
+\DoxyCodeLine{00600\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Tp,\ \textcolor{keywordtype}{int}\ dim>}
+\DoxyCodeLine{00601\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ Tp*\ get\_pointer(sycl::local\_accessor<Tp,\ dim>\ acc)\ \{}
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{keywordflow}{return}\ acc.template\ get\_multi\_ptr<sycl::access::decorated::no>().get();}
+\DoxyCodeLine{00603\ \}}
+\DoxyCodeLine{00604\ }
+\DoxyCodeLine{00605\ int64\_t\ downsample\_sycl\_global\_range(int64\_t\ accumulate\_block\_num,\ int64\_t\ block\_size);}
+\DoxyCodeLine{00606\ }
+\DoxyCodeLine{00607\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ ceil\_div(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ m,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ n)\ \{}
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{keywordflow}{return}\ (m\ +\ n\ -\/\ 1)\ /\ n;}
+\DoxyCodeLine{00609\ \}}
+\DoxyCodeLine{00610\ }
+\DoxyCodeLine{00611\ \textcolor{keywordtype}{bool}\ gpu\_has\_xmx(sycl::device\ \&dev);}
+\DoxyCodeLine{00612\ }
+\DoxyCodeLine{00613\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ N,\ \textcolor{keyword}{class}\ T>\ std::string\ debug\_get\_array\_str(\textcolor{keyword}{const}\ std::string\ \&\ prefix,\ \textcolor{keyword}{const}\ T\ array[N])\ \{}
+\DoxyCodeLine{00614\ \ \ \ \ \textcolor{keywordflow}{if}\ (LIKELY(!g\_ggml\_sycl\_debug))\ \{}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00616\ \ \ \ \ \}}
+\DoxyCodeLine{00617\ \ \ \ \ std::stringstream\ ss;}
+\DoxyCodeLine{00618\ \ \ \ \ ss\ <<\ prefix\ <<\ \textcolor{stringliteral}{"{}=["{}};}
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{keywordflow}{for}\ (std::size\_t\ i\ =\ 0;\ i\ <\ N\ -\/\ 1;\ ++i)\ \{}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ ss\ <<\ \doxymbox{\hyperlink{namespacedetail_a917c3efabea8a20dc72d9ae2c673d632af1f713c9e000f5d3f280adbd124df4f5}{array}}[i]\ <<\ \textcolor{stringliteral}{"{},\ "{}};}
+\DoxyCodeLine{00621\ \ \ \ \ \}}
+\DoxyCodeLine{00622\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (N\ >\ 0)\ \{}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ ss\ <<\ \doxymbox{\hyperlink{namespacedetail_a917c3efabea8a20dc72d9ae2c673d632af1f713c9e000f5d3f280adbd124df4f5}{array}}[N\ -\/\ 1];}
+\DoxyCodeLine{00624\ \ \ \ \ \}}
+\DoxyCodeLine{00625\ \ \ \ \ ss\ <<\ \textcolor{stringliteral}{"{}]"{}};}
+\DoxyCodeLine{00626\ \ \ \ \ \textcolor{keywordflow}{return}\ ss.str();}
+\DoxyCodeLine{00627\ \}}
+\DoxyCodeLine{00628\ }
+\DoxyCodeLine{00629\ \textcolor{keyword}{inline}\ std::string\ debug\_get\_tensor\_str(\textcolor{keyword}{const}\ std::string\ \&prefix,}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *tensor,\ \textcolor{keyword}{const}\ std::string\ \&suffix\ =\ \textcolor{stringliteral}{"{}"{}})\ \{}
+\DoxyCodeLine{00631\ \ \ \ \ std::stringstream\ ss;}
+\DoxyCodeLine{00632\ \ \ \ \ \textcolor{keywordflow}{if}\ (LIKELY(!g\_ggml\_sycl\_debug))\ \{\ \textcolor{keywordflow}{return}\ ss.str();\ \}}
+\DoxyCodeLine{00633\ \ \ \ \ ss\ <<\ prefix.c\_str()\ <<\ \textcolor{stringliteral}{"{}="{}};}
+\DoxyCodeLine{00634\ \ \ \ \ \textcolor{keywordflow}{if}\ (tensor)\ \{}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ ss\ <<\ \textcolor{stringliteral}{"{}'"{}}\ <<\ tensor-\/>name\ <<\ \textcolor{stringliteral}{"{}':type="{}}\ <<\ ggml\_type\_name(tensor-\/>type);}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ ss\ <<\ debug\_get\_array\_str<GGML\_MAX\_DIMS>(\textcolor{stringliteral}{"{};ne"{}},\ tensor-\/>ne);}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ ss\ <<\ debug\_get\_array\_str<GGML\_MAX\_DIMS>(\textcolor{stringliteral}{"{};nb"{}},\ tensor-\/>nb);}
+\DoxyCodeLine{00638\ }
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ggml\_is\_contiguous(tensor))\ \{\ ss\ <<\ \textcolor{stringliteral}{"{};strided"{}};\ \}}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ggml\_is\_permuted(tensor))\ \{\ ss\ <<\ \textcolor{stringliteral}{"{};permuted"{}};\ \}}
+\DoxyCodeLine{00641\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ ss\ <<\ \textcolor{stringliteral}{"{}nullptr"{}};}
+\DoxyCodeLine{00643\ \ \ \ \ \}}
+\DoxyCodeLine{00644\ \ \ \ \ ss\ <<\ suffix;}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{keywordflow}{return}\ ss.str();}
+\DoxyCodeLine{00646\ \}}
+\DoxyCodeLine{00647\ }
+\DoxyCodeLine{00648\ \textcolor{comment}{//\ Use\ scope\_op\_debug\_print\ to\ log\ operations\ coming\ from\ running\ a\ model}}
+\DoxyCodeLine{00649\ \textcolor{keyword}{struct\ }scope\_op\_debug\_print\ \{}
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{comment}{//\ Use\ string\_views\ to\ avoid\ the\ cost\ of\ creating\ a\ string\ and\ concatenating\ them}}
+\DoxyCodeLine{00651\ \ \ \ \ \textcolor{comment}{//\ string\_views\ must\ be\ alive\ for\ as\ long\ as\ the\ object\ is\ alive}}
+\DoxyCodeLine{00652\ \ \ \ \ \textcolor{comment}{//\ scope\_op\_debug\_print\ are\ used\ with\ string\ literals\ in\ practice\ which\ are\ stored\ in\ constant\ space\ so\ always\ accessible}}
+\DoxyCodeLine{00653\ \ \ \ \ scope\_op\_debug\_print(\textcolor{keyword}{const}\ std::string\_view\ \&\ func,\ \textcolor{keyword}{const}\ std::string\_view\ \&\ func\_suffix,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst,}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ num\_src,\ \textcolor{keyword}{const}\ std::string\_view\ \&\ suffix\ =\ \textcolor{stringliteral}{"{}"{}})\ :}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ func(func),}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ func\_suffix(func\_suffix)\ \{}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (LIKELY(!g\_ggml\_sycl\_debug))\ \{}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ GGML\_SYCL\_DEBUG(\textcolor{stringliteral}{"{}[SYCL][OP]\ call\ \%s\%s:"{}},\ func.data(),\ func\_suffix.data());}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ GGML\_SYCL\_DEBUG(\textcolor{stringliteral}{"{}\%s"{}},\ debug\_get\_tensor\_str(\textcolor{stringliteral}{"{}\ dst"{}},\ dst).c\_str());}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dst)\ \{}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (std::size\_t\ i\ =\ 0;\ i\ <\ num\_src;\ ++i)\ \{}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_SYCL\_DEBUG(\textcolor{stringliteral}{"{}\%s"{}},\ debug\_get\_tensor\_str(\textcolor{stringliteral}{"{}\(\backslash\)tsrc"{}}\ +\ std::to\_string(i),\ dst-\/>src[i]).c\_str());}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ GGML\_SYCL\_DEBUG(\textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ suffix.data());}
+\DoxyCodeLine{00668\ \ \ \ \ \}}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00670\ \ \ \ \ scope\_op\_debug\_print(\textcolor{keyword}{const}\ std::string\_view\ \&\ func,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst,\ std::size\_t\ num\_src,}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ \&\ suffix\ =\ \textcolor{stringliteral}{"{}"{}})\ :}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ scope\_op\_debug\_print(func,\ \textcolor{stringliteral}{"{}"{}},\ dst,\ num\_src,\ suffix)\ \{\}}
+\DoxyCodeLine{00673\ }
+\DoxyCodeLine{00674\ \ \ \ \ \string~scope\_op\_debug\_print()\ \{\ GGML\_SYCL\_DEBUG(\textcolor{stringliteral}{"{}[SYCL][OP]\ call\ \%s\%s\ done\(\backslash\)n"{}},\ func.data(),\ func\_suffix.data());\ \}}
+\DoxyCodeLine{00675\ }
+\DoxyCodeLine{00676\ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00677\ \ \ \ \ std::string\_view\ func;}
+\DoxyCodeLine{00678\ \ \ \ \ std::string\_view\ func\_suffix;}
+\DoxyCodeLine{00679\ \};}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ get\_alibi\_slope(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ max\_bias,}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ h,}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ n\_head\_log2,}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ m0,}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ m1)\ \{}
+\DoxyCodeLine{00686\ \ \ \ \ \textcolor{keywordflow}{if}\ (max\_bias\ <=\ 0.0f)\ \{}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1.0f;}
+\DoxyCodeLine{00688\ \ \ \ \ \}}
+\DoxyCodeLine{00689\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ base\ =\ h\ <\ n\_head\_log2\ ?\ m0\ :\ m1;}
+\DoxyCodeLine{00690\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ exph\ =\ h\ <\ n\_head\_log2\ ?\ h\ +\ 1\ :\ 2*(h\ -\/\ n\_head\_log2)\ +\ 1;}
+\DoxyCodeLine{00691\ }
+\DoxyCodeLine{00692\ \ \ \ \ \textcolor{keywordflow}{return}\ dpct::pow(base,\ exph);}
+\DoxyCodeLine{00693\ \}}
+\DoxyCodeLine{00694\ }
+\DoxyCodeLine{00695\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ sycl::uint3\ init\_fastdiv\_values(uint32\_t\ d)\ \{}
+\DoxyCodeLine{00696\ \ \ \ \ GGML\_ASSERT(d\ !=\ 0);}
+\DoxyCodeLine{00697\ }
+\DoxyCodeLine{00698\ \ \ \ \ uint32\_t\ L\ =\ 0;}
+\DoxyCodeLine{00699\ \ \ \ \ \textcolor{keywordflow}{while}\ (L\ <\ 32\ \&\&\ (uint32\_t\{\ 1\ \}\ <<\ L)\ <\ d)\ \{}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ L++;}
+\DoxyCodeLine{00701\ \ \ \ \ \}}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \ \ \ \ uint32\_t\ mp\ =\ (uint32\_t)\ ((uint64\_t\{\ 1\ \}\ <<\ 32)\ *\ ((uint64\_t\{\ 1\ \}\ <<\ L)\ -\/\ d)\ /\ d\ +\ 1);}
+\DoxyCodeLine{00704\ \ \ \ \ \textcolor{keywordflow}{return}\ sycl::uint3(mp,\ L,\ d);}
+\DoxyCodeLine{00705\ \}}
+\DoxyCodeLine{00706\ }
+\DoxyCodeLine{00707\ \textcolor{comment}{//\ Maximum\ number\ of\ bytes\ that\ can\ be\ copied\ in\ a\ single\ instruction.}}
+\DoxyCodeLine{00708\ \textcolor{comment}{//\ Set\ by\ test\ result.}}
+\DoxyCodeLine{00709\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_get\_max\_cpy\_bytes()\ \{}
+\DoxyCodeLine{00710\ \ \ \ \ \textcolor{keywordflow}{return}\ 16;}
+\DoxyCodeLine{00711\ \}}
+\DoxyCodeLine{00712\ }
+\DoxyCodeLine{00713\ \textcolor{comment}{//\ Aligned\ memory\ transfers\ of\ 8/16\ bytes\ can\ be\ faster\ than\ 2\ transfers\ with\ 4\ bytes.}}
+\DoxyCodeLine{00714\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ n\textcolor{keywordtype}{byte}s,\ \textcolor{keywordtype}{int}\ alignment\ =\ 0>}
+\DoxyCodeLine{00715\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ ggml\_sycl\_memcpy\_1(\textcolor{keywordtype}{void}\ *\ dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ src)\ \{}
+\DoxyCodeLine{00716\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (alignment\ !=\ 0)\ \{}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(nbytes\ \%\ alignment\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ alignment"{}});}
+\DoxyCodeLine{00718\ \ \ \ \ \}}
+\DoxyCodeLine{00719\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ nb\_per\_cpy\ =\ alignment\ ==\ 0\ ?\ nbytes\ :\ alignment;}
+\DoxyCodeLine{00720\ }
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00722\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ nbytes/nb\_per\_cpy;\ ++i)\ \{}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (nb\_per\_cpy\ ==\ 1)\ \{}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{char}\ *)\ dst)[i]\ =\ ((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)\ src)[i];}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (nb\_per\_cpy\ ==\ 2)\ \{}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{short}\ *)\ dst)[i]\ =\ ((\textcolor{keyword}{const}\ \textcolor{keywordtype}{short}\ *)\ src)[i];}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (nb\_per\_cpy\ ==\ 4)\ \{}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}\ *)\ dst)[i]\ =\ ((\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *)\ src)[i];}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (nb\_per\_cpy\ ==\ 8)\ \{}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ \ \ \ \ ((sycl::int2\ *)\ dst)[i]\ =\ ((\textcolor{keyword}{const}\ sycl::int2\ *)\ src)[i];}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (nb\_per\_cpy\ ==\ 16)\ \{}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \ \ \ \ ((sycl::int4\ *)\ dst)[i]\ =\ ((\textcolor{keyword}{const}\ sycl::int4\ *)\ src)[i];}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(nbytes\ ==\ 0\ \&\&\ nbytes\ ==\ -\/1,\ \textcolor{stringliteral}{"{}bad\ nbytes"{}});}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00736\ \ \ \ \ \}}
+\DoxyCodeLine{00737\ \}}
+\DoxyCodeLine{00738\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00739\ sycl::half2\ \_\_dpct\_inline\_\_\ make\_half2(\ T\ x,\ T\ y)\ \{}
+\DoxyCodeLine{00740\ \ \ \ \ sycl::half2\ res(\textcolor{keyword}{static\_cast<}sycl::half\textcolor{keyword}{>}(x),\textcolor{keyword}{static\_cast<}sycl::half\textcolor{keyword}{>}(y));}
+\DoxyCodeLine{00741\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00742\ \}}
+\DoxyCodeLine{00743\ }
+\DoxyCodeLine{00744\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ uint32\_t\ fastdiv(uint32\_t\ n,\ \textcolor{keyword}{const}\ sycl::uint3\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}})\ \{}
+\DoxyCodeLine{00745\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ hi\ =\ sycl::mul\_hi<unsigned>(n,\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}}.x());}
+\DoxyCodeLine{00746\ \ \ \ \ \textcolor{keywordflow}{return}\ (hi\ +\ n)\ >>\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}}.y();}
+\DoxyCodeLine{00747\ \}}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ }
+\DoxyCodeLine{00750\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00751\ sycl::float2\ \_\_dpct\_inline\_\_\ make\_float2(\ T\ x,\ T\ y)\ \{}
+\DoxyCodeLine{00752\ \ \ \ \ sycl::float2\ res(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x),\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y));}
+\DoxyCodeLine{00753\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00754\ \}}
+\DoxyCodeLine{00755\ }
+\DoxyCodeLine{00756\ sycl::float2\ \_\_dpct\_inline\_\_\ \_\_half22float2(sycl::half2\ \&H)\ \{}
+\DoxyCodeLine{00757\ \ \ \ \ sycl::float2\ float2\_value(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(H.x()),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(H.y()));}
+\DoxyCodeLine{00758\ \ \ \ \ \textcolor{keywordflow}{return}\ float2\_value;}
+\DoxyCodeLine{00759\ \}}
+\DoxyCodeLine{00760\ }
+\DoxyCodeLine{00761\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ sycl::uint2\ fast\_div\_modulo(uint32\_t\ n,\ \textcolor{keyword}{const}\ sycl::uint3\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}})\ \{}
+\DoxyCodeLine{00762\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ div\_val\ =\ fastdiv(n,\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}});}
+\DoxyCodeLine{00763\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ mod\_val\ =\ n\ -\/\ div\_val\ *\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}}.z();}
+\DoxyCodeLine{00764\ \ \ \ \ \textcolor{keywordflow}{return}\ sycl::uint2(div\_val,\ mod\_val);}
+\DoxyCodeLine{00765\ \}}
+\DoxyCodeLine{00766\ }
+\DoxyCodeLine{00767\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{int}\ ggml\_sycl\_dp4a(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ a,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ b,\ \textcolor{keywordtype}{int}\ c)\ \{}
+\DoxyCodeLine{00768\ \ \ \ \ \textcolor{keywordflow}{return}\ dpct::dp4a(a,\ b,\ c);}
+\DoxyCodeLine{00769\ \}}
+\DoxyCodeLine{00770\ }
+\DoxyCodeLine{00771\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{float}\ ggml\_sycl\_e8m0\_to\_fp32(uint8\_t\ x)\ \{}
+\DoxyCodeLine{00772\ \ \ \ \ uint32\_t\ bits;}
+\DoxyCodeLine{00773\ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ ==\ 0)\ \{}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ bits\ =\ 0x00400000;}
+\DoxyCodeLine{00775\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ bits\ =\ (uint32\_t)\ x\ <<\ 23;}
+\DoxyCodeLine{00777\ \ \ \ \ \}}
+\DoxyCodeLine{00778\ }
+\DoxyCodeLine{00779\ \ \ \ \ \textcolor{keywordtype}{float}\ result;}
+\DoxyCodeLine{00780\ \ \ \ \ memcpy(\&result,\ \&bits,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}));}
+\DoxyCodeLine{00781\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00782\ \}}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ sycl::float2\ \_\_dpct\_inline\_\_\ \_\_half22float2(\textcolor{keyword}{const}\ sycl::half2\ \&H)\ \{}
+\DoxyCodeLine{00785\ \ \ \ \ sycl::float2\ float2\_value(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(H.x()),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(H.y()));}
+\DoxyCodeLine{00786\ \ \ \ \ \textcolor{keywordflow}{return}\ float2\_value;}
+\DoxyCodeLine{00787\ \}}
+\DoxyCodeLine{00788\ }
+\DoxyCodeLine{00789\ \textcolor{keywordtype}{float}\ \_\_dpct\_inline\_\_\ \_\_half2float(sycl::half\ H)\ \{}
+\DoxyCodeLine{00790\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(H);}
+\DoxyCodeLine{00791\ \}}
+\DoxyCodeLine{00792\ }
+\DoxyCodeLine{00793\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ ggml\_sycl\_mad(\textcolor{keywordtype}{float}\ \&\ acc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ v,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ u)\ \{}
+\DoxyCodeLine{00794\ \ \ \ \ acc\ +=\ v*u;}
+\DoxyCodeLine{00795\ \}}
+\DoxyCodeLine{00796\ }
+\DoxyCodeLine{00797\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ ggml\_sycl\_mad(\textcolor{keywordtype}{float}\ \&\ acc,\ \textcolor{keyword}{const}\ sycl::float2\ v,\ \textcolor{keyword}{const}\ sycl::float2\ u)\ \{}
+\DoxyCodeLine{00798\ \ \ \ \ acc\ +=\ v.x()\ *\ u.x();}
+\DoxyCodeLine{00799\ \ \ \ \ acc\ +=\ v.y()\ *\ u.y();}
+\DoxyCodeLine{00800\ \}}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ ggml\_sycl\_mad(\textcolor{keywordtype}{float}\ \&\ acc,\ \textcolor{keyword}{const}\ sycl::half2\ v,\ \textcolor{keyword}{const}\ sycl::half2\ u)\ \{}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00804\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ tmp\ =\ (v\ *\ u).\textcolor{keyword}{template}\ convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00805\ \ \ \ \ acc\ +=\ tmp.x()\ +\ tmp.y();}
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00807\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ tmpv\ =\ \_\_half22float2(v);}
+\DoxyCodeLine{00808\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ tmpu\ =\ \_\_half22float2(u);}
+\DoxyCodeLine{00809\ \ \ \ \ acc\ +=\ tmpv.x()\ *\ tmpu.x();}
+\DoxyCodeLine{00810\ \ \ \ \ acc\ +=\ tmpv.y()\ *\ tmpu.y();}
+\DoxyCodeLine{00811\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00812\ \}}
+\DoxyCodeLine{00813\ }
+\DoxyCodeLine{00814\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ ggml\_sycl\_mad(sycl::half2\ \&\ acc,\ \textcolor{keyword}{const}\ sycl::half2\ v,\ \textcolor{keyword}{const}\ sycl::half2\ u)\ \{}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00816\ \ \ \ \ acc\ +=\ v*u;}
+\DoxyCodeLine{00817\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00818\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ tmpv\ =\ \_\_half22float2(v);}
+\DoxyCodeLine{00819\ \ \ \ \ \textcolor{keyword}{const}\ sycl::float2\ tmpu\ =\ \_\_half22float2(u);}
+\DoxyCodeLine{00820\ \ \ \ \ sycl::float2\ tmpacc\ =\ \_\_half22float2(acc);}
+\DoxyCodeLine{00821\ \ \ \ \ \textcolor{comment}{//\ tmpacc.x\ +=\ tmpv.x()\ *\ tmpu.x();}}
+\DoxyCodeLine{00822\ \ \ \ \ \textcolor{comment}{//\ tmpacc.y\ +=\ tmpv.y()\ *\ tmpu.y();}}
+\DoxyCodeLine{00823\ \ \ \ \ sycl::float2\ tmp1(tmpacc.x()\ +\ tmpv.x()\ *\ tmpu.x(),\ tmpacc.y()\ +\ tmpv.y()\ *\ tmpu.y());}
+\DoxyCodeLine{00824\ \ \ \ \ acc\ =\ make\_half2(tmp1.x(),\ tmp1.y());}
+\DoxyCodeLine{00825\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00826\ \}}
+\DoxyCodeLine{00827\ }
+\DoxyCodeLine{00828\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ n>}
+\DoxyCodeLine{00829\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__unroll}{ggml\_sycl\_unroll}}\ \{}
+\DoxyCodeLine{00830\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func,\ \textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{00831\ \ \ \ \ \textcolor{keywordtype}{void}\ operator()(\textcolor{keyword}{const}\ Func\ \&\ f,\ Args...\ args)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ f(n\ -\/\ 1,\ args...);}
+\DoxyCodeLine{00833\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__sycl__unroll}{ggml\_sycl\_unroll}}<n\ -\/\ 1>\{\}(f,\ args...);}
+\DoxyCodeLine{00834\ \ \ \ \ \}}
+\DoxyCodeLine{00835\ \};}
+\DoxyCodeLine{00836\ }
+\DoxyCodeLine{00837\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00838\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__sycl__unroll}{ggml\_sycl\_unroll}}<1>\ \{}
+\DoxyCodeLine{00839\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func,\ \textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{00840\ \ \ \ \ \textcolor{keywordtype}{void}\ operator()(\textcolor{keyword}{const}\ Func\ \&\ f,\ Args...\ args)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \ \ f(0,\ args...);}
+\DoxyCodeLine{00842\ \ \ \ \ \}}
+\DoxyCodeLine{00843\ \};}
+\DoxyCodeLine{00844\ }
+\DoxyCodeLine{00845\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ sycl::half2\ ggml\_sycl\_hmax2(\textcolor{keyword}{const}\ sycl::half2\ a,\ \textcolor{keyword}{const}\ sycl::half2\ b)\ \{}
+\DoxyCodeLine{00846\ \ \ \ \ sycl::half2\ ret;}
+\DoxyCodeLine{00847\ \ \ \ \ \textcolor{keyword}{reinterpret\_cast<}sycl::half\ \&\textcolor{keyword}{>}(ret.x())\ =}
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ sycl::vec<float,\ 1>(sycl::fmax(a[0],\ b[0])).convert<sycl::half,\ sycl::rounding\_mode::automatic>()[0];}
+\DoxyCodeLine{00849\ \ \ \ \ \textcolor{keyword}{reinterpret\_cast<}sycl::half\ \&\textcolor{keyword}{>}(ret.y())\ =}
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ sycl::vec<float,\ 1>(sycl::fmax(a[1],\ b[1])).convert<sycl::half,\ sycl::rounding\_mode::automatic>()[0];}
+\DoxyCodeLine{00851\ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{00852\ \}}
+\DoxyCodeLine{00853\ }
+\DoxyCodeLine{00854\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ sycl::half\ ggml\_sycl\_hmax(\textcolor{keyword}{const}\ sycl::half\ a,\ \textcolor{keyword}{const}\ sycl::half\ b)\ \{}
+\DoxyCodeLine{00855\ \ \ \ \ \textcolor{keywordflow}{return}\ sycl::vec<float,\ 1>(}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::fmax(sycl::vec<sycl::half,\ 1>(a).convert<float,\ sycl::rounding\_mode::automatic>()[0],}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::vec<sycl::half,\ 1>(b).convert<float,\ sycl::rounding\_mode::automatic>()[0]))}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ .convert<sycl::half,\ sycl::rounding\_mode::automatic>()[0];}
+\DoxyCodeLine{00859\ \}}
+\DoxyCodeLine{00860\ }
+\DoxyCodeLine{00861\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ uint32\_t\ \_\_hgt2\_mask(\textcolor{keyword}{const}\ sycl::half2\ a,\ \textcolor{keyword}{const}\ sycl::half2\ b)\ \{}
+\DoxyCodeLine{00862\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ mask\_low\ \ =\ 0x0000FFFF\ *\ (float(a[0])\ >\ float(b[0]));}
+\DoxyCodeLine{00863\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ mask\_high\ =\ 0xFFFF0000\ *\ (float(a[1])\ >\ float(b[1]));}
+\DoxyCodeLine{00864\ \ \ \ \ \textcolor{keywordflow}{return}\ mask\_low\ |\ mask\_high;}
+\DoxyCodeLine{00865\ \}}
+\DoxyCodeLine{00866\ }
+\DoxyCodeLine{00867\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ uint32\_t\ fastmodulo(uint32\_t\ n,\ \textcolor{keyword}{const}\ sycl::uint3\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}})\ \{}
+\DoxyCodeLine{00868\ \ \ \ \ \textcolor{comment}{//\ expects\ \ fastdiv\_values\ to\ contain\ <mp,\ L,\ divisor>\ in\ <x,\ y,\ z>\ (see\ init\_fastdiv\_values)}}
+\DoxyCodeLine{00869\ \ \ \ \ \textcolor{keywordflow}{return}\ n\ -\/\ fastdiv(n,\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}})\ *\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}}.z();}
+\DoxyCodeLine{00870\ \}}
+\DoxyCodeLine{00871\ }
+\DoxyCodeLine{00872\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ fast\_fp16\_available(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ cc)\ \{}
+\DoxyCodeLine{00873\ \ \ \ \ GGML\_UNUSED(cc);}
+\DoxyCodeLine{00874\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \ \ \textcolor{comment}{//Intel\ GPUs\ always\ support\ FP16.}}
+\DoxyCodeLine{00875\ \}}
+\DoxyCodeLine{00876\ }
+\DoxyCodeLine{00877\ \textcolor{keyword}{enum\ class}\ block\_reduce\_method\ \{}
+\DoxyCodeLine{00878\ \ \ \ \ MAX,}
+\DoxyCodeLine{00879\ \ \ \ \ SUM,}
+\DoxyCodeLine{00880\ \};}
+\DoxyCodeLine{00881\ }
+\DoxyCodeLine{00882\ \textcolor{keyword}{template}<block\_reduce\_method\ method\_t,\ \textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{int}\ warp\_size>}
+\DoxyCodeLine{00883\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structblock__reduce__policy}{block\_reduce\_policy}};}
+\DoxyCodeLine{00884\ }
+\DoxyCodeLine{00885\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}...\ Ts>}
+\DoxyCodeLine{00886\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ is\_any\ =\ (std::is\_same\_v<T,\ Ts>\ ||\ ...);}
+\DoxyCodeLine{00887\ }
+\DoxyCodeLine{00888\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}...>}
+\DoxyCodeLine{00889\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ ggml\_sycl\_dependent\_false\_v\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00890\ }
+\DoxyCodeLine{00891\ \textcolor{preprocessor}{\#define\ WARP\_32\_SIZE\ 32}}
+\DoxyCodeLine{00892\ }
+\DoxyCodeLine{00893\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{int}\ warp\_size>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structblock__reduce__policy}{block\_reduce\_policy<block\_reduce\_method::SUM,\ T,\ warp\_size>}}\ \{}
+\DoxyCodeLine{00894\ \ \ \ \ \textcolor{keyword}{static}\ T\ reduce(T\ val)\ \{}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (is\_any<T,\ float,\ sycl::float2,\ sycl::half2,\ int>)\ \{}
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ warp\_reduce\_sum<warp\_size>(val);}
+\DoxyCodeLine{00897\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(ggml\_sycl\_dependent\_false\_v<T>,\ \textcolor{stringliteral}{"{}Unsupported\ type\ for\ block\ reduce\ sum"{}});}
+\DoxyCodeLine{00899\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00900\ \ \ \ \ \}}
+\DoxyCodeLine{00901\ }
+\DoxyCodeLine{00902\ \ \ \ \ \textcolor{keyword}{static}\ T\ sentinel()\ \{}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<T,\ float>)\ \{}
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0.0f;}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<T,\ sycl::float2>)\ \{}
+\DoxyCodeLine{00906\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sycl::float2(0.0f,\ 0.0f);}
+\DoxyCodeLine{00907\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<T,\ sycl::half2>)\ \{}
+\DoxyCodeLine{00908\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sycl::half2(0.0f,\ 0.0f);}
+\DoxyCodeLine{00909\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<T,\ int>)\ \{}
+\DoxyCodeLine{00910\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00911\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00912\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(ggml\_sycl\_dependent\_false\_v<T>,\ \textcolor{stringliteral}{"{}Unsupported\ type\ for\ block\ reduce\ sum"{}});}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00914\ \ \ \ \ \}}
+\DoxyCodeLine{00915\ \};}
+\DoxyCodeLine{00916\ }
+\DoxyCodeLine{00917\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{int}\ warp\_size>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structblock__reduce__policy}{block\_reduce\_policy<block\_reduce\_method::MAX,\ T,\ warp\_size>}}\ \{}
+\DoxyCodeLine{00918\ \ \ \ \ \textcolor{keyword}{static}\ T\ reduce(T\ val)\ \{}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (is\_any<T,\ float,\ sycl::half2>)\ \{}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ warp\_reduce\_max<warp\_size>(val);}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(ggml\_sycl\_dependent\_false\_v<T>,\ \textcolor{stringliteral}{"{}Unsupported\ type\ for\ block\ reduce\ max"{}});}
+\DoxyCodeLine{00923\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00924\ \ \ \ \ \}}
+\DoxyCodeLine{00925\ }
+\DoxyCodeLine{00926\ \ \ \ \ \textcolor{keyword}{static}\ T\ sentinel()\ \{}
+\DoxyCodeLine{00927\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<T,\ float>)\ \{}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/INFINITY;}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<T,\ sycl::half2>)\ \{}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sycl::half2(-\/INFINITY,\ -\/INFINITY);}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00932\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(ggml\_sycl\_dependent\_false\_v<T>,\ \textcolor{stringliteral}{"{}Unsupported\ type\ for\ block\ reduce\ max"{}});}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00934\ \ \ \ \ \}}
+\DoxyCodeLine{00935\ \};}
+\DoxyCodeLine{00936\ }
+\DoxyCodeLine{00937\ }
+\DoxyCodeLine{00938\ \textcolor{keyword}{template}\ <block\_reduce\_method\ reduce\_method\_t,\ \textcolor{keywordtype}{int}\ warp\_size,\ \textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00939\ \textcolor{keyword}{static}\ T\ block\_reduce(T\ val,\ T\ *\ shared\_vals,\ \textcolor{keywordtype}{int}\ block\_size\_template)\ \{}
+\DoxyCodeLine{00940\ \ \ \ \ \textcolor{keyword}{auto}\ item\_ct1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ sycl::ext::oneapi::this\_work\_item::get\_nd\_item<3>();}
+\DoxyCodeLine{00941\ \ \ \ \ val\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \doxymbox{\hyperlink{structblock__reduce__policy}{block\_reduce\_policy<reduce\_method\_t,\ T,warp\_size>::reduce}}(val);}
+\DoxyCodeLine{00942\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ block\_size\ =\ block\_size\_template\ ==\ 0\ ?\ item\_ct1.get\_local\_range(2)\ :\ block\_size\_template;}
+\DoxyCodeLine{00943\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nthreads\ =\ item\_ct1.get\_local\_range(2);}
+\DoxyCodeLine{00944\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nwarps\ =\ nthreads\ /\ WARP\_SIZE;}
+\DoxyCodeLine{00945\ }
+\DoxyCodeLine{00946\ \ \ \ \ \textcolor{keywordflow}{if}\ (block\_size\ >\ warp\_size)\ \{}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ assert((block\_size\ <=\ 1024)\ \&\&\ (block\_size\ \%\ warp\_size)\ ==\ 0);}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ warp\_id\ =\ item\_ct1.get\_local\_id(2)\ /\ warp\_size;}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ lane\_id\ =\ item\_ct1.get\_local\_id(2)\ \%\ warp\_size;}
+\DoxyCodeLine{00950\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (lane\_id\ ==\ 0)\ \{}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_vals[warp\_id]\ =\ val;}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ item\_ct1.barrier(sycl::access::fence\_space::local\_space);}
+\DoxyCodeLine{00954\ }
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ nreduce\ =\ nwarps\ /\ WARP\_SIZE;}
+\DoxyCodeLine{00956\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ tmp\ =\ 0.f;}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (lane\_id\ <\ (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(block\_size)\ /\ warp\_size))\ \{}
+\DoxyCodeLine{00958\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ nreduce;\ i\ +=\ 1)}
+\DoxyCodeLine{00959\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ +=\ shared\_vals[lane\_id\ +\ i\ *\ WARP\_SIZE];}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00962\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00963\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structblock__reduce__policy}{block\_reduce\_policy<reduce\_method\_t,\ T,\ warp\_size>::reduce}}(tmp);}
+\DoxyCodeLine{00964\ \ \ \ \ \}}
+\DoxyCodeLine{00965\ \ \ \ \ \textcolor{keywordflow}{return}\ val;}
+\DoxyCodeLine{00966\ \}}
+\DoxyCodeLine{00967\ }
+\DoxyCodeLine{00968\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_COMMON\_HPP}}
+
+\end{DoxyCode}

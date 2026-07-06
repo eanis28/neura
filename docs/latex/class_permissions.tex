@@ -1,0 +1,119 @@
+\doxysection{Permissions Class Reference}
+\hypertarget{class_permissions}{}\label{class_permissions}\index{Permissions@{Permissions}}
+
+
+Tracks which optional features the user has granted consent for.  
+
+
+
+
+{\ttfamily \+\#include $<$config.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{class_permissions_ab2358a501c651dc9bcaa6c41ab06e904}{has\+Permission}} (const std::\+string \&feature) const
+\begin{DoxyCompactList}\small\item\em Checks whether a named feature has been granted. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_permissions_af1de5079834ea2198f81f444cf050f7c}{request\+Permission}} (const std::\+string \&feature)
+\begin{DoxyCompactList}\small\item\em Prompts the user to grant a permission and stores the result. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_permissions_a3db1042ccf6e76cfe250cfdc44f53a1a}\label{class_permissions_a3db1042ccf6e76cfe250cfdc44f53a1a} 
+bool {\bfseries allow\+Media\+Control} = false
+\begin{DoxyCompactList}\small\item\em Permit controlling local media playback. \end{DoxyCompactList}\item 
+\Hypertarget{class_permissions_a12ca5f659600391d70a2eeb111ea3ffb}\label{class_permissions_a12ca5f659600391d70a2eeb111ea3ffb} 
+bool {\bfseries allow\+Weather\+Lookup} = false
+\begin{DoxyCompactList}\small\item\em Permit outbound calls to the weather API. \end{DoxyCompactList}\item 
+\Hypertarget{class_permissions_a9e664540253f339b2a0a0ad04bfa7321}\label{class_permissions_a9e664540253f339b2a0a0ad04bfa7321} 
+bool {\bfseries allow\+Calendar\+Write} = false
+\begin{DoxyCompactList}\small\item\em Permit creating/\+modifying Google Calendar events. \end{DoxyCompactList}\item 
+\Hypertarget{class_permissions_aeadec92add6467ec30ded163561f6c1a}\label{class_permissions_aeadec92add6467ec30ded163561f6c1a} 
+bool {\bfseries allow\+Location\+Access} = false
+\begin{DoxyCompactList}\small\item\em Permit reading the device\textquotesingle{}s current location. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std::\+map$<$ std::\+string, bool \texorpdfstring{$\ast$}{*} $>$ \doxymbox{\hyperlink{class_permissions_a6002e5eeafaa654d8214f81f83ec3355}{field\+Map}} ()
+\begin{DoxyCompactList}\small\item\em Returns a name-\/to-\/pointer map over all permission flags. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Tracks which optional features the user has granted consent for. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Each flag guards a capability that may have privacy or cost implications. Flags default to false (deny-\/by-\/default). Use \doxylink{class_permissions_ab2358a501c651dc9bcaa6c41ab06e904}{has\+Permission()} to query and \doxylink{class_permissions_af1de5079834ea2198f81f444cf050f7c}{request\+Permission()} to prompt the user at runtime. 
+
+\label{doc-func-members}
+\Hypertarget{class_permissions_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_permissions_a6002e5eeafaa654d8214f81f83ec3355}\index{Permissions@{Permissions}!fieldMap@{fieldMap}}
+\index{fieldMap@{fieldMap}!Permissions@{Permissions}}
+\doxysubsubsection{\texorpdfstring{fieldMap()}{fieldMap()}}
+{\footnotesize\ttfamily \label{class_permissions_a6002e5eeafaa654d8214f81f83ec3355} 
+std::\+map$<$ std::\+string, bool \texorpdfstring{$\ast$}{*} $>$ Permissions::\+field\+Map (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns a name-\/to-\/pointer map over all permission flags. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Used internally by \doxylink{class_permissions_ab2358a501c651dc9bcaa6c41ab06e904}{has\+Permission()} and \doxylink{class_permissions_af1de5079834ea2198f81f444cf050f7c}{request\+Permission()} to look up a flag by its string name without a chain of if/\+else comparisons. Extend this map when adding new permission fields.
+
+\begin{DoxyReturn}{Returns}
+A std::\+map whose keys are field name strings and whose values are pointers to the corresponding bool members. 
+\end{DoxyReturn}
+\Hypertarget{class_permissions_ab2358a501c651dc9bcaa6c41ab06e904}\index{Permissions@{Permissions}!hasPermission@{hasPermission}}
+\index{hasPermission@{hasPermission}!Permissions@{Permissions}}
+\doxysubsubsection{\texorpdfstring{hasPermission()}{hasPermission()}}
+{\footnotesize\ttfamily \label{class_permissions_ab2358a501c651dc9bcaa6c41ab06e904} 
+bool Permissions::\+has\+Permission (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{feature}{}\end{DoxyParamCaption}) const}
+
+
+
+Checks whether a named feature has been granted. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em feature} & Case-\/sensitive feature name (e.\+g. "{}allow\+Calendar\+Write"{}). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the corresponding flag is set; false if the feature is unknown or has not been granted. 
+\end{DoxyReturn}
+\Hypertarget{class_permissions_af1de5079834ea2198f81f444cf050f7c}\index{Permissions@{Permissions}!requestPermission@{requestPermission}}
+\index{requestPermission@{requestPermission}!Permissions@{Permissions}}
+\doxysubsubsection{\texorpdfstring{requestPermission()}{requestPermission()}}
+{\footnotesize\ttfamily \label{class_permissions_af1de5079834ea2198f81f444cf050f7c} 
+bool Permissions::\+request\+Permission (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{feature}{}\end{DoxyParamCaption})}
+
+
+
+Prompts the user to grant a permission and stores the result. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+If the user grants consent, the corresponding flag is set to true and the change is persisted via \doxylink{class_configuration_a7be34e96bb4bedaac932857e2e4622cf}{Configuration::\+save()}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em feature} & Case-\/sensitive feature name to request consent for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the user granted the permission; false if denied or the feature name is unrecognised. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{config_8h}{config.\+h}}\item 
+config.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,40 @@
+\doxysection{worker\+\_\+pool\+\_\+s Struct Reference}
+\hypertarget{structworker__pool__s}{}\label{structworker__pool__s}\index{worker\_pool\_s@{worker\_pool\_s}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structworker__pool__s_a835ac069b21a25fad25ea7479a52e80c}\label{structworker__pool__s_a835ac069b21a25fad25ea7479a52e80c} 
+\doxymbox{\hyperlink{structworker__pool__job__t}{worker\+\_\+pool\+\_\+job\+\_\+t}} {\bfseries job} \+[MAX\+\_\+\+NUM\+\_\+\+WORKERS]\+
+\item 
+\Hypertarget{structworker__pool__s_a890ac29f4d216a34975cd8b3b960727c}\label{structworker__pool__s_a890ac29f4d216a34975cd8b3b960727c} 
+qurt\+\_\+thread\+\_\+t {\bfseries thread} \+[MAX\+\_\+\+NUM\+\_\+\+WORKERS]\+
+\item 
+\Hypertarget{structworker__pool__s_a5307df04430bcd64a0830ed07b57110b}\label{structworker__pool__s_a5307df04430bcd64a0830ed07b57110b} 
+\doxymbox{\hyperlink{structworker__context__t}{worker\+\_\+context\+\_\+t}} {\bfseries context} \+[MAX\+\_\+\+NUM\+\_\+\+WORKERS]\+
+\item 
+\Hypertarget{structworker__pool__s_aa9fec6c9b10a3f72ce31199a2b04b488}\label{structworker__pool__s_aa9fec6c9b10a3f72ce31199a2b04b488} 
+void \texorpdfstring{$\ast$}{*} {\bfseries stack} \+[MAX\+\_\+\+NUM\+\_\+\+WORKERS]\+
+\item 
+\Hypertarget{structworker__pool__s_a42d6b231961ffd715530c1a2b4bcea84}\label{structworker__pool__s_a42d6b231961ffd715530c1a2b4bcea84} 
+unsigned int {\bfseries n\+\_\+threads}
+\item 
+\Hypertarget{structworker__pool__s_ac5a4e75c5628f1593325d30a8cce4321}\label{structworker__pool__s_ac5a4e75c5628f1593325d30a8cce4321} 
+atomic\+\_\+uint {\bfseries seqn}
+\item 
+\Hypertarget{structworker__pool__s_a5ecdff2a7d2769ebcd983a4de80cfad8}\label{structworker__pool__s_a5ecdff2a7d2769ebcd983a4de80cfad8} 
+atomic\+\_\+uint {\bfseries next\+\_\+job}
+\item 
+\Hypertarget{structworker__pool__s_a529f0a24f6a3b6e59291b57d48be0212}\label{structworker__pool__s_a529f0a24f6a3b6e59291b57d48be0212} 
+atomic\+\_\+uint {\bfseries n\+\_\+pending}
+\item 
+\Hypertarget{structworker__pool__s_a29709047276852c0b6ee08b3b4299f15}\label{structworker__pool__s_a29709047276852c0b6ee08b3b4299f15} 
+atomic\+\_\+uint {\bfseries n\+\_\+jobs}
+\item 
+\Hypertarget{structworker__pool__s_a20ed463f57207a05a40137b230e0c64e}\label{structworker__pool__s_a20ed463f57207a05a40137b230e0c64e} 
+atomic\+\_\+bool {\bfseries killed}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/hexagon/\+htp/\+worker-\/pool.\+c\end{DoxyCompactItemize}

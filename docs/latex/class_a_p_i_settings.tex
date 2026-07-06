@@ -1,0 +1,103 @@
+\doxysection{APISettings Class Reference}
+\hypertarget{class_a_p_i_settings}{}\label{class_a_p_i_settings}\index{APISettings@{APISettings}}
+
+
+Holds all third-\/party API credentials and base URLs.  
+
+
+
+
+{\ttfamily \+\#include $<$config.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_a_p_i_settings_a4aee65699f710a8452e75be8d8814f6e}\label{class_a_p_i_settings_a4aee65699f710a8452e75be8d8814f6e} 
+std::\+string {\bfseries weather\+Api\+Key}
+\begin{DoxyCompactList}\small\item\em Open\+Weather\+Map API key. \end{DoxyCompactList}\item 
+\Hypertarget{class_a_p_i_settings_af9146b7452ec1f79b492f0c375285f11}\label{class_a_p_i_settings_af9146b7452ec1f79b492f0c375285f11} 
+std::\+string {\bfseries youtube\+Api\+Key}
+\begin{DoxyCompactList}\small\item\em You\+Tube Data API v3 key. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_a_p_i_settings_a7523042c9fdfa5ab07a017bea3972efe}{google\+Client\+Id}}
+\begin{DoxyCompactList}\small\item\em OAuth 2.\+0 client ID obtained from the Google Cloud Console. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_a_p_i_settings_a8fdeaa4ec181dd4aa669977e5193be05}{google\+Client\+Secret}}
+\begin{DoxyCompactList}\small\item\em OAuth 2.\+0 client secret obtained from the Google Cloud Console. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_a_p_i_settings_ac4ebb2b0678091b52c5c7964be2ba156}{google\+Refresh\+Token}}
+\begin{DoxyCompactList}\small\item\em Long-\/lived OAuth 2.\+0 refresh token used to obtain access tokens. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_a_p_i_settings_a3cc06037cc3a88d21f2aad6eb18d4664}{google\+Calendar\+Id}} = "{}primary"{}
+\begin{DoxyCompactList}\small\item\em Google Calendar ID to write events to. \end{DoxyCompactList}\item 
+\Hypertarget{class_a_p_i_settings_af3d6db7286e10de8760da6311facf0fc}\label{class_a_p_i_settings_af3d6db7286e10de8760da6311facf0fc} 
+std::\+string {\bfseries weather\+Base\+Url} = "{}https:\+/\+/\+api.\+openweathermap.\+org/\+data/\+2.\+5"{}
+\begin{DoxyCompactList}\small\item\em Open\+Weather\+Map REST base URL. \end{DoxyCompactList}\item 
+\Hypertarget{class_a_p_i_settings_a52cfd2f7cf9ec24dd400e0b4fb775bc1}\label{class_a_p_i_settings_a52cfd2f7cf9ec24dd400e0b4fb775bc1} 
+std::\+string {\bfseries google\+Calendar\+Url} = "{}https:\+/\+/\+www.\+googleapis.\+com/\+calendar/\+v3"{}
+\begin{DoxyCompactList}\small\item\em Google Calendar REST base URL. \end{DoxyCompactList}\item 
+\Hypertarget{class_a_p_i_settings_aca47da52a869156c04e210d2d4b9d3cb}\label{class_a_p_i_settings_aca47da52a869156c04e210d2d4b9d3cb} 
+std::\+string {\bfseries google\+Token\+Url} = "{}https:\+/\+/\+oauth2.\+googleapis.\+com/\+token"{}
+\begin{DoxyCompactList}\small\item\em Google OAuth 2.\+0 token endpoint. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Holds all third-\/party API credentials and base URLs. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Fields are populated by \doxylink{class_configuration_adf2992468f43f18aa8acb7b4b9c9cf98}{Configuration::\+load()} from config.\+ini. Base URL fields have sensible defaults and should only be changed when routing traffic through a proxy or a mock server during testing. 
+
+\label{doc-variable-members}
+\Hypertarget{class_a_p_i_settings_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_a_p_i_settings_a3cc06037cc3a88d21f2aad6eb18d4664}\index{APISettings@{APISettings}!googleCalendarId@{googleCalendarId}}
+\index{googleCalendarId@{googleCalendarId}!APISettings@{APISettings}}
+\doxysubsubsection{\texorpdfstring{googleCalendarId}{googleCalendarId}}
+{\footnotesize\ttfamily \label{class_a_p_i_settings_a3cc06037cc3a88d21f2aad6eb18d4664} 
+std::\+string APISettings::\+google\+Calendar\+Id = "{}primary"{}}
+
+
+
+Google Calendar ID to write events to. 
+
+Defaults to "{}primary"{}, which resolves to the authenticated user\textquotesingle{}s main calendar. Override with a specific calendar ID (e.\+g. "{}work\textbackslash{}@group.\+calendar.\+google.\+com"{}) to target a secondary calendar. \Hypertarget{class_a_p_i_settings_a7523042c9fdfa5ab07a017bea3972efe}\index{APISettings@{APISettings}!googleClientId@{googleClientId}}
+\index{googleClientId@{googleClientId}!APISettings@{APISettings}}
+\doxysubsubsection{\texorpdfstring{googleClientId}{googleClientId}}
+{\footnotesize\ttfamily \label{class_a_p_i_settings_a7523042c9fdfa5ab07a017bea3972efe} 
+std::\+string APISettings::\+google\+Client\+Id}
+
+
+
+OAuth 2.\+0 client ID obtained from the Google Cloud Console. 
+
+Created once per project under APIs \& Services → Credentials. Treat as semi-\/public:\+ it is transmitted during the token exchange but is not sufficient on its own to authenticate. \Hypertarget{class_a_p_i_settings_a8fdeaa4ec181dd4aa669977e5193be05}\index{APISettings@{APISettings}!googleClientSecret@{googleClientSecret}}
+\index{googleClientSecret@{googleClientSecret}!APISettings@{APISettings}}
+\doxysubsubsection{\texorpdfstring{googleClientSecret}{googleClientSecret}}
+{\footnotesize\ttfamily \label{class_a_p_i_settings_a8fdeaa4ec181dd4aa669977e5193be05} 
+std::\+string APISettings::\+google\+Client\+Secret}
+
+
+
+OAuth 2.\+0 client secret obtained from the Google Cloud Console. 
+
+\begin{DoxyWarning}{Warning}
+Keep this value out of version control. Anyone with the client ID and secret pair can impersonate this application. 
+\end{DoxyWarning}
+\Hypertarget{class_a_p_i_settings_ac4ebb2b0678091b52c5c7964be2ba156}\index{APISettings@{APISettings}!googleRefreshToken@{googleRefreshToken}}
+\index{googleRefreshToken@{googleRefreshToken}!APISettings@{APISettings}}
+\doxysubsubsection{\texorpdfstring{googleRefreshToken}{googleRefreshToken}}
+{\footnotesize\ttfamily \label{class_a_p_i_settings_ac4ebb2b0678091b52c5c7964be2ba156} 
+std::\+string APISettings::\+google\+Refresh\+Token}
+
+
+
+Long-\/lived OAuth 2.\+0 refresh token used to obtain access tokens. 
+
+Acquired once via the interactive OAuth consent flow and written to config.\+ini. It does not expire unless manually revoked at {\itshape myaccount.\+google.\+com/\+permissions}. \doxylink{requirements_The}{The} assistant exchanges it automatically for a fresh access token on every run.
+
+\begin{DoxyWarning}{Warning}
+Store securely — this token grants ongoing access to the user\textquotesingle{}s Google account within the approved scopes. 
+\end{DoxyWarning}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{config_8h}{config.\+h}}\end{DoxyCompactItemize}

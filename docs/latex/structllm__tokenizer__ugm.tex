@@ -1,0 +1,55 @@
+\doxysection{llm\+\_\+tokenizer\+\_\+ugm Struct Reference}
+\hypertarget{structllm__tokenizer__ugm}{}\label{structllm__tokenizer__ugm}\index{llm\_tokenizer\_ugm@{llm\_tokenizer\_ugm}}
+Inheritance diagram for llm\+\_\+tokenizer\+\_\+ugm:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{structllm__tokenizer__ugm}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a92c315b4f67c92747088f4da85c48429}\label{structllm__tokenizer__ugm_a92c315b4f67c92747088f4da85c48429} 
+{\bfseries llm\+\_\+tokenizer\+\_\+ugm} (const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \&vocab, const std::\+vector$<$ char $>$ \&precompiled\+\_\+charsmap)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a9dae035e61a422c6e4234d69ba6b4cb3}\label{structllm__tokenizer__ugm_a9dae035e61a422c6e4234d69ba6b4cb3} 
+const std::\+string {\bfseries escaped\+\_\+space} = "{}\textbackslash{}x\+E2\textbackslash{}x96\textbackslash{}x81"{}
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a8273c3228b63d046c360e9a50a866fae}\label{structllm__tokenizer__ugm_a8273c3228b63d046c360e9a50a866fae} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries prefix\+\_\+replacements} = NULL
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a3cac54d563efbd8b4a9f752bc77ac823}\label{structllm__tokenizer__ugm_a3cac54d563efbd8b4a9f752bc77ac823} 
+size\+\_\+t {\bfseries prefix\+\_\+replacements\+\_\+size} = 0
+\item 
+\Hypertarget{structllm__tokenizer__ugm_adc1dbfad148cd472f746cc9aaa960e36}\label{structllm__tokenizer__ugm_adc1dbfad148cd472f746cc9aaa960e36} 
+const uint32\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries xcda\+\_\+array} = NULL
+\item 
+\Hypertarget{structllm__tokenizer__ugm_aa929c1362d3e12ae3a33d34f25cf798e}\label{structllm__tokenizer__ugm_aa929c1362d3e12ae3a33d34f25cf798e} 
+size\+\_\+t {\bfseries xcda\+\_\+array\+\_\+size} = 0
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a710a019f43fdb64c0404dba32652a082}\label{structllm__tokenizer__ugm_a710a019f43fdb64c0404dba32652a082} 
+struct \doxymbox{\hyperlink{structnaive__trie}{naive\+\_\+trie}} {\bfseries user\+\_\+defined\+\_\+token\+\_\+matcher}
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a84c47927bdf2288cdc79f18f615ca613}\label{structllm__tokenizer__ugm_a84c47927bdf2288cdc79f18f615ca613} 
+float {\bfseries min\+\_\+score} = FLT\+\_\+\+MAX
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a1de10cb7e0778141baf7aff479fadf7b}\label{structllm__tokenizer__ugm_a1de10cb7e0778141baf7aff479fadf7b} 
+float {\bfseries max\+\_\+score} = -\/FLT\+\_\+\+MAX
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a165e5061755f7b92f6a7ecc8c882c0fe}\label{structllm__tokenizer__ugm_a165e5061755f7b92f6a7ecc8c882c0fe} 
+float {\bfseries unknown\+\_\+token\+\_\+score\+\_\+penalty} = 10.\+0
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a947b768421ef5adcee6e9c920fdf3559}\label{structllm__tokenizer__ugm_a947b768421ef5adcee6e9c920fdf3559} 
+float {\bfseries unknown\+\_\+token\+\_\+score}
+\item 
+\Hypertarget{structllm__tokenizer__ugm_a20772a3973362bc80974f5f74c8a08a8}\label{structllm__tokenizer__ugm_a20772a3973362bc80974f5f74c8a08a8} 
+struct \doxymbox{\hyperlink{structnaive__trie}{naive\+\_\+trie}} {\bfseries token\+\_\+matcher}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/vocab.\+cpp\end{DoxyCompactItemize}

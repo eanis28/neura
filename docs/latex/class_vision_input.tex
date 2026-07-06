@@ -1,0 +1,100 @@
+\doxysection{Vision\+Input Class Reference}
+\hypertarget{class_vision_input}{}\label{class_vision_input}\index{VisionInput@{VisionInput}}
+
+
+Manages a Python subprocess for real-\/time hand gesture detection.  
+
+
+
+
+{\ttfamily \+\#include $<$Vision\+Input.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_vision_input_aaea2418176f6766cfd7ae09f333d176a}\label{class_vision_input_aaea2418176f6766cfd7ae09f333d176a} 
+{\bfseries Vision\+Input} ()
+\begin{DoxyCompactList}\small\item\em Constructor -\/ initializes with no active subprocess. \end{DoxyCompactList}\item 
+\Hypertarget{class_vision_input_ab7800dddb115d9ba6da676b496b03259}\label{class_vision_input_ab7800dddb115d9ba6da676b496b03259} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Vision\+Input} ()
+\begin{DoxyCompactList}\small\item\em Destructor -\/ ensures subprocess is terminated before cleanup. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_vision_input_a7cb6ee0db013a06ffc2d74a2843ac5c6}{start\+Listening}} ()
+\begin{DoxyCompactList}\small\item\em Starts the gesture detection subprocess. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_vision_input_a1f9bae68fff075c03c15d7b489bfe8c5}{stop\+Listening}} ()
+\begin{DoxyCompactList}\small\item\em Stops the gesture detection subprocess. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_vision_input_a415cb88e71ca4c1c88d5c941e5d8c9b2}{get\+Input}} (std::\+string \&gesture, float \&nx, float \&ny)
+\begin{DoxyCompactList}\small\item\em Reads the next gesture detection result from the subprocess. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_vision_input_ac890e4121c71b731f6c94c0f5748b45b}\label{class_vision_input_ac890e4121c71b731f6c94c0f5748b45b} 
+FILE \texorpdfstring{$\ast$}{*} {\bfseries pipe}
+\begin{DoxyCompactList}\small\item\em Pipe to read stdout from the Python subprocess. \end{DoxyCompactList}\item 
+\Hypertarget{class_vision_input_a04ad85190a315c515396f0e076077aab}\label{class_vision_input_a04ad85190a315c515396f0e076077aab} 
+pid\+\_\+t {\bfseries pid}
+\begin{DoxyCompactList}\small\item\em Process ID of the running Python script (-\/1 if not running). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages a Python subprocess for real-\/time hand gesture detection. 
+
+This class spawns and communicates with a Python script (detect.\+py) that performs hand gesture recognition using the webcam. Gesture data is read line-\/by-\/line from the subprocess\textquotesingle{}s stdout, providing gesture names and normalized hand position coordinates. \doxylink{requirements_The}{The} subprocess is automatically terminated on destruction or when explicitly stopped. 
+
+\label{doc-func-members}
+\Hypertarget{class_vision_input_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_vision_input_a415cb88e71ca4c1c88d5c941e5d8c9b2}\index{VisionInput@{VisionInput}!getInput@{getInput}}
+\index{getInput@{getInput}!VisionInput@{VisionInput}}
+\doxysubsubsection{\texorpdfstring{getInput()}{getInput()}}
+{\footnotesize\ttfamily \label{class_vision_input_a415cb88e71ca4c1c88d5c941e5d8c9b2} 
+bool Vision\+Input::\+get\+Input (\begin{DoxyParamCaption}\item[{std::\+string \&}]{gesture}{, }\item[{float \&}]{nx}{, }\item[{float \&}]{ny}{}\end{DoxyParamCaption})}
+
+
+
+Reads the next gesture detection result from the subprocess. 
+
+Reads one line from the Python script\textquotesingle{}s stdout. Each line contains space-\/separated values:\+ gesture\+\_\+name normalized\+\_\+x normalized\+\_\+y. Coordinates are in the range \+[0.\+0, 1.\+0]\+ representing relative position on screen.
+
+
+\begin{DoxyParams}{Parameters}
+{\em gesture} & Output parameter for the detected gesture name \\
+\hline
+{\em nx} & Output parameter for normalized X coordinate (0.\+0 to 1.\+0) \\
+\hline
+{\em ny} & Output parameter for normalized Y coordinate (0.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if a gesture was successfully read, false if pipe is closed or read failed 
+\end{DoxyReturn}
+\Hypertarget{class_vision_input_a7cb6ee0db013a06ffc2d74a2843ac5c6}\index{VisionInput@{VisionInput}!startListening@{startListening}}
+\index{startListening@{startListening}!VisionInput@{VisionInput}}
+\doxysubsubsection{\texorpdfstring{startListening()}{startListening()}}
+{\footnotesize\ttfamily \label{class_vision_input_a7cb6ee0db013a06ffc2d74a2843ac5c6} 
+bool Vision\+Input::\+start\+Listening (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Starts the gesture detection subprocess. 
+
+Launches detect.\+py using the platform-\/specific Python interpreter from the virtual environment. If a subprocess is already running, it is stopped first. On mac\+OS/\+\+Linux, uses pgrep to obtain the process ID for later termination. On Windows, uses Power\+Shell to find the python process.
+
+\begin{DoxyReturn}{Returns}
+true if subprocess was successfully started, false on failure 
+\end{DoxyReturn}
+\Hypertarget{class_vision_input_a1f9bae68fff075c03c15d7b489bfe8c5}\index{VisionInput@{VisionInput}!stopListening@{stopListening}}
+\index{stopListening@{stopListening}!VisionInput@{VisionInput}}
+\doxysubsubsection{\texorpdfstring{stopListening()}{stopListening()}}
+{\footnotesize\ttfamily \label{class_vision_input_a1f9bae68fff075c03c15d7b489bfe8c5} 
+void Vision\+Input::\+stop\+Listening (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops the gesture detection subprocess. 
+
+Sends SIGTERM (Unix) or Stop-\/\+Process (Windows) to terminate the Python script, then closes the pipe. Safe to call multiple times or when no subprocess is running. 
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_vision_input_8h}{Vision\+Input.\+h}}\item 
+\doxymbox{\hyperlink{_vision_input_8cpp}{Vision\+Input.\+cpp}}\end{DoxyCompactItemize}

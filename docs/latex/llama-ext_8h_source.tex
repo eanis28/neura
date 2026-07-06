@@ -1,0 +1,18 @@
+\doxysection{llama-\/ext.h}
+\hypertarget{llama-ext_8h_source}{}\label{llama-ext_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/ext.h@{whisper.cpp/examples/talk-\/llama/llama-\/ext.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama-\/context.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}stdint.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Reserve\ a\ new\ compute\ graph.\ It\ is\ valid\ until\ the\ next\ call\ to\ llama\_graph\_reserve.}}
+\DoxyCodeLine{00008\ LLAMA\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ llama\_graph\_reserve(}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structllama__context}{llama\_context}}\ *\ ctx,}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ uint32\_t\ n\_tokens,}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ uint32\_t\ n\_seqs,}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ uint32\_t\ n\_outputs);}
+
+\end{DoxyCode}

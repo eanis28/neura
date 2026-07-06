@@ -1,0 +1,77 @@
+\doxysection{whisper.\+cpp/\+tests/\+librispeech Directory Reference}
+\hypertarget{dir_918d2cdef7d872a1c66daba14a9019c6}{}\label{dir_918d2cdef7d872a1c66daba14a9019c6}\index{whisper.cpp/tests/librispeech Directory Reference@{whisper.cpp/tests/librispeech Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \doxymbox{\hyperlink{dir_4313ac5d919f44fce8de6b515bd3e143}{normalizers}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_918d2cdef7d872a1c66daba14a9019c6_autotoc_md198}{}\doxysubsection{\texorpdfstring{whisper.\+cpp/\+tests/\+librispeech}{whisper.\+cpp/\+tests/\+librispeech}}\label{dir_918d2cdef7d872a1c66daba14a9019c6_autotoc_md198}
+\href{https://www.openslr.org/12}{\texttt{Libri\+Speech}} is a standard dataset for training and evaluating automatic speech recognition systems.
+
+This directory contains a set of tools to evaluate the recognition performance of whisper.\+cpp on Libri\+Speech corpus.\hypertarget{dir_918d2cdef7d872a1c66daba14a9019c6_autotoc_md199}{}\doxysubsection{\texorpdfstring{Quick Start}{Quick Start}}\label{dir_918d2cdef7d872a1c66daba14a9019c6_autotoc_md199}
+
+\begin{DoxyEnumerate}
+\item (Pre-\/requirement) Compile {\ttfamily whisper-\/cli} and prepare the Whisper model in {\ttfamily ggml} format.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ \#\ Execute\ the\ commands\ below\ in\ the\ project\ root\ dir.}
+\DoxyCodeLine{\$\ cmake\ -\/B\ build}
+\DoxyCodeLine{\$\ cmake\ -\/-\/build\ build\ -\/-\/config\ Release}
+\DoxyCodeLine{\$\ ./models/download-\/ggml-\/model.sh\ tiny}
+
+\end{DoxyCode}
+
+
+Consult \doxylink{dir_772ead685b9d496e78573f3740fb4e67}{whisper.cpp/\+\+README.md} for more details.
+\item Download the audio files from Libri\+Speech project.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ make\ get-\/audio}
+
+\end{DoxyCode}
+
+\item Set up the environment to compute WER score.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ pip\ install\ -\/r\ requirements.txt}
+
+\end{DoxyCode}
+
+
+For example, if you use {\ttfamily virtualenv}, you can set up it as follows:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ python3\ -\/m\ venv\ venv}
+\DoxyCodeLine{\$\ .\ venv/bin/activate}
+\DoxyCodeLine{\$\ pip\ install\ -\/r\ requirements.txt}
+
+\end{DoxyCode}
+
+\item Run the benchmark test.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ make}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}\hypertarget{dir_918d2cdef7d872a1c66daba14a9019c6_autotoc_md200}{}\doxysubsection{\texorpdfstring{How-\/to guides}{How-\/to guides}}\label{dir_918d2cdef7d872a1c66daba14a9019c6_autotoc_md200}
+\hypertarget{dir_918d2cdef7d872a1c66daba14a9019c6_autotoc_md201}{}\doxysubsubsection{\texorpdfstring{How to change the inference parameters}{How to change the inference parameters}}\label{dir_918d2cdef7d872a1c66daba14a9019c6_autotoc_md201}
+Create {\ttfamily eval.\+conf} and override variables.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{WHISPER\_MODEL\ =\ large-\/v3-\/turbo}
+\DoxyCodeLine{WHISPER\_FLAGS\ =\ -\/-\/no-\/prints\ -\/-\/threads\ 8\ -\/-\/language\ en\ -\/-\/output-\/txt}
+
+\end{DoxyCode}
+
+
+Check out {\ttfamily eval.\+mk} for more details. 

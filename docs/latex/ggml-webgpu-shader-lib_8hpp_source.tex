@@ -1,0 +1,1712 @@
+\doxysection{ggml-\/webgpu-\/shader-\/lib.hpp}
+\hypertarget{ggml-webgpu-shader-lib_8hpp_source}{}\label{ggml-webgpu-shader-lib_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/webgpu/ggml-\/webgpu-\/shader-\/lib.hpp@{whisper.cpp/ggml/src/ggml-\/webgpu/ggml-\/webgpu-\/shader-\/lib.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GGML\_WEBGPU\_SHADER\_LIB\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GGML\_WEBGPU\_SHADER\_LIB\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml-\/wgsl-\/shaders.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}pre\_wgsl.hpp"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <webgpu/webgpu\_cpp.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ GGML\_WEBGPU\_F16\_SIZE\_BYTES\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ GGML\_WEBGPU\_F32\_SIZE\_BYTES\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 4}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ GGML\_WEBGPU\_I32\_SIZE\_BYTES\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 4}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ GGML\_WEBGPU\_FLASH\_ATTN\_PREFERRED\_KV\_SG\_TILES\ 8u}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ GGML\_WEBGPU\_FLASH\_ATTN\_PREFERRED\_WG\_SIZE\ \ \ \ \ 128u}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ Matches\ GGML\_PAD(...,\ 256)\ in\ src/llama-\/context.cpp\ for\ KV\ cache\ sizing.}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ GGML\_WEBGPU\_KV\_SEQ\_PAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 256u}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ GGML\_WEBGPU\_ARGSORT\_MERGE\_MAX\_WG\_SIZE\ 512u}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Matrix\ multiplication\ parameters}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ Register\ tiling\ parameters}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_TILE\_M\ \ \ \ 8}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_TILE\_N\ \ \ \ 8}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_WG\_SIZE\_M\ 8}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_WG\_SIZE\_N\ 8}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_TILE\_K\ \ \ \ 32}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ Subgroup\ matrix\ parameters}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ The\ number\ of\ subgroups\ in\ the\ M\ dimension}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_SUBGROUP\_M\ \ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ The\ number\ of\ subgroups\ in\ the\ N\ dimension}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_SUBGROUP\_N\ \ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ The\ number\ of\ subgroup\ matrices\ each\ subgroup\ accumulates\ over}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_SUBGROUP\_MATRIX\_M\ 4}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_SUBGROUP\_MATRIX\_N\ 2}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ Matrix-\/vector\ multiplication\ parameters}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_VEC\_WG\_SIZE\ 256}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ Must\ be\ multiple\ of\ 4\ to\ work\ with\ vectorized\ paths,\ and\ must\ divide}}
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ mul\_mat\_vec\ wg\ size}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_VEC\_FLOAT\_OUTPUTS\_PER\_WG\ 64}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_VEC\_FLOAT\_TILE\_K\ \ \ \ \ \ \ \ \ 256}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_VEC\_LEGACY\_Q\_OUTPUTS\_PER\_WG\ 64}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_VEC\_LEGACY\_Q\_TILE\_K\ \ \ \ \ \ \ \ \ 256}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ Requires\ 32\ threads\ per\ output\ (wg\_size/outputs\_per\_wg\ ==\ 32)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_VEC\_K\_Q\_OUTPUTS\_PER\_WG\ 8}}
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ Requires\ at\ least\ two\ (and\ multiple\ of\ 2)\ k-\/quant\ blocks\ per\ tile}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_VEC\_K\_Q\_TILE\_K\ \ \ \ \ \ \ \ \ 512}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//\ default\ size\ for\ legacy\ matrix\ multiplication}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ WEBGPU\_MUL\_MAT\_WG\_SIZE\ 256}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ Same\ hash\ combine\ function\ as\ in\ boost}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ ggml\_webgpu\_hash\_combine(\textcolor{keywordtype}{size\_t}\ \&\ seed,\ \textcolor{keyword}{const}\ T\ \&\ value)\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ seed\ \string^=\ std::hash<T>\{\}(value)\ +\ 0x9e3779b9\ +\ (seed\ <<\ 6)\ +\ (seed\ >>\ 2);}
+\DoxyCodeLine{00066\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src0;}
+\DoxyCodeLine{00070\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src1;}
+\DoxyCodeLine{00071\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src2;}
+\DoxyCodeLine{00072\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src3;}
+\DoxyCodeLine{00073\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src4;}
+\DoxyCodeLine{00074\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ uint32\_t\ max\_wg\_size;}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ wg\_mem\_limit\_bytes\ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ inplace\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ overlap\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ src\_overlap\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ supports\_subgroup\_matrix\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00082\ \ \ \ \ uint32\_t\ sg\_mat\_m\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00083\ \ \ \ \ uint32\_t\ sg\_mat\_n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00084\ \ \ \ \ uint32\_t\ sg\_mat\_k\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00085\ \ \ \ \ uint32\_t\ max\_subgroup\_size\ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ wgpu::ComputePipeline\ pipeline;}
+\DoxyCodeLine{00090\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ name;}
+\DoxyCodeLine{00091\ \ \ \ \ std::shared\_ptr<void>\ context\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00092\ \};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__generic__shader__decisions}{ggml\_webgpu\_generic\_shader\_decisions}}\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ uint32\_t\ wg\_size\ =\ 0;}
+\DoxyCodeLine{00096\ \};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__ssm__conv__shader__decisions}{ggml\_webgpu\_ssm\_conv\_shader\_decisions}}\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ uint32\_t\ block\_size;}
+\DoxyCodeLine{00100\ \ \ \ \ uint32\_t\ tokens\_per\_wg;}
+\DoxyCodeLine{00101\ \};}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__argsort__shader__lib__context}{ggml\_webgpu\_argsort\_shader\_lib\_context}}\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ uint32\_t\ max\_wg\_size;}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ wg\_mem\_limit\_bytes;}
+\DoxyCodeLine{00108\ \ \ \ \ int32\_t\ \ order;}
+\DoxyCodeLine{00109\ \};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__set__rows__pipeline__key}{ggml\_webgpu\_set\_rows\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{int}\ dst\_type;}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{int}\ vec4;}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{int}\ i64\_idx;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__set__rows__pipeline__key}{ggml\_webgpu\_set\_rows\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dst\_type\ ==\ other.dst\_type\ \&\&\ vec4\ ==\ other.vec4\ \&\&\ i64\_idx\ ==\ other.i64\_idx;}
+\DoxyCodeLine{00120\ \ \ \ \ \}}
+\DoxyCodeLine{00121\ \};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__set__rows__pipeline__key__hash}{ggml\_webgpu\_set\_rows\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__set__rows__pipeline__key}{ggml\_webgpu\_set\_rows\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.dst\_type);}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.vec4);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.i64\_idx);}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00130\ \ \ \ \ \}}
+\DoxyCodeLine{00131\ \};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__set__rows__shader__decisions}{ggml\_webgpu\_set\_rows\_shader\_decisions}}\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ vec4;}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ i64\_idx;}
+\DoxyCodeLine{00136\ \ \ \ \ uint32\_t\ wg\_size;}
+\DoxyCodeLine{00137\ \};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__set__pipeline__key}{ggml\_webgpu\_set\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ ggml\_type\ type;}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ inplace;}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__set__pipeline__key}{ggml\_webgpu\_set\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ type\ ==\ other.type\ \&\&\ inplace\ ==\ other.inplace;}
+\DoxyCodeLine{00147\ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \};}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__set__pipeline__key__hash}{ggml\_webgpu\_set\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__set__pipeline__key}{ggml\_webgpu\_set\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.type);}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.inplace);}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00156\ \ \ \ \ \}}
+\DoxyCodeLine{00157\ \};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__get__rows__pipeline__key}{ggml\_webgpu\_get\_rows\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ ggml\_type\ src\_type;}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ vectorized;}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__get__rows__pipeline__key}{ggml\_webgpu\_get\_rows\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ src\_type\ ==\ other.src\_type\ \&\&\ vectorized\ ==\ other.vectorized;}
+\DoxyCodeLine{00167\ \ \ \ \ \}}
+\DoxyCodeLine{00168\ \};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__get__rows__pipeline__key__hash}{ggml\_webgpu\_get\_rows\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__get__rows__pipeline__key}{ggml\_webgpu\_get\_rows\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.src\_type);}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.vectorized);}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00176\ \ \ \ \ \}}
+\DoxyCodeLine{00177\ \};}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__row__norm__pipeline__key}{ggml\_webgpu\_row\_norm\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ ggml\_op\ op;}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ inplace;}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__row__norm__pipeline__key}{ggml\_webgpu\_row\_norm\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ op\ ==\ other.op\ \&\&\ inplace\ ==\ other.inplace;}
+\DoxyCodeLine{00187\ \ \ \ \ \}}
+\DoxyCodeLine{00188\ \};}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__row__norm__pipeline__key__hash}{ggml\_webgpu\_row\_norm\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__row__norm__pipeline__key}{ggml\_webgpu\_row\_norm\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.op);}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.inplace);}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00196\ \ \ \ \ \}}
+\DoxyCodeLine{00197\ \};}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00200\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__pad__pipeline__key}{ggml\_webgpu\_pad\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keywordtype}{bool}\ circular;}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__pad__pipeline__key}{ggml\_webgpu\_pad\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ circular\ ==\ other.circular;\ \}}
+\DoxyCodeLine{00204\ \};}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__pad__pipeline__key__hash}{ggml\_webgpu\_pad\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__pad__pipeline__key}{ggml\_webgpu\_pad\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.circular);}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00211\ \ \ \ \ \}}
+\DoxyCodeLine{00212\ \};}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00215\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__solve__tri__pipeline__key}{ggml\_webgpu\_solve\_tri\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keywordtype}{int}\ type;}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keywordtype}{int}\ n;}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordtype}{int}\ k;}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__solve__tri__pipeline__key}{ggml\_webgpu\_solve\_tri\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ type\ ==\ other.type\ \&\&\ n\ ==\ other.n\ \&\&\ k\ ==\ other.k;}
+\DoxyCodeLine{00222\ \ \ \ \ \}}
+\DoxyCodeLine{00223\ \};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__solve__tri__pipeline__key__hash}{ggml\_webgpu\_solve\_tri\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__solve__tri__pipeline__key}{ggml\_webgpu\_solve\_tri\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.type);}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.n);}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.k);}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00232\ \ \ \ \ \}}
+\DoxyCodeLine{00233\ \};}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00236\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__ssm__conv__pipeline__key}{ggml\_webgpu\_ssm\_conv\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keywordtype}{int}\ type;}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordtype}{int}\ vectorized;}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__ssm__conv__pipeline__key}{ggml\_webgpu\_ssm\_conv\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ type\ ==\ other.type\ \&\&\ vectorized\ ==\ other.vectorized;}
+\DoxyCodeLine{00242\ \ \ \ \ \}}
+\DoxyCodeLine{00243\ \};}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00246\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__gated__delta__net__pipeline__key}{ggml\_webgpu\_gated\_delta\_net\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordtype}{int}\ type;}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keywordtype}{int}\ s\_v;}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keywordtype}{int}\ kda;}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__gated__delta__net__pipeline__key}{ggml\_webgpu\_gated\_delta\_net\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ type\ ==\ other.type\ \&\&\ s\_v\ ==\ other.s\_v\ \&\&\ kda\ ==\ other.kda;}
+\DoxyCodeLine{00253\ \ \ \ \ \}}
+\DoxyCodeLine{00254\ \};}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__gated__delta__net__pipeline__key__hash}{ggml\_webgpu\_gated\_delta\_net\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__gated__delta__net__pipeline__key}{ggml\_webgpu\_gated\_delta\_net\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.type);}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.s\_v);}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.kda);}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00263\ \ \ \ \ \}}
+\DoxyCodeLine{00264\ \};}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__ssm__conv__pipeline__key__hash}{ggml\_webgpu\_ssm\_conv\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__ssm__conv__pipeline__key}{ggml\_webgpu\_ssm\_conv\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.type);}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.vectorized);}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00272\ \ \ \ \ \}}
+\DoxyCodeLine{00273\ \};}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__scale__pipeline__key}{ggml\_webgpu\_scale\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keywordtype}{int}\ inplace;}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__scale__pipeline__key}{ggml\_webgpu\_scale\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ inplace\ ==\ other.inplace;\ \}}
+\DoxyCodeLine{00281\ \};}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__scale__pipeline__key__hash}{ggml\_webgpu\_scale\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__scale__pipeline__key}{ggml\_webgpu\_scale\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.inplace);}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00288\ \ \ \ \ \}}
+\DoxyCodeLine{00289\ \};}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__concat__pipeline__key}{ggml\_webgpu\_concat\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keywordtype}{int}\ type;}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__concat__pipeline__key}{ggml\_webgpu\_concat\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ type\ ==\ other.type;\ \}}
+\DoxyCodeLine{00297\ \};}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__concat__pipeline__key__hash}{ggml\_webgpu\_concat\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__concat__pipeline__key}{ggml\_webgpu\_concat\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.type);}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00304\ \ \ \ \ \}}
+\DoxyCodeLine{00305\ \};}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__repeat__pipeline__key}{ggml\_webgpu\_repeat\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keywordtype}{int}\ type;}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__repeat__pipeline__key}{ggml\_webgpu\_repeat\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ type\ ==\ other.type;\ \}}
+\DoxyCodeLine{00313\ \};}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__repeat__pipeline__key__hash}{ggml\_webgpu\_repeat\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__repeat__pipeline__key}{ggml\_webgpu\_repeat\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.type);}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00320\ \ \ \ \ \}}
+\DoxyCodeLine{00321\ \};}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__binary__pipeline__key}{ggml\_webgpu\_binary\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keywordtype}{int}\ \ type;}
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keywordtype}{int}\ \ op;}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keywordtype}{bool}\ inplace;}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordtype}{bool}\ overlap;}
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keywordtype}{bool}\ src\_overlap;}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__binary__pipeline__key}{ggml\_webgpu\_binary\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ type\ ==\ other.type\ \&\&\ op\ ==\ other.op\ \&\&\ inplace\ ==\ other.inplace\ \&\&\ overlap\ ==\ other.overlap\ \&\&}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ src\_overlap\ ==\ other.src\_overlap;}
+\DoxyCodeLine{00335\ \ \ \ \ \}}
+\DoxyCodeLine{00336\ \};}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__binary__pipeline__key__hash}{ggml\_webgpu\_binary\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__binary__pipeline__key}{ggml\_webgpu\_binary\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.type);}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.op);}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.inplace);}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.overlap);}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.src\_overlap);}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00347\ \ \ \ \ \}}
+\DoxyCodeLine{00348\ \};}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__unary__pipeline__key}{ggml\_webgpu\_unary\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00353\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ type;}
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ op;}
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ is\_unary;\ \ \textcolor{comment}{//\ many\ unary\ operators\ fall\ under\ the\ GGML\_OP\_UNARY\ umbrella}}
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ inplace;}
+\DoxyCodeLine{00357\ \ \ \ \ ggml\_tri\_type\ ttype;\ \ \ \ \ \textcolor{comment}{//\ only\ used\ for\ GGML\_OP\_TRI}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__unary__pipeline__key}{ggml\_webgpu\_unary\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ type\ ==\ other.type\ \&\&\ op\ ==\ other.op\ \&\&\ is\_unary\ ==\ other.is\_unary\ \&\&\ inplace\ ==\ other.inplace\ \&\&}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ttype\ ==\ other.ttype;}
+\DoxyCodeLine{00362\ \ \ \ \ \}}
+\DoxyCodeLine{00363\ \};}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__unary__pipeline__key__hash}{ggml\_webgpu\_unary\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__unary__pipeline__key}{ggml\_webgpu\_unary\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.type);}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.op);}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.is\_unary);}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.inplace);}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.ttype);}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00374\ \ \ \ \ \}}
+\DoxyCodeLine{00375\ \};}
+\DoxyCodeLine{00376\ }
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__flash__attn__pipeline__key}{ggml\_webgpu\_flash\_attn\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00380\ \ \ \ \ ggml\_type\ kv\_type;}
+\DoxyCodeLine{00381\ \ \ \ \ uint32\_t\ \ head\_dim\_qk;}
+\DoxyCodeLine{00382\ \ \ \ \ uint32\_t\ \ head\_dim\_v;}
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ kv\_direct;}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ has\_mask;}
+\DoxyCodeLine{00385\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ has\_sinks;}
+\DoxyCodeLine{00386\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ uses\_logit\_softcap;}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__flash__attn__pipeline__key}{ggml\_webgpu\_flash\_attn\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ kv\_type\ ==\ other.kv\_type\ \&\&\ head\_dim\_qk\ ==\ other.head\_dim\_qk\ \&\&\ head\_dim\_v\ ==\ other.head\_dim\_v\ \&\&}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kv\_direct\ ==\ other.kv\_direct\ \&\&\ has\_mask\ ==\ other.has\_mask\ \&\&\ has\_sinks\ ==\ other.has\_sinks\ \&\&}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uses\_logit\_softcap\ ==\ other.uses\_logit\_softcap;}
+\DoxyCodeLine{00392\ \ \ \ \ \}}
+\DoxyCodeLine{00393\ \};}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__flash__attn__pipeline__key__hash}{ggml\_webgpu\_flash\_attn\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__flash__attn__pipeline__key}{ggml\_webgpu\_flash\_attn\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.kv\_type);}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.head\_dim\_qk);}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.head\_dim\_v);}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.kv\_direct);}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.has\_mask);}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.has\_sinks);}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.uses\_logit\_softcap);}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00406\ \ \ \ \ \}}
+\DoxyCodeLine{00407\ \};}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__flash__attn__shader__lib__context}{ggml\_webgpu\_flash\_attn\_shader\_lib\_context}}\ \{}
+\DoxyCodeLine{00410\ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__flash__attn__pipeline__key}{ggml\_webgpu\_flash\_attn\_pipeline\_key}}\ key;}
+\DoxyCodeLine{00411\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sg\_mat\_m;}
+\DoxyCodeLine{00412\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sg\_mat\_n;}
+\DoxyCodeLine{00413\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sg\_mat\_k;}
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wg\_mem\_limit\_bytes;}
+\DoxyCodeLine{00415\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_subgroup\_size;}
+\DoxyCodeLine{00416\ \};}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__flash__attn__shader__decisions}{ggml\_webgpu\_flash\_attn\_shader\_decisions}}\ \{}
+\DoxyCodeLine{00419\ \ \ \ \ uint32\_t\ q\_tile\ \ =\ 0;}
+\DoxyCodeLine{00420\ \ \ \ \ uint32\_t\ kv\_tile\ =\ 0;}
+\DoxyCodeLine{00421\ \ \ \ \ uint32\_t\ wg\_size\ =\ 0;}
+\DoxyCodeLine{00422\ \};}
+\DoxyCodeLine{00423\ }
+\DoxyCodeLine{00424\ \textcolor{comment}{//\ This\ is\ exposed\ because\ it's\ necessary\ in\ supports\_op}}
+\DoxyCodeLine{00425\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ ggml\_webgpu\_flash\_attn\_wg\_mem\_bytes(uint32\_t\ q\_tile,}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ kv\_tile,}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ head\_dim\_qk,}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ head\_dim\_v,}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ has\_mask,}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ kv\_direct)\ \{}
+\DoxyCodeLine{00431\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ max\_head\_dim\ =\ std::max(head\_dim\_qk,\ head\_dim\_v);}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ f16\_elems\ \ \ \ =\ 0;}
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ f32\_elems\ \ \ \ =\ 0;}
+\DoxyCodeLine{00434\ \ \ \ \ f16\_elems\ +=\ q\_tile\ *\ head\_dim\_qk;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ q\_shmem}}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keywordflow}{if}\ (!kv\_direct)\ \{}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ f16\_elems\ +=\ kv\_tile\ *\ max\_head\_dim;\ \ \textcolor{comment}{//\ kv\_shmem}}
+\DoxyCodeLine{00437\ \ \ \ \ \}}
+\DoxyCodeLine{00438\ \ \ \ \ f16\_elems\ +=\ q\_tile\ *\ head\_dim\_v;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ o\_shmem}}
+\DoxyCodeLine{00439\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_mask)\ \{}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ f16\_elems\ +=\ q\_tile\ *\ kv\_tile;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ mask\_shmem}}
+\DoxyCodeLine{00441\ \ \ \ \ \}}
+\DoxyCodeLine{00442\ \ \ \ \ f16\_elems\ +=\ q\_tile\ *\ kv\_tile;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ inter\_shmem}}
+\DoxyCodeLine{00443\ \ \ \ \ f32\_elems\ +=\ q\_tile;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ row\_max\_shmem}}
+\DoxyCodeLine{00444\ \ \ \ \ f32\_elems\ +=\ q\_tile;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ exp\_sum\_shmem}}
+\DoxyCodeLine{00445\ \ \ \ \ \textcolor{keywordflow}{return}\ f16\_elems\ *\ GGML\_WEBGPU\_F16\_SIZE\_BYTES\ +\ f32\_elems\ *\ GGML\_WEBGPU\_F32\_SIZE\_BYTES;}
+\DoxyCodeLine{00446\ \}}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__legacy__mul__mat__pipeline__key}{ggml\_webgpu\_legacy\_mul\_mat\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00451\ \ \ \ \ ggml\_type\ src0\_type;}
+\DoxyCodeLine{00452\ \ \ \ \ ggml\_type\ src1\_type;}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__legacy__mul__mat__pipeline__key}{ggml\_webgpu\_legacy\_mul\_mat\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ src0\_type\ ==\ other.src0\_type\ \&\&\ src1\_type\ ==\ other.src1\_type;}
+\DoxyCodeLine{00456\ \ \ \ \ \}}
+\DoxyCodeLine{00457\ \};}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00459\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__legacy__mul__mat__pipeline__key__hash}{ggml\_webgpu\_legacy\_mul\_mat\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__legacy__mul__mat__pipeline__key}{ggml\_webgpu\_legacy\_mul\_mat\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.src0\_type);}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.src1\_type);}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00465\ \ \ \ \ \}}
+\DoxyCodeLine{00466\ \};}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__mul__mat__vec__pipeline__key}{ggml\_webgpu\_mul\_mat\_vec\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00469\ \ \ \ \ ggml\_type\ src0\_type;}
+\DoxyCodeLine{00470\ \ \ \ \ ggml\_type\ src1\_type;}
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ vectorized;}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__mul__mat__vec__pipeline__key}{ggml\_webgpu\_mul\_mat\_vec\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ src0\_type\ ==\ other.src0\_type\ \&\&\ src1\_type\ ==\ other.src1\_type\ \&\&\ vectorized\ ==\ other.vectorized;}
+\DoxyCodeLine{00475\ \ \ \ \ \}}
+\DoxyCodeLine{00476\ \};}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__mul__mat__vec__pipeline__key__hash}{ggml\_webgpu\_mul\_mat\_vec\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__mul__mat__vec__pipeline__key}{ggml\_webgpu\_mul\_mat\_vec\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.src0\_type);}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.src1\_type);}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.vectorized);}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00485\ \ \ \ \ \}}
+\DoxyCodeLine{00486\ \};}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__mul__mat__vec__shader__decisions}{ggml\_webgpu\_mul\_mat\_vec\_shader\_decisions}}\ \{}
+\DoxyCodeLine{00489\ \ \ \ \ uint32\_t\ wg\_size;}
+\DoxyCodeLine{00490\ \ \ \ \ uint32\_t\ tile\_k;}
+\DoxyCodeLine{00491\ \ \ \ \ uint32\_t\ outputs\_per\_wg;}
+\DoxyCodeLine{00492\ \ \ \ \ uint32\_t\ vec\_size;}
+\DoxyCodeLine{00493\ \};}
+\DoxyCodeLine{00494\ }
+\DoxyCodeLine{00495\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__mul__mat__pipeline__key}{ggml\_webgpu\_mul\_mat\_pipeline\_key}}\ \{}
+\DoxyCodeLine{00496\ \ \ \ \ ggml\_type\ src0\_type;}
+\DoxyCodeLine{00497\ \ \ \ \ ggml\_type\ src1\_type;}
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ vectorized;}
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ use\_subgroup\_matrix;}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__mul__mat__pipeline__key}{ggml\_webgpu\_mul\_mat\_pipeline\_key}}\ \&\ other)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ src0\_type\ ==\ other.src0\_type\ \&\&\ src1\_type\ ==\ other.src1\_type\ \&\&\ vectorized\ ==\ other.vectorized\ \&\&}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ use\_subgroup\_matrix\ ==\ other.use\_subgroup\_matrix;}
+\DoxyCodeLine{00504\ \ \ \ \ \}}
+\DoxyCodeLine{00505\ \};}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__mul__mat__pipeline__key__hash}{ggml\_webgpu\_mul\_mat\_pipeline\_key\_hash}}\ \{}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__mul__mat__pipeline__key}{ggml\_webgpu\_mul\_mat\_pipeline\_key}}\ \&\ key)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ seed\ =\ 0;}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.src0\_type);}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.src1\_type);}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.vectorized);}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ ggml\_webgpu\_hash\_combine(seed,\ key.use\_subgroup\_matrix);}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ seed;}
+\DoxyCodeLine{00515\ \ \ \ \ \}}
+\DoxyCodeLine{00516\ \};}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__webgpu__mul__mat__shader__decisions}{ggml\_webgpu\_mul\_mat\_shader\_decisions}}\ \{}
+\DoxyCodeLine{00519\ \ \ \ \ uint32\_t\ tile\_k;}
+\DoxyCodeLine{00520\ \ \ \ \ uint32\_t\ wg\_size\_m;}
+\DoxyCodeLine{00521\ \ \ \ \ uint32\_t\ wg\_size\_n;}
+\DoxyCodeLine{00522\ \ \ \ \ uint32\_t\ wg\_size;}
+\DoxyCodeLine{00523\ \ \ \ \ uint32\_t\ outputs\_per\_wg;}
+\DoxyCodeLine{00524\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ use\_subgroup\_matrix;}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \ \ \ \ uint32\_t\ tile\_m;}
+\DoxyCodeLine{00527\ \ \ \ \ uint32\_t\ tile\_n;}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{comment}{//\ Subgroup\ matrix\ parameters}}
+\DoxyCodeLine{00530\ \ \ \ \ uint32\_t\ subgroup\_m;}
+\DoxyCodeLine{00531\ \ \ \ \ uint32\_t\ subgroup\_n;}
+\DoxyCodeLine{00532\ \ \ \ \ uint32\_t\ subgroup\_matrix\_m;}
+\DoxyCodeLine{00533\ \ \ \ \ uint32\_t\ subgroup\_matrix\_n;}
+\DoxyCodeLine{00534\ }
+\DoxyCodeLine{00535\ \ \ \ \ uint32\_t\ mul\_mat\_wg\_size;}
+\DoxyCodeLine{00536\ \};}
+\DoxyCodeLine{00537\ }
+\DoxyCodeLine{00538\ \textcolor{keyword}{class\ }ggml\_webgpu\_shader\_lib\ \{}
+\DoxyCodeLine{00539\ \ \ \ \ wgpu::Device\ \ \ \ \ \ \ \ \ \ \ device;}
+\DoxyCodeLine{00540\ \ \ \ \ \doxymbox{\hyperlink{classpre__wgsl_1_1_preprocessor}{pre\_wgsl::Preprocessor}}\ preprocessor;}
+\DoxyCodeLine{00541\ }
+\DoxyCodeLine{00542\ \ \ \ \ std::unordered\_map<int,\ webgpu\_pipeline>\ sum\_rows\_pipelines;\ \ \ \ \ \ \ \textcolor{comment}{//\ key\ is\ fixed,\ no\ variants\ yet}}
+\DoxyCodeLine{00543\ \ \ \ \ std::unordered\_map<int,\ webgpu\_pipeline>\ argmax\_pipelines;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ key\ is\ vec4}}
+\DoxyCodeLine{00544\ \ \ \ \ std::unordered\_map<int,\ webgpu\_pipeline>\ argsort\_pipelines;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ key\ is\ order}}
+\DoxyCodeLine{00545\ \ \ \ \ std::unordered\_map<int,\ webgpu\_pipeline>\ argsort\_merge\_pipelines;\ \ \textcolor{comment}{//\ key\ is\ order}}
+\DoxyCodeLine{00546\ \ \ \ \ std::unordered\_map<int,\ webgpu\_pipeline>\ cumsum\_pipelines;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ key\ is\ fixed,\ no\ variants\ yet}}
+\DoxyCodeLine{00547\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_row\_norm\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_row\_norm\_pipeline\_key\_hash>}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ row\_norm\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ op/inplace}}
+\DoxyCodeLine{00549\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_get\_rows\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_get\_rows\_pipeline\_key\_hash>}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ get\_rows\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ src\_type,\ vectorized}}
+\DoxyCodeLine{00551\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_unary\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_unary\_pipeline\_key\_hash>}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ unary\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ type/op/inplace}}
+\DoxyCodeLine{00553\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_scale\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_scale\_pipeline\_key\_hash>}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ scale\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ inplace}}
+\DoxyCodeLine{00555\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_solve\_tri\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_solve\_tri\_pipeline\_key\_hash>}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ solve\_tri\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ type}}
+\DoxyCodeLine{00557\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_ssm\_conv\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_ssm\_conv\_pipeline\_key\_hash>}
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ ssm\_conv\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ type/vectorized}}
+\DoxyCodeLine{00559\ \ \ \ \ std::unordered\_map<\doxymbox{\hyperlink{structggml__webgpu__gated__delta__net__pipeline__key}{ggml\_webgpu\_gated\_delta\_net\_pipeline\_key}},}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}},}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__gated__delta__net__pipeline__key__hash}{ggml\_webgpu\_gated\_delta\_net\_pipeline\_key\_hash}}>}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ gated\_delta\_net\_pipelines;\ \ \textcolor{comment}{//\ type/S\_v/kda}}
+\DoxyCodeLine{00563\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_pad\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_pad\_pipeline\_key\_hash>}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ pad\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ circular/non-\/circular}}
+\DoxyCodeLine{00565\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_binary\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_binary\_pipeline\_key\_hash>}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ binary\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ type/op/inplace/overlap}}
+\DoxyCodeLine{00567\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_concat\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_concat\_pipeline\_key\_hash>}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ concat\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ type}}
+\DoxyCodeLine{00569\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_repeat\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_repeat\_pipeline\_key\_hash>}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ repeat\_pipelines;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ type}}
+\DoxyCodeLine{00571\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_flash\_attn\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_flash\_attn\_pipeline\_key\_hash>}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ flash\_attn\_pipelines;}
+\DoxyCodeLine{00573\ \ \ \ \ std::unordered\_map<\doxymbox{\hyperlink{structggml__webgpu__legacy__mul__mat__pipeline__key}{ggml\_webgpu\_legacy\_mul\_mat\_pipeline\_key}},}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}},}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__legacy__mul__mat__pipeline__key__hash}{ggml\_webgpu\_legacy\_mul\_mat\_pipeline\_key\_hash}}>}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ mul\_mat\_legacy\_pipelines;\ \ \textcolor{comment}{//\ legacy\ mul\_mat\ (non-\/subgroup/non-\/regtile/non-\/vec)}}
+\DoxyCodeLine{00577\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_mul\_mat\_vec\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_mul\_mat\_vec\_pipeline\_key\_hash>}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ mul\_mat\_vec\_pipelines;\ \ \ \ \ \textcolor{comment}{//\ fast\ mat-\/vec\ (n==1)}}
+\DoxyCodeLine{00579\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_mul\_mat\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_mul\_mat\_pipeline\_key\_hash>}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ mul\_mat\_fast\_pipelines;\ \ \ \ \textcolor{comment}{//\ fast\ mat-\/mat\ (reg-\/tile\ or\ subgroup)}}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00582\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_set\_rows\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_set\_rows\_pipeline\_key\_hash>}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ set\_rows\_pipelines;}
+\DoxyCodeLine{00584\ \ \ \ \ std::unordered\_map<ggml\_webgpu\_set\_pipeline\_key,\ webgpu\_pipeline,\ ggml\_webgpu\_set\_pipeline\_key\_hash>\ set\_pipelines;}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00587\ \ \ \ \ ggml\_webgpu\_shader\_lib(wgpu::Device\ device)\ \{\ this-\/>device\ =\ device;\ \}}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_sum\_rows\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ sum\_rows\_pipelines.find(1);}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ sum\_rows\_pipelines.end())\ \{}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_sum\_rows,\ defines);}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ sum\_rows\_pipelines[1]\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ \textcolor{stringliteral}{"{}sum\_rows"{}});}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sum\_rows\_pipelines[1];}
+\DoxyCodeLine{00600\ \ \ \ \ \}}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_row\_norm\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__row__norm__pipeline__key}{ggml\_webgpu\_row\_norm\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ .op\ \ \ \ \ \ =\ context.dst-\/>op,}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ .inplace\ =\ context.inplace,}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00607\ }
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ row\_norm\_pipelines.find(key);}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ row\_norm\_pipelines.end())\ \{}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant;}
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.op)\ \{}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_OP\_RMS\_NORM:}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}RMS\_NORM"{}});}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}rms\_norm"{}};}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_OP\_L2\_NORM:}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}L2\_NORM"{}});}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}l2\_norm"{}};}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ op\ for\ row\_norm\ shader"{}});}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00627\ }
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.inplace)\ \{}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INPLACE"{}});}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_inplace"{}};}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00632\ }
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ row\_norm\_wg\_size\ =\ 128u;}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ uint32\_t\ \ \ \ \ \ \ wg\_size\ \ \ \ \ \ \ \ \ \ =\ std::min(context.max\_wg\_size,\ row\_norm\_wg\_size);}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(wg\_size));}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_row\_norm,\ defines);}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ row\_norm\_pipelines[key]\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ row\_norm\_pipelines[key];}
+\DoxyCodeLine{00639\ \ \ \ \ \}}
+\DoxyCodeLine{00640\ }
+\DoxyCodeLine{00641\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_argmax\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ vec4\ =\ context.src0-\/>ne[0]\ \%\ 4\ ==\ 0;}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ argmax\_pipelines.find(vec4);}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ argmax\_pipelines.end())\ \{}
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}argmax"{}};}
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vec4)\ \{}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}VEC4"{}});}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_vec4"{}};}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_argmax,\ defines);}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ argmax\_pipelines[vec4]\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ argmax\_pipelines.at(vec4);}
+\DoxyCodeLine{00659\ \ \ \ \ \}}
+\DoxyCodeLine{00660\ }
+\DoxyCodeLine{00661\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_set\_rows\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__set__rows__pipeline__key}{ggml\_webgpu\_set\_rows\_pipeline\_key}}\ key\ =\ \{\ .dst\_type\ =\ context.dst-\/>type,}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .vec4\ \ \ \ \ =\ context.src0-\/>ne[0]\ \%\ 4\ ==\ 0,}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .i64\_idx\ \ =\ context.src1-\/>type\ ==\ GGML\_TYPE\_I64\ \};}
+\DoxyCodeLine{00665\ }
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ set\_rows\_pipelines.find(key);}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ set\_rows\_pipelines.end())\ \{}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00670\ }
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}set\_rows"{}};}
+\DoxyCodeLine{00673\ }
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (context.dst-\/>type)\ \{}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}DST\_F32"{}});}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_dstf32"{}};}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}DST\_F16"{}});}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_dstf16"{}};}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ dst\ type\ for\ set\_rows\ shader"{}});}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.vec4)\ \{}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}VEC4"{}});}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_vec4"{}};}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.i64\_idx)\ \{}
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}I64\_IDX"{}});}
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_i64idx"{}};}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00695\ }
+\DoxyCodeLine{00696\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{00697\ }
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_set\_rows,\ defines);}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_set\_rows\_shader\_decisions>();}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ decisions-\/>vec4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ key.vec4;}
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ decisions-\/>i64\_idx\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ key.i64\_idx;}
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ context.max\_wg\_size;}
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ set\_rows\_pipelines[key]\ \ \ \ \ \ \ \ \ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ set\_rows\_pipelines[key].context\ =\ decisions;}
+\DoxyCodeLine{00705\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ set\_rows\_pipelines[key];}
+\DoxyCodeLine{00706\ \ \ \ \ \}}
+\DoxyCodeLine{00707\ }
+\DoxyCodeLine{00708\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_set\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__set__pipeline__key}{ggml\_webgpu\_set\_pipeline\_key}}\ key\ =\ \{\ .type\ =\ context.dst-\/>type,\ .inplace\ =\ context.inplace\ \};}
+\DoxyCodeLine{00710\ }
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ set\_pipelines.find(key);}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ set\_pipelines.end())\ \{}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00715\ }
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}set"{}};}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.type)\ \{}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_F32"{}});}
+\DoxyCodeLine{00722\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_I32:}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_I32"{}});}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_i32"{}};}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ type\ for\ set\ shader"{}});}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00731\ }
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.inplace)\ \{}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INPLACE"{}});}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_inplace"{}};}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00736\ }
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{00738\ }
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_set,\ defines);}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ =\ context.max\_wg\_size;}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ set\_pipelines[key]\ \ \ \ \ \ \ =\ pipeline;}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ set\_pipelines[key];}
+\DoxyCodeLine{00746\ \ \ \ \ \}}
+\DoxyCodeLine{00747\ }
+\DoxyCodeLine{00748\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_cumsum\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ cumsum\_pipelines.find(1);}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ cumsum\_pipelines.end())\ \{}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_cumsum,\ defines);}
+\DoxyCodeLine{00758\ \ \ \ \ \ \ \ \ cumsum\_pipelines[1]\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ \textcolor{stringliteral}{"{}cumsum"{}});}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cumsum\_pipelines[1];}
+\DoxyCodeLine{00760\ \ \ \ \ \}}
+\DoxyCodeLine{00761\ }
+\DoxyCodeLine{00762\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_argsort\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ is\_top\_k\ =\ context.dst-\/>op\ ==\ GGML\_OP\_TOP\_K;}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ascending\ order\ is\ 0,\ descending\ order\ is\ 1}}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ order\ =}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \ \ \ \ is\_top\_k\ ?\ (int32\_t)\ GGML\_SORT\_ORDER\_DESC\ :\ (int32\_t)\ ggml\_get\_op\_params\_i32(context.dst,\ 0);}
+\DoxyCodeLine{00767\ }
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ argsort\_pipelines.find(order);}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ argsort\_pipelines.end())\ \{}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00772\ }
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}argsort"{}};}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}ORDER="{}})\ +\ std::to\_string(order));}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ variant\ +=\ std::string(\textcolor{stringliteral}{"{}\_order"{}})\ +\ std::to\_string(order);}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ uint32\_t\ wg\_size\ =\ 1;}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (wg\_size\ *\ 2\ <=\ context.max\_wg\_size\ \&\&}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wg\_size\ *\ GGML\_WEBGPU\_I32\_SIZE\_BYTES\ <=\ context.wg\_mem\_limit\_bytes\ /\ 2)\ \{}
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \ \ \ \ wg\_size\ *=\ 2;}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(wg\_size));}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_argsort,\ defines);}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{00785\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ wg\_size;}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ argsort\_pipelines[order]\ \ \ \ \ \ \ \ \ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ argsort\_pipelines[order].context\ =\ decisions;}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ argsort\_pipelines[order];}
+\DoxyCodeLine{00789\ \ \ \ \ \}}
+\DoxyCodeLine{00790\ }
+\DoxyCodeLine{00791\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_argsort\_merge\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ is\_top\_k\ =\ context.dst-\/>op\ ==\ GGML\_OP\_TOP\_K;}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ascending\ order\ is\ 0,\ descending\ order\ is\ 1}}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ order\ =}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ is\_top\_k\ ?\ (int32\_t)\ GGML\_SORT\_ORDER\_DESC\ :\ (int32\_t)\ ggml\_get\_op\_params\_i32(context.dst,\ 0);}
+\DoxyCodeLine{00796\ }
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ argsort\_merge\_pipelines.find(order);}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ argsort\_merge\_pipelines.end())\ \{}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}argsort\_merge"{}};}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}ORDER="{}})\ +\ std::to\_string(order));}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ variant\ +=\ std::string(\textcolor{stringliteral}{"{}\_order"{}})\ +\ std::to\_string(order);}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ uint32\_t\ wg\_size\ =\ std::min(GGML\_WEBGPU\_ARGSORT\_MERGE\_MAX\_WG\_SIZE,\ context.max\_wg\_size);}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(wg\_size));}
+\DoxyCodeLine{00808\ }
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_argsort\_merge,\ defines);}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ argsort\_merge\_pipelines[order]\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ argsort\_merge\_pipelines[order];}
+\DoxyCodeLine{00812\ \ \ \ \ \}}
+\DoxyCodeLine{00813\ }
+\DoxyCodeLine{00814\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_get\_rows\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00815\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ vectorized\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ context.src0-\/>type\ ==\ GGML\_TYPE\_F32\ \&\&\ context.dst-\/>ne[0]\ \%\ 4\ ==\ 0;}
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__get__rows__pipeline__key}{ggml\_webgpu\_get\_rows\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \ \ \ \ .src\_type\ \ \ =\ context.src0-\/>type,}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ \ \ .vectorized\ =\ (int)\ vectorized,}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00820\ }
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ get\_rows\_pipelines.find(key);}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ get\_rows\_pipelines.end())\ \{}
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00825\ }
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}get\_rows"{}};}
+\DoxyCodeLine{00828\ }
+\DoxyCodeLine{00829\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__type__traits}{ggml\_type\_traits}}\ *\ type\_traits\ =\ ggml\_get\_type\_traits(key.src\_type);}
+\DoxyCodeLine{00830\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ type\_str\ \ \ \ =\ type\_traits-\/>type\_name;}
+\DoxyCodeLine{00831\ }
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.src\_type)\ \{}
+\DoxyCodeLine{00833\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{00834\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}FLOAT\_PARALLEL"{}});}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.vectorized)\ \{}
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}F32\_VEC"{}});}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC\_TYPE=vec4<f32>"{}});}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}DST\_TYPE=vec4<f32>"{}});}
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BLOCK\_SIZE=4u"{}});}
+\DoxyCodeLine{00840\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}F32"{}});}
+\DoxyCodeLine{00842\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC\_TYPE=f32"{}});}
+\DoxyCodeLine{00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}DST\_TYPE=f32"{}});}
+\DoxyCodeLine{00844\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BLOCK\_SIZE=1u"{}});}
+\DoxyCodeLine{00845\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{00849\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}FLOAT\_PARALLEL"{}});}
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}F16"{}});}
+\DoxyCodeLine{00851\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC\_TYPE=f16"{}});}
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}DST\_TYPE=f32"{}});}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BLOCK\_SIZE=1u"{}});}
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f16"{}};}
+\DoxyCodeLine{00855\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_I32:}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}FLOAT\_PARALLEL"{}});}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}I32"{}});}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC\_TYPE=i32"{}});}
+\DoxyCodeLine{00860\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}DST\_TYPE=i32"{}});}
+\DoxyCodeLine{00861\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BLOCK\_SIZE=1u"{}});}
+\DoxyCodeLine{00862\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_i32"{}};}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00866\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ type\_upper\ =\ type\_str;}
+\DoxyCodeLine{00867\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::transform(type\_upper.begin(),\ type\_upper.end(),\ type\_upper.begin(),\ ::toupper);}
+\DoxyCodeLine{00868\ }
+\DoxyCodeLine{00869\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BYTE\_HELPERS"{}});}
+\DoxyCodeLine{00870\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper\ +\ \textcolor{stringliteral}{"{}\_T"{}});}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper);}
+\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper\ +\ \textcolor{stringliteral}{"{}\_SCALE\_MIN"{}});}
+\DoxyCodeLine{00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper\ +\ \textcolor{stringliteral}{"{}\_TABLES"{}});}
+\DoxyCodeLine{00874\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper\ +\ \textcolor{stringliteral}{"{}\_GRID"{}});}
+\DoxyCodeLine{00875\ }
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_"{}};}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ type\_str;}
+\DoxyCodeLine{00878\ }
+\DoxyCodeLine{00879\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}SRC\_TYPE="{}})\ +\ type\_str);}
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}DST\_TYPE=f32"{}});}
+\DoxyCodeLine{00881\ }
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((key.src\_type\ >=\ GGML\_TYPE\_Q4\_0\ \&\&\ key.src\_type\ <=\ GGML\_TYPE\_Q8\_1)\ ||}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ key.src\_type\ ==\ GGML\_TYPE\_IQ4\_NL)\ \{}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BLOCK\_SIZE=32u"{}});}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (key.src\_type\ >=\ GGML\_TYPE\_Q2\_K)\ \{}
+\DoxyCodeLine{00886\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BLOCK\_SIZE=256u"{}});}
+\DoxyCodeLine{00887\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BLOCK\_SIZE=1u"{}});}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00891\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00892\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00893\ }
+\DoxyCodeLine{00894\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.vectorized)\ \{}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_vec"{}};}
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00897\ }
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}WG\_SIZE="{}}\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{00899\ }
+\DoxyCodeLine{00900\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_get\_rows,\ defines);}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{00902\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ =\ context.max\_wg\_size;}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ get\_rows\_pipelines[key]\ \ =\ pipeline;}
+\DoxyCodeLine{00906\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get\_rows\_pipelines[key];}
+\DoxyCodeLine{00907\ \ \ \ \ \}}
+\DoxyCodeLine{00908\ }
+\DoxyCodeLine{00909\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_scale\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00910\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__scale__pipeline__key}{ggml\_webgpu\_scale\_pipeline\_key}}\ key\ =\ \{\ .inplace\ =\ context.inplace\ \};}
+\DoxyCodeLine{00911\ }
+\DoxyCodeLine{00912\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ scale\_pipelines.find(key);}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ scale\_pipelines.end())\ \{}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00915\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00916\ }
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00918\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}scale"{}};}
+\DoxyCodeLine{00919\ }
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.inplace)\ \{}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INPLACE"{}});}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_inplace"{}};}
+\DoxyCodeLine{00923\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00924\ }
+\DoxyCodeLine{00925\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{00926\ }
+\DoxyCodeLine{00927\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_scale,\ defines);}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ =\ context.max\_wg\_size;}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{00932\ \ \ \ \ \ \ \ \ scale\_pipelines[key]\ \ \ \ \ =\ pipeline;}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ scale\_pipelines[key];}
+\DoxyCodeLine{00934\ \ \ \ \ \}}
+\DoxyCodeLine{00935\ }
+\DoxyCodeLine{00936\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_solve\_tri\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__solve__tri__pipeline__key}{ggml\_webgpu\_solve\_tri\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ context.dst-\/>type,}
+\DoxyCodeLine{00939\ \ \ \ \ \ \ \ \ \ \ \ \ .n\ \ \ \ =\ (int)\ context.src0-\/>ne[0],}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ \ \ \ \ .k\ \ \ \ =\ (\textcolor{keywordtype}{int})\ context.src1-\/>ne[0],}
+\DoxyCodeLine{00941\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00942\ }
+\DoxyCodeLine{00943\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ solve\_tri\_pipelines.find(key);}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ solve\_tri\_pipelines.end())\ \{}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00947\ }
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}solve\_tri"{}};}
+\DoxyCodeLine{00950\ }
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.type)\ \{}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00956\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ type\ for\ solve\_tri\ shader"{}});}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00958\ }
+\DoxyCodeLine{00959\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ wg\_size\ \ \ \ \ \ \ =\ std::min((uint32\_t)\ key.n,\ context.max\_wg\_size);}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ k\_tile\ \ \ \ \ \ \ \ =\ wg\_size;}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ bytes\_per\_row\ =\ ((uint32\_t)\ key.n\ +\ wg\_size)\ *\ GGML\_WEBGPU\_F32\_SIZE\_BYTES;}
+\DoxyCodeLine{00962\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ batch\_n\ \ \ \ \ \ \ =\ (uint32\_t)\ (context.wg\_mem\_limit\_bytes\ /\ bytes\_per\_row);}
+\DoxyCodeLine{00963\ }
+\DoxyCodeLine{00964\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}N="{}})\ +\ std::to\_string(key.n));}
+\DoxyCodeLine{00965\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(wg\_size));}
+\DoxyCodeLine{00966\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}K\_TILE="{}})\ +\ std::to\_string(k\_tile));}
+\DoxyCodeLine{00967\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}BATCH\_N="{}})\ +\ std::to\_string(batch\_n));}
+\DoxyCodeLine{00968\ }
+\DoxyCodeLine{00969\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_solve\_tri,\ defines);}
+\DoxyCodeLine{00970\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ =\ wg\_size;}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{00973\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{00974\ \ \ \ \ \ \ \ \ solve\_tri\_pipelines[key]\ =\ pipeline;}
+\DoxyCodeLine{00975\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ solve\_tri\_pipelines[key];}
+\DoxyCodeLine{00976\ \ \ \ \ \}}
+\DoxyCodeLine{00977\ }
+\DoxyCodeLine{00978\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_ssm\_conv\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{00979\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__ssm__conv__pipeline__key}{ggml\_webgpu\_ssm\_conv\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{00980\ \ \ \ \ \ \ \ \ \ \ \ \ .type\ \ \ \ \ \ \ =\ context.dst-\/>type,}
+\DoxyCodeLine{00981\ \ \ \ \ \ \ \ \ \ \ \ \ .vectorized\ =\ context.src1-\/>ne[0]\ ==\ 4,}
+\DoxyCodeLine{00982\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00983\ }
+\DoxyCodeLine{00984\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ ssm\_conv\_pipelines.find(key);}
+\DoxyCodeLine{00985\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ ssm\_conv\_pipelines.end())\ \{}
+\DoxyCodeLine{00986\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00987\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00988\ }
+\DoxyCodeLine{00989\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{00990\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}ssm\_conv"{}};}
+\DoxyCodeLine{00991\ }
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.type)\ \{}
+\DoxyCodeLine{00993\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{00994\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{00995\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00996\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00997\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ type\ for\ ssm\_conv\ shader"{}});}
+\DoxyCodeLine{00998\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00999\ }
+\DoxyCodeLine{01000\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.vectorized)\ \{}
+\DoxyCodeLine{01001\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}VECTORIZED"{}});}
+\DoxyCodeLine{01002\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_vec4"{}};}
+\DoxyCodeLine{01003\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01004\ }
+\DoxyCodeLine{01005\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ uint32\_t\ block\_size\ \ \ \ =\ 32u;}
+\DoxyCodeLine{01006\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ uint32\_t\ tokens\_per\_wg\ =\ 8u;}
+\DoxyCodeLine{01007\ }
+\DoxyCodeLine{01008\ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BLOCK\_SIZE="{}}\ +\ std::to\_string(block\_size)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01009\ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TOKENS\_PER\_WG="{}}\ +\ std::to\_string(tokens\_per\_wg)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01010\ }
+\DoxyCodeLine{01011\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_ssm\_conv,\ defines);}
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_ssm\_conv\_shader\_decisions>();}
+\DoxyCodeLine{01013\ \ \ \ \ \ \ \ \ decisions-\/>block\_size\ \ \ \ =\ block\_size;}
+\DoxyCodeLine{01014\ \ \ \ \ \ \ \ \ decisions-\/>tokens\_per\_wg\ =\ tokens\_per\_wg;}
+\DoxyCodeLine{01015\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01016\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01017\ \ \ \ \ \ \ \ \ ssm\_conv\_pipelines[key]\ \ =\ pipeline;}
+\DoxyCodeLine{01018\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ssm\_conv\_pipelines[key];}
+\DoxyCodeLine{01019\ \ \ \ \ \}}
+\DoxyCodeLine{01020\ }
+\DoxyCodeLine{01021\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_gated\_delta\_net\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01022\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__gated__delta__net__pipeline__key}{ggml\_webgpu\_gated\_delta\_net\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{01023\ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ context.dst-\/>type,}
+\DoxyCodeLine{01024\ \ \ \ \ \ \ \ \ \ \ \ \ .s\_v\ \ =\ (int)\ context.src2-\/>ne[0],}
+\DoxyCodeLine{01025\ \ \ \ \ \ \ \ \ \ \ \ \ .kda\ \ =\ context.src3-\/>ne[0]\ ==\ context.src2-\/>ne[0],}
+\DoxyCodeLine{01026\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01027\ }
+\DoxyCodeLine{01028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ gated\_delta\_net\_pipelines.find(key);}
+\DoxyCodeLine{01029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ gated\_delta\_net\_pipelines.end())\ \{}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01031\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01032\ }
+\DoxyCodeLine{01033\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01034\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}gated\_delta\_net"{}};}
+\DoxyCodeLine{01035\ }
+\DoxyCodeLine{01036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.type)\ \{}
+\DoxyCodeLine{01037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ type\ for\ gated\_delta\_net\ shader"{}});}
+\DoxyCodeLine{01042\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01043\ }
+\DoxyCodeLine{01044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.kda)\ \{}
+\DoxyCodeLine{01045\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}KDA"{}});}
+\DoxyCodeLine{01046\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_kda"{}};}
+\DoxyCodeLine{01047\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01048\ }
+\DoxyCodeLine{01049\ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}S\_V="{}}\ +\ std::to\_string(key.s\_v)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01050\ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}WG\_SIZE="{}}\ +\ std::to\_string(key.s\_v)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01051\ }
+\DoxyCodeLine{01052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ \ \ \ \ processed\ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_gated\_delta\_net,\ defines);}
+\DoxyCodeLine{01053\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ \ \ \ \ \ \ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01054\ \ \ \ \ \ \ \ \ gated\_delta\_net\_pipelines[key]\ =\ pipeline;}
+\DoxyCodeLine{01055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ gated\_delta\_net\_pipelines[key];}
+\DoxyCodeLine{01056\ \ \ \ \ \}}
+\DoxyCodeLine{01057\ }
+\DoxyCodeLine{01058\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_pad\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01059\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__pad__pipeline__key}{ggml\_webgpu\_pad\_pipeline\_key}}\ key\ =\ \{\ .circular\ =\ ggml\_get\_op\_params\_i32(context.dst,\ 8)\ !=\ 0\ \};}
+\DoxyCodeLine{01060\ }
+\DoxyCodeLine{01061\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ pad\_pipelines.find(key);}
+\DoxyCodeLine{01062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ pad\_pipelines.end())\ \{}
+\DoxyCodeLine{01063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01065\ }
+\DoxyCodeLine{01066\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01067\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}pad"{}};}
+\DoxyCodeLine{01068\ }
+\DoxyCodeLine{01069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.circular)\ \{}
+\DoxyCodeLine{01070\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}CIRCULAR"{}});}
+\DoxyCodeLine{01071\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_circular"{}};}
+\DoxyCodeLine{01072\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01073\ }
+\DoxyCodeLine{01074\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{01075\ }
+\DoxyCodeLine{01076\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_pad,\ defines);}
+\DoxyCodeLine{01077\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{01078\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ =\ context.max\_wg\_size;}
+\DoxyCodeLine{01079\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01080\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01081\ \ \ \ \ \ \ \ \ pad\_pipelines[key]\ \ \ \ \ \ \ =\ pipeline;}
+\DoxyCodeLine{01082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pad\_pipelines[key];}
+\DoxyCodeLine{01083\ \ \ \ \ \}}
+\DoxyCodeLine{01084\ }
+\DoxyCodeLine{01085\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_mul\_mat\_vec\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01086\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__mul__mat__vec__pipeline__key}{ggml\_webgpu\_mul\_mat\_vec\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{01087\ \ \ \ \ \ \ \ \ \ \ \ \ .src0\_type\ \ =\ context.src0-\/>type,}
+\DoxyCodeLine{01088\ \ \ \ \ \ \ \ \ \ \ \ \ .src1\_type\ \ =\ context.src1-\/>type,}
+\DoxyCodeLine{01089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Quantized\ mat-\/vec\ path\ currently\ runs\ scalar;\ only\ allow\ vectorization\ when\ both\ inputs\ are\ float}}
+\DoxyCodeLine{01090\ \ \ \ \ \ \ \ \ \ \ \ \ .vectorized\ =\ (context.src0-\/>ne[0]\ \%\ 4\ ==\ 0\ \&\&\ context.dst-\/>ne[0]\ \%\ 4\ ==\ 0\ \&\&}
+\DoxyCodeLine{01091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (context.src0-\/>type\ ==\ GGML\_TYPE\_F32\ ||\ context.src0-\/>type\ ==\ GGML\_TYPE\_F16))\ ?}
+\DoxyCodeLine{01092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1\ :}
+\DoxyCodeLine{01093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0,}
+\DoxyCodeLine{01094\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01095\ }
+\DoxyCodeLine{01096\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ mul\_mat\_vec\_pipelines.find(key);}
+\DoxyCodeLine{01097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ mul\_mat\_vec\_pipelines.end())\ \{}
+\DoxyCodeLine{01098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01100\ }
+\DoxyCodeLine{01101\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01102\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}mul\_mat\_vec"{}};}
+\DoxyCodeLine{01103\ }
+\DoxyCodeLine{01104\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ src0\ type\ (matrix\ row)}}
+\DoxyCodeLine{01105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (context.src0-\/>type)\ \{}
+\DoxyCodeLine{01106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC0\_INNER\_TYPE=f32"{}});}
+\DoxyCodeLine{01108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}MUL\_ACC\_FLOAT"{}});}
+\DoxyCodeLine{01109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{01112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC0\_INNER\_TYPE=f16"{}});}
+\DoxyCodeLine{01113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}MUL\_ACC\_FLOAT"{}});}
+\DoxyCodeLine{01114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f16"{}};}
+\DoxyCodeLine{01115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Quantized\ types:\ use\ helpers\ but\ accumulate\ in\ f16}}
+\DoxyCodeLine{01119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__type__traits}{ggml\_type\_traits}}\ *\ src0\_traits\ =\ ggml\_get\_type\_traits(context.src0-\/>type);}
+\DoxyCodeLine{01120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ src0\_name\ \ \ =\ src0\_traits-\/>type\_name;}
+\DoxyCodeLine{01121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ type\_upper\ \ =\ src0\_name;}
+\DoxyCodeLine{01122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_"{}}\ +\ src0\_name;}
+\DoxyCodeLine{01123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::transform(type\_upper.begin(),\ type\_upper.end(),\ type\_upper.begin(),\ ::toupper);}
+\DoxyCodeLine{01124\ }
+\DoxyCodeLine{01125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BYTE\_HELPERS"{}});}
+\DoxyCodeLine{01126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}MUL\_ACC\_"{}}\ +\ type\_upper);}
+\DoxyCodeLine{01127\ }
+\DoxyCodeLine{01128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ For\ fast\ path\ we\ always\ dequantize\ from\ f16\ inside\ the\ shader}}
+\DoxyCodeLine{01129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC0\_INNER\_TYPE=f16"{}});}
+\DoxyCodeLine{01130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01132\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01133\ }
+\DoxyCodeLine{01134\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ src1\ type\ (vector)}}
+\DoxyCodeLine{01135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (context.src1-\/>type)\ \{}
+\DoxyCodeLine{01136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC1\_INNER\_TYPE=f32"{}});}
+\DoxyCodeLine{01138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{01141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC1\_INNER\_TYPE=f16"{}});}
+\DoxyCodeLine{01142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f16"{}};}
+\DoxyCodeLine{01143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ src1\ type\ for\ mul\_mat\_vec\ shader"{}});}
+\DoxyCodeLine{01146\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01147\ }
+\DoxyCodeLine{01148\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ VEC/SCALAR\ controls}}
+\DoxyCodeLine{01149\ \ \ \ \ \ \ \ \ defines.push\_back(key.vectorized\ ?\ \textcolor{stringliteral}{"{}VEC"{}}\ :\ \textcolor{stringliteral}{"{}SCALAR"{}});}
+\DoxyCodeLine{01150\ }
+\DoxyCodeLine{01151\ \ \ \ \ \ \ \ \ uint32\_t\ wg\_size\ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_VEC\_WG\_SIZE;}
+\DoxyCodeLine{01152\ \ \ \ \ \ \ \ \ uint32\_t\ tile\_k\ \ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_VEC\_FLOAT\_TILE\_K;}
+\DoxyCodeLine{01153\ \ \ \ \ \ \ \ \ uint32\_t\ outputs\_per\_wg\ =\ WEBGPU\_MUL\_MAT\_VEC\_FLOAT\_OUTPUTS\_PER\_WG;}
+\DoxyCodeLine{01154\ }
+\DoxyCodeLine{01155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.src0\_type\ >=\ GGML\_TYPE\_Q2\_K)\ \{}
+\DoxyCodeLine{01156\ \ \ \ \ \ \ \ \ \ \ \ \ tile\_k\ \ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_VEC\_K\_Q\_TILE\_K;}
+\DoxyCodeLine{01157\ \ \ \ \ \ \ \ \ \ \ \ \ outputs\_per\_wg\ =\ WEBGPU\_MUL\_MAT\_VEC\_K\_Q\_OUTPUTS\_PER\_WG;}
+\DoxyCodeLine{01158\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (key.src0\_type\ >=\ GGML\_TYPE\_Q4\_0)\ \{}
+\DoxyCodeLine{01159\ \ \ \ \ \ \ \ \ \ \ \ \ tile\_k\ \ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_VEC\_LEGACY\_Q\_TILE\_K;}
+\DoxyCodeLine{01160\ \ \ \ \ \ \ \ \ \ \ \ \ outputs\_per\_wg\ =\ WEBGPU\_MUL\_MAT\_VEC\_LEGACY\_Q\_OUTPUTS\_PER\_WG;}
+\DoxyCodeLine{01161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01162\ }
+\DoxyCodeLine{01163\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(wg\_size));}
+\DoxyCodeLine{01164\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}TILE\_K="{}})\ +\ std::to\_string(tile\_k));}
+\DoxyCodeLine{01165\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}OUTPUTS\_PER\_WG="{}})\ +\ std::to\_string(outputs\_per\_wg));}
+\DoxyCodeLine{01166\ }
+\DoxyCodeLine{01167\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_mul\_mat\_vec,\ defines);}
+\DoxyCodeLine{01168\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_mul\_mat\_vec\_shader\_decisions>();}
+\DoxyCodeLine{01169\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ \ =\ wg\_size;}
+\DoxyCodeLine{01170\ \ \ \ \ \ \ \ \ decisions-\/>tile\_k\ \ \ \ \ \ \ \ \ =\ tile\_k;}
+\DoxyCodeLine{01171\ \ \ \ \ \ \ \ \ decisions-\/>outputs\_per\_wg\ =\ outputs\_per\_wg;}
+\DoxyCodeLine{01172\ \ \ \ \ \ \ \ \ decisions-\/>vec\_size\ \ \ \ \ \ \ =\ key.vectorized\ ?\ 4\ :\ 1;}
+\DoxyCodeLine{01173\ }
+\DoxyCodeLine{01174\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ \ \ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01175\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01176\ \ \ \ \ \ \ \ \ mul\_mat\_vec\_pipelines[key]\ =\ pipeline;}
+\DoxyCodeLine{01177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mul\_mat\_vec\_pipelines[key];}
+\DoxyCodeLine{01178\ \ \ \ \ \}}
+\DoxyCodeLine{01179\ }
+\DoxyCodeLine{01180\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_mul\_mat\_fast\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01181\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__mul__mat__pipeline__key}{ggml\_webgpu\_mul\_mat\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{01182\ \ \ \ \ \ \ \ \ \ \ \ \ .src0\_type\ \ =\ context.src0-\/>type,}
+\DoxyCodeLine{01183\ \ \ \ \ \ \ \ \ \ \ \ \ .src1\_type\ \ =\ context.src1-\/>type,}
+\DoxyCodeLine{01184\ \ \ \ \ \ \ \ \ \ \ \ \ .vectorized\ =\ (context.src0-\/>ne[0]\ \%\ 4\ ==\ 0\ \&\&\ context.dst-\/>ne[0]\ \%\ 4\ ==\ 0\ \&\&\ context.dst-\/>ne[1]\ \%\ 4\ ==\ 0\ \&\&}
+\DoxyCodeLine{01185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (context.src0-\/>type\ ==\ GGML\_TYPE\_F32\ ||\ context.src0-\/>type\ ==\ GGML\_TYPE\_F16))\ ?}
+\DoxyCodeLine{01186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1\ :}
+\DoxyCodeLine{01187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0,}
+\DoxyCodeLine{01188\ \ \ \ \ \ \ \ \ \ \ \ \ .use\_subgroup\_matrix\ =\ context.supports\_subgroup\_matrix}
+\DoxyCodeLine{01189\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01190\ }
+\DoxyCodeLine{01191\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ mul\_mat\_fast\_pipelines.find(key);}
+\DoxyCodeLine{01192\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ mul\_mat\_fast\_pipelines.end())\ \{}
+\DoxyCodeLine{01193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01194\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01195\ }
+\DoxyCodeLine{01196\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ shader\_src\ =\ key.use\_subgroup\_matrix\ ?\ wgsl\_mul\_mat\_subgroup\_matrix\ :\ wgsl\_mul\_mat\_reg\_tile;}
+\DoxyCodeLine{01197\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01198\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ key.use\_subgroup\_matrix\ ?\ \textcolor{stringliteral}{"{}mul\_mat\_subgroup\_matrix"{}}\ :\ \textcolor{stringliteral}{"{}mul\_mat\_reg\_tile"{}};}
+\DoxyCodeLine{01199\ }
+\DoxyCodeLine{01200\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ src1\ type}}
+\DoxyCodeLine{01201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (context.src1-\/>type)\ \{}
+\DoxyCodeLine{01202\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC1\_INNER\_TYPE=f32"{}});}
+\DoxyCodeLine{01204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{01206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC1\_INNER\_TYPE=f16"{}});}
+\DoxyCodeLine{01207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ src1\ type\ for\ mul\_mat\ fast\ shader"{}});}
+\DoxyCodeLine{01210\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01211\ }
+\DoxyCodeLine{01212\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ src0\ type}}
+\DoxyCodeLine{01213\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__type__traits}{ggml\_type\_traits}}\ *\ src0\_traits\ =\ ggml\_get\_type\_traits(context.src0-\/>type);}
+\DoxyCodeLine{01214\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ src0\_name\ \ \ =\ src0\_traits-\/>type\_name;}
+\DoxyCodeLine{01215\ }
+\DoxyCodeLine{01216\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (context.src0-\/>type)\ \{}
+\DoxyCodeLine{01217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC0\_INNER\_TYPE=f32"{}});}
+\DoxyCodeLine{01219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}FLOAT"{}});}
+\DoxyCodeLine{01220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}MUL\_ACC\_FLOAT"{}});}
+\DoxyCodeLine{01221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INIT\_SRC0\_SHMEM\_FLOAT"{}});}
+\DoxyCodeLine{01222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INIT\_SRC1\_SHMEM\_FLOAT"{}});}
+\DoxyCodeLine{01223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{01226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC0\_INNER\_TYPE=f16"{}});}
+\DoxyCodeLine{01227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}FLOAT"{}});}
+\DoxyCodeLine{01228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}MUL\_ACC\_FLOAT"{}});}
+\DoxyCodeLine{01229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INIT\_SRC0\_SHMEM\_FLOAT"{}});}
+\DoxyCodeLine{01230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INIT\_SRC1\_SHMEM\_FLOAT"{}});}
+\DoxyCodeLine{01231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f16"{}};}
+\DoxyCodeLine{01232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01233\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ type\_upper\ =\ src0\_name;}
+\DoxyCodeLine{01236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::transform(type\_upper.begin(),\ type\_upper.end(),\ type\_upper.begin(),\ ::toupper);}
+\DoxyCodeLine{01237\ }
+\DoxyCodeLine{01238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BYTE\_HELPERS"{}});}
+\DoxyCodeLine{01239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}MUL\_ACC\_"{}}\ +\ type\_upper);}
+\DoxyCodeLine{01240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INIT\_SRC0\_SHMEM\_"{}}\ +\ type\_upper);}
+\DoxyCodeLine{01241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INIT\_SRC1\_SHMEM\_FLOAT"{}});}
+\DoxyCodeLine{01242\ }
+\DoxyCodeLine{01243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Use\ f16\ inside\ the\ shader\ for\ quantized\ types}}
+\DoxyCodeLine{01244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC0\_INNER\_TYPE=f16"{}});}
+\DoxyCodeLine{01245\ }
+\DoxyCodeLine{01246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ std::string(\textcolor{stringliteral}{"{}\_"{}})\ +\ src0\_name;}
+\DoxyCodeLine{01247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01249\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01250\ }
+\DoxyCodeLine{01251\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ VEC/SCALAR\ controls}}
+\DoxyCodeLine{01252\ \ \ \ \ \ \ \ \ defines.push\_back(key.vectorized\ ?\ \textcolor{stringliteral}{"{}VEC"{}}\ :\ \textcolor{stringliteral}{"{}SCALAR"{}});}
+\DoxyCodeLine{01253\ }
+\DoxyCodeLine{01254\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Tiles}}
+\DoxyCodeLine{01255\ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TILE\_M="{}}\ +\ std::to\_string(WEBGPU\_MUL\_MAT\_TILE\_M)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01256\ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TILE\_N="{}}\ +\ std::to\_string(WEBGPU\_MUL\_MAT\_TILE\_N)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01257\ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TILE\_K="{}}\ +\ std::to\_string(WEBGPU\_MUL\_MAT\_TILE\_K)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01258\ }
+\DoxyCodeLine{01259\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Subgroup\ matrix\ specifics}}
+\DoxyCodeLine{01260\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.use\_subgroup\_matrix)\ \{}
+\DoxyCodeLine{01261\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}MAX\_SUBGROUP\_SIZE="{}}\ +\ std::to\_string(context.max\_subgroup\_size)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01262\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SUBGROUP\_M="{}}\ +\ std::to\_string(WEBGPU\_MUL\_MAT\_SUBGROUP\_M)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01263\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SUBGROUP\_N="{}}\ +\ std::to\_string(WEBGPU\_MUL\_MAT\_SUBGROUP\_N)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01264\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SUBGROUP\_MATRIX\_M="{}}\ +\ std::to\_string(WEBGPU\_MUL\_MAT\_SUBGROUP\_MATRIX\_M)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01265\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SUBGROUP\_MATRIX\_N="{}}\ +\ std::to\_string(WEBGPU\_MUL\_MAT\_SUBGROUP\_MATRIX\_N)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01266\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SUBGROUP\_MATRIX\_M\_SIZE="{}}\ +\ std::to\_string(context.sg\_mat\_m)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01267\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SUBGROUP\_MATRIX\_N\_SIZE="{}}\ +\ std::to\_string(context.sg\_mat\_n)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01268\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SUBGROUP\_MATRIX\_K\_SIZE="{}}\ +\ std::to\_string(context.sg\_mat\_k)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01269\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01270\ }
+\DoxyCodeLine{01271\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ variant\ suffix\ for\ src1\ type}}
+\DoxyCodeLine{01272\ \ \ \ \ \ \ \ \ variant\ +=\ std::string(\textcolor{stringliteral}{"{}\_"{}})\ +\ (context.src1-\/>type\ ==\ GGML\_TYPE\_F32\ ?\ \textcolor{stringliteral}{"{}f32"{}}\ :\ \textcolor{stringliteral}{"{}f16"{}});}
+\DoxyCodeLine{01273\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.vectorized)\ \{}
+\DoxyCodeLine{01274\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_vectorized"{}};}
+\DoxyCodeLine{01275\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01276\ }
+\DoxyCodeLine{01277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!key.use\_subgroup\_matrix)\ \{}
+\DoxyCodeLine{01278\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}WORKGROUP\_SIZE\_M="{}}\ +\ std::to\_string(WEBGPU\_MUL\_MAT\_WG\_SIZE\_M)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01279\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}WORKGROUP\_SIZE\_N="{}}\ +\ std::to\_string(WEBGPU\_MUL\_MAT\_WG\_SIZE\_N)\ +\ \textcolor{stringliteral}{"{}u"{}});}
+\DoxyCodeLine{01280\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01281\ }
+\DoxyCodeLine{01282\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ =\ preprocessor.preprocess(shader\_src,\ defines);}
+\DoxyCodeLine{01283\ }
+\DoxyCodeLine{01284\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_mul\_mat\_shader\_decisions>();}
+\DoxyCodeLine{01285\ \ \ \ \ \ \ \ \ decisions-\/>tile\_k\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_TILE\_K;}
+\DoxyCodeLine{01286\ \ \ \ \ \ \ \ \ decisions-\/>tile\_m\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_TILE\_M;}
+\DoxyCodeLine{01287\ \ \ \ \ \ \ \ \ decisions-\/>tile\_n\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_TILE\_N;}
+\DoxyCodeLine{01288\ \ \ \ \ \ \ \ \ decisions-\/>use\_subgroup\_matrix\ =\ key.use\_subgroup\_matrix;}
+\DoxyCodeLine{01289\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.use\_subgroup\_matrix)\ \{}
+\DoxyCodeLine{01290\ \ \ \ \ \ \ \ \ \ \ \ \ decisions-\/>subgroup\_m\ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_SUBGROUP\_M;}
+\DoxyCodeLine{01291\ \ \ \ \ \ \ \ \ \ \ \ \ decisions-\/>subgroup\_n\ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_SUBGROUP\_N;}
+\DoxyCodeLine{01292\ \ \ \ \ \ \ \ \ \ \ \ \ decisions-\/>subgroup\_matrix\_m\ =\ WEBGPU\_MUL\_MAT\_SUBGROUP\_MATRIX\_M;}
+\DoxyCodeLine{01293\ \ \ \ \ \ \ \ \ \ \ \ \ decisions-\/>subgroup\_matrix\_n\ =\ WEBGPU\_MUL\_MAT\_SUBGROUP\_MATRIX\_N;}
+\DoxyCodeLine{01294\ \ \ \ \ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ \ \ \ \ =\ context.max\_subgroup\_size;}
+\DoxyCodeLine{01295\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01296\ \ \ \ \ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\_m\ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_WG\_SIZE\_M;}
+\DoxyCodeLine{01297\ \ \ \ \ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\_n\ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_WG\_SIZE\_N;}
+\DoxyCodeLine{01298\ \ \ \ \ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ \ \ =\ WEBGPU\_MUL\_MAT\_WG\_SIZE\_M\ *\ WEBGPU\_MUL\_MAT\_WG\_SIZE\_N;}
+\DoxyCodeLine{01299\ \ \ \ \ \ \ \ \ \ \ \ \ decisions-\/>mul\_mat\_wg\_size\ =\ WEBGPU\_MUL\_MAT\_WG\_SIZE;}
+\DoxyCodeLine{01300\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01301\ }
+\DoxyCodeLine{01302\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ \ \ \ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01303\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01304\ \ \ \ \ \ \ \ \ mul\_mat\_fast\_pipelines[key]\ =\ pipeline;}
+\DoxyCodeLine{01305\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mul\_mat\_fast\_pipelines[key];}
+\DoxyCodeLine{01306\ \ \ \ \ \}}
+\DoxyCodeLine{01307\ }
+\DoxyCodeLine{01308\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_mul\_mat\_legacy\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01309\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__legacy__mul__mat__pipeline__key}{ggml\_webgpu\_legacy\_mul\_mat\_pipeline\_key}}\ key\ =\ \{\ .src0\_type\ =\ context.src0-\/>type,}
+\DoxyCodeLine{01310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .src1\_type\ =\ context.src1-\/>type\ \};}
+\DoxyCodeLine{01311\ }
+\DoxyCodeLine{01312\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ mul\_mat\_legacy\_pipelines.find(key);}
+\DoxyCodeLine{01313\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ mul\_mat\_legacy\_pipelines.end())\ \{}
+\DoxyCodeLine{01314\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01315\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01316\ }
+\DoxyCodeLine{01317\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01318\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}mul\_mat"{}};}
+\DoxyCodeLine{01319\ }
+\DoxyCodeLine{01320\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (context.src1-\/>type)\ \{}
+\DoxyCodeLine{01321\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC1\_TYPE=f32"{}});}
+\DoxyCodeLine{01323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{01326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC1\_TYPE=f16"{}});}
+\DoxyCodeLine{01327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f16"{}};}
+\DoxyCodeLine{01328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ src1\ type\ for\ mul\_mat\ legacy\ shader"{}});}
+\DoxyCodeLine{01331\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01332\ }
+\DoxyCodeLine{01333\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__type__traits}{ggml\_type\_traits}}\ *\ src0\_traits\ =\ ggml\_get\_type\_traits(context.src0-\/>type);}
+\DoxyCodeLine{01334\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ src0\_name\ \ \ =\ src0\_traits-\/>type\_name;}
+\DoxyCodeLine{01335\ }
+\DoxyCodeLine{01336\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (context.src0-\/>type)\ \{}
+\DoxyCodeLine{01337\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC0\_TYPE=f32"{}});}
+\DoxyCodeLine{01339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}FLOAT"{}});}
+\DoxyCodeLine{01340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01342\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{01343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC0\_TYPE=f16"{}});}
+\DoxyCodeLine{01344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}FLOAT"{}});}
+\DoxyCodeLine{01345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f16"{}};}
+\DoxyCodeLine{01346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01347\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ quantized\ types}}
+\DoxyCodeLine{01350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ type\_upper\ =\ src0\_name;}
+\DoxyCodeLine{01351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::transform(type\_upper.begin(),\ type\_upper.end(),\ type\_upper.begin(),\ ::toupper);}
+\DoxyCodeLine{01352\ }
+\DoxyCodeLine{01353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}SRC0\_TYPE="{}})\ +\ src0\_name);}
+\DoxyCodeLine{01354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}BYTE\_HELPERS"{}});}
+\DoxyCodeLine{01355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper\ +\ \textcolor{stringliteral}{"{}\_T"{}});}
+\DoxyCodeLine{01356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper);}
+\DoxyCodeLine{01357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper\ +\ \textcolor{stringliteral}{"{}\_SCALE\_MIN"{}});}
+\DoxyCodeLine{01358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper\ +\ \textcolor{stringliteral}{"{}\_TABLES"{}});}
+\DoxyCodeLine{01359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(type\_upper\ +\ \textcolor{stringliteral}{"{}\_GRID"{}});}
+\DoxyCodeLine{01360\ }
+\DoxyCodeLine{01361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ std::string(\textcolor{stringliteral}{"{}\_"{}})\ +\ src0\_name;}
+\DoxyCodeLine{01362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01364\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01365\ }
+\DoxyCodeLine{01366\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ =\ preprocessor.preprocess(wgsl\_mul\_mat,\ defines);}
+\DoxyCodeLine{01367\ }
+\DoxyCodeLine{01368\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{01369\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ =\ WEBGPU\_MUL\_MAT\_WG\_SIZE;}
+\DoxyCodeLine{01370\ }
+\DoxyCodeLine{01371\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ \ \ \ \ \ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01372\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01373\ \ \ \ \ \ \ \ \ mul\_mat\_legacy\_pipelines[key]\ =\ pipeline;}
+\DoxyCodeLine{01374\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mul\_mat\_legacy\_pipelines[key];}
+\DoxyCodeLine{01375\ \ \ \ \ \}}
+\DoxyCodeLine{01376\ }
+\DoxyCodeLine{01377\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_unary\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01378\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_unary\ =\ context.dst-\/>op\ ==\ GGML\_OP\_UNARY;}
+\DoxyCodeLine{01379\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ op\ \ \ \ \ \ \ =\ is\_unary\ ?\ (int)\ ggml\_get\_unary\_op(context.dst)\ :\ context.dst-\/>op;}
+\DoxyCodeLine{01380\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__unary__pipeline__key}{ggml\_webgpu\_unary\_pipeline\_key}}\ key\ \ \ \ \ \ =\ \{}
+\DoxyCodeLine{01381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .type\ \ \ \ \ =\ context.dst-\/>type,}
+\DoxyCodeLine{01382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .op\ \ \ \ \ \ \ =\ op,}
+\DoxyCodeLine{01383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .is\_unary\ =\ is\_unary,}
+\DoxyCodeLine{01384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .inplace\ \ =\ context.inplace,}
+\DoxyCodeLine{01385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .ttype\ \ \ \ =\ (ggml\_tri\_type)\ ggml\_get\_op\_params\_i32(context.dst,\ 0),}
+\DoxyCodeLine{01386\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01387\ }
+\DoxyCodeLine{01388\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ unary\_pipelines.find(key);}
+\DoxyCodeLine{01389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ unary\_pipelines.end())\ \{}
+\DoxyCodeLine{01390\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01391\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01392\ }
+\DoxyCodeLine{01393\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01394\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =}
+\DoxyCodeLine{01395\ \ \ \ \ \ \ \ \ \ \ \ \ key.is\_unary\ ?\ ggml\_unary\_op\_name((ggml\_unary\_op)\ key.op)\ :\ ggml\_op\_name((ggml\_op)\ key.op);}
+\DoxyCodeLine{01396\ \ \ \ \ \ \ \ \ defines.push\_back(variant);}
+\DoxyCodeLine{01397\ }
+\DoxyCodeLine{01398\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.type)\ \{}
+\DoxyCodeLine{01399\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_F32"{}});}
+\DoxyCodeLine{01401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01403\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{01404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_F16"{}});}
+\DoxyCodeLine{01405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f16"{}};}
+\DoxyCodeLine{01406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01407\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ type\ for\ unary\ shader"{}});}
+\DoxyCodeLine{01409\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01410\ }
+\DoxyCodeLine{01411\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.inplace)\ \{}
+\DoxyCodeLine{01412\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INPLACE"{}});}
+\DoxyCodeLine{01413\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_inplace"{}};}
+\DoxyCodeLine{01414\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01415\ }
+\DoxyCodeLine{01416\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (op\ ==\ GGML\_OP\_TRI)\ \{}
+\DoxyCodeLine{01417\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.ttype)\ \{}
+\DoxyCodeLine{01418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TRI\_TYPE\_LOWER:}
+\DoxyCodeLine{01419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TRI\_TYPE\_LOWER"{}});}
+\DoxyCodeLine{01420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_tri\_type\_lower"{}};}
+\DoxyCodeLine{01421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TRI\_TYPE\_LOWER\_DIAG:}
+\DoxyCodeLine{01423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TRI\_TYPE\_LOWER\_DIAG"{}});}
+\DoxyCodeLine{01424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_tri\_type\_lower\_diag"{}};}
+\DoxyCodeLine{01425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TRI\_TYPE\_UPPER:}
+\DoxyCodeLine{01427\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TRI\_TYPE\_UPPER"{}});}
+\DoxyCodeLine{01428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_tri\_type\_upper"{}};}
+\DoxyCodeLine{01429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TRI\_TYPE\_UPPER\_DIAG:}
+\DoxyCodeLine{01431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TRI\_TYPE\_UPPER\_DIAG"{}});}
+\DoxyCodeLine{01432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_tri\_upper\_diag"{}};}
+\DoxyCodeLine{01433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ ggml\_tri\_type\ for\ unary\ shader"{}});}
+\DoxyCodeLine{01436\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01437\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01438\ }
+\DoxyCodeLine{01439\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{01440\ }
+\DoxyCodeLine{01441\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_unary,\ defines);}
+\DoxyCodeLine{01442\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{01443\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ =\ context.max\_wg\_size;}
+\DoxyCodeLine{01444\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01445\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01446\ \ \ \ \ \ \ \ \ unary\_pipelines[key]\ \ \ \ \ =\ pipeline;}
+\DoxyCodeLine{01447\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ unary\_pipelines[key];}
+\DoxyCodeLine{01448\ \ \ \ \ \}}
+\DoxyCodeLine{01449\ }
+\DoxyCodeLine{01450\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_binary\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01451\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__binary__pipeline__key}{ggml\_webgpu\_binary\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{01452\ \ \ \ \ \ \ \ \ \ \ \ \ .type\ \ \ \ \ \ \ \ =\ context.dst-\/>type,}
+\DoxyCodeLine{01453\ \ \ \ \ \ \ \ \ \ \ \ \ .op\ \ \ \ \ \ \ \ \ \ =\ context.dst-\/>op,}
+\DoxyCodeLine{01454\ \ \ \ \ \ \ \ \ \ \ \ \ .inplace\ \ \ \ \ =\ context.inplace,}
+\DoxyCodeLine{01455\ \ \ \ \ \ \ \ \ \ \ \ \ .overlap\ \ \ \ \ =\ context.overlap,}
+\DoxyCodeLine{01456\ \ \ \ \ \ \ \ \ \ \ \ \ .src\_overlap\ =\ context.src\_overlap,}
+\DoxyCodeLine{01457\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01458\ }
+\DoxyCodeLine{01459\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ binary\_pipelines.find(key);}
+\DoxyCodeLine{01460\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ binary\_pipelines.end())\ \{}
+\DoxyCodeLine{01461\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01462\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01463\ }
+\DoxyCodeLine{01464\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01465\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ op\_name\ =\ ggml\_op\_name((ggml\_op)\ key.op);}
+\DoxyCodeLine{01466\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ op\_name;}
+\DoxyCodeLine{01467\ }
+\DoxyCodeLine{01468\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}OP\_"{}})\ +\ op\_name);}
+\DoxyCodeLine{01469\ }
+\DoxyCodeLine{01470\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.type)\ \{}
+\DoxyCodeLine{01471\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_F32"{}});}
+\DoxyCodeLine{01473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01475\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{01476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_F16"{}});}
+\DoxyCodeLine{01477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f16"{}};}
+\DoxyCodeLine{01478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01479\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ type\ for\ binary\ shader"{}});}
+\DoxyCodeLine{01481\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01482\ }
+\DoxyCodeLine{01483\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.inplace)\ \{}
+\DoxyCodeLine{01484\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}INPLACE"{}});}
+\DoxyCodeLine{01485\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_inplace"{}};}
+\DoxyCodeLine{01486\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (key.overlap)\ \{}
+\DoxyCodeLine{01487\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}OVERLAP"{}});}
+\DoxyCodeLine{01488\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_overlap"{}};}
+\DoxyCodeLine{01489\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (key.src\_overlap)\ \{}
+\DoxyCodeLine{01490\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SRC\_OVERLAP"{}});}
+\DoxyCodeLine{01491\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_src\_overlap"{}};}
+\DoxyCodeLine{01492\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01493\ }
+\DoxyCodeLine{01494\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{01495\ }
+\DoxyCodeLine{01496\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_binary,\ defines);}
+\DoxyCodeLine{01497\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{01498\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ =\ context.max\_wg\_size;}
+\DoxyCodeLine{01499\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01500\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01501\ \ \ \ \ \ \ \ \ binary\_pipelines[key]\ \ \ \ =\ pipeline;}
+\DoxyCodeLine{01502\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ binary\_pipelines[key];}
+\DoxyCodeLine{01503\ \ \ \ \ \}}
+\DoxyCodeLine{01504\ }
+\DoxyCodeLine{01505\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_concat\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01506\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__concat__pipeline__key}{ggml\_webgpu\_concat\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{01507\ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ context.dst-\/>type,}
+\DoxyCodeLine{01508\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01509\ }
+\DoxyCodeLine{01510\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ concat\_pipelines.find(key);}
+\DoxyCodeLine{01511\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ concat\_pipelines.end())\ \{}
+\DoxyCodeLine{01512\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01513\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01514\ }
+\DoxyCodeLine{01515\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01516\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}concat"{}};}
+\DoxyCodeLine{01517\ }
+\DoxyCodeLine{01518\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.type)\ \{}
+\DoxyCodeLine{01519\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01520\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_F32"{}});}
+\DoxyCodeLine{01521\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01522\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_I32:}
+\DoxyCodeLine{01524\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_I32"{}});}
+\DoxyCodeLine{01525\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_i32"{}};}
+\DoxyCodeLine{01526\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01527\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01528\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ type\ for\ concat\ shader"{}});}
+\DoxyCodeLine{01529\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01530\ }
+\DoxyCodeLine{01531\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{01532\ }
+\DoxyCodeLine{01533\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_concat,\ defines);}
+\DoxyCodeLine{01534\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{01535\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ =\ context.max\_wg\_size;}
+\DoxyCodeLine{01536\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01537\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01538\ \ \ \ \ \ \ \ \ concat\_pipelines[key]\ \ \ \ =\ pipeline;}
+\DoxyCodeLine{01539\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ concat\_pipelines[key];}
+\DoxyCodeLine{01540\ \ \ \ \ \}}
+\DoxyCodeLine{01541\ }
+\DoxyCodeLine{01542\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_repeat\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01543\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__repeat__pipeline__key}{ggml\_webgpu\_repeat\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{01544\ \ \ \ \ \ \ \ \ \ \ \ \ .type\ =\ context.dst-\/>type,}
+\DoxyCodeLine{01545\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01546\ }
+\DoxyCodeLine{01547\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ repeat\_pipelines.find(key);}
+\DoxyCodeLine{01548\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ repeat\_pipelines.end())\ \{}
+\DoxyCodeLine{01549\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01550\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01551\ }
+\DoxyCodeLine{01552\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01553\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}repeat"{}};}
+\DoxyCodeLine{01554\ }
+\DoxyCodeLine{01555\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.type)\ \{}
+\DoxyCodeLine{01556\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01557\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_F32"{}});}
+\DoxyCodeLine{01558\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_f32"{}};}
+\DoxyCodeLine{01559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01560\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_I32:}
+\DoxyCodeLine{01561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_I32"{}});}
+\DoxyCodeLine{01562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_i32"{}};}
+\DoxyCodeLine{01563\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01564\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_I16:}
+\DoxyCodeLine{01565\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}TYPE\_I16"{}});}
+\DoxyCodeLine{01566\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_i16"{}};}
+\DoxyCodeLine{01567\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01568\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01569\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ type\ for\ repeat\ shader"{}});}
+\DoxyCodeLine{01570\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01571\ }
+\DoxyCodeLine{01572\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(context.max\_wg\_size));}
+\DoxyCodeLine{01573\ }
+\DoxyCodeLine{01574\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ \ \ \ \ \ \ =\ preprocessor.preprocess(wgsl\_repeat,\ defines);}
+\DoxyCodeLine{01575\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ \ \ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_generic\_shader\_decisions>();}
+\DoxyCodeLine{01576\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ \ \ \ \ \ \ =\ context.max\_wg\_size;}
+\DoxyCodeLine{01577\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01578\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01579\ \ \ \ \ \ \ \ \ repeat\_pipelines[key]\ \ \ \ =\ pipeline;}
+\DoxyCodeLine{01580\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ repeat\_pipelines[key];}
+\DoxyCodeLine{01581\ \ \ \ \ \}}
+\DoxyCodeLine{01582\ }
+\DoxyCodeLine{01583\ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ get\_flash\_attn\_pipeline(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__shader__lib__context}{ggml\_webgpu\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01584\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ has\_mask\ \ =\ context.src3\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{01585\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ has\_sinks\ =\ context.src4\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{01586\ }
+\DoxyCodeLine{01587\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ kv\_direct\ =\ (context.src1-\/>type\ ==\ GGML\_TYPE\_F16)\ \&\&\ (context.src0-\/>ne[0]\ \%\ context.sg\_mat\_k\ ==\ 0)\ \&\&}
+\DoxyCodeLine{01588\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (context.src1-\/>ne[1]\ \%\ context.sg\_mat\_n\ ==\ 0);}
+\DoxyCodeLine{01589\ }
+\DoxyCodeLine{01590\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__webgpu__flash__attn__pipeline__key}{ggml\_webgpu\_flash\_attn\_pipeline\_key}}\ key\ =\ \{}
+\DoxyCodeLine{01591\ \ \ \ \ \ \ \ \ \ \ \ \ .kv\_type\ \ \ \ \ \ \ \ \ \ \ \ =\ context.src1-\/>type,}
+\DoxyCodeLine{01592\ \ \ \ \ \ \ \ \ \ \ \ \ .head\_dim\_qk\ \ \ \ \ \ \ \ =\ (uint32\_t)\ context.src0-\/>ne[0],}
+\DoxyCodeLine{01593\ \ \ \ \ \ \ \ \ \ \ \ \ .head\_dim\_v\ \ \ \ \ \ \ \ \ =\ (uint32\_t)\ context.src2-\/>ne[0],}
+\DoxyCodeLine{01594\ \ \ \ \ \ \ \ \ \ \ \ \ .kv\_direct\ \ \ \ \ \ \ \ \ \ =\ kv\_direct,}
+\DoxyCodeLine{01595\ \ \ \ \ \ \ \ \ \ \ \ \ .has\_mask\ \ \ \ \ \ \ \ \ \ \ =\ has\_mask,}
+\DoxyCodeLine{01596\ \ \ \ \ \ \ \ \ \ \ \ \ .has\_sinks\ \ \ \ \ \ \ \ \ \ =\ has\_sinks,}
+\DoxyCodeLine{01597\ \ \ \ \ \ \ \ \ \ \ \ \ .uses\_logit\_softcap\ =\ (*(\textcolor{keywordtype}{float}\ *)\ \&context.dst-\/>op\_params[2])\ !=\ 0.0f,}
+\DoxyCodeLine{01598\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01599\ }
+\DoxyCodeLine{01600\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ flash\_attn\_pipelines.find(key);}
+\DoxyCodeLine{01601\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ flash\_attn\_pipelines.end())\ \{}
+\DoxyCodeLine{01602\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{01603\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01604\ }
+\DoxyCodeLine{01605\ \ \ \ \ \ \ \ \ std::vector<std::string>\ defines;}
+\DoxyCodeLine{01606\ \ \ \ \ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ variant\ =\ \textcolor{stringliteral}{"{}flash\_attn"{}};}
+\DoxyCodeLine{01607\ }
+\DoxyCodeLine{01608\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (key.kv\_type)\ \{}
+\DoxyCodeLine{01609\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F32:}
+\DoxyCodeLine{01610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}KV\_F32"{}});}
+\DoxyCodeLine{01611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01612\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_F16:}
+\DoxyCodeLine{01613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}KV\_F16"{}});}
+\DoxyCodeLine{01614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01615\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_Q4\_0:}
+\DoxyCodeLine{01616\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}KV\_Q4\_0"{}});}
+\DoxyCodeLine{01617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01618\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_TYPE\_Q8\_0:}
+\DoxyCodeLine{01619\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}KV\_Q8\_0"{}});}
+\DoxyCodeLine{01620\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01621\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{01622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}Unsupported\ KV\ type\ for\ flash\ attention\ shader"{}});}
+\DoxyCodeLine{01623\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01624\ \ \ \ \ \ \ \ \ variant\ +=\ std::string(\textcolor{stringliteral}{"{}\_"{}})\ +\ ggml\_type\_name(key.kv\_type);}
+\DoxyCodeLine{01625\ }
+\DoxyCodeLine{01626\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.has\_mask)\ \{}
+\DoxyCodeLine{01627\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}MASK"{}});}
+\DoxyCodeLine{01628\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_mask"{}};}
+\DoxyCodeLine{01629\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01630\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.has\_sinks)\ \{}
+\DoxyCodeLine{01631\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}SINKS"{}});}
+\DoxyCodeLine{01632\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_sinks"{}};}
+\DoxyCodeLine{01633\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01634\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.uses\_logit\_softcap)\ \{}
+\DoxyCodeLine{01635\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}LOGIT\_SOFTCAP"{}});}
+\DoxyCodeLine{01636\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_lgsc"{}};}
+\DoxyCodeLine{01637\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01638\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.kv\_direct)\ \{}
+\DoxyCodeLine{01639\ \ \ \ \ \ \ \ \ \ \ \ \ defines.push\_back(\textcolor{stringliteral}{"{}KV\_DIRECT"{}});}
+\DoxyCodeLine{01640\ \ \ \ \ \ \ \ \ \ \ \ \ variant\ +=\ \textcolor{stringliteral}{"{}\_kvdirect"{}};}
+\DoxyCodeLine{01641\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01642\ }
+\DoxyCodeLine{01643\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}HEAD\_DIM\_QK="{}})\ +\ std::to\_string(key.head\_dim\_qk));}
+\DoxyCodeLine{01644\ \ \ \ \ \ \ \ \ variant\ +=\ std::string(\textcolor{stringliteral}{"{}\_hsqk"{}})\ +\ std::to\_string(key.head\_dim\_qk);}
+\DoxyCodeLine{01645\ }
+\DoxyCodeLine{01646\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}HEAD\_DIM\_V="{}})\ +\ std::to\_string(key.head\_dim\_v));}
+\DoxyCodeLine{01647\ \ \ \ \ \ \ \ \ variant\ +=\ std::string(\textcolor{stringliteral}{"{}\_hsv"{}})\ +\ std::to\_string(key.head\_dim\_v);}
+\DoxyCodeLine{01648\ }
+\DoxyCodeLine{01649\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}SG\_MAT\_M="{}})\ +\ std::to\_string(context.sg\_mat\_m));}
+\DoxyCodeLine{01650\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}SG\_MAT\_N="{}})\ +\ std::to\_string(context.sg\_mat\_n));}
+\DoxyCodeLine{01651\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}SG\_MAT\_K="{}})\ +\ std::to\_string(context.sg\_mat\_k));}
+\DoxyCodeLine{01652\ }
+\DoxyCodeLine{01653\ \ \ \ \ \ \ \ \ uint32\_t\ q\_tile\ =\ context.sg\_mat\_m;}
+\DoxyCodeLine{01654\ \ \ \ \ \ \ \ \ uint32\_t\ kv\_tile\ =}
+\DoxyCodeLine{01655\ \ \ \ \ \ \ \ \ \ \ \ \ std::min(ggml\_webgpu\_flash\_attn\_max\_kv\_tile(\{\ key,\ context.sg\_mat\_m,\ context.sg\_mat\_n,\ context.sg\_mat\_k,}
+\DoxyCodeLine{01656\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ context.wg\_mem\_limit\_bytes,\ context.max\_subgroup\_size\ \}),}
+\DoxyCodeLine{01657\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ context.sg\_mat\_n\ *\ GGML\_WEBGPU\_FLASH\_ATTN\_PREFERRED\_KV\_SG\_TILES);}
+\DoxyCodeLine{01658\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.kv\_direct)\ \{}
+\DoxyCodeLine{01659\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (GGML\_WEBGPU\_KV\_SEQ\_PAD\ \%\ kv\_tile\ !=\ 0)\ \{}
+\DoxyCodeLine{01660\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kv\_tile\ -\/=\ context.sg\_mat\_n;}
+\DoxyCodeLine{01661\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01662\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01663\ }
+\DoxyCodeLine{01664\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}Q\_TILE="{}})\ +\ std::to\_string(q\_tile));}
+\DoxyCodeLine{01665\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}KV\_TILE="{}})\ +\ std::to\_string(kv\_tile));}
+\DoxyCodeLine{01666\ }
+\DoxyCodeLine{01667\ \ \ \ \ \ \ \ \ uint32\_t\ wg\_size\ =\ std::max(context.max\_subgroup\_size,\ GGML\_WEBGPU\_FLASH\_ATTN\_PREFERRED\_WG\_SIZE);}
+\DoxyCodeLine{01668\ \ \ \ \ \ \ \ \ defines.push\_back(std::string(\textcolor{stringliteral}{"{}WG\_SIZE="{}})\ +\ std::to\_string(wg\_size));}
+\DoxyCodeLine{01669\ }
+\DoxyCodeLine{01670\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ processed\ \ \ \ \ =\ preprocessor.preprocess(wgsl\_flash\_attn,\ defines);}
+\DoxyCodeLine{01671\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ decisions\ \ \ \ \ =\ std::make\_shared<ggml\_webgpu\_flash\_attn\_shader\_decisions>();}
+\DoxyCodeLine{01672\ \ \ \ \ \ \ \ \ decisions-\/>q\_tile\ \ =\ q\_tile;}
+\DoxyCodeLine{01673\ \ \ \ \ \ \ \ \ decisions-\/>kv\_tile\ =\ kv\_tile;}
+\DoxyCodeLine{01674\ \ \ \ \ \ \ \ \ decisions-\/>wg\_size\ =\ wg\_size;}
+\DoxyCodeLine{01675\ }
+\DoxyCodeLine{01676\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ pipeline\ \ =\ ggml\_webgpu\_create\_pipeline(device,\ processed,\ variant);}
+\DoxyCodeLine{01677\ \ \ \ \ \ \ \ \ pipeline.context\ \ \ \ \ \ \ \ \ \ =\ decisions;}
+\DoxyCodeLine{01678\ \ \ \ \ \ \ \ \ flash\_attn\_pipelines[key]\ =\ pipeline;}
+\DoxyCodeLine{01679\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ flash\_attn\_pipelines[key];}
+\DoxyCodeLine{01680\ \ \ \ \ \}}
+\DoxyCodeLine{01681\ }
+\DoxyCodeLine{01682\ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01683\ \ \ \ \ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{structwebgpu__pipeline}{webgpu\_pipeline}}\ ggml\_webgpu\_create\_pipeline(wgpu::Device\ \&\ device,}
+\DoxyCodeLine{01684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ \ \ \ shader\_code,}
+\DoxyCodeLine{01685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ \ \ \ label)\ \{}
+\DoxyCodeLine{01686\ \ \ \ \ \ \ \ \ wgpu::ShaderSourceWGSL\ shader\_source;}
+\DoxyCodeLine{01687\ \ \ \ \ \ \ \ \ shader\_source.code\ =\ shader\_code.c\_str();}
+\DoxyCodeLine{01688\ }
+\DoxyCodeLine{01689\ \ \ \ \ \ \ \ \ wgpu::ShaderModuleDescriptor\ shader\_desc;}
+\DoxyCodeLine{01690\ \ \ \ \ \ \ \ \ shader\_desc.nextInChain\ =\ \&shader\_source;}
+\DoxyCodeLine{01691\ }
+\DoxyCodeLine{01692\ \ \ \ \ \ \ \ \ wgpu::ShaderModule\ shader\_module\ =\ device.CreateShaderModule(\&shader\_desc);}
+\DoxyCodeLine{01693\ }
+\DoxyCodeLine{01694\ \ \ \ \ \ \ \ \ wgpu::ComputePipelineDescriptor\ pipeline\_desc;}
+\DoxyCodeLine{01695\ \ \ \ \ \ \ \ \ pipeline\_desc.label\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ label.c\_str();}
+\DoxyCodeLine{01696\ \ \ \ \ \ \ \ \ pipeline\_desc.compute.module\ \ \ \ \ =\ shader\_module;}
+\DoxyCodeLine{01697\ \ \ \ \ \ \ \ \ pipeline\_desc.compute.entryPoint\ =\ \textcolor{stringliteral}{"{}main"{}};\ \ \ \textcolor{comment}{//\ Entry\ point\ in\ the\ WGSL\ code}}
+\DoxyCodeLine{01698\ \ \ \ \ \ \ \ \ pipeline\_desc.layout\ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \ \textcolor{comment}{//\ nullptr\ means\ auto\ layout}}
+\DoxyCodeLine{01699\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ device.CreateComputePipeline(\&pipeline\_desc),\ label\ \};}
+\DoxyCodeLine{01700\ \ \ \ \ \}}
+\DoxyCodeLine{01701\ }
+\DoxyCodeLine{01702\ \ \ \ \ \textcolor{keyword}{static}\ uint32\_t\ ggml\_webgpu\_flash\_attn\_max\_kv\_tile(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__webgpu__flash__attn__shader__lib__context}{ggml\_webgpu\_flash\_attn\_shader\_lib\_context}}\ \&\ context)\ \{}
+\DoxyCodeLine{01703\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ limit\_bytes\ =\ context.wg\_mem\_limit\_bytes;}
+\DoxyCodeLine{01704\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ q\_tile\ \ \ \ \ \ =\ context.sg\_mat\_m;}
+\DoxyCodeLine{01705\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ base\_q\_bytes\ =}
+\DoxyCodeLine{01706\ \ \ \ \ \ \ \ \ \ \ \ \ (context.key.head\_dim\_qk\ +\ context.key.head\_dim\_v)\ *\ q\_tile\ *\ GGML\_WEBGPU\_F16\_SIZE\_BYTES\ +}
+\DoxyCodeLine{01707\ \ \ \ \ \ \ \ \ \ \ \ \ 2\ *\ q\_tile\ *\ GGML\_WEBGPU\_F32\_SIZE\_BYTES;}
+\DoxyCodeLine{01708\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ bytes\_per\_kv\ =\ 0;}
+\DoxyCodeLine{01709\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!context.key.kv\_direct)\ \{}
+\DoxyCodeLine{01710\ \ \ \ \ \ \ \ \ \ \ \ \ bytes\_per\_kv\ +=\ std::max(context.key.head\_dim\_qk,\ context.key.head\_dim\_v);}
+\DoxyCodeLine{01711\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01712\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (context.key.has\_mask)\ \{}
+\DoxyCodeLine{01713\ \ \ \ \ \ \ \ \ \ \ \ \ bytes\_per\_kv\ +=\ q\_tile;}
+\DoxyCodeLine{01714\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01715\ \ \ \ \ \ \ \ \ bytes\_per\_kv\ +=\ q\_tile;}
+\DoxyCodeLine{01716\ \ \ \ \ \ \ \ \ bytes\_per\_kv\ *=\ GGML\_WEBGPU\_F16\_SIZE\_BYTES;}
+\DoxyCodeLine{01717\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ max\_kv\_tile\ =\ (limit\_bytes\ -\/\ base\_q\_bytes)\ /\ bytes\_per\_kv;}
+\DoxyCodeLine{01718\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (max\_kv\_tile\ /\ context.sg\_mat\_n)\ *\ context.sg\_mat\_n;}
+\DoxyCodeLine{01719\ \ \ \ \ \}}
+\DoxyCodeLine{01720\ \};}
+\DoxyCodeLine{01721\ }
+\DoxyCodeLine{01722\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GGML\_WEBGPU\_SHADER\_LIB\_HPP}}
+
+\end{DoxyCode}

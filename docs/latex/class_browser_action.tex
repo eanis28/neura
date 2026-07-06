@@ -1,0 +1,285 @@
+\doxysection{Browser\+Action Class Reference}
+\hypertarget{class_browser_action}{}\label{class_browser_action}\index{BrowserAction@{BrowserAction}}
+
+
+Opens the first You\+Tube video matching a song title and artist.  
+
+
+
+
+{\ttfamily \+\#include $<$Browser\+Action.\+h$>$}
+
+Inheritance diagram for Browser\+Action:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_browser_action}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_browser_action_ae2ef2b8b09aa6dcf28a5e4eae4cb436e}{Browser\+Action}} (const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&cfg, const std::\+string \&title, const std::\+string \&artist)
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{class_browser_action}{Browser\+Action} for the given song. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_browser_action_adafe724cef6bfb133d9216d2814336e1}{execute}} () override
+\begin{DoxyCompactList}\small\item\em Searches You\+Tube and opens the best matching video in the browser. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_browser_action_a9e2e097a20c3363e0ae34217a5dea5bc}{describe}} () const override
+\begin{DoxyCompactList}\small\item\em Returns a human-\/readable summary of the action. \end{DoxyCompactList}\item 
+const std::\+string \& \doxymbox{\hyperlink{class_browser_action_acd64dbe1d1a0ac386763929167bbf810}{get\+Title}} () const
+\begin{DoxyCompactList}\small\item\em Returns the song title supplied at construction. \end{DoxyCompactList}\item 
+const std::\+string \& \doxymbox{\hyperlink{class_browser_action_a6221a019f15d3e76df66744496fcd22a}{get\+Artist}} () const
+\begin{DoxyCompactList}\small\item\em Returns the artist name supplied at construction. \end{DoxyCompactList}\item 
+const std::\+string \& \doxymbox{\hyperlink{class_browser_action_afb249eec6c3a3e3b0b4bf32c216beb81}{get\+Opened\+Url}} () const
+\begin{DoxyCompactList}\small\item\em Returns the URL that was opened by the last successful \doxylink{class_browser_action_adafe724cef6bfb133d9216d2814336e1}{execute()} call. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_action_adf6d17666645657d71bee9f12386db6b}{Action}} (const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&cfg)
+\begin{DoxyCompactList}\small\item\em Constructs an \doxylink{class_action}{Action} with the application-\/wide configuration. \end{DoxyCompactList}\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+Action} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor — ensures correct cleanup of derived classes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string \doxymbox{\hyperlink{class_browser_action_a3037f0b4659a03217bd16ee5d512fd17}{fetch\+First\+Video\+Id}} () const
+\begin{DoxyCompactList}\small\item\em Queries the You\+Tube Data API v3 for the top video matching the song. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_browser_action_aa6eb6194f96df2360ec5004eeaf64f03}{build\+Fallback\+Search\+Url}} () const
+\begin{DoxyCompactList}\small\item\em Builds a You\+Tube search-\/results URL as a fallback. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_browser_action_acfb0667328640cf197dc4c5f71f59832}{open\+In\+Browser}} (const std::\+string \&url) const
+\begin{DoxyCompactList}\small\item\em Opens a URL in the operating system\textquotesingle{}s default browser. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_browser_action_adf5d997041c9a8cbdc75741224f07f6b}\label{class_browser_action_adf5d997041c9a8cbdc75741224f07f6b} 
+std::\+string {\bfseries song\+Title}
+\begin{DoxyCompactList}\small\item\em Song title supplied at construction. \end{DoxyCompactList}\item 
+\Hypertarget{class_browser_action_a9fccafe752c41ef35cc8a42f070534cc}\label{class_browser_action_a9fccafe752c41ef35cc8a42f070534cc} 
+std::\+string {\bfseries song\+Artist}
+\begin{DoxyCompactList}\small\item\em Artist name supplied at construction. \end{DoxyCompactList}\item 
+\Hypertarget{class_browser_action_a2d1bcaf1861533e59a9e2b7ff9d3a225}\label{class_browser_action_a2d1bcaf1861533e59a9e2b7ff9d3a225} 
+std::\+string {\bfseries opened\+Url}
+\begin{DoxyCompactList}\small\item\em Populated with the opened URL after a successful {\ttfamily \doxylink{class_browser_action_adafe724cef6bfb133d9216d2814336e1}{execute()}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_action_a13c6ee9594194b04786b10850402f6d3}{log}} (const std::\+string \&message) const
+\begin{DoxyCompactList}\small\item\em Writes a timestamped log line to {\ttfamily stdout}. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_action_a31a34834f233fc45a14b944d48c1971d}{http\+Get}} (const std::\+string \&url) const
+\begin{DoxyCompactList}\small\item\em Performs a synchronous HTTP GET request via libcurl. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_action_a005ac4b700f13661b881a7df5d40b6a2}{http\+Post}} (const std::\+string \&url, const std::\+string \&bearer\+Token, const std::\+string \&body, const std::\+string \&content\+Type="{}application/\+json"{}) const
+\begin{DoxyCompactList}\small\item\em Performs a synchronous HTTP POST request via libcurl. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Member Functions inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+string \doxymbox{\hyperlink{class_action_aea26611d135c5a8a585cfcfd4cf963fe}{url\+Encode}} (const std::\+string \&raw)
+\begin{DoxyCompactList}\small\item\em Percent-\/encodes a raw string according to RFC 3986. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{class_action}{Action}}}
+\begin{DoxyCompactItemize}
+\item 
+const \doxymbox{\hyperlink{class_configuration}{Configuration}} \& {\bfseries config}
+\begin{DoxyCompactList}\small\item\em Shared, read-\/only application configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Opens the first You\+Tube video matching a song title and artist. 
+
+Inherits HTTP helpers and configuration access from \doxylink{class_action}{Action}. On \doxylink{class_browser_action_adafe724cef6bfb133d9216d2814336e1}{execute()}, the action:\+
+\begin{DoxyItemize}
+\item Calls \doxylink{class_browser_action_a3037f0b4659a03217bd16ee5d512fd17}{fetch\+First\+Video\+Id()} to query the You\+Tube Data API v3.
+\item Falls back to \doxylink{class_browser_action_aa6eb6194f96df2360ec5004eeaf64f03}{build\+Fallback\+Search\+Url()} if the API call fails or no API key is configured.
+\item Passes the resolved URL to \doxylink{class_browser_action_acfb0667328640cf197dc4c5f71f59832}{open\+In\+Browser()}, which delegates to the platform\textquotesingle{}s default browser launcher ({\ttfamily xdg-\/open} on Linux, open on mac\+OS, start on Windows).
+\end{DoxyItemize}
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+
+\label{doc-constructors}
+\Hypertarget{class_browser_action_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_browser_action_ae2ef2b8b09aa6dcf28a5e4eae4cb436e}\index{BrowserAction@{BrowserAction}!BrowserAction@{BrowserAction}}
+\index{BrowserAction@{BrowserAction}!BrowserAction@{BrowserAction}}
+\doxysubsubsection{\texorpdfstring{BrowserAction()}{BrowserAction()}}
+{\footnotesize\ttfamily \label{class_browser_action_ae2ef2b8b09aa6dcf28a5e4eae4cb436e} 
+Browser\+Action::\+\+Browser\+Action (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_configuration}{Configuration}} \&}]{cfg}{, }\item[{const std::\+string \&}]{title}{, }\item[{const std::\+string \&}]{artist}{}\end{DoxyParamCaption})}
+
+
+
+Constructs a \doxylink{class_browser_action}{Browser\+Action} for the given song. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em cfg} & Application configuration (may contain a You\+Tube API key). \\
+\hline
+{\em title} & Title of the song to search for. \\
+\hline
+{\em artist} & Name of the performing artist or band. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_browser_action_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_browser_action_aa6eb6194f96df2360ec5004eeaf64f03}\index{BrowserAction@{BrowserAction}!buildFallbackSearchUrl@{buildFallbackSearchUrl}}
+\index{buildFallbackSearchUrl@{buildFallbackSearchUrl}!BrowserAction@{BrowserAction}}
+\doxysubsubsection{\texorpdfstring{buildFallbackSearchUrl()}{buildFallbackSearchUrl()}}
+{\footnotesize\ttfamily \label{class_browser_action_aa6eb6194f96df2360ec5004eeaf64f03} 
+std::\+string Browser\+Action::\+build\+Fallback\+Search\+Url (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Builds a You\+Tube search-\/results URL as a fallback. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Used when \doxylink{class_browser_action_a3037f0b4659a03217bd16ee5d512fd17}{fetch\+First\+Video\+Id()} returns an empty string. Percent-\/encodes the combined title and artist query and appends it to \href{https://www.youtube.com/results?search_query=}{\texttt{https:\+/\+/\+www.\+youtube.\+com/\+results?search\+\_\+query=}}.
+
+\begin{DoxyReturn}{Returns}
+A fully-\/qualified, percent-\/encoded You\+Tube search URL. 
+\end{DoxyReturn}
+\Hypertarget{class_browser_action_a9e2e097a20c3363e0ae34217a5dea5bc}\index{BrowserAction@{BrowserAction}!describe@{describe}}
+\index{describe@{describe}!BrowserAction@{BrowserAction}}
+\doxysubsubsection{\texorpdfstring{describe()}{describe()}}
+{\footnotesize\ttfamily \label{class_browser_action_a9e2e097a20c3363e0ae34217a5dea5bc} 
+std::\+string Browser\+Action::\+describe (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Returns a human-\/readable summary of the action. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+A string of the form "{}\+Play \textbackslash{}"{}$<$title$>$\textbackslash{}"{} by $<$artist$>$ on You\+Tube"{}. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{class_action_a564b8be4c69e16668ba4f41ec7dd6cbf}{Action}}.
+
+\Hypertarget{class_browser_action_adafe724cef6bfb133d9216d2814336e1}\index{BrowserAction@{BrowserAction}!execute@{execute}}
+\index{execute@{execute}!BrowserAction@{BrowserAction}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_browser_action_adafe724cef6bfb133d9216d2814336e1} 
+bool Browser\+Action::\+execute (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Searches You\+Tube and opens the best matching video in the browser. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+true if a URL was successfully opened, false otherwise. 
+\end{DoxyReturn}
+
+
+Implements \doxymbox{\hyperlink{class_action_a018c91fe89cff73911c5862df0cd8f63}{Action}}.
+
+\Hypertarget{class_browser_action_a3037f0b4659a03217bd16ee5d512fd17}\index{BrowserAction@{BrowserAction}!fetchFirstVideoId@{fetchFirstVideoId}}
+\index{fetchFirstVideoId@{fetchFirstVideoId}!BrowserAction@{BrowserAction}}
+\doxysubsubsection{\texorpdfstring{fetchFirstVideoId()}{fetchFirstVideoId()}}
+{\footnotesize\ttfamily \label{class_browser_action_a3037f0b4659a03217bd16ee5d512fd17} 
+std::\+string Browser\+Action::\+fetch\+First\+Video\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Queries the You\+Tube Data API v3 for the top video matching the song. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Constructs a search request using song\+Title and song\+Artist, percent-\/encodes the query via \doxylink{class_action_aea26611d135c5a8a585cfcfd4cf963fe}{url\+Encode()}, and issues an \doxylink{class_action_a31a34834f233fc45a14b944d48c1971d}{http\+Get()} call. Parses the JSON response and extracts the first video\+Id.
+
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} You\+Tube video ID string (e.\+g. "{}d\+Qw4w9\+Wg\+Xc\+Q"{}), or an empty string if the API key is missing, the request fails, or no results are returned. 
+\end{DoxyReturn}
+\Hypertarget{class_browser_action_a6221a019f15d3e76df66744496fcd22a}\index{BrowserAction@{BrowserAction}!getArtist@{getArtist}}
+\index{getArtist@{getArtist}!BrowserAction@{BrowserAction}}
+\doxysubsubsection{\texorpdfstring{getArtist()}{getArtist()}}
+{\footnotesize\ttfamily \label{class_browser_action_a6221a019f15d3e76df66744496fcd22a} 
+const std::\+string \& Browser\+Action::\+get\+Artist (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the artist name supplied at construction. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+Reference to the stored artist string. 
+\end{DoxyReturn}
+\Hypertarget{class_browser_action_afb249eec6c3a3e3b0b4bf32c216beb81}\index{BrowserAction@{BrowserAction}!getOpenedUrl@{getOpenedUrl}}
+\index{getOpenedUrl@{getOpenedUrl}!BrowserAction@{BrowserAction}}
+\doxysubsubsection{\texorpdfstring{getOpenedUrl()}{getOpenedUrl()}}
+{\footnotesize\ttfamily \label{class_browser_action_afb249eec6c3a3e3b0b4bf32c216beb81} 
+const std::\+string \& Browser\+Action::\+get\+Opened\+Url (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the URL that was opened by the last successful \doxylink{class_browser_action_adafe724cef6bfb133d9216d2814336e1}{execute()} call. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} You\+Tube watch or search-\/results URL, or an empty string if \doxylink{class_browser_action_adafe724cef6bfb133d9216d2814336e1}{execute()} has not been called or failed. 
+\end{DoxyReturn}
+\Hypertarget{class_browser_action_acd64dbe1d1a0ac386763929167bbf810}\index{BrowserAction@{BrowserAction}!getTitle@{getTitle}}
+\index{getTitle@{getTitle}!BrowserAction@{BrowserAction}}
+\doxysubsubsection{\texorpdfstring{getTitle()}{getTitle()}}
+{\footnotesize\ttfamily \label{class_browser_action_acd64dbe1d1a0ac386763929167bbf810} 
+const std::\+string \& Browser\+Action::\+get\+Title (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the song title supplied at construction. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+Reference to the stored song title string. 
+\end{DoxyReturn}
+\Hypertarget{class_browser_action_acfb0667328640cf197dc4c5f71f59832}\index{BrowserAction@{BrowserAction}!openInBrowser@{openInBrowser}}
+\index{openInBrowser@{openInBrowser}!BrowserAction@{BrowserAction}}
+\doxysubsubsection{\texorpdfstring{openInBrowser()}{openInBrowser()}}
+{\footnotesize\ttfamily \label{class_browser_action_acfb0667328640cf197dc4c5f71f59832} 
+bool Browser\+Action::\+open\+In\+Browser (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{url}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Opens a URL in the operating system\textquotesingle{}s default browser. 
+
+\begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}
+Dispatches to the appropriate launcher at runtime:\+
+\begin{DoxyItemize}
+\item Linux — xdg-\/open
+\item mac\+OS — open
+\item Windows — start
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em url} & \doxylink{requirements_The}{The} fully-\/qualified URL to open. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the launcher process was started without error; false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_browser_action_8h}{Browser\+Action.\+h}}\item 
+Browser\+Action.\+cpp\end{DoxyCompactItemize}

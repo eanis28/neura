@@ -1,0 +1,81 @@
+\doxysection{unicode\+\_\+cpt\+\_\+flags Struct Reference}
+\hypertarget{structunicode__cpt__flags}{}\label{structunicode__cpt__flags}\index{unicode\_cpt\_flags@{unicode\_cpt\_flags}}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structunicode__cpt__flags_a20f6925858121425c71891fa8a419514}\label{structunicode__cpt__flags_a20f6925858121425c71891fa8a419514} 
+enum \{ \newline
+{\bfseries UNDEFINED} = 0x0001
+, {\bfseries NUMBER} = 0x0002
+, {\bfseries LETTER} = 0x0004
+, {\bfseries SEPARATOR} = 0x0008
+, \newline
+{\bfseries ACCENT\+\_\+\+MARK} = 0x0010
+, {\bfseries PUNCTUATION} = 0x0020
+, {\bfseries SYMBOL} = 0x0040
+, {\bfseries CONTROL} = 0x0080
+, \newline
+{\bfseries MASK\+\_\+\+CATEGORIES} = 0x00\+FF
+, {\bfseries WHITESPACE} = 0x0100
+, {\bfseries LOWERCASE} = 0x0200
+, {\bfseries UPPERCASE} = 0x0400
+, \newline
+{\bfseries NFD} = 0x0800
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structunicode__cpt__flags_a1439292841b048f8e400a10b110d8929}\label{structunicode__cpt__flags_a1439292841b048f8e400a10b110d8929} 
+{\bfseries unicode\+\_\+cpt\+\_\+flags} (const uint16\+\_\+t flags=0)
+\item 
+\Hypertarget{structunicode__cpt__flags_aa043893f1f075c8a05fddcff22fa3a10}\label{structunicode__cpt__flags_aa043893f1f075c8a05fddcff22fa3a10} 
+uint16\+\_\+t {\bfseries as\+\_\+uint} () const
+\item 
+\Hypertarget{structunicode__cpt__flags_a5ca1b2c3138712c2c8a757198d8db44c}\label{structunicode__cpt__flags_a5ca1b2c3138712c2c8a757198d8db44c} 
+uint16\+\_\+t {\bfseries category\+\_\+flag} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structunicode__cpt__flags_af953dbaac7749a29a7e35fce66474cf7}\label{structunicode__cpt__flags_af953dbaac7749a29a7e35fce66474cf7} 
+uint16\+\_\+t {\bfseries is\+\_\+undefined}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_af8b8e4053fe0be1414f1a752a6dde6a2}\label{structunicode__cpt__flags_af8b8e4053fe0be1414f1a752a6dde6a2} 
+uint16\+\_\+t {\bfseries is\+\_\+number}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_a013a90cca09aaf995c0b683a2620d5ca}\label{structunicode__cpt__flags_a013a90cca09aaf995c0b683a2620d5ca} 
+uint16\+\_\+t {\bfseries is\+\_\+letter}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_aae76dda9f098cc402f8497efb981301a}\label{structunicode__cpt__flags_aae76dda9f098cc402f8497efb981301a} 
+uint16\+\_\+t {\bfseries is\+\_\+separator}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_a6ce41a3795a01a0229480c210c047cba}\label{structunicode__cpt__flags_a6ce41a3795a01a0229480c210c047cba} 
+uint16\+\_\+t {\bfseries is\+\_\+accent\+\_\+mark}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_a2cbd30d44ff8707bf16c5b9f780673da}\label{structunicode__cpt__flags_a2cbd30d44ff8707bf16c5b9f780673da} 
+uint16\+\_\+t {\bfseries is\+\_\+punctuation}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_ace1e29011b94a10a7449ad303d3fb7d4}\label{structunicode__cpt__flags_ace1e29011b94a10a7449ad303d3fb7d4} 
+uint16\+\_\+t {\bfseries is\+\_\+symbol}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_a72974a1223dcf5461aa6c438d27b341c}\label{structunicode__cpt__flags_a72974a1223dcf5461aa6c438d27b341c} 
+uint16\+\_\+t {\bfseries is\+\_\+control}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_ae28417c4dab9b847caa30a4f78a8b775}\label{structunicode__cpt__flags_ae28417c4dab9b847caa30a4f78a8b775} 
+uint16\+\_\+t {\bfseries is\+\_\+whitespace}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_a4849cd3ddad0c1893dece006337ba58d}\label{structunicode__cpt__flags_a4849cd3ddad0c1893dece006337ba58d} 
+uint16\+\_\+t {\bfseries is\+\_\+lowercase}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_a62d382882b39414bb272e58700ccd1c6}\label{structunicode__cpt__flags_a62d382882b39414bb272e58700ccd1c6} 
+uint16\+\_\+t {\bfseries is\+\_\+uppercase}:\+ 1
+\item 
+\Hypertarget{structunicode__cpt__flags_afefb305d1e1d39b6caffeb059034ddfb}\label{structunicode__cpt__flags_afefb305d1e1d39b6caffeb059034ddfb} 
+uint16\+\_\+t {\bfseries is\+\_\+nfd}:\+ 1
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+unicode.\+h\end{DoxyCompactItemize}

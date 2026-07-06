@@ -1,0 +1,179 @@
+\doxysection{llama-\/batch.h}
+\hypertarget{llama-batch_8h_source}{}\label{llama-batch_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/batch.h@{whisper.cpp/examples/talk-\/llama/llama-\/batch.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}llama-\/cparams.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <bitset>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ keep\ this\ struct\ lightweight}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{bool}\ equal\_seqs()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ b\_equal\_seqs\ !=\ 0;}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{comment}{//\ typical\ for\ M-\/RoPE\ cases:}}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{comment}{//\ \ \ 0\ -\/\ sequantial\ position\ of\ the\ tokens/embeddings\ in\ the\ sequence}}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//\ \ \ 1\ -\/\ y\ position\ in\ the\ image}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ \ \ 2\ -\/\ x\ position\ in\ the\ image}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{//\ \ \ 3\ -\/\ other}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_pos\_2d()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ @ngxson\ :\ we\ may\ need\ to\ check\ for\ model\ arch\ when\ more\ models\ use\ >1\ positions}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ n\_pos\ >=\ 3;}
+\DoxyCodeLine{00028\ \ \ \ \ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ uint32\_t\ b\_equal\_seqs;\ \textcolor{comment}{//\ note:\ this\ is\ a\ boolean,\ but\ we\ use\ an\ int32\_t\ for\ alignment}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ otherwise\ address\ sanitizer\ complains}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{//\ TODO:\ whole\_seqs\ for\ embeddings?}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ uint32\_t\ n\_tokens;\ \ \ \ \ \textcolor{comment}{//\ total\ tokens\ (n\_seq\_tokens\ *\ n\_seqs)}}
+\DoxyCodeLine{00035\ \ \ \ \ uint32\_t\ n\_seq\_tokens;\ \textcolor{comment}{//\ tokens\ per\ sequence\ set}}
+\DoxyCodeLine{00036\ \ \ \ \ uint32\_t\ n\_seqs;\ \ \ \ \ \ \ \textcolor{comment}{//\ sequence\ sets\ in\ the\ ubatch}}
+\DoxyCodeLine{00037\ \ \ \ \ uint32\_t\ n\_seqs\_unq;\ \ \ \textcolor{comment}{//\ unique\ sequence\ ids\ in\ the\ ubatch}}
+\DoxyCodeLine{00038\ \ \ \ \ uint32\_t\ n\_pos;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ number\ of\ position\ inputs\ for\ each\ token/embedding}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ seq\_id\_unq:\ unique\ sequence\ ids\ in\ the\ ubatch}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//\ seq\_idx:\ \ \ \ indices\ of\ the\ unique\ sequence\ ids\ in\ the\ ubatch\ in\ [0,\ n\_seqs\_unq)}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ used\ for\ extracting\ sequence\ pooled\ embeddings}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ size\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ idx\ |\ val}}
+\DoxyCodeLine{00045\ \ \ \ \ llama\_token\ \ *\ \ token;\ \ \ \ \ \ \textcolor{comment}{//\ [n\_tokens]\ \ \ \ \ \ \ \ \ |\ i\ \ \ |\ id,\ token}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ *\ \ embd;\ \ \ \ \ \ \ \textcolor{comment}{//\ [n\_embd,\ n\_tokens]\ |\ i\ \ \ |\ embd}}
+\DoxyCodeLine{00047\ \ \ \ \ llama\_pos\ \ \ \ *\ \ pos;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ [n\_tokens*n\_pos]\ \ \ |\ i\ \ \ |\ pos}}
+\DoxyCodeLine{00048\ \ \ \ \ int32\_t\ \ \ \ \ \ *\ \ n\_seq\_id;\ \ \ \textcolor{comment}{//\ [n\_tokens]\ \ \ \ \ \ \ \ \ |\ i\ \ \ |\ -\/}}
+\DoxyCodeLine{00049\ \ \ \ \ llama\_seq\_id\ **\ seq\_id;\ \ \ \ \ \textcolor{comment}{//\ [n\_tokens]\ \ \ \ \ \ \ \ \ |\ s\ \ \ |\ s0,\ s1,\ seq\_id}}
+\DoxyCodeLine{00050\ \ \ \ \ llama\_seq\_id\ *\ \ seq\_id\_unq;\ \textcolor{comment}{//\ [n\_seqs\_unq]\ \ \ \ \ \ \ |\ s\ \ \ |\ seq\_id}}
+\DoxyCodeLine{00051\ \ \ \ \ int32\_t\ \ \ \ \ \ *\ \ seq\_idx;\ \ \ \ \textcolor{comment}{//\ [LLAMA\_MAX\_SEQ]\ \ \ \ |\ -\/\ \ \ |\ seq\_idx}}
+\DoxyCodeLine{00052\ \ \ \ \ int8\_t\ \ \ \ \ \ \ *\ \ output;\ \ \ \ \ \textcolor{comment}{//\ [n\_tokens]\ \ \ \ \ \ \ \ \ |\ i\ \ \ |\ -\/}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__ubatch_1_1data__t}{data\_t}}\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ std::vector<llama\_token>\ \ \ \ token;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ std::vector<float>\ \ \ \ \ \ \ \ \ \ embd;}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ std::vector<llama\_pos>\ \ \ \ \ \ pos;}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ std::vector<int32\_t>\ \ \ \ \ \ \ \ n\_seq\_id;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ std::vector<llama\_seq\_id\ *>\ seq\_id;\ \ \ \ \ \ \textcolor{comment}{//\ these\ point\ into\ the\ seq\_id\_data\ below}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ std::vector<llama\_seq\_id>\ \ \ seq\_id\_unq;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ std::vector<int32\_t>\ \ \ \ \ \ \ \ seq\_idx;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ std::vector<int8\_t>\ \ \ \ \ \ \ \ \ output;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ std::vector<llama\_seq\_id>\ seq\_id\_data;}
+\DoxyCodeLine{00065\ \ \ \ \ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ the\ llama\_ubatch\ pointers\ above\ point\ to\ this\ data\ if\ set.\ otherwise\ -\/\ point\ to\ external\ non-\/owning\ data}}
+\DoxyCodeLine{00068\ \ \ \ \ std::shared\_ptr<data\_t>\ data;}
+\DoxyCodeLine{00069\ \};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{//\ a\ helper\ for\ sanitizing,\ fulfilling\ and\ splitting\ a\ batch}}
+\DoxyCodeLine{00072\ \textcolor{keyword}{class\ }llama\_batch\_allocr\ \{}
+\DoxyCodeLine{00073\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00074\ \ \ \ \ llama\_batch\_allocr(uint32\_t\ n\_pos\_per\_embd);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//\ sanitize\ and\ auto-\/gen\ missing\ data\ in\ the\ input\ batch}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ memory\ is\ optional.\ if\ provided\ will\ be\ used\ to\ check\ for\ sequence\ continuity\ and\ to\ determine\ the\ positions}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{bool}\ init(}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ \&\ batch\_inp,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ \&\ vocab,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__memory__i}{llama\_memory\_i}}\ *\ memory,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ n\_embd,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ n\_seq\_max,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ output\_all);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ \&\ get\_batch()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ uint32\_t\ get\_n\_tokens()\ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00089\ \ \ \ \ uint32\_t\ get\_n\_outputs()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00090\ \ \ \ \ uint32\_t\ get\_n\_used()\ \ \ \ \textcolor{keyword}{const};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ the\ array\ of\ output\ indices\ in\ the\ order\ they\ were\ encountered\ during\ the\ ubatch\ splitting}}
+\DoxyCodeLine{00093\ \ \ \ \ std::vector<int32\_t>\ \&\ get\_out\_ids();}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{comment}{//\ min/max\ positions\ of\ each\ sequence\ in\ the\ current\ ubatch}}
+\DoxyCodeLine{00096\ \ \ \ \ llama\_pos\ seq\_pos\_min(llama\_seq\_id\ seq\_id)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00097\ \ \ \ \ llama\_pos\ seq\_pos\_max(llama\_seq\_id\ seq\_id)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{comment}{//\ call\ once\ before\ splitting\ the\ batch\ to\ reset\ the\ internal\ state}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ split\_reset();}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ simple\ split,\ unknown\ number\ of\ sequence\ sets\ of\ unequal\ lengths}}
+\DoxyCodeLine{00103\ \ \ \ \ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ split\_simple(uint32\_t\ n\_ubatch);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{comment}{//\ make\ ubatches\ of\ equal-\/length\ sequences\ sets}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{//\ if\ sequential\ ==\ true,\ the\ tokens\ in\ the\ ubatch\ will\ have\ increasing\ sequential\ sequence\ ids}}
+\DoxyCodeLine{00107\ \ \ \ \ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ split\_equal(uint32\_t\ n\_ubatch,\ \textcolor{keywordtype}{bool}\ sequential);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//\ sequence-\/set-\/wise\ split\ -\/\ each\ ubatch\ contains\ a\ single\ sequence-\/set}}
+\DoxyCodeLine{00110\ \ \ \ \ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ split\_seq(uint32\_t\ n\_ubatch);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ a\ helper\ method\ for\ creating\ a\ well-\/defined\ ubatch\ of\ tokens}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{comment}{//\ TODO:\ support\ embeddings\ if\ needed\ in\ the\ future}}
+\DoxyCodeLine{00114\ \ \ \ \ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ ubatch\_reserve(uint32\_t\ n\_seq\_tokens,\ uint32\_t\ n\_seqs);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{void}\ clear();}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ create\ the\ next\ ubatch\ based\ on\ the\ provided\ batch\ indices\ (idxs)\ and\ the\ number\ of\ sequence\ sets\ (n\_seqs)}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//\ return\ llama\_ubatch.n\_tokens\ ==\ 0\ if\ the\ entire\ batch\ was\ consumed}}
+\DoxyCodeLine{00121\ \ \ \ \ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ ubatch\_add(\textcolor{keyword}{const}\ std::vector<int32\_t>\ \&\ idxs,\ uint32\_t\ n\_seqs,\ \textcolor{keywordtype}{bool}\ equal\_seqs);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{comment}{//\ for\ debugging,\ start\ with\ LLAMA\_BATCH\_DEBUG=2}}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{void}\ ubatch\_print(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__ubatch}{llama\_ubatch}}\ \&\ ubatch,\ \textcolor{keywordtype}{int}\ debug);}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \doxymbox{\hyperlink{structllama__batch}{llama\_batch}}\ batch;}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ only\ for\ debugging\ purposes}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}}\ *\ vocab;}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{comment}{//\ TODO:\ this\ is\ more\ of\ a\ temporary\ solution\ until\ we\ have\ a\ better\ way\ to\ handle\ multiple\ positions\ per\ token/embd}}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ ref:\ https://github.com/ggml-\/org/llama.cpp/issues/13694\#issuecomment-\/2983871762}}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ n\_pos\_per\_embd;}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ uint32\_t\ n\_embd;}
+\DoxyCodeLine{00136\ \ \ \ \ uint32\_t\ n\_seq\_max;}
+\DoxyCodeLine{00137\ \ \ \ \ uint32\_t\ n\_outputs;}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ std::array<llama\_seq\_id,\ 1>\ seq\_id\_0\ =\ \{\{\ 0\ \}\};\ \textcolor{comment}{//\ default\ sequence\ id}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ std::vector<llama\_pos>\ \ \ \ \ \ pos;}
+\DoxyCodeLine{00142\ \ \ \ \ std::vector<int32\_t>\ \ \ \ \ \ \ \ n\_seq\_id;}
+\DoxyCodeLine{00143\ \ \ \ \ std::vector<llama\_seq\_id\ *>\ seq\_id;}
+\DoxyCodeLine{00144\ \ \ \ \ std::vector<llama\_seq\_id>\ \ \ seq\_id\_unq;}
+\DoxyCodeLine{00145\ \ \ \ \ std::vector<int32\_t>\ \ \ \ \ \ \ \ seq\_idx;}
+\DoxyCodeLine{00146\ \ \ \ \ std::vector<int8\_t>\ \ \ \ \ \ \ \ \ output;}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{using\ }pos\_set\_t\ =\ std::set<llama\_pos>;}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{using\ }seq\_cpl\_t\ =\ std::vector<bool>;}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{comment}{//\ helper\ flag\ to\ quickly\ determine\ if\ there\ are\ any\ coupled\ sequences\ in\ the\ batch}}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_cpl\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ std::vector<pos\_set\_t>\ seq\_pos;\ \textcolor{comment}{//\ seq\_pos[s]:\ the\ set\ of\ positions\ in\ sequence\ s}}
+\DoxyCodeLine{00155\ \ \ \ \ std::vector<seq\_cpl\_t>\ seq\_cpl;\ \textcolor{comment}{//\ seq\_cpl[s0][s1]:\ if\ sequence\ s0\ is\ coupled\ to\ sequence\ s1}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{using\ }idx\_vec\_t\ =\ std::vector<int32\_t>;}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{using\ }seq\_set\_t\ =\ std::bitset<LLAMA\_MAX\_SEQ>;}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ std::vector<seq\_set\_t>\ seq\_set;\ \textcolor{comment}{//\ seq\_set[i]:\ the\ sequence\ set\ of\ token\ i}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ std::unordered\_map<seq\_set\_t,\ idx\_vec\_t>\ seq\_set\_map;\ \textcolor{comment}{//\ the\ indices\ at\ which\ the\ sequence\ set\ appears}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{comment}{//\ batch\ indices\ of\ the\ output}}
+\DoxyCodeLine{00165\ \ \ \ \ std::vector<int32\_t>\ out\_ids;}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ uint32\_t\ n\_used;}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{comment}{//\ used[i]\ indicates\ if\ token\ i\ has\ already\ been\ used\ in\ a\ previous\ ubatch}}
+\DoxyCodeLine{00170\ \ \ \ \ std::vector<bool>\ used;}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordtype}{int}\ debug;}
+\DoxyCodeLine{00173\ \};}
+
+\end{DoxyCode}

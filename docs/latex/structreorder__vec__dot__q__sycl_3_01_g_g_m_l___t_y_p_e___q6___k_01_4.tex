@@ -1,0 +1,31 @@
+\doxysection{reorder\+\_\+vec\+\_\+dot\+\_\+q\+\_\+sycl\texorpdfstring{$<$}{<} GGML\+\_\+\+TYPE\+\_\+\+Q6\+\_\+K \texorpdfstring{$>$}{>} Struct Reference}
+\hypertarget{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4}{}\label{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4}\index{reorder\_vec\_dot\_q\_sycl$<$ GGML\_TYPE\_Q6\_K $>$@{reorder\_vec\_dot\_q\_sycl$<$ GGML\_TYPE\_Q6\_K $>$}}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a03792ed6b0d861b6b73f4e5d35e9e0d0}\label{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a03792ed6b0d861b6b73f4e5d35e9e0d0} 
+using {\bfseries q6\+\_\+k\+\_\+block} = \doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t}{ggml\+\_\+sycl\+\_\+reordered::\+block\+\_\+q\+\_\+t}}$<$GGML\+\_\+\+TYPE\+\_\+\+Q6\+\_\+K$>$
+\item 
+\Hypertarget{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a4adfda3627097af2577f3dc22d5f4c01}\label{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a4adfda3627097af2577f3dc22d5f4c01} 
+using {\bfseries q6\+\_\+k\+\_\+traits} = typename \doxymbox{\hyperlink{structggml__sycl__reordered_1_1block__q__t_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_1_1traits}{q6\+\_\+k\+\_\+block::\+traits}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a4bfef0b53288b1cc25fd33b6e7dede70}\label{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a4bfef0b53288b1cc25fd33b6e7dede70} 
+\+\_\+\+\_\+dpct\+\_\+inline\+\_\+\+\_\+ float {\bfseries vec\+\_\+dot\+\_\+q6\+\_\+\+K\+\_\+q8\+\_\+1\+\_\+impl\+\_\+mmvq} (const int vl, const int vh, const int \texorpdfstring{$\ast$}{*}\+\_\+\+\_\+restrict\+\_\+\+\_\+ u, const int8\+\_\+t \texorpdfstring{$\ast$}{*}\+\_\+\+\_\+restrict\+\_\+\+\_\+ scales, const float d, const float \texorpdfstring{$\ast$}{*}\+\_\+\+\_\+restrict\+\_\+\+\_\+ d8)
+\item 
+\Hypertarget{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a5afc38d039e6b2785308b8d5cf35e62a}\label{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a5afc38d039e6b2785308b8d5cf35e62a} 
+\+\_\+\+\_\+dpct\+\_\+inline\+\_\+\+\_\+ float {\bfseries operator()} (const void \texorpdfstring{$\ast$}{*}\+\_\+\+\_\+restrict\+\_\+\+\_\+ vbq, const std::\+pair$<$ int, int $>$ ibx\+\_\+offset, const std::\+pair$<$ int, int $>$ d\+\_\+offset, const int8\+\_\+t \texorpdfstring{$\ast$}{*}q8\+\_\+1\+\_\+quant\+\_\+ptr, const sycl::\+half2 \texorpdfstring{$\ast$}{*}q8\+\_\+1\+\_\+ds, const int iqs)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a85093569e801eda5801396456db5eb5a}\label{structreorder__vec__dot__q__sycl_3_01_g_g_m_l___t_y_p_e___q6___k_01_4_a85093569e801eda5801396456db5eb5a} 
+static constexpr ggml\+\_\+type {\bfseries gtype} = GGML\+\_\+\+TYPE\+\_\+\+Q6\+\_\+K
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+vecdotq.\+hpp\end{DoxyCompactItemize}

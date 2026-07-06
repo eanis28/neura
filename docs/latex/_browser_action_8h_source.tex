@@ -1,0 +1,38 @@
+\doxysection{Browser\+Action.\+h}
+\hypertarget{_browser_action_8h_source}{}\label{_browser_action_8h_source}\doxymbox{\hyperlink{_browser_action_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{action_8h}{action.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_browser_action_ae2ef2b8b09aa6dcf28a5e4eae4cb436e}{BrowserAction}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_action_adf6d17666645657d71bee9f12386db6b}{Action}}\ \{}
+\DoxyCodeLine{00034\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00043\ \ \ \ \ \doxymbox{\hyperlink{class_browser_action_ae2ef2b8b09aa6dcf28a5e4eae4cb436e}{BrowserAction}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_configuration}{Configuration}}\&\ cfg,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ \ \ title,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ \ \ artist);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_browser_action_adafe724cef6bfb133d9216d2814336e1}{execute}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00061\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_browser_action_a9e2e097a20c3363e0ae34217a5dea5bc}{describe}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ \doxymbox{\hyperlink{class_browser_action_acd64dbe1d1a0ac386763929167bbf810}{getTitle}}()\textcolor{keyword}{\ \ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_browser_action_adf5d997041c9a8cbdc75741224f07f6b}{songTitle}};\ \ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ \doxymbox{\hyperlink{class_browser_action_a6221a019f15d3e76df66744496fcd22a}{getArtist}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_browser_action_a9fccafe752c41ef35cc8a42f070534cc}{songArtist}};\ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ \doxymbox{\hyperlink{class_browser_action_afb249eec6c3a3e3b0b4bf32c216beb81}{getOpenedUrl}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_browser_action_a2d1bcaf1861533e59a9e2b7ff9d3a225}{openedUrl}};\ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00087\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_browser_action_adf5d997041c9a8cbdc75741224f07f6b}{songTitle}};\ \ }
+\DoxyCodeLine{00088\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_browser_action_a9fccafe752c41ef35cc8a42f070534cc}{songArtist}};\ }
+\DoxyCodeLine{00089\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_browser_action_a2d1bcaf1861533e59a9e2b7ff9d3a225}{openedUrl}};\ \ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00103\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_browser_action_a3037f0b4659a03217bd16ee5d512fd17}{fetchFirstVideoId}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00115\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_browser_action_aa6eb6194f96df2360ec5004eeaf64f03}{buildFallbackSearchUrl}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_browser_action_acfb0667328640cf197dc4c5f71f59832}{openInBrowser}}(\textcolor{keyword}{const}\ std::string\&\ url)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00131\ \};}
+
+\end{DoxyCode}

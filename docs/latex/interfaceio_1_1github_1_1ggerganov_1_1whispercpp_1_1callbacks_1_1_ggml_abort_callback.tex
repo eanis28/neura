@@ -1,0 +1,42 @@
+\doxysection{io.\+github.\+ggerganov.\+whispercpp.\+callbacks.\+Ggml\+Abort\+Callback Interface Reference}
+\hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_ggml_abort_callback}{}\label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_ggml_abort_callback}\index{io.github.ggerganov.whispercpp.callbacks.GgmlAbortCallback@{io.github.ggerganov.whispercpp.callbacks.GgmlAbortCallback}}
+Inheritance diagram for io.\+github.\+ggerganov.\+whispercpp.\+callbacks.\+Ggml\+Abort\+Callback:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_ggml_abort_callback}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+boolean \doxymbox{\hyperlink{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_ggml_abort_callback_ad4d4dd59250d362fc0b1acb484763390}{invoke}} (com.\+sun.\+jna.\+Pointer data)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Callback for aborting GGML computation Maps to the C typedef:\+ bool (\texorpdfstring{$\ast$}{*}ggml\+\_\+abort\+\_\+callback)(void \texorpdfstring{$\ast$}{*} data) 
+
+\label{doc-func-members}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_ggml_abort_callback_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_ggml_abort_callback_ad4d4dd59250d362fc0b1acb484763390}\index{io.github.ggerganov.whispercpp.callbacks.GgmlAbortCallback@{io.github.ggerganov.whispercpp.callbacks.GgmlAbortCallback}!invoke@{invoke}}
+\index{invoke@{invoke}!io.github.ggerganov.whispercpp.callbacks.GgmlAbortCallback@{io.github.ggerganov.whispercpp.callbacks.GgmlAbortCallback}}
+\doxysubsubsection{\texorpdfstring{invoke()}{invoke()}}
+{\footnotesize\ttfamily \label{interfaceio_1_1github_1_1ggerganov_1_1whispercpp_1_1callbacks_1_1_ggml_abort_callback_ad4d4dd59250d362fc0b1acb484763390} 
+boolean io.\+github.\+ggerganov.\+whispercpp.\+callbacks.\+Ggml\+Abort\+Callback.\+invoke (\begin{DoxyParamCaption}\item[{com.\+sun.\+jna.\+Pointer}]{data}{}\end{DoxyParamCaption})}
+
+Return true to abort the computation, false to continue
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & User data passed to the callback \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true to abort, false to continue 
+\end{DoxyReturn}
+
+
+The documentation for this interface was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+bindings/\+java/\+src/\+main/\+java/\+io/\+github/\+ggerganov/\+whispercpp/\+callbacks/\+Ggml\+Abort\+Callback.\+java\end{DoxyCompactItemize}

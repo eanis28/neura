@@ -1,0 +1,16 @@
+\doxysection{whisper-\/compat.h}
+\hypertarget{whisper-compat_8h_source}{}\label{whisper-compat_8h_source}\index{whisper.cpp/src/coreml/whisper-\/compat.h@{whisper.cpp/src/coreml/whisper-\/compat.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#import\ <CoreML/CoreML.h>}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{@interface\ }MLModel\ (Compat)}
+\DoxyCodeLine{00004\ -\/\ (void)\ predictionFromFeatures:(\textcolor{keywordtype}{id}<MLFeatureProvider>)\ input}
+\DoxyCodeLine{00005\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ completionHandler:(\textcolor{keywordtype}{void}\ (\string^)(\textcolor{keywordtype}{id}<MLFeatureProvider>\ output,\ NSError\ *\ error))\ completionHandler;}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ -\/\ (void)\ predictionFromFeatures:(\textcolor{keywordtype}{id}<MLFeatureProvider>)\ input}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options:(MLPredictionOptions\ *)\ options}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ completionHandler:(\textcolor{keywordtype}{void}\ (\string^)(\textcolor{keywordtype}{id}<MLFeatureProvider>\ output,\ NSError\ *\ error))\ completionHandler;}
+\DoxyCodeLine{00010\ \textcolor{keyword}{@end}}
+
+\end{DoxyCode}

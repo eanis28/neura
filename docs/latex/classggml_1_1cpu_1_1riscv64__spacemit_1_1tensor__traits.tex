@@ -1,0 +1,43 @@
+\doxysection{ggml::\+cpu::\+riscv64\+\_\+spacemit::\+tensor\+\_\+traits\texorpdfstring{$<$}{<} BLOC\+\_\+\+TYPE, INTER\+\_\+\+SIZE, NB\+\_\+\+COLS \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits}{}\label{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits}\index{ggml::cpu::riscv64\_spacemit::tensor\_traits$<$ BLOC\_TYPE, INTER\_SIZE, NB\_COLS $>$@{ggml::cpu::riscv64\_spacemit::tensor\_traits$<$ BLOC\_TYPE, INTER\_SIZE, NB\_COLS $>$}}
+Inheritance diagram for ggml::\+cpu::\+riscv64\+\_\+spacemit::\+tensor\+\_\+traits\texorpdfstring{$<$}{<} BLOC\+\_\+\+TYPE, INTER\+\_\+\+SIZE, NB\+\_\+\+COLS \texorpdfstring{$>$}{>}:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_a2f7ec9caca49f86d37d0bf534c05a085}\label{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_a2f7ec9caca49f86d37d0bf534c05a085} 
+bool {\bfseries work\+\_\+size} (int, const struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op, size\+\_\+t \&size) override
+\item 
+\Hypertarget{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_a06b264442fbd52b2d54a34640d05d372}\label{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_a06b264442fbd52b2d54a34640d05d372} 
+bool {\bfseries compute\+\_\+forward} (struct \doxymbox{\hyperlink{structggml__compute__params}{ggml\+\_\+compute\+\_\+params}} \texorpdfstring{$\ast$}{*}params, struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op) override
+\item 
+\Hypertarget{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_aa32e6094491dbc79a745e29d41cbc317}\label{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_aa32e6094491dbc79a745e29d41cbc317} 
+void {\bfseries forward\+\_\+mul\+\_\+mat\+\_\+q4} (\doxymbox{\hyperlink{structggml__compute__params}{ggml\+\_\+compute\+\_\+params}} \texorpdfstring{$\ast$}{*}params, \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}op)
+\item 
+int \doxymbox{\hyperlink{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_ab6f1c066c603d6f38a67dd023f1f9577}{repack}} (struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}t, const void \texorpdfstring{$\ast$}{*}data, size\+\_\+t data\+\_\+size) override
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_ab6f1c066c603d6f38a67dd023f1f9577}\index{ggml::cpu::riscv64\_spacemit::tensor\_traits$<$ BLOC\_TYPE, INTER\_SIZE, NB\_COLS $>$@{ggml::cpu::riscv64\_spacemit::tensor\_traits$<$ BLOC\_TYPE, INTER\_SIZE, NB\_COLS $>$}!repack@{repack}}
+\index{repack@{repack}!ggml::cpu::riscv64\_spacemit::tensor\_traits$<$ BLOC\_TYPE, INTER\_SIZE, NB\_COLS $>$@{ggml::cpu::riscv64\_spacemit::tensor\_traits$<$ BLOC\_TYPE, INTER\_SIZE, NB\_COLS $>$}}
+\doxysubsubsection{\texorpdfstring{repack()}{repack()}}
+{\footnotesize\ttfamily \label{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits_ab6f1c066c603d6f38a67dd023f1f9577} 
+template$<$typename BLOC\+\_\+\+TYPE, int64\+\_\+t INTER\+\_\+\+SIZE, int64\+\_\+t NB\+\_\+\+COLS$>$ \\
+int \doxymbox{\hyperlink{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits}{ggml::\+cpu::\+riscv64\+\_\+spacemit::\+tensor\+\_\+traits}}$<$ BLOC\+\_\+\+TYPE, INTER\+\_\+\+SIZE, NB\+\_\+\+COLS $>$::\+repack (\begin{DoxyParamCaption}\item[{struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}}]{t}{, }\item[{const void \texorpdfstring{$\ast$}{*}}]{data}{, }\item[{size\+\_\+t}]{data\+\_\+size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [private]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classggml_1_1cpu_1_1riscv64__spacemit_1_1tensor__traits__base}{ggml::\+cpu::\+riscv64\+\_\+spacemit::\+tensor\+\_\+traits\+\_\+base}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/cpu/\+spacemit/\+ime.\+cpp\end{DoxyCompactItemize}

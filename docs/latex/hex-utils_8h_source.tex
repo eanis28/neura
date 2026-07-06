@@ -1,0 +1,77 @@
+\doxysection{hex-\/utils.h}
+\hypertarget{hex-utils_8h_source}{}\label{hex-utils_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hex-\/utils.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hex-\/utils.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HEX\_UTILS\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HEX\_UTILS\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}hexagon\_types.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}hex-\/fastdiv.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}hex-\/dump.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifndef\ MAX}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ MAX(a,\ b)\ ((a)\ >\ (b)\ ?\ (a)\ :\ (b))}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifndef\ MIN}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ MIN(a,\ b)\ ((a)\ <\ (b)\ ?\ (a)\ :\ (b))}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint64\_t\ hex\_get\_cycles()\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ uint64\_t\ cycles\ =\ 0;}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}\ \%0\ =\ c15:14\(\backslash\)n"{}}\ :\ \textcolor{stringliteral}{"{}=r"{}}(cycles));}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{return}\ cycles;}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint64\_t\ hex\_get\_pktcnt()\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ uint64\_t\ pktcnt;}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}\ \%0\ =\ c19:18\(\backslash\)n"{}}\ :\ \textcolor{stringliteral}{"{}=r"{}}(pktcnt));}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordflow}{return}\ pktcnt;}
+\DoxyCodeLine{00030\ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ hmx\_ceil\_div(\textcolor{keywordtype}{size\_t}\ num,\ \textcolor{keywordtype}{size\_t}\ den)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordflow}{return}\ (num\ +\ den\ -\/\ 1)\ /\ den;}
+\DoxyCodeLine{00034\ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ int32\_t\ hex\_is\_aligned(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ addr,\ uint32\_t\ align)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{return}\ ((\textcolor{keywordtype}{size\_t})\ addr\ \&\ (align\ -\/\ 1))\ ==\ 0;}
+\DoxyCodeLine{00038\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ hex\_align\_up(\textcolor{keywordtype}{size\_t}\ v,\ \textcolor{keywordtype}{size\_t}\ align)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{return}\ hmx\_ceil\_div(v,\ align)\ *\ align;}
+\DoxyCodeLine{00042\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ hex\_align\_down(\textcolor{keywordtype}{size\_t}\ v,\ \textcolor{keywordtype}{size\_t}\ align)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordflow}{return}\ (v\ /\ align)\ *\ align;}
+\DoxyCodeLine{00046\ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ int32\_t\ hex\_is\_one\_chunk(\textcolor{keywordtype}{void}\ *\ addr,\ uint32\_t\ n,\ uint32\_t\ chunk\_size)\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ uint32\_t\ left\_off\ \ =\ (size\_t)\ addr\ \&\ (chunk\_size\ -\/\ 1);}
+\DoxyCodeLine{00050\ \ \ \ \ uint32\_t\ right\_off\ =\ left\_off\ +\ n;}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordflow}{return}\ right\_off\ <=\ chunk\_size;}
+\DoxyCodeLine{00052\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint32\_t\ hex\_round\_up(uint32\_t\ n,\ uint32\_t\ m)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{return}\ m\ *\ ((n\ +\ m\ -\/\ 1)\ /\ m);}
+\DoxyCodeLine{00056\ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ hex\_smin(\textcolor{keywordtype}{size\_t}\ a,\ \textcolor{keywordtype}{size\_t}\ b)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordflow}{return}\ a\ <\ b\ ?\ a\ :\ b;}
+\DoxyCodeLine{00060\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ hex\_smax(\textcolor{keywordtype}{size\_t}\ a,\ \textcolor{keywordtype}{size\_t}\ b)\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{return}\ a\ >\ b\ ?\ a\ :\ b;}
+\DoxyCodeLine{00064\ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hex\_l2fetch(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ p,\ uint32\_t\ width,\ uint32\_t\ stride,\ uint32\_t\ height)\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ control\ =\ Q6\_P\_combine\_RR(stride,\ Q6\_R\_combine\_RlRl(width,\ height));}
+\DoxyCodeLine{00068\ \ \ \ \ Q6\_l2fetch\_AP((\textcolor{keywordtype}{void}\ *)\ p,\ control);}
+\DoxyCodeLine{00069\ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HEX\_UTILS\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

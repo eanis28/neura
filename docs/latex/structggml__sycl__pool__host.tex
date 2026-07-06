@@ -1,0 +1,77 @@
+\doxysection{ggml\+\_\+sycl\+\_\+pool\+\_\+host Struct Reference}
+\hypertarget{structggml__sycl__pool__host}{}\label{structggml__sycl__pool__host}\index{ggml\_sycl\_pool\_host@{ggml\_sycl\_pool\_host}}
+Inheritance diagram for ggml\+\_\+sycl\+\_\+pool\+\_\+host:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{structggml__sycl__pool__host}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structggml__sycl__pool__host_1_1ggml__sycl__buffer}{ggml\+\_\+sycl\+\_\+buffer}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__sycl__pool__host_a004dee1a74222cabe20dd7d6114da2d4}\label{structggml__sycl__pool__host_a004dee1a74222cabe20dd7d6114da2d4} 
+{\bfseries ggml\+\_\+sycl\+\_\+pool\+\_\+host} (queue\+\_\+ptr qptr\+\_\+, int device\+\_\+)
+\item 
+void \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{structggml__sycl__pool__host_a3e19f58c43a2167f0f7db0dbd546f547}{alloc}} (size\+\_\+t size, size\+\_\+t \texorpdfstring{$\ast$}{*}actual\+\_\+size) override
+\item 
+void \doxymbox{\hyperlink{structggml__sycl__pool__host_a849261135e8cc6ee0ae898369a9c5999}{free}} (void \texorpdfstring{$\ast$}{*}ptr, size\+\_\+t size) override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__sycl__pool__host_abadedd67316e4c492d30330c752d782e}\label{structggml__sycl__pool__host_abadedd67316e4c492d30330c752d782e} 
+queue\+\_\+ptr {\bfseries qptr}
+\item 
+\Hypertarget{structggml__sycl__pool__host_a89c30b6897e5e94dca3c27129aa851d4}\label{structggml__sycl__pool__host_a89c30b6897e5e94dca3c27129aa851d4} 
+int {\bfseries device}
+\item 
+\Hypertarget{structggml__sycl__pool__host_a443ed02ba21a1399570969f9f9af9f87}\label{structggml__sycl__pool__host_a443ed02ba21a1399570969f9f9af9f87} 
+std::\+vector$<$ \doxymbox{\hyperlink{structggml__sycl__pool__host_1_1ggml__sycl__buffer}{ggml\+\_\+sycl\+\_\+buffer}} $>$ {\bfseries buffer\+\_\+pool} = std::\+vector$<$\doxymbox{\hyperlink{structggml__sycl__pool__host_1_1ggml__sycl__buffer}{ggml\+\_\+sycl\+\_\+buffer}}$>$(MAX\+\_\+\+POOL\+\_\+\+SIZE)
+\item 
+\Hypertarget{structggml__sycl__pool__host_a8ba7fd50aa3719112e2e729edcd05bcc}\label{structggml__sycl__pool__host_a8ba7fd50aa3719112e2e729edcd05bcc} 
+size\+\_\+t {\bfseries pool\+\_\+size} = 0
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__sycl__pool__host_acfcfc6c639bc57fb6678a3fb3cb4bb32}\label{structggml__sycl__pool__host_acfcfc6c639bc57fb6678a3fb3cb4bb32} 
+static int {\bfseries counter} \{ 0 \}
+\item 
+\Hypertarget{structggml__sycl__pool__host_a51a172e56bb2e0ae2fb012c609ccba45}\label{structggml__sycl__pool__host_a51a172e56bb2e0ae2fb012c609ccba45} 
+static constexpr int {\bfseries MAX\+\_\+\+POOL\+\_\+\+SIZE} \{ 64 \}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{structggml__sycl__pool__host_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structggml__sycl__pool__host_a3e19f58c43a2167f0f7db0dbd546f547}\index{ggml\_sycl\_pool\_host@{ggml\_sycl\_pool\_host}!alloc@{alloc}}
+\index{alloc@{alloc}!ggml\_sycl\_pool\_host@{ggml\_sycl\_pool\_host}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}}
+{\footnotesize\ttfamily \label{structggml__sycl__pool__host_a3e19f58c43a2167f0f7db0dbd546f547} 
+void \texorpdfstring{$\ast$}{*} ggml\+\_\+sycl\+\_\+pool\+\_\+host::\+alloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{, }\item[{size\+\_\+t \texorpdfstring{$\ast$}{*}}]{actual\+\_\+size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}}.
+
+\Hypertarget{structggml__sycl__pool__host_a849261135e8cc6ee0ae898369a9c5999}\index{ggml\_sycl\_pool\_host@{ggml\_sycl\_pool\_host}!free@{free}}
+\index{free@{free}!ggml\_sycl\_pool\_host@{ggml\_sycl\_pool\_host}}
+\doxysubsubsection{\texorpdfstring{free()}{free()}}
+{\footnotesize\ttfamily \label{structggml__sycl__pool__host_a849261135e8cc6ee0ae898369a9c5999} 
+void ggml\+\_\+sycl\+\_\+pool\+\_\+host::\+free (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{ptr}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structggml__sycl__pool}{ggml\+\_\+sycl\+\_\+pool}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+ggml-\/sycl.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,67 @@
+\doxysection{llm\+\_\+graph\+\_\+input\+\_\+embd Class Reference}
+\hypertarget{classllm__graph__input__embd}{}\label{classllm__graph__input__embd}\index{llm\_graph\_input\_embd@{llm\_graph\_input\_embd}}
+Inheritance diagram for llm\+\_\+graph\+\_\+input\+\_\+embd:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllm__graph__input__embd}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__embd_aa34f3bec96b03025ff0d5e87c7fa00a5}\label{classllm__graph__input__embd_aa34f3bec96b03025ff0d5e87c7fa00a5} 
+{\bfseries llm\+\_\+graph\+\_\+input\+\_\+embd} (int64\+\_\+t n\+\_\+embd)
+\item 
+void \doxymbox{\hyperlink{classllm__graph__input__embd_ac2b46ab00f8d94245beb020ba6761840}{set\+\_\+input}} (const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}ubatch) override
+\item 
+bool \doxymbox{\hyperlink{classllm__graph__input__embd_a9d5de9f15b514b0faf8c2851e989f490}{can\+\_\+reuse}} (const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&params) override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllm__graph__input__embd_a7740a158cf841cf781b63240fc3aee32}\label{classllm__graph__input__embd_a7740a158cf841cf781b63240fc3aee32} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries tokens} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__embd_a01ecc64cd4921fa8396bb33f7ce2339c}\label{classllm__graph__input__embd_a01ecc64cd4921fa8396bb33f7ce2339c} 
+\doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries embd} = nullptr
+\item 
+\Hypertarget{classllm__graph__input__embd_adc827341e7b0a1e83df450bea56f9b0b}\label{classllm__graph__input__embd_adc827341e7b0a1e83df450bea56f9b0b} 
+const int64\+\_\+t {\bfseries n\+\_\+embd} = 0
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries debug} = 0
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllm__graph__input__embd_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllm__graph__input__embd_a9d5de9f15b514b0faf8c2851e989f490}\index{llm\_graph\_input\_embd@{llm\_graph\_input\_embd}!can\_reuse@{can\_reuse}}
+\index{can\_reuse@{can\_reuse}!llm\_graph\_input\_embd@{llm\_graph\_input\_embd}}
+\doxysubsubsection{\texorpdfstring{can\_reuse()}{can\_reuse()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__embd_a9d5de9f15b514b0faf8c2851e989f490} 
+bool llm\+\_\+graph\+\_\+input\+\_\+embd::\+can\+\_\+reuse (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllm__graph__params}{llm\+\_\+graph\+\_\+params}} \&}]{params}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+\Hypertarget{classllm__graph__input__embd_ac2b46ab00f8d94245beb020ba6761840}\index{llm\_graph\_input\_embd@{llm\_graph\_input\_embd}!set\_input@{set\_input}}
+\index{set\_input@{set\_input}!llm\_graph\_input\_embd@{llm\_graph\_input\_embd}}
+\doxysubsubsection{\texorpdfstring{set\_input()}{set\_input()}}
+{\footnotesize\ttfamily \label{classllm__graph__input__embd_ac2b46ab00f8d94245beb020ba6761840} 
+void llm\+\_\+graph\+\_\+input\+\_\+embd::\+set\+\_\+input (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \texorpdfstring{$\ast$}{*}}]{ubatch}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{classllm__graph__input__i}{llm\+\_\+graph\+\_\+input\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/graph.\+cpp\end{DoxyCompactItemize}

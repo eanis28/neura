@@ -1,0 +1,601 @@
+\doxysection{llama\+\_\+layer Struct Reference}
+\hypertarget{structllama__layer}{}\label{structllama__layer}\index{llama\_layer@{llama\_layer}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__layer_a9630a69b829491c814a3dabed229371f}\label{structllama__layer_a9630a69b829491c814a3dabed229371f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a9ae836dd74e3d141bdf63b6adda342c3}\label{structllama__layer_a9ae836dd74e3d141bdf63b6adda342c3} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+norm\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_ab1b16bd515f82710170385433f0edd86}\label{structllama__layer_ab1b16bd515f82710170385433f0edd86} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+norm\+\_\+2} = nullptr
+\item 
+\Hypertarget{structllama__layer_aff552d56f1acf8d8fa50f2050bdf871a}\label{structllama__layer_aff552d56f1acf8d8fa50f2050bdf871a} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+norm\+\_\+2\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_af91aa5d9936de5e087a65e3b69d4cde3}\label{structllama__layer_af91aa5d9936de5e087a65e3b69d4cde3} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+q\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a49fef45976040e021b7a254ff92efa55}\label{structllama__layer_a49fef45976040e021b7a254ff92efa55} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+q\+\_\+norm\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa1e4af2a04d4233f61d309ae7bad7241}\label{structllama__layer_aa1e4af2a04d4233f61d309ae7bad7241} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+k\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a9e4bf9236b726e87b438a41b87c32888}\label{structllama__layer_a9e4bf9236b726e87b438a41b87c32888} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+k\+\_\+norm\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae6bceaa4286c52eed18d8f5463725eee}\label{structllama__layer_ae6bceaa4286c52eed18d8f5463725eee} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+out\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_adc81f1f340c52930406b160045d195e4}\label{structllama__layer_adc81f1f340c52930406b160045d195e4} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+out\+\_\+norm\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a5925766596800635b9dad664ec25ac4e}\label{structllama__layer_a5925766596800635b9dad664ec25ac4e} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+q\+\_\+a\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a928e7e0cdddaf4c6bfe910728c28419f}\label{structllama__layer_a928e7e0cdddaf4c6bfe910728c28419f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+kv\+\_\+a\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a6025eb34f67c02f29d6d27a03981faac}\label{structllama__layer_a6025eb34f67c02f29d6d27a03981faac} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+sub\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a9095434bab66e9e32f7da206470307fc}\label{structllama__layer_a9095434bab66e9e32f7da206470307fc} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+post\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a4496882b44d550da6c3e39cc3ec99631}\label{structllama__layer_a4496882b44d550da6c3e39cc3ec99631} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+sub\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_aaf788e4b95e8bae800b4e6ab95920c99}\label{structllama__layer_aaf788e4b95e8bae800b4e6ab95920c99} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+norm\+\_\+cross} = nullptr
+\item 
+\Hypertarget{structllama__layer_a855f7e6d9948f29bd13635bc464312b9}\label{structllama__layer_a855f7e6d9948f29bd13635bc464312b9} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+norm\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa327154ce5e354f76c410bd32dc6daa3}\label{structllama__layer_aa327154ce5e354f76c410bd32dc6daa3} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_aadbc0a7883bf1a6cada3c9c26b6a4c78}\label{structllama__layer_aadbc0a7883bf1a6cada3c9c26b6a4c78} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+dt\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa998b8e26d9942a2bfee78eef3ca294f}\label{structllama__layer_aa998b8e26d9942a2bfee78eef3ca294f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+b\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a52c645bbfdf64f5a999328944afa2418}\label{structllama__layer_a52c645bbfdf64f5a999328944afa2418} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+c\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa3fdd6c0f00ab8909e8e58108c68756d}\label{structllama__layer_aa3fdd6c0f00ab8909e8e58108c68756d} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wq} = nullptr
+\item 
+\Hypertarget{structllama__layer_a35d2216cf016fca1954d655d5e4f0b96}\label{structllama__layer_a35d2216cf016fca1954d655d5e4f0b96} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wk} = nullptr
+\item 
+\Hypertarget{structllama__layer_a4971918e5bcb392edbc5066ef585a9e5}\label{structllama__layer_a4971918e5bcb392edbc5066ef585a9e5} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wv} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa137c14dc8dfd208e095c63ced1a69b5}\label{structllama__layer_aa137c14dc8dfd208e095c63ced1a69b5} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wo} = nullptr
+\item 
+\Hypertarget{structllama__layer_a94cf290839fa74c3305e7ac4b07d1050}\label{structllama__layer_a94cf290839fa74c3305e7ac4b07d1050} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wqkv} = nullptr
+\item 
+\Hypertarget{structllama__layer_a01842f8939e92ac70be0a2ffbc0bf538}\label{structllama__layer_a01842f8939e92ac70be0a2ffbc0bf538} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wq\+\_\+a} = nullptr
+\item 
+\Hypertarget{structllama__layer_a6f314b34dc41fcc00e220c86b05e7a94}\label{structllama__layer_a6f314b34dc41fcc00e220c86b05e7a94} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wq\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a140a7b5f731d3f499226f0d88c5ae2cb}\label{structllama__layer_a140a7b5f731d3f499226f0d88c5ae2cb} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wkv\+\_\+a\+\_\+mqa} = nullptr
+\item 
+\Hypertarget{structllama__layer_a442108abc605943450dbec5f6c46c88e}\label{structllama__layer_a442108abc605943450dbec5f6c46c88e} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wkv\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_af3736f7849074cf5daf608290b89f88c}\label{structllama__layer_af3736f7849074cf5daf608290b89f88c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wk\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_af930bb67e78743142959e6cf415f283b}\label{structllama__layer_af930bb67e78743142959e6cf415f283b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wv\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a23484d27696203f6467d54e2ae52fd74}\label{structllama__layer_a23484d27696203f6467d54e2ae52fd74} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wq\+\_\+cross} = nullptr
+\item 
+\Hypertarget{structllama__layer_ab4b6f31bd706b562149812385f75207e}\label{structllama__layer_ab4b6f31bd706b562149812385f75207e} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wk\+\_\+cross} = nullptr
+\item 
+\Hypertarget{structllama__layer_a91e851a1ef5637bc9ecd3555f8c803f1}\label{structllama__layer_a91e851a1ef5637bc9ecd3555f8c803f1} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wv\+\_\+cross} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa3c0552370090f617c8732062cd235ba}\label{structllama__layer_aa3c0552370090f617c8732062cd235ba} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wo\+\_\+cross} = nullptr
+\item 
+\Hypertarget{structllama__layer_a0792bd66bae22af9a438bbe3c98e9037}\label{structllama__layer_a0792bd66bae22af9a438bbe3c98e9037} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wq\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_a5d92c3bd6c633e8171e37c7e579d2d15}\label{structllama__layer_a5d92c3bd6c633e8171e37c7e579d2d15} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wk\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_a920e0b97de53fe3c1c38f91f04484bc0}\label{structllama__layer_a920e0b97de53fe3c1c38f91f04484bc0} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wv\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_a2bce622844d4ec6b77d9bfc70600c505}\label{structllama__layer_a2bce622844d4ec6b77d9bfc70600c505} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wo\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_a173930efd7ba068b1a27136dd7d039a9}\label{structllama__layer_a173930efd7ba068b1a27136dd7d039a9} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wqkv\+\_\+gate} = nullptr
+\item 
+\Hypertarget{structllama__layer_a41b6e2db0d16ae7331373e1cf3f31c21}\label{structllama__layer_a41b6e2db0d16ae7331373e1cf3f31c21} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries bq} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae0e467c9ed4344c790feb77858e98660}\label{structllama__layer_ae0e467c9ed4344c790feb77858e98660} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries bk} = nullptr
+\item 
+\Hypertarget{structllama__layer_a0fe0e6616d80eaf84396ccb3811e8ea2}\label{structllama__layer_a0fe0e6616d80eaf84396ccb3811e8ea2} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries bv} = nullptr
+\item 
+\Hypertarget{structllama__layer_a7193defa88878e725e9306c535fe55e8}\label{structllama__layer_a7193defa88878e725e9306c535fe55e8} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries bo} = nullptr
+\item 
+\Hypertarget{structllama__layer_a395612cd2a35419e932da537328e2160}\label{structllama__layer_a395612cd2a35419e932da537328e2160} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries bqkv} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae1443bea9a3b3ca45e5d1adfab92f72d}\label{structllama__layer_ae1443bea9a3b3ca45e5d1adfab92f72d} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+rel\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a318bf58dcfad3ebd632727e85b253aa5}\label{structllama__layer_a318bf58dcfad3ebd632727e85b253aa5} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+rel\+\_\+b\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae68fc8355163dc106ad14eb27634f205}\label{structllama__layer_ae68fc8355163dc106ad14eb27634f205} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+rel\+\_\+b\+\_\+cross} = nullptr
+\item 
+\Hypertarget{structllama__layer_a054e652af43dc7e0cde80cf976a9b0c8}\label{structllama__layer_a054e652af43dc7e0cde80cf976a9b0c8} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a7335f228a56bdc938906ee4e94fc42d0}\label{structllama__layer_a7335f228a56bdc938906ee4e94fc42d0} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+norm\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a729c7a34f11c637b697adcefe83570ae}\label{structllama__layer_a729c7a34f11c637b697adcefe83570ae} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+post\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_ad681052e95c1ec447fb1aadfd72d340f}\label{structllama__layer_ad681052e95c1ec447fb1aadfd72d340f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries layer\+\_\+out\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a841d7b47df887529ca75c0ea423df6cc}\label{structllama__layer_a841d7b47df887529ca75c0ea423df6cc} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries layer\+\_\+out\+\_\+norm\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a52059b516b7d301be5a5a8831f0f495c}\label{structllama__layer_a52059b516b7d301be5a5a8831f0f495c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+norm\+\_\+exps} = nullptr
+\item 
+\Hypertarget{structllama__layer_a63c7ac37b941f303fe86d0e9abc5e9f1}\label{structllama__layer_a63c7ac37b941f303fe86d0e9abc5e9f1} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+norm\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_acc6362841aeeff65d2e99db954bb3cfc}\label{structllama__layer_acc6362841aeeff65d2e99db954bb3cfc} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate} = nullptr
+\item 
+\Hypertarget{structllama__layer_a312b8a648eeb7af73f4e97dff75f9fd0}\label{structllama__layer_a312b8a648eeb7af73f4e97dff75f9fd0} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down} = nullptr
+\item 
+\Hypertarget{structllama__layer_a663a3e287569754a90a72926f67aa607}\label{structllama__layer_a663a3e287569754a90a72926f67aa607} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up} = nullptr
+\item 
+\Hypertarget{structllama__layer_a1ea836b0134d03c67463c2b75c3d71e0}\label{structllama__layer_a1ea836b0134d03c67463c2b75c3d71e0} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_a5827c32da6ab5bd507bc4b190dddfc7e}\label{structllama__layer_a5827c32da6ab5bd507bc4b190dddfc7e} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_abdb99006774e90f84cb7b5d5649168fb}\label{structllama__layer_abdb99006774e90f84cb7b5d5649168fb} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up\+\_\+enc} = nullptr
+\item 
+\Hypertarget{structllama__layer_a17fe4dfe6828b7b19934a7f02b56abe4}\label{structllama__layer_a17fe4dfe6828b7b19934a7f02b56abe4} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+inp} = nullptr
+\item 
+\Hypertarget{structllama__layer_a10b2a3c0b80f9c64303fabb10a0c38aa}\label{structllama__layer_a10b2a3c0b80f9c64303fabb10a0c38aa} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+exps} = nullptr
+\item 
+\Hypertarget{structllama__layer_ac3d1c684d9c83262898a61338e96d1ec}\label{structllama__layer_ac3d1c684d9c83262898a61338e96d1ec} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down\+\_\+exps} = nullptr
+\item 
+\Hypertarget{structllama__layer_a45c1299065a13d9870b1e5fe3ee7964e}\label{structllama__layer_a45c1299065a13d9870b1e5fe3ee7964e} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up\+\_\+exps} = nullptr
+\item 
+\Hypertarget{structllama__layer_ab829f5537a894064f6b90cddd0301552}\label{structllama__layer_ab829f5537a894064f6b90cddd0301552} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+up\+\_\+exps} = nullptr
+\item 
+\Hypertarget{structllama__layer_a187f84ef318c96d86717600851787c83}\label{structllama__layer_a187f84ef318c96d86717600851787c83} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+inp\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a5f7f8d857e863a91d71e170d845362ae}\label{structllama__layer_a5f7f8d857e863a91d71e170d845362ae} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+exps\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_aef204f411d17b4c22a5adcfefa90e343}\label{structllama__layer_aef204f411d17b4c22a5adcfefa90e343} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down\+\_\+exps\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a1d7fd0a14b67d0d8188e5c2c29e678cb}\label{structllama__layer_a1d7fd0a14b67d0d8188e5c2c29e678cb} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up\+\_\+exps\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a38827842642ef420b8d21f4b3929e35e}\label{structllama__layer_a38827842642ef420b8d21f4b3929e35e} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+up\+\_\+exps\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a8cf254e016926d166d2e2a85610356a4}\label{structllama__layer_a8cf254e016926d166d2e2a85610356a4} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+exps\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a5048a63cbeaabcc6c3a5d16901b04ae5}\label{structllama__layer_a5048a63cbeaabcc6c3a5d16901b04ae5} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down\+\_\+exps\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a789680d7643b5029cbfaeb724140ce02}\label{structllama__layer_a789680d7643b5029cbfaeb724140ce02} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up\+\_\+exps\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_ad9619fa37d8f3349953d6d279fc20403}\label{structllama__layer_ad9619fa37d8f3349953d6d279fc20403} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+latent\+\_\+down} = nullptr
+\item 
+\Hypertarget{structllama__layer_a3b7611a745f33f33f777abd4d5a95f23}\label{structllama__layer_a3b7611a745f33f33f777abd4d5a95f23} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+latent\+\_\+up} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae6b782551029273a66d887f7eab8a37c}\label{structllama__layer_ae6b782551029273a66d887f7eab8a37c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+inp\+\_\+shexp} = nullptr
+\item 
+\Hypertarget{structllama__layer_a7dc50d46046b4279115d589bafa1a720}\label{structllama__layer_a7dc50d46046b4279115d589bafa1a720} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+shexp} = nullptr
+\item 
+\Hypertarget{structllama__layer_a73c6b37feb4bd3cadb97184bde1b2e3d}\label{structllama__layer_a73c6b37feb4bd3cadb97184bde1b2e3d} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down\+\_\+shexp} = nullptr
+\item 
+\Hypertarget{structllama__layer_ad1f0cc4f959b7a030bcea0f2e0b65505}\label{structllama__layer_ad1f0cc4f959b7a030bcea0f2e0b65505} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up\+\_\+shexp} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae2027f6ab1b4e6f5f8cdd01b23476049}\label{structllama__layer_ae2027f6ab1b4e6f5f8cdd01b23476049} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+chexps} = nullptr
+\item 
+\Hypertarget{structllama__layer_af979dda6e31ca8b0414ddccfda26ad7f}\label{structllama__layer_af979dda6e31ca8b0414ddccfda26ad7f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down\+\_\+chexps} = nullptr
+\item 
+\Hypertarget{structllama__layer_acbea5744a4452ce001eb32c4df6800a4}\label{structllama__layer_acbea5744a4452ce001eb32c4df6800a4} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up\+\_\+chexps} = nullptr
+\item 
+\Hypertarget{structllama__layer_af01d625ea900ab9693fc7934c34791a7}\label{structllama__layer_af01d625ea900ab9693fc7934c34791a7} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_ad9a988fa8224553b7fd35bde125dd7b4}\label{structllama__layer_ad9a988fa8224553b7fd35bde125dd7b4} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_adb5b999296d2ac91c93875183a00c9d5}\label{structllama__layer_adb5b999296d2ac91c93875183a00c9d5} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a6cbcf32df65c38c7a16b2c2533ba28c9}\label{structllama__layer_a6cbcf32df65c38c7a16b2c2533ba28c9} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+act} = nullptr
+\item 
+\Hypertarget{structllama__layer_acdb3b9b6acec1e2b66ce978791c8878f}\label{structllama__layer_acdb3b9b6acec1e2b66ce978791c8878f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+exp\+\_\+probs\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_ac0600efb103f182908ff14bd216e1d16}\label{structllama__layer_ac0600efb103f182908ff14bd216e1d16} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+in} = nullptr
+\item 
+\Hypertarget{structllama__layer_a29ca61a148792ff46b7b47e7d2e72838}\label{structllama__layer_a29ca61a148792ff46b7b47e7d2e72838} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+x} = nullptr
+\item 
+\Hypertarget{structllama__layer_a3daed35724464e7bdf535b30dc718580}\label{structllama__layer_a3daed35724464e7bdf535b30dc718580} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+dt} = nullptr
+\item 
+\Hypertarget{structllama__layer_abb94cf1d7bbe3b3d07f1774e19100d35}\label{structllama__layer_abb94cf1d7bbe3b3d07f1774e19100d35} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+out} = nullptr
+\item 
+\Hypertarget{structllama__layer_a11433096afa18dc9ca1546d91fcb4999}\label{structllama__layer_a11433096afa18dc9ca1546d91fcb4999} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+conv1d} = nullptr
+\item 
+\Hypertarget{structllama__layer_ac4a06e51461518a6f48d6a2191d8853b}\label{structllama__layer_ac4a06e51461518a6f48d6a2191d8853b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+a} = nullptr
+\item 
+\Hypertarget{structllama__layer_acad271d74be149447080f0cb3608f801}\label{structllama__layer_acad271d74be149447080f0cb3608f801} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+d} = nullptr
+\item 
+\Hypertarget{structllama__layer_a58a46fea1a5899f6297832b5e193a72a}\label{structllama__layer_a58a46fea1a5899f6297832b5e193a72a} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+conv1d\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a3f5c6dff74f6b0b23d35f0610eef9792}\label{structllama__layer_a3f5c6dff74f6b0b23d35f0610eef9792} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+dt\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a48faba46b2073155ca5782a2b9cda157}\label{structllama__layer_a48faba46b2073155ca5782a2b9cda157} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+beta\+\_\+alpha} = nullptr
+\item 
+\Hypertarget{structllama__layer_aeb03f46fdc1be90fcaa47ffc7235e923}\label{structllama__layer_aeb03f46fdc1be90fcaa47ffc7235e923} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+alpha} = nullptr
+\item 
+\Hypertarget{structllama__layer_a62aaa73a9fad0ffcf4959bcd16aa36f0}\label{structllama__layer_a62aaa73a9fad0ffcf4959bcd16aa36f0} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+w1} = nullptr
+\item 
+\Hypertarget{structllama__layer_ab49d11453da0a6345c9b200e6b70d0ba}\label{structllama__layer_ab49d11453da0a6345c9b200e6b70d0ba} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+w2} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae3300e09cd1476c7a0ad06dbec859394}\label{structllama__layer_ae3300e09cd1476c7a0ad06dbec859394} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+lerp\+\_\+x} = nullptr
+\item 
+\Hypertarget{structllama__layer_a697f5639e905fa75773a429651dd64e1}\label{structllama__layer_a697f5639e905fa75773a429651dd64e1} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+lerp\+\_\+w} = nullptr
+\item 
+\Hypertarget{structllama__layer_aeccd170d9d6ccc5aa0b187dcc9b0d521}\label{structllama__layer_aeccd170d9d6ccc5aa0b187dcc9b0d521} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+lerp\+\_\+k} = nullptr
+\item 
+\Hypertarget{structllama__layer_a8bc8dee32fc6080ef174d87b6e691661}\label{structllama__layer_a8bc8dee32fc6080ef174d87b6e691661} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+lerp\+\_\+v} = nullptr
+\item 
+\Hypertarget{structllama__layer_a1c1735d65d7488db5f241ada07216890}\label{structllama__layer_a1c1735d65d7488db5f241ada07216890} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+lerp\+\_\+r} = nullptr
+\item 
+\Hypertarget{structllama__layer_a809bff1bd1b8f523ff165df04980374a}\label{structllama__layer_a809bff1bd1b8f523ff165df04980374a} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+lerp\+\_\+g} = nullptr
+\item 
+\Hypertarget{structllama__layer_ac4fab7a1e79e4da8c651db6d43f0912d}\label{structllama__layer_ac4fab7a1e79e4da8c651db6d43f0912d} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+lerp\+\_\+fused} = nullptr
+\item 
+\Hypertarget{structllama__layer_a71ed581a3ebf8253333e00ec77ef4ed7}\label{structllama__layer_a71ed581a3ebf8253333e00ec77ef4ed7} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+first} = nullptr
+\item 
+\Hypertarget{structllama__layer_a9ec61bf2755d708d9e851abcd25e5a33}\label{structllama__layer_a9ec61bf2755d708d9e851abcd25e5a33} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+decay} = nullptr
+\item 
+\Hypertarget{structllama__layer_a4216a49e9a167a2dbbd6e63d0f676308}\label{structllama__layer_a4216a49e9a167a2dbbd6e63d0f676308} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+decay\+\_\+w1} = nullptr
+\item 
+\Hypertarget{structllama__layer_a1cb91806e1d094ac4eedfc98ffdc0ebe}\label{structllama__layer_a1cb91806e1d094ac4eedfc98ffdc0ebe} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+decay\+\_\+w2} = nullptr
+\item 
+\Hypertarget{structllama__layer_a725c147cae73ab5f9c5ff6ef11e0a2c2}\label{structllama__layer_a725c147cae73ab5f9c5ff6ef11e0a2c2} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+key} = nullptr
+\item 
+\Hypertarget{structllama__layer_ade84f610266030451ab1cc0d8575060b}\label{structllama__layer_ade84f610266030451ab1cc0d8575060b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+key\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a52fa8c36f98de4b4b16c7bf444b30fe2}\label{structllama__layer_a52fa8c36f98de4b4b16c7bf444b30fe2} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+value} = nullptr
+\item 
+\Hypertarget{structllama__layer_a4ad7b4c28c7051df0d0dde534e7c1b22}\label{structllama__layer_a4ad7b4c28c7051df0d0dde534e7c1b22} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+value\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a23fb58dd7e3968c9a3ee78461e237767}\label{structllama__layer_a23fb58dd7e3968c9a3ee78461e237767} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+receptance} = nullptr
+\item 
+\Hypertarget{structllama__layer_a0c365fe7f4551d9fb5dd4a9df72ae27c}\label{structllama__layer_a0c365fe7f4551d9fb5dd4a9df72ae27c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+receptance\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a55f10d5321f6c0b04246b81830fb8ce6}\label{structllama__layer_a55f10d5321f6c0b04246b81830fb8ce6} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+gate} = nullptr
+\item 
+\Hypertarget{structllama__layer_ac0706782897fd1ed8f69a2fb26c2d624}\label{structllama__layer_ac0706782897fd1ed8f69a2fb26c2d624} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+w0} = nullptr
+\item 
+\Hypertarget{structllama__layer_a909f9f8ab6d1d922b2157739033dff58}\label{structllama__layer_a909f9f8ab6d1d922b2157739033dff58} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+a0} = nullptr
+\item 
+\Hypertarget{structllama__layer_a2b485eaeecac8b3a330098003ea5c1de}\label{structllama__layer_a2b485eaeecac8b3a330098003ea5c1de} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+a1} = nullptr
+\item 
+\Hypertarget{structllama__layer_a4b660b3033ea15b37ea24509813efce6}\label{structllama__layer_a4b660b3033ea15b37ea24509813efce6} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+a2} = nullptr
+\item 
+\Hypertarget{structllama__layer_a22eb1059cbecb2a4f189c264fb650ee6}\label{structllama__layer_a22eb1059cbecb2a4f189c264fb650ee6} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+v0} = nullptr
+\item 
+\Hypertarget{structllama__layer_a168790fb49a4a436dc5cf02887a3e6ad}\label{structllama__layer_a168790fb49a4a436dc5cf02887a3e6ad} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+v1} = nullptr
+\item 
+\Hypertarget{structllama__layer_ac7f1177a3c7409957def62355d9e3d60}\label{structllama__layer_ac7f1177a3c7409957def62355d9e3d60} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+v2} = nullptr
+\item 
+\Hypertarget{structllama__layer_a367847e9d0eb80f105cef91c8856a02b}\label{structllama__layer_a367847e9d0eb80f105cef91c8856a02b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+g1} = nullptr
+\item 
+\Hypertarget{structllama__layer_a2691325de8219cd6e4723074a12d6b3d}\label{structllama__layer_a2691325de8219cd6e4723074a12d6b3d} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+g2} = nullptr
+\item 
+\Hypertarget{structllama__layer_aaeedf1f289d6d18374fc303ebf067d07}\label{structllama__layer_aaeedf1f289d6d18374fc303ebf067d07} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+k\+\_\+k} = nullptr
+\item 
+\Hypertarget{structllama__layer_a5ac58beb2689390dd6f24cb7285be49b}\label{structllama__layer_a5ac58beb2689390dd6f24cb7285be49b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+k\+\_\+a} = nullptr
+\item 
+\Hypertarget{structllama__layer_a24feed3d777159289d2c5d67714a2ca9}\label{structllama__layer_a24feed3d777159289d2c5d67714a2ca9} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+r\+\_\+k} = nullptr
+\item 
+\Hypertarget{structllama__layer_a195ee304eeebc3c111be3712e94ca41d}\label{structllama__layer_a195ee304eeebc3c111be3712e94ca41d} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+ln} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae99cccac0b9361c73b09f413e2691fa0}\label{structllama__layer_ae99cccac0b9361c73b09f413e2691fa0} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+ln\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_ab21f2cc24c91df79c8f550d7de194940}\label{structllama__layer_ab21f2cc24c91df79c8f550d7de194940} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries time\+\_\+mix\+\_\+output} = nullptr
+\item 
+\Hypertarget{structllama__layer_af9b9bb5668b4456e6f62066c5e76c9b6}\label{structllama__layer_af9b9bb5668b4456e6f62066c5e76c9b6} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries channel\+\_\+mix\+\_\+lerp\+\_\+k} = nullptr
+\item 
+\Hypertarget{structllama__layer_a2013dd8b079dbc3b0f15deedb9e03756}\label{structllama__layer_a2013dd8b079dbc3b0f15deedb9e03756} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries channel\+\_\+mix\+\_\+lerp\+\_\+r} = nullptr
+\item 
+\Hypertarget{structllama__layer_a901d94bcc4a34488c54ea9bcbb9ffaf8}\label{structllama__layer_a901d94bcc4a34488c54ea9bcbb9ffaf8} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries channel\+\_\+mix\+\_\+key} = nullptr
+\item 
+\Hypertarget{structllama__layer_aadea16bd15a0febaa2641a772dda953b}\label{structllama__layer_aadea16bd15a0febaa2641a772dda953b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries channel\+\_\+mix\+\_\+receptance} = nullptr
+\item 
+\Hypertarget{structllama__layer_a437fa0e8c83dcb765cfddf099531ff0b}\label{structllama__layer_a437fa0e8c83dcb765cfddf099531ff0b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries channel\+\_\+mix\+\_\+value} = nullptr
+\item 
+\Hypertarget{structllama__layer_a187102a4cca0eb502b4f140c477a59a2}\label{structllama__layer_a187102a4cca0eb502b4f140c477a59a2} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries rope\+\_\+long} = nullptr
+\item 
+\Hypertarget{structllama__layer_af578279cdb1d95286493cebcdf948b6b}\label{structllama__layer_af578279cdb1d95286493cebcdf948b6b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries rope\+\_\+short} = nullptr
+\item 
+\Hypertarget{structllama__layer_aca71725e11b810c69972918762657abd}\label{structllama__layer_aca71725e11b810c69972918762657abd} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries rope\+\_\+freqs} = nullptr
+\item 
+\Hypertarget{structllama__layer_a5fb313e3689e140bba1acbe4b8026fd4}\label{structllama__layer_a5fb313e3689e140bba1acbe4b8026fd4} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wq\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a3de81ae96f39bff5625522269eb4d617}\label{structllama__layer_a3de81ae96f39bff5625522269eb4d617} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wk\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a3fd823482682ae6ff2d572d3b7c1529a}\label{structllama__layer_a3fd823482682ae6ff2d572d3b7c1529a} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wv\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a4ac3febaab40e284c8c68381beeeeaba}\label{structllama__layer_a4ac3febaab40e284c8c68381beeeeaba} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wo\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a1a17ede261a62ef1fbac8726d6bce998}\label{structllama__layer_a1a17ede261a62ef1fbac8726d6bce998} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wqkv\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a48ab1f359f34bd7857255b1832560f5b}\label{structllama__layer_a48ab1f359f34bd7857255b1832560f5b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries wqkv\+\_\+gate\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a9f13257b09bc25bb54d8bca37185a65e}\label{structllama__layer_a9f13257b09bc25bb54d8bca37185a65e} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a1238a343896a826a694d94f6657c9b2d}\label{structllama__layer_a1238a343896a826a694d94f6657c9b2d} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a1c9e09370e63371b4fa4b24e8b55c16f}\label{structllama__layer_a1c9e09370e63371b4fa4b24e8b55c16f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa72c6af703cca12409de6f709207cedc}\label{structllama__layer_aa72c6af703cca12409de6f709207cedc} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+gate\+\_\+shexp\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a8fb399fa67303df41c1875ea1fb753c2}\label{structllama__layer_a8fb399fa67303df41c1875ea1fb753c2} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+up\+\_\+shexp\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_adba5c2b91dce221bd4def53a79b0331c}\label{structllama__layer_adba5c2b91dce221bd4def53a79b0331c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+down\+\_\+shexp\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_ad1f256fa50f0fd6a5f8d3f181ab82293}\label{structllama__layer_ad1f256fa50f0fd6a5f8d3f181ab82293} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+out\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa33ba44ff3897fe1d621b685bc7aa317}\label{structllama__layer_aa33ba44ff3897fe1d621b685bc7aa317} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+alpha\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_ad6a5f0bd132ba4e6ec034abb356e1925}\label{structllama__layer_ad6a5f0bd132ba4e6ec034abb356e1925} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+beta\+\_\+s} = nullptr
+\item 
+\Hypertarget{structllama__layer_a37f1161904276f693774ecc19b1612e1}\label{structllama__layer_a37f1161904276f693774ecc19b1612e1} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries per\+\_\+layer\+\_\+inp\+\_\+gate} = nullptr
+\item 
+\Hypertarget{structllama__layer_a2b7ff6d7626c47259dc45f536168641b}\label{structllama__layer_a2b7ff6d7626c47259dc45f536168641b} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries per\+\_\+layer\+\_\+proj} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae2d8e5213dd0f67f0f7483b3ba9de138}\label{structllama__layer_ae2d8e5213dd0f67f0f7483b3ba9de138} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries per\+\_\+layer\+\_\+post\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a6c5af06e264a6a9a193b1b444713a56d}\label{structllama__layer_a6c5af06e264a6a9a193b1b444713a56d} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries altup\+\_\+correct\+\_\+coef} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa12a065f8bbcc8b45db435f18b008f9e}\label{structllama__layer_aa12a065f8bbcc8b45db435f18b008f9e} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries altup\+\_\+correct\+\_\+scale} = nullptr
+\item 
+\Hypertarget{structllama__layer_a527edf315bc40c6795c3ebb95ef8b503}\label{structllama__layer_a527edf315bc40c6795c3ebb95ef8b503} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries altup\+\_\+predict\+\_\+coef} = nullptr
+\item 
+\Hypertarget{structllama__layer_af03b0d1479161d73a8a402d20919e4d1}\label{structllama__layer_af03b0d1479161d73a8a402d20919e4d1} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries altup\+\_\+router} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae0f6c91b539e3fe2f134fdafd365ee97}\label{structllama__layer_ae0f6c91b539e3fe2f134fdafd365ee97} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries altup\+\_\+router\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a1305fcbddc26417ee3fac9868b7bcddb}\label{structllama__layer_a1305fcbddc26417ee3fac9868b7bcddb} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries laurel\+\_\+l} = nullptr
+\item 
+\Hypertarget{structllama__layer_af0b5dbe7fa4778f6d2d5bf6d40bbd5f7}\label{structllama__layer_af0b5dbe7fa4778f6d2d5bf6d40bbd5f7} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries laurel\+\_\+r} = nullptr
+\item 
+\Hypertarget{structllama__layer_a436dcd6bb4a848954d93a329c3bfa89c}\label{structllama__layer_a436dcd6bb4a848954d93a329c3bfa89c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries laurel\+\_\+post\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_acaab9ab179f3f41703cf46fbec0e86e1}\label{structllama__layer_acaab9ab179f3f41703cf46fbec0e86e1} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries attn\+\_\+sinks} = nullptr
+\item 
+\Hypertarget{structllama__layer_ab7b8b04b9ab2bb42767dd440b2a96724}\label{structllama__layer_ab7b8b04b9ab2bb42767dd440b2a96724} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries visexp\+\_\+attn\+\_\+wqkv} = nullptr
+\item 
+\Hypertarget{structllama__layer_a044a3d89c2bdd74f3f639affb391d882}\label{structllama__layer_a044a3d89c2bdd74f3f639affb391d882} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries visexp\+\_\+attn\+\_\+wo} = nullptr
+\item 
+\Hypertarget{structllama__layer_a43c67429cdf47b64aa7a83d5b71f6ac8}\label{structllama__layer_a43c67429cdf47b64aa7a83d5b71f6ac8} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries visexp\+\_\+ffn\+\_\+gate} = nullptr
+\item 
+\Hypertarget{structllama__layer_a06f9eadc3228501bd55201b0f1b3002a}\label{structllama__layer_a06f9eadc3228501bd55201b0f1b3002a} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries visexp\+\_\+ffn\+\_\+down} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae36f67c2cf678823290e031576d53a14}\label{structllama__layer_ae36f67c2cf678823290e031576d53a14} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries visexp\+\_\+ffn\+\_\+up} = nullptr
+\item 
+\Hypertarget{structllama__layer_a4f63e16c6b7dc85995423faa0aa60058}\label{structllama__layer_a4f63e16c6b7dc85995423faa0aa60058} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+act\+\_\+alpha\+\_\+n} = nullptr
+\item 
+\Hypertarget{structllama__layer_af727deace8928005f266669365fe107e}\label{structllama__layer_af727deace8928005f266669365fe107e} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+act\+\_\+alpha\+\_\+p} = nullptr
+\item 
+\Hypertarget{structllama__layer_a30359ba9199a13da5047f381e6469e28}\label{structllama__layer_a30359ba9199a13da5047f381e6469e28} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+act\+\_\+beta} = nullptr
+\item 
+\Hypertarget{structllama__layer_a7795f9550abe874baaeab5bc792f9f4c}\label{structllama__layer_a7795f9550abe874baaeab5bc792f9f4c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ffn\+\_\+act\+\_\+eps} = nullptr
+\item 
+\Hypertarget{structllama__layer_a112bac4100ca0cc7685631ecc8450994}\label{structllama__layer_a112bac4100ca0cc7685631ecc8450994} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+q\+\_\+conv} = nullptr
+\item 
+\Hypertarget{structllama__layer_ade6ed3312c925b850261db29842f1355}\label{structllama__layer_ade6ed3312c925b850261db29842f1355} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+k\+\_\+conv} = nullptr
+\item 
+\Hypertarget{structllama__layer_a0308e82902721640307544ae0a58ef87}\label{structllama__layer_a0308e82902721640307544ae0a58ef87} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+v\+\_\+conv} = nullptr
+\item 
+\Hypertarget{structllama__layer_aa9f2e8e4bfb37ba0f4444871a8b8697c}\label{structllama__layer_aa9f2e8e4bfb37ba0f4444871a8b8697c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+f\+\_\+a} = nullptr
+\item 
+\Hypertarget{structllama__layer_a90dfa702048db72116378a570da36966}\label{structllama__layer_a90dfa702048db72116378a570da36966} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+f\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a572f73d4dd03610498d33db3307a879f}\label{structllama__layer_a572f73d4dd03610498d33db3307a879f} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+beta} = nullptr
+\item 
+\Hypertarget{structllama__layer_a46ac43088a22315eafa125237e9c6afc}\label{structllama__layer_a46ac43088a22315eafa125237e9c6afc} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+g\+\_\+a} = nullptr
+\item 
+\Hypertarget{structllama__layer_a39f0acf433f916a7fe8caf55fb014a45}\label{structllama__layer_a39f0acf433f916a7fe8caf55fb014a45} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+g\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a75bf02dde3c4387d1919dcb37e87607c}\label{structllama__layer_a75bf02dde3c4387d1919dcb37e87607c} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries ssm\+\_\+o\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_a6712fe238e34d8d0f2b6308be9ab3f83}\label{structllama__layer_a6712fe238e34d8d0f2b6308be9ab3f83} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries indexer\+\_\+k\+\_\+norm} = nullptr
+\item 
+\Hypertarget{structllama__layer_ac0a59d7d4e07871db61cff1abab1c7e8}\label{structllama__layer_ac0a59d7d4e07871db61cff1abab1c7e8} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries indexer\+\_\+k\+\_\+norm\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_a55ec00b66cbf092eb26433fdd68c10be}\label{structllama__layer_a55ec00b66cbf092eb26433fdd68c10be} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries indexer\+\_\+proj} = nullptr
+\item 
+\Hypertarget{structllama__layer_a683ab7468bbd652ca6dbd276829d7cab}\label{structllama__layer_a683ab7468bbd652ca6dbd276829d7cab} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries indexer\+\_\+attn\+\_\+k} = nullptr
+\item 
+\Hypertarget{structllama__layer_a3a504f6cd26cd98f05ae56d224a085e4}\label{structllama__layer_a3a504f6cd26cd98f05ae56d224a085e4} 
+struct \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries indexer\+\_\+attn\+\_\+q\+\_\+b} = nullptr
+\item 
+\Hypertarget{structllama__layer_ae6ea652c379de770ffc91fc85343070b}\label{structllama__layer_ae6ea652c379de770ffc91fc85343070b} 
+struct \doxymbox{\hyperlink{structllama__layer__posnet}{llama\+\_\+layer\+\_\+posnet}} {\bfseries posnet}
+\item 
+\Hypertarget{structllama__layer_aa3bd508229c5d65bcf01a1b16374eca2}\label{structllama__layer_aa3bd508229c5d65bcf01a1b16374eca2} 
+struct \doxymbox{\hyperlink{structllama__layer__convnext}{llama\+\_\+layer\+\_\+convnext}} {\bfseries convnext}
+\item 
+\Hypertarget{structllama__layer_a01d6f525e5d8dc12761dd77f3f84923b}\label{structllama__layer_a01d6f525e5d8dc12761dd77f3f84923b} 
+struct \doxymbox{\hyperlink{structllama__layer__shortconv}{llama\+\_\+layer\+\_\+shortconv}} {\bfseries shortconv}
+\item 
+\Hypertarget{structllama__layer_af8ad52edc1d2bc283cab93879deb86e4}\label{structllama__layer_af8ad52edc1d2bc283cab93879deb86e4} 
+struct \doxymbox{\hyperlink{structllama__layer__nextn}{llama\+\_\+layer\+\_\+nextn}} {\bfseries nextn}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/model.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,34 @@
+\doxysection{vk\+\_\+perf\+\_\+logger Class Reference}
+\hypertarget{classvk__perf__logger}{}\label{classvk__perf__logger}\index{vk\_perf\_logger@{vk\_perf\_logger}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classvk__perf__logger_a819de6f8c231b6f466f7b99591517fbe}\label{classvk__perf__logger_a819de6f8c231b6f466f7b99591517fbe} 
+void {\bfseries print\+\_\+timings} (bool force=false)
+\item 
+\Hypertarget{classvk__perf__logger_af76d0b3bfd4dda001bd77e3b47d2053d}\label{classvk__perf__logger_af76d0b3bfd4dda001bd77e3b47d2053d} 
+std::\+string {\bfseries get\+\_\+node\+\_\+fusion\+\_\+name} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}node, const char \texorpdfstring{$\ast$}{*}fusion\+\_\+name, uint64\+\_\+t \texorpdfstring{$\ast$}{*}n\+\_\+flops)
+\item 
+\Hypertarget{classvk__perf__logger_aab6cf3559273080174211dc32fd6ccf9}\label{classvk__perf__logger_aab6cf3559273080174211dc32fd6ccf9} 
+void {\bfseries log\+\_\+timing} (const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*}node, const char \texorpdfstring{$\ast$}{*}fusion\+\_\+name, uint64\+\_\+t time)
+\item 
+\Hypertarget{classvk__perf__logger_a4f1d77f00247549e82155e11a8c89acd}\label{classvk__perf__logger_a4f1d77f00247549e82155e11a8c89acd} 
+void {\bfseries log\+\_\+timing} (const std::\+vector$<$ \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ \&nodes, const std::\+vector$<$ const char \texorpdfstring{$\ast$}{*} $>$ \&names, uint64\+\_\+t time)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classvk__perf__logger_a99f29e527c1b95550ac5a48a025ae594}\label{classvk__perf__logger_a99f29e527c1b95550ac5a48a025ae594} 
+std::\+map$<$ std::\+string, std::\+vector$<$ uint64\+\_\+t $>$ $>$ {\bfseries timings}
+\item 
+\Hypertarget{classvk__perf__logger_a836b4825894e20b00a143df8b6cdacb6}\label{classvk__perf__logger_a836b4825894e20b00a143df8b6cdacb6} 
+std::\+map$<$ std::\+string, std::\+vector$<$ uint64\+\_\+t $>$ $>$ {\bfseries flops}
+\item 
+\Hypertarget{classvk__perf__logger_afe9180116d815d9a167706f15a3b73a9}\label{classvk__perf__logger_afe9180116d815d9a167706f15a3b73a9} 
+uint32\+\_\+t {\bfseries print\+\_\+count} \{\}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/vulkan/\+ggml-\/vulkan.\+cpp\end{DoxyCompactItemize}

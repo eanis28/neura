@@ -1,0 +1,379 @@
+\doxysection{ggml-\/backend.h}
+\hypertarget{ggml-backend_8h_source}{}\label{ggml-backend_8h_source}\index{whisper.cpp/ggml/include/ggml-\/backend.h@{whisper.cpp/ggml/include/ggml-\/backend.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml-\/alloc.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifdef\ GGML\_BACKEND\_SHARED}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#\ \ \ \ if\ defined(\_WIN32)\ \&\&\ !defined(\_\_MINGW32\_\_)}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ ifdef\ GGML\_BACKEND\_BUILD}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ define\ GGML\_BACKEND\_API\ \_\_declspec(dllexport)\ extern}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ define\ GGML\_BACKEND\_API\ \_\_declspec(dllimport)\ extern}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ GGML\_BACKEND\_API\ \_\_attribute\_\_\ ((visibility\ ("{}default"{})))\ extern}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ \ \ \ define\ GGML\_BACKEND\_API\ extern}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__buffer__type}{ggml\_backend\_buffer\_type}}\ *\ ggml\_backend\_buffer\_type\_t;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__buffer}{ggml\_backend\_buffer}}\ *\ ggml\_backend\_buffer\_t;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__event}{ggml\_backend\_event}}\ *\ ggml\_backend\_event\_t;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend}{ggml\_backend}}\ *\ ggml\_backend\_t;}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *\ ggml\_backend\_graph\_plan\_t;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__reg}{ggml\_backend\_reg}}\ *\ ggml\_backend\_reg\_t;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__device}{ggml\_backend\_device}}\ *\ ggml\_backend\_dev\_t;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ Backend\ buffer\ type}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ ggml\_backend\_buft\_name\ \ \ \ \ \ \ \ \ \ (ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00038\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_t\ ggml\_backend\_buft\_alloc\_buffer\ \ (ggml\_backend\_buffer\_type\_t\ buft,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00039\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buft\_get\_alignment\ (ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00040\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buft\_get\_max\_size\ \ (ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00041\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buft\_get\_alloc\_size(ggml\_backend\_buffer\_type\_t\ buft,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00042\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buft\_is\_host\ \ \ \ \ \ \ (ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00043\ \ \ \ \ GGML\_API\ ggml\_backend\_dev\_t\ \ \ \ ggml\_backend\_buft\_get\_device\ \ \ \ (ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//\ Backend\ buffer}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_backend\_buffer\_usage\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ GGML\_BACKEND\_BUFFER\_USAGE\_ANY\ =\ 0,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ GGML\_BACKEND\_BUFFER\_USAGE\_WEIGHTS\ =\ 1,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ GGML\_BACKEND\_BUFFER\_USAGE\_COMPUTE\ =\ 2,}
+\DoxyCodeLine{00053\ \ \ \ \ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_name\ \ \ \ \ \ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00056\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_free\ \ \ \ \ \ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00057\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_get\_base\ \ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00058\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_get\_size\ \ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00059\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_status\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_init\_tensor\ \ \ (ggml\_backend\_buffer\_t\ buffer,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00060\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_get\_alignment\ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00061\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_get\_max\_size\ \ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00062\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_get\_alloc\_size(ggml\_backend\_buffer\_t\ buffer,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00063\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_clear\ \ \ \ \ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer,\ uint8\_t\ value);}
+\DoxyCodeLine{00064\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_is\_host\ \ \ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00065\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_set\_usage\ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer,\ \textcolor{keyword}{enum}\ ggml\_backend\_buffer\_usage\ usage);}
+\DoxyCodeLine{00066\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_backend\_buffer\_usage\ ggml\_backend\_buffer\_get\_usage\ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00067\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_type\_t\ \ \ \ \ ggml\_backend\_buffer\_get\_type\ \ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00068\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_reset\ \ \ \ \ \ \ \ \ (ggml\_backend\_buffer\_t\ buffer);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ tensor\ copy\ between\ different\ backends}}
+\DoxyCodeLine{00071\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_tensor\_copy(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ Backend\ (stream)}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ GGML\_API\ ggml\_guid\_t\ \ ggml\_backend\_guid(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00078\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ ggml\_backend\_name(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00079\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ ggml\_backend\_free(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_get\_default\_buffer\_type(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00082\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_t\ \ \ \ \ \ ggml\_backend\_alloc\_buffer(ggml\_backend\_t\ backend,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00083\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_get\_alignment(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00084\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_get\_max\_size(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_tensor\_set\_async(ggml\_backend\_t\ backend,\ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00087\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_tensor\_get\_async(ggml\_backend\_t\ backend,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ "{}offset"{}\ refers\ to\ the\ offset\ in\ tensor-\/>data\ for\ setting/getting\ data}}
+\DoxyCodeLine{00090\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_tensor\_set(\ \ \ \ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00091\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_tensor\_get(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00092\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_tensor\_memset(\ \ \ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \ \ \ \ uint8\_t\ value,\ \textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_synchronize(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ GGML\_API\ ggml\_backend\_graph\_plan\_t\ ggml\_backend\_graph\_plan\_create(ggml\_backend\_t\ backend,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph);}
+\DoxyCodeLine{00097\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_graph\_plan\_free\ \ (ggml\_backend\_t\ backend,\ ggml\_backend\_graph\_plan\_t\ plan);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_status\ ggml\_backend\_graph\_plan\_compute\ (ggml\_backend\_t\ backend,\ ggml\_backend\_graph\_plan\_t\ plan);}
+\DoxyCodeLine{00100\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_status\ ggml\_backend\_graph\_compute\ \ \ \ \ \ (ggml\_backend\_t\ backend,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph);}
+\DoxyCodeLine{00101\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_status\ ggml\_backend\_graph\_compute\_async(ggml\_backend\_t\ backend,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ NOTE:\ will\ be\ removed,\ use\ device\ version\ instead}}
+\DoxyCodeLine{00104\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_supports\_op(ggml\_backend\_t\ backend,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00105\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_supports\_buft(ggml\_backend\_t\ backend,\ ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00106\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_offload\_op(ggml\_backend\_t\ backend,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ asynchronous\ copy}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//\ the\ copy\ is\ performed\ after\ all\ the\ currently\ queued\ operations\ in\ backend\_src}}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{//\ backend\_dst\ will\ wait\ for\ the\ copy\ to\ complete\ before\ performing\ other\ operations}}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{//\ automatic\ fallback\ to\ sync\ copy\ if\ async\ is\ not\ supported}}
+\DoxyCodeLine{00112\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_tensor\_copy\_async(ggml\_backend\_t\ backend\_src,\ ggml\_backend\_t\ backend\_dst,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ src,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ GGML\_API\ ggml\_backend\_dev\_t\ ggml\_backend\_get\_device(ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{comment}{//\ Events}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ GGML\_API\ ggml\_backend\_event\_t\ ggml\_backend\_event\_new(ggml\_backend\_dev\_t\ device);}
+\DoxyCodeLine{00121\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_event\_free(ggml\_backend\_event\_t\ event);}
+\DoxyCodeLine{00122\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_event\_record(ggml\_backend\_event\_t\ event,\ ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00123\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_event\_synchronize(ggml\_backend\_event\_t\ event);}
+\DoxyCodeLine{00124\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_event\_wait(ggml\_backend\_t\ backend,\ ggml\_backend\_event\_t\ event);}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{comment}{//\ Backend\ device}}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_backend\_dev\_type\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ CPU\ device\ using\ system\ memory}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ GGML\_BACKEND\_DEVICE\_TYPE\_CPU,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ GPU\ device\ using\ dedicated\ memory}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ GGML\_BACKEND\_DEVICE\_TYPE\_GPU,}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ integrated\ GPU\ device\ using\ host\ memory}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ GGML\_BACKEND\_DEVICE\_TYPE\_IGPU,}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ accelerator\ devices\ intended\ to\ be\ used\ together\ with\ the\ CPU\ backend\ (e.g.\ BLAS\ or\ AMX)}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ GGML\_BACKEND\_DEVICE\_TYPE\_ACCEL}
+\DoxyCodeLine{00139\ \ \ \ \ \};}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{//\ functionality\ supported\ by\ the\ device}}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__dev__caps}{ggml\_backend\_dev\_caps}}\ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ asynchronous\ operations}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ async;}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pinned\ host\ buffer}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ host\_buffer;}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ creating\ buffers\ from\ host\ ptr}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ buffer\_from\_host\_ptr;}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ event\ synchronization}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ events;}
+\DoxyCodeLine{00151\ \ \ \ \ \};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{comment}{//\ all\ the\ device\ properties}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__dev__props}{ggml\_backend\_dev\_props}}\ \{}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ device\ name}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ device\ description}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ description;}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ device\ free\ memory\ in\ bytes}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ memory\_free;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ device\ total\ memory\ in\ bytes}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ memory\_total;}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ device\ type}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_backend\_dev\_type\ type;}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ device\ id}}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ for\ PCI\ devices,\ this\ should\ be\ the\ PCI\ bus\ id\ formatted\ as\ "{}domain:bus:device.function"{}\ (e.g.\ "{}0000:01:00.0"{})}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ if\ the\ id\ is\ unknown,\ this\ should\ be\ NULL}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ device\_id;}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ device\ capabilities}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__dev__caps}{ggml\_backend\_dev\_caps}}\ caps;}
+\DoxyCodeLine{00171\ \ \ \ \ \};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_name(ggml\_backend\_dev\_t\ device);}
+\DoxyCodeLine{00174\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_description(ggml\_backend\_dev\_t\ device);}
+\DoxyCodeLine{00175\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_memory(ggml\_backend\_dev\_t\ device,\ \textcolor{keywordtype}{size\_t}\ *\ free,\ \textcolor{keywordtype}{size\_t}\ *\ total);}
+\DoxyCodeLine{00176\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_backend\_dev\_type\ \ \ \ ggml\_backend\_dev\_type(ggml\_backend\_dev\_t\ device);}
+\DoxyCodeLine{00177\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_get\_props(ggml\_backend\_dev\_t\ device,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__backend__dev__props}{ggml\_backend\_dev\_props}}\ *\ props);}
+\DoxyCodeLine{00178\ \ \ \ \ GGML\_API\ ggml\_backend\_reg\_t\ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_backend\_reg(ggml\_backend\_dev\_t\ device);}
+\DoxyCodeLine{00179\ \ \ \ \ GGML\_API\ ggml\_backend\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_init(ggml\_backend\_dev\_t\ device,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ params);}
+\DoxyCodeLine{00180\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_type\_t\ \ \ \ ggml\_backend\_dev\_buffer\_type(ggml\_backend\_dev\_t\ device);}
+\DoxyCodeLine{00181\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_type\_t\ \ \ \ ggml\_backend\_dev\_host\_buffer\_type(ggml\_backend\_dev\_t\ device);}
+\DoxyCodeLine{00182\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_t\ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_buffer\_from\_host\_ptr(ggml\_backend\_dev\_t\ device,\ \textcolor{keywordtype}{void}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{size\_t}\ max\_tensor\_size);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_supports\_op(ggml\_backend\_dev\_t\ device,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00185\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_supports\_buft(ggml\_backend\_dev\_t\ device,\ ggml\_backend\_buffer\_type\_t\ buft);}
+\DoxyCodeLine{00186\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_offload\_op(ggml\_backend\_dev\_t\ device,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{comment}{//\ Backend\ (reg)}}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ GGML\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ \ \ \ \ \ ggml\_backend\_reg\_name(ggml\_backend\_reg\_t\ reg);}
+\DoxyCodeLine{00193\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_reg\_dev\_count(ggml\_backend\_reg\_t\ reg);}
+\DoxyCodeLine{00194\ \ \ \ \ GGML\_API\ ggml\_backend\_dev\_t\ ggml\_backend\_reg\_dev\_get(ggml\_backend\_reg\_t\ reg,\ \textcolor{keywordtype}{size\_t}\ index);}
+\DoxyCodeLine{00195\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_reg\_get\_proc\_address(ggml\_backend\_reg\_t\ reg,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name);}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{comment}{//\ Common\ functions\ that\ may\ be\ obtained\ using\ ggml\_backend\_reg\_get\_proc\_address}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{comment}{//\ Split\ buffer\ type\ for\ tensor\ parallelism}}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{typedef}\ ggml\_backend\_buffer\_type\_t\ \ \ (*ggml\_backend\_split\_buffer\_type\_t)(\textcolor{keywordtype}{int}\ main\_device,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ tensor\_split);}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{comment}{//\ Set\ the\ number\ of\ threads\ for\ the\ backend}}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keyword}{typedef}\ void\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*ggml\_backend\_set\_n\_threads\_t)(ggml\_backend\_t\ backend,\ \textcolor{keywordtype}{int}\ n\_threads);}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ Get\ additional\ buffer\ types\ provided\ by\ the\ device\ (returns\ a\ NULL-\/terminated\ array)}}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keyword}{typedef}\ ggml\_backend\_buffer\_type\_t\ *\ (*ggml\_backend\_dev\_get\_extra\_bufts\_t)(ggml\_backend\_dev\_t\ device);}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{comment}{//\ Set\ the\ abort\ callback\ for\ the\ backend}}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{typedef}\ void\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*ggml\_backend\_set\_abort\_callback\_t)(ggml\_backend\_t\ backend,\ ggml\_abort\_callback\ abort\_callback,\ \textcolor{keywordtype}{void}\ *\ abort\_callback\_data);}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{comment}{//\ Get\ a\ list\ of\ feature\ flags\ supported\ by\ the\ backend\ (returns\ a\ NULL-\/terminated\ array)}}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__feature}{ggml\_backend\_feature}}\ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name;}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ value;}
+\DoxyCodeLine{00211\ \ \ \ \ \};}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__feature}{ggml\_backend\_feature}}\ *\ (*ggml\_backend\_get\_features\_t)(ggml\_backend\_reg\_t\ reg);}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{comment}{//\ Backend\ registry}}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_register(ggml\_backend\_reg\_t\ reg);}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_backend\_device\_register(ggml\_backend\_dev\_t\ device);}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{comment}{//\ Backend\ (reg)\ enumeration}}
+\DoxyCodeLine{00223\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_reg\_count(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00224\ \ \ \ \ GGML\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_reg\_get(\textcolor{keywordtype}{size\_t}\ index);}
+\DoxyCodeLine{00225\ \ \ \ \ GGML\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_reg\_by\_name(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name);}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{comment}{//\ Device\ enumeration}}
+\DoxyCodeLine{00228\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_dev\_count(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00229\ \ \ \ \ GGML\_API\ ggml\_backend\_dev\_t\ ggml\_backend\_dev\_get(\textcolor{keywordtype}{size\_t}\ index);}
+\DoxyCodeLine{00230\ \ \ \ \ GGML\_API\ ggml\_backend\_dev\_t\ ggml\_backend\_dev\_by\_name(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name);}
+\DoxyCodeLine{00231\ \ \ \ \ GGML\_API\ ggml\_backend\_dev\_t\ ggml\_backend\_dev\_by\_type(\textcolor{keyword}{enum}\ ggml\_backend\_dev\_type\ type);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{comment}{//\ Direct\ backend\ (stream)\ initialization}}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{comment}{//\ =\ ggml\_backend\_dev\_init(ggml\_backend\_dev\_by\_name(name),\ params)}}
+\DoxyCodeLine{00235\ \ \ \ \ GGML\_API\ ggml\_backend\_t\ ggml\_backend\_init\_by\_name(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ params);}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{comment}{//\ =\ ggml\_backend\_dev\_init(ggml\_backend\_dev\_by\_type(type),\ params)}}
+\DoxyCodeLine{00237\ \ \ \ \ GGML\_API\ ggml\_backend\_t\ ggml\_backend\_init\_by\_type(\textcolor{keyword}{enum}\ ggml\_backend\_dev\_type\ type,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ params);}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{comment}{//\ =\ ggml\_backend\_dev\_init(ggml\_backend\_dev\_by\_type(GPU)\ OR\ ggml\_backend\_dev\_by\_type(CPU),\ NULL)}}
+\DoxyCodeLine{00239\ \ \ \ \ GGML\_API\ ggml\_backend\_t\ ggml\_backend\_init\_best(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{comment}{//\ Load\ a\ backend\ from\ a\ dynamic\ library\ and\ register\ it}}
+\DoxyCodeLine{00242\ \ \ \ \ GGML\_API\ ggml\_backend\_reg\_t\ ggml\_backend\_load(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ path);}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{comment}{//\ Unload\ a\ backend\ if\ loaded\ dynamically\ and\ unregister\ it}}
+\DoxyCodeLine{00244\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_unload(ggml\_backend\_reg\_t\ reg);}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{comment}{//\ Load\ all\ known\ backends\ from\ dynamic\ libraries}}
+\DoxyCodeLine{00246\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_load\_all(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00247\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_load\_all\_from\_path(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ dir\_path);}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{comment}{//\ Backend\ scheduler}}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{//\ The\ backend\ scheduler\ allows\ for\ multiple\ backend\ devices\ to\ be\ used\ together}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{comment}{//\ Handles\ compute\ buffer\ allocation,\ assignment\ of\ tensors\ to\ backends,\ and\ copying\ of\ tensors\ between\ backends}}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{comment}{//\ The\ backends\ are\ selected\ based\ on:}}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{comment}{//\ -\/\ the\ backend\ that\ supports\ the\ operation}}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{comment}{//\ -\/\ the\ location\ of\ the\ pre-\/allocated\ tensors\ (e.g.\ the\ weights)}}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00259\ \textcolor{comment}{\ \ \ \ \ \ Example\ usage:}}
+\DoxyCodeLine{00260\ \textcolor{comment}{}}
+\DoxyCodeLine{00261\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ operations\ that\ use\ tensors\ allocated\ in\ a\ buffer\ with\ USAGE\_WEIGHTS\ will\ be\ assigned}}
+\DoxyCodeLine{00262\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ preferably\ to\ run\ on\ the\ same\ backend\ as\ the\ buffer}}
+\DoxyCodeLine{00263\ \textcolor{comment}{\ \ \ \ \ \ \ \ ggml\_backend\_buffer\_set\_usage(buf\_weights,\ GGML\_BACKEND\_BUFFER\_USAGE\_WEIGHTS);}}
+\DoxyCodeLine{00264\ \textcolor{comment}{}}
+\DoxyCodeLine{00265\ \textcolor{comment}{\ \ \ \ \ \ \ \ sched\ =\ ggml\_backend\_sched\_new(\{backend\_gpu,\ backend\_gpu2,\ backend\_cpu\},\ NULL,\ num\_backends,\ GGML\_DEFAULT\_GRAPH\_SIZE,\ false,\ true);}}
+\DoxyCodeLine{00266\ \textcolor{comment}{}}
+\DoxyCodeLine{00267\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ initialize\ buffers\ from\ a\ max\ size\ graph\ (optional)}}
+\DoxyCodeLine{00268\ \textcolor{comment}{\ \ \ \ \ \ \ \ reserve\_graph\ =\ build\_graph(sched,\ max\_batch\_size);}}
+\DoxyCodeLine{00269\ \textcolor{comment}{}}
+\DoxyCodeLine{00270\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ manually\ assign\ nodes\ to\ a\ backend\ (optional,\ should\ not\ be\ needed\ in\ most\ cases)}}
+\DoxyCodeLine{00271\ \textcolor{comment}{\ \ \ \ \ \ \ \ struct\ ggml\_tensor\ *\ node\ =\ ggml\_mul\_mat(ctx,\ ...);}}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ \ \ \ \ \ \ \ ggml\_backend\_sched\_set\_tensor\_backend(sched,\ node,\ backend\_gpu);}}
+\DoxyCodeLine{00273\ \textcolor{comment}{}}
+\DoxyCodeLine{00274\ \textcolor{comment}{\ \ \ \ \ \ \ \ ggml\_backend\_sched\_reserve(sched,\ reserve\_graph);}}
+\DoxyCodeLine{00275\ \textcolor{comment}{}}
+\DoxyCodeLine{00276\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ compute}}
+\DoxyCodeLine{00277\ \textcolor{comment}{\ \ \ \ \ \ \ \ graph\ =\ build\_graph(sched);\ //\ the\ graph\ and\ its\ tensors\ are\ single-\/use\ in\ terms\ of\ allocation,\ multi-\/use\ in\ terms\ of\ computation}}
+\DoxyCodeLine{00278\ \textcolor{comment}{\ \ \ \ \ \ \ \ for\ (int\ i\ =\ 0;\ i\ <\ 10;\ ++i)\ \{}}
+\DoxyCodeLine{00279\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_graph\_compute(sched,\ graph);\ //\ on\ the\ first\ iteration\ the\ graph\ is\ allocated\ automatically}}
+\DoxyCodeLine{00280\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00281\ \textcolor{comment}{}}
+\DoxyCodeLine{00282\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ if\ there\ are\ graph\ inputs:}}
+\DoxyCodeLine{00283\ \textcolor{comment}{\ \ \ \ \ \ \ \ graph\ =\ build\_graph(sched);\ //\ get\ a\ new\ graph\ that\ is\ not\ allocated\ (the\ metadata\ for\ the\ old\ graph\ is\ freed\ once\ ggml\_free\ is\ called)}}
+\DoxyCodeLine{00284\ \textcolor{comment}{\ \ \ \ \ \ \ \ ggml\_backend\_sched\_reset(sched);\ //\ clear\ the\ allocation\ of\ the\ previous\ graph}}
+\DoxyCodeLine{00285\ \textcolor{comment}{\ \ \ \ \ \ \ \ ggml\_backend\_sched\_alloc\_graph(sched,\ graph);\ //\ explicitly\ allocate\ the\ new\ graph\ but\ do\ not\ execute\ it}}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ \ \ \ \ \ \ \ ggml\_backend\_tensor\_set(input\_tensor,\ ...);\ //\ copy\ data\ to\ the\ newly\ allocated\ graph\ tensors}}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ \ \ \ \ \ \ \ ggml\_backend\_sched\_graph\_compute(sched,\ graph);\ //\ execute\ the\ graph}}
+\DoxyCodeLine{00288\ \textcolor{comment}{}}
+\DoxyCodeLine{00289\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ as\ an\ alternative\ to\ the\ above\ it\ is\ also\ possible\ to\ assign\ the\ inputs\ to\ a\ dedicated\ context\ and}}
+\DoxyCodeLine{00290\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ allocate\ them\ statically\ via\ ggml\_backend\_alloc\_ctx\_tensors}}
+\DoxyCodeLine{00291\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00292\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__sched}{ggml\_backend\_sched}}\ *\ ggml\_backend\_sched\_t;}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{comment}{//\ Evaluation\ callback\ for\ each\ node\ in\ the\ graph\ (set\ with\ ggml\_backend\_sched\_set\_eval\_callback)}}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{comment}{//\ when\ ask\ ==\ true,\ the\ scheduler\ wants\ to\ know\ if\ the\ user\ wants\ to\ observe\ this\ node}}
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{comment}{//\ this\ allows\ the\ scheduler\ to\ batch\ nodes\ together\ in\ order\ to\ evaluate\ them\ in\ a\ single\ call}}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{comment}{//\ when\ ask\ ==\ false,\ the\ scheduler\ is\ passing\ the\ node\ tensor\ to\ the\ user\ for\ observation}}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{comment}{//\ if\ the\ user\ returns\ false,\ the\ scheduler\ will\ cancel\ the\ graph\ compute}}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keyword}{typedef}\ bool\ (*ggml\_backend\_sched\_eval\_callback)(\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t,\ \textcolor{keywordtype}{bool}\ ask,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{comment}{//\ Initialize\ a\ backend\ scheduler,\ backends\ with\ low\ index\ are\ given\ priority\ over\ backends\ with\ high\ index}}
+\DoxyCodeLine{00306\ \ \ \ \ GGML\_API\ ggml\_backend\_sched\_t\ ggml\_backend\_sched\_new(ggml\_backend\_t\ *\ backends,\ ggml\_backend\_buffer\_type\_t\ *\ bufts,\ \textcolor{keywordtype}{int}\ n\_backends,\ \textcolor{keywordtype}{size\_t}\ graph\_size,\ \textcolor{keywordtype}{bool}\ parallel,\ \textcolor{keywordtype}{bool}\ op\_offload);}
+\DoxyCodeLine{00307\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_free(ggml\_backend\_sched\_t\ sched);}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{comment}{//\ Initialize\ backend\ buffers\ from\ a\ measure\ graph}}
+\DoxyCodeLine{00310\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_reserve\_size(ggml\_backend\_sched\_t\ sched,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ measure\_graph,\ \textcolor{keywordtype}{size\_t}\ *\ sizes);}
+\DoxyCodeLine{00311\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_reserve(ggml\_backend\_sched\_t\ sched,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ measure\_graph);\ \textcolor{comment}{//\ returns\ success}}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_get\_n\_backends(ggml\_backend\_sched\_t\ sched);}
+\DoxyCodeLine{00314\ \ \ \ \ GGML\_API\ ggml\_backend\_t\ \ \ \ \ \ \ ggml\_backend\_sched\_get\_backend(ggml\_backend\_sched\_t\ sched,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ number\ of\ splits\ of\ the\ last\ graph}}
+\DoxyCodeLine{00317\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_get\_n\_splits(ggml\_backend\_sched\_t\ sched);}
+\DoxyCodeLine{00318\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_get\_n\_copies(ggml\_backend\_sched\_t\ sched);}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_sched\_get\_buffer\_type(ggml\_backend\_sched\_t\ sched,\ ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00321\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_get\_buffer\_size(ggml\_backend\_sched\_t\ sched,\ ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_set\_tensor\_backend(ggml\_backend\_sched\_t\ sched,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ node,\ ggml\_backend\_t\ backend);}
+\DoxyCodeLine{00324\ \ \ \ \ GGML\_API\ ggml\_backend\_t\ \ \ \ \ \ \ ggml\_backend\_sched\_get\_tensor\_backend(ggml\_backend\_sched\_t\ sched,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ node);}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{comment}{//\ Split\ graph\ without\ allocating\ it}}
+\DoxyCodeLine{00327\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_split\_graph(ggml\_backend\_sched\_t\ sched,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph);}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{comment}{//\ Allocate\ and\ compute\ graph\ on\ the\ backend\ scheduler}}
+\DoxyCodeLine{00330\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_alloc\_graph(ggml\_backend\_sched\_t\ sched,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph);\ \textcolor{comment}{//\ returns\ success}}
+\DoxyCodeLine{00331\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_status\ \ \ \ \ ggml\_backend\_sched\_graph\_compute(ggml\_backend\_sched\_t\ sched,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph);}
+\DoxyCodeLine{00332\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_status\ \ \ \ \ ggml\_backend\_sched\_graph\_compute\_async(ggml\_backend\_sched\_t\ sched,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph);}
+\DoxyCodeLine{00333\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_synchronize(ggml\_backend\_sched\_t\ sched);}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{comment}{//\ Reset\ all\ assignments\ and\ allocators\ -\/\ must\ be\ called\ before\ changing\ the\ node\ backends\ or\ allocating\ a\ new\ graph.}}
+\DoxyCodeLine{00336\ \ \ \ \ \textcolor{comment}{//\ This\ in\ effect\ deallocates\ all\ tensors\ that\ were\ previously\ allocated\ and\ leaves\ them\ with\ dangling\ pointers.}}
+\DoxyCodeLine{00337\ \ \ \ \ \textcolor{comment}{//\ The\ correct\ way\ to\ use\ this\ API\ is\ to\ discard\ the\ deallocated\ tensors\ and\ create\ new\ ones.}}
+\DoxyCodeLine{00338\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_reset(ggml\_backend\_sched\_t\ sched);}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{comment}{//\ Set\ a\ callback\ to\ be\ called\ for\ each\ resulting\ node\ during\ graph\ compute}}
+\DoxyCodeLine{00341\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_sched\_set\_eval\_callback(ggml\_backend\_sched\_t\ sched,\ ggml\_backend\_sched\_eval\_callback\ callback,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{comment}{//\ Utils}}
+\DoxyCodeLine{00345\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__graph__copy}{ggml\_backend\_graph\_copy}}\ \{}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ ggml\_backend\_buffer\_t\ buffer;}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx\_allocated;}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx\_unallocated;}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph;}
+\DoxyCodeLine{00352\ \ \ \ \ \};}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{comment}{//\ Copy\ a\ graph\ to\ a\ different\ backend}}
+\DoxyCodeLine{00355\ \ \ \ \ GGML\_API\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__graph__copy}{ggml\_backend\_graph\_copy}}\ \doxymbox{\hyperlink{structggml__backend__graph__copy}{ggml\_backend\_graph\_copy}}(ggml\_backend\_t\ backend,\ struct\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph);}
+\DoxyCodeLine{00356\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_backend\_graph\_copy\_free(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__backend__graph__copy}{ggml\_backend\_graph\_copy}}\ copy);}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keyword}{typedef}\ bool\ (*ggml\_backend\_eval\_callback)(\textcolor{keywordtype}{int}\ node\_index,\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t1,\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t2,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{comment}{//\ Compare\ the\ output\ of\ two\ backends}}
+\DoxyCodeLine{00361\ \ \ \ \ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_backend\_compare\_graph\_backend(ggml\_backend\_t\ backend1,\ ggml\_backend\_t\ backend2,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ graph,\ ggml\_backend\_eval\_callback\ callback,\ \textcolor{keywordtype}{void}\ *\ user\_data,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ *\ test\_nodes,\ \textcolor{keywordtype}{size\_t}\ num\_test\_nodes);}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{comment}{//\ Tensor\ initialization}}
+\DoxyCodeLine{00364\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_status\ ggml\_backend\_tensor\_alloc(ggml\_backend\_buffer\_t\ buffer,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{void}\ *\ addr);}
+\DoxyCodeLine{00365\ \ \ \ \ GGML\_API\ \textcolor{keyword}{enum}\ ggml\_status\ ggml\_backend\_view\_init(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor);}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{comment}{//\ CPU\ buffer\ types\ are\ always\ available}}
+\DoxyCodeLine{00368\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_t\ \ \ \ \ \ ggml\_backend\_cpu\_buffer\_from\_ptr(\textcolor{keywordtype}{void}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00369\ \ \ \ \ GGML\_API\ ggml\_backend\_buffer\_type\_t\ ggml\_backend\_cpu\_buffer\_type(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\#ifdef\ \ \_\_cplusplus}}
+\DoxyCodeLine{00372\ \}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

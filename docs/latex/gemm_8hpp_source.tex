@@ -1,0 +1,96 @@
+\doxysection{gemm.\+hpp}
+\hypertarget{gemm_8hpp_source}{}\label{gemm_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/gemm.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/gemm.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2024\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_GEMM\_HPP}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_GEMM\_HPP}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}ggml-\/sycl.h"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#if\ GGML\_SYCL\_DNNL}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}dnnl.hpp"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}dnnl\_sycl.hpp"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }DnnlGemmWrapper\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{using\ }dt\ =\ dnnl::memory::data\_type;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{using\ }tag\ =\ dnnl::memory::format\_tag;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ dt\ to\_dt()\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<T,\ float>)\ \textcolor{keywordflow}{return}\ dt::f32;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<T,\ sycl::half>)\ \textcolor{keywordflow}{return}\ dt::f16;}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keyword}{static\_assert}(0);}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ gemm(ggml\_backend\_sycl\_context\ \&\ ctx,\ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{int}\ k,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ a,\ dt\ at,\ dnnl\_dim\_t\ stra0,\ dnnl\_dim\_t\ stra1,\ dnnl\_dim\_t\ stra2,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ b,\ dt\ bt,\ dnnl\_dim\_t\ strb0,\ dnnl\_dim\_t\ strb1,\ dnnl\_dim\_t\ strb2,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\ c,\ dt\ ct,\ \textcolor{keyword}{const}\ queue\_ptr\ \&\ q,\ dnnl\_dim\_t\ batches\_a,\ dnnl\_dim\_t\ batches\_b)\ \{}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ stream\ =\ ctx.stream\_dnnl(q);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ eng\ =\ ctx.engine\_dnnl(q);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ dnnl::memory::dims\ a\_dims\ =\ \{batches\_a,\ m,\ k\ \};}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ dnnl::memory::dims\ a\_strides\ =\ \{stra2,\ stra1,\ stra0\};}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ a\_in\_md\ =\ dnnl::memory::desc(a\_dims,\ at,\ a\_strides);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ dnnl::memory::dims\ b\_dims\ =\ \{batches\_b,\ k,\ n\ \};}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ dnnl::memory::dims\ b\_strides\ =\ \{strb2,\ strb0,\ strb1\};}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ b\_in\_md\ =\ dnnl::memory::desc(b\_dims,\ bt,\ b\_strides);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ dnnl::memory::dims\ c\_dims\ =\ \{\ std::max(batches\_a,\ batches\_b),\ m,\ n\};}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ dnnl::memory::dims\ c\_strides\ =\ \{m*n,\ 1,\ \ m\ \};}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ c\_md\ \ \ \ =\ dnnl::memory::desc(c\_dims,\ ct,\ c\_strides);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ dnnl::primitive\_attr\ primitive\_attr;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ primitive\_attr.set\_scratchpad\_mode(dnnl::scratchpad\_mode::user);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#ifdef\ GGML\_SYCL\_F16}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ primitive\_attr.set\_fpmath\_mode(dnnl::fpmath\_mode::f16);}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ a\_mem\ =\ dnnl::memory(a\_in\_md,\ eng,\ \textcolor{keyword}{const\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(a));}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ b\_mem\ =\ dnnl::memory(b\_in\_md,\ eng,\ \textcolor{keyword}{const\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(b));}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ matmul\_pd\ =\ dnnl::matmul::primitive\_desc(eng,\ a\_in\_md,\ b\_in\_md,\ c\_md,\ primitive\_attr);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ c\_mem\ =\ dnnl::memory(matmul\_pd.dst\_desc(),\ eng,\ c);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ scratchpad\_md\ =\ matmul\_pd.scratchpad\_desc();}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ scratchpad\_mem\ =\ ctx.get\_scratchpad\_mem(scratchpad\_md,\ eng,\ q);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ matmul\_prim\ =\ dnnl::matmul(matmul\_pd);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ std::unordered\_map<int,\ dnnl::memory>\ matmul\_args;}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ matmul\_args.insert(\{\ DNNL\_ARG\_SRC,\ a\_mem\ \});}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ matmul\_args.insert(\{\ DNNL\_ARG\_WEIGHTS,\ b\_mem\ \});}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ matmul\_args.insert(\{\ DNNL\_ARG\_DST,\ c\_mem\ \});}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ matmul\_args.insert(\{\ DNNL\_ARG\_SCRATCHPAD,\ scratchpad\_mem\ \});}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ matmul\_prim.execute(stream,\ matmul\_args);}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ row\_gemm(ggml\_backend\_sycl\_context\ \&\ ctx,\ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{int}\ k,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ a,\ dt\ at,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ b,\ dt\ bt,\ \textcolor{keywordtype}{void}\ *\ c,\ dt\ ct,\ \textcolor{keyword}{const}\ queue\_ptr\ \&\ q)\ \{}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ gemm(ctx,\ m,\ n,\ k,\ a,\ at,\ 1,\ k,\ k\ *\ m,\ b,\ bt,\ 1,\ k,\ n\ *\ k,\ c,\ ct,\ q,\ 1,\ 1);}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_GEMM\_HPP}}
+
+\end{DoxyCode}

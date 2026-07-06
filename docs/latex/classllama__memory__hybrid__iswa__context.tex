@@ -1,0 +1,112 @@
+\doxysection{llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context Class Reference}
+\hypertarget{classllama__memory__hybrid__iswa__context}{}\label{classllama__memory__hybrid__iswa__context}\index{llama\_memory\_hybrid\_iswa\_context@{llama\_memory\_hybrid\_iswa\_context}}
+Inheritance diagram for llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllama__memory__hybrid__iswa__context}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_a2919a10b9028cf91d27003ef1475164c}\label{classllama__memory__hybrid__iswa__context_a2919a10b9028cf91d27003ef1475164c} 
+using {\bfseries slot\+\_\+info\+\_\+vec\+\_\+t} = llama\+\_\+kv\+\_\+cache::\+slot\+\_\+info\+\_\+vec\+\_\+t
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_ad717d67ed2a33a06d5d97c91d86a3e0c}\label{classllama__memory__hybrid__iswa__context_ad717d67ed2a33a06d5d97c91d86a3e0c} 
+{\bfseries llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context} (llama\+\_\+memory\+\_\+status status)
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_aa4d42eea10b90e1d998bcc4f4ea4ec5d}\label{classllama__memory__hybrid__iswa__context_aa4d42eea10b90e1d998bcc4f4ea4ec5d} 
+{\bfseries llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context} (\doxymbox{\hyperlink{classllama__memory__hybrid__iswa}{llama\+\_\+memory\+\_\+hybrid\+\_\+iswa}} \texorpdfstring{$\ast$}{*}mem)
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_a676accbe71634dd6dfa4960a2558d00e}\label{classllama__memory__hybrid__iswa__context_a676accbe71634dd6dfa4960a2558d00e} 
+{\bfseries llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context} (\doxymbox{\hyperlink{classllama__memory__hybrid__iswa}{llama\+\_\+memory\+\_\+hybrid\+\_\+iswa}} \texorpdfstring{$\ast$}{*}mem, \doxymbox{\hyperlink{structllama__context}{llama\+\_\+context}} \texorpdfstring{$\ast$}{*}lctx, bool optimize)
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_aa50bbbf7795ed415e11135792200e59d}\label{classllama__memory__hybrid__iswa__context_aa50bbbf7795ed415e11135792200e59d} 
+{\bfseries llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context} (\doxymbox{\hyperlink{classllama__memory__hybrid__iswa}{llama\+\_\+memory\+\_\+hybrid\+\_\+iswa}} \texorpdfstring{$\ast$}{*}mem, slot\+\_\+info\+\_\+vec\+\_\+t sinfos\+\_\+base, slot\+\_\+info\+\_\+vec\+\_\+t sinfos\+\_\+swa, std::\+vector$<$ \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} $>$ ubatches)
+\item 
+bool \doxymbox{\hyperlink{classllama__memory__hybrid__iswa__context_aae51d3edb8058deed9432c680e6bea72}{next}} () override
+\item 
+bool \doxymbox{\hyperlink{classllama__memory__hybrid__iswa__context_aaa7dfaa368658b6cdb9236a8d7039bc4}{apply}} () override
+\item 
+llama\+\_\+memory\+\_\+status \doxymbox{\hyperlink{classllama__memory__hybrid__iswa__context_ac4d0d3a60dc440454054c15f847d2a89}{get\+\_\+status}} () const override
+\item 
+const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \& \doxymbox{\hyperlink{classllama__memory__hybrid__iswa__context_abeaca18877425f8a8d6e5c456712c8a9}{get\+\_\+ubatch}} () const override
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_a83d6d37d91d426c2c42cb3e49d1980b9}\label{classllama__memory__hybrid__iswa__context_a83d6d37d91d426c2c42cb3e49d1980b9} 
+const \doxymbox{\hyperlink{classllama__kv__cache__iswa__context}{llama\+\_\+kv\+\_\+cache\+\_\+iswa\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+attn} () const
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_a943755b99a240aa10f359d4394d79ce8}\label{classllama__memory__hybrid__iswa__context_a943755b99a240aa10f359d4394d79ce8} 
+const \doxymbox{\hyperlink{classllama__memory__recurrent__context}{llama\+\_\+memory\+\_\+recurrent\+\_\+context}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+recr} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_aeab26f438b519f793576a403437b74aa}\label{classllama__memory__hybrid__iswa__context_aeab26f438b519f793576a403437b74aa} 
+size\+\_\+t {\bfseries i\+\_\+next} = 0
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_a6cf55ac7450b54d398cf3b75aaaea549}\label{classllama__memory__hybrid__iswa__context_a6cf55ac7450b54d398cf3b75aaaea549} 
+std::\+vector$<$ \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} $>$ {\bfseries ubatches}
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_a319bedf79252baba088699963cc9313e}\label{classllama__memory__hybrid__iswa__context_a319bedf79252baba088699963cc9313e} 
+const llama\+\_\+memory\+\_\+context\+\_\+ptr {\bfseries ctx\+\_\+attn}
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_af168effaf4c3e1fc060b2ca702805067}\label{classllama__memory__hybrid__iswa__context_af168effaf4c3e1fc060b2ca702805067} 
+const llama\+\_\+memory\+\_\+context\+\_\+ptr {\bfseries ctx\+\_\+recr}
+\item 
+\Hypertarget{classllama__memory__hybrid__iswa__context_a34ad21a4c96df61d545fc1b83671744d}\label{classllama__memory__hybrid__iswa__context_a34ad21a4c96df61d545fc1b83671744d} 
+const llama\+\_\+memory\+\_\+status {\bfseries status}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllama__memory__hybrid__iswa__context_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllama__memory__hybrid__iswa__context_aaa7dfaa368658b6cdb9236a8d7039bc4}\index{llama\_memory\_hybrid\_iswa\_context@{llama\_memory\_hybrid\_iswa\_context}!apply@{apply}}
+\index{apply@{apply}!llama\_memory\_hybrid\_iswa\_context@{llama\_memory\_hybrid\_iswa\_context}}
+\doxysubsubsection{\texorpdfstring{apply()}{apply()}}
+{\footnotesize\ttfamily \label{classllama__memory__hybrid__iswa__context_aaa7dfaa368658b6cdb9236a8d7039bc4} 
+bool llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context::\+apply (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}}.
+
+\Hypertarget{classllama__memory__hybrid__iswa__context_ac4d0d3a60dc440454054c15f847d2a89}\index{llama\_memory\_hybrid\_iswa\_context@{llama\_memory\_hybrid\_iswa\_context}!get\_status@{get\_status}}
+\index{get\_status@{get\_status}!llama\_memory\_hybrid\_iswa\_context@{llama\_memory\_hybrid\_iswa\_context}}
+\doxysubsubsection{\texorpdfstring{get\_status()}{get\_status()}}
+{\footnotesize\ttfamily \label{classllama__memory__hybrid__iswa__context_ac4d0d3a60dc440454054c15f847d2a89} 
+llama\+\_\+memory\+\_\+status llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context::\+get\+\_\+status (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}}.
+
+\Hypertarget{classllama__memory__hybrid__iswa__context_abeaca18877425f8a8d6e5c456712c8a9}\index{llama\_memory\_hybrid\_iswa\_context@{llama\_memory\_hybrid\_iswa\_context}!get\_ubatch@{get\_ubatch}}
+\index{get\_ubatch@{get\_ubatch}!llama\_memory\_hybrid\_iswa\_context@{llama\_memory\_hybrid\_iswa\_context}}
+\doxysubsubsection{\texorpdfstring{get\_ubatch()}{get\_ubatch()}}
+{\footnotesize\ttfamily \label{classllama__memory__hybrid__iswa__context_abeaca18877425f8a8d6e5c456712c8a9} 
+const \doxymbox{\hyperlink{structllama__ubatch}{llama\+\_\+ubatch}} \& llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context::\+get\+\_\+ubatch (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}}.
+
+\Hypertarget{classllama__memory__hybrid__iswa__context_aae51d3edb8058deed9432c680e6bea72}\index{llama\_memory\_hybrid\_iswa\_context@{llama\_memory\_hybrid\_iswa\_context}!next@{next}}
+\index{next@{next}!llama\_memory\_hybrid\_iswa\_context@{llama\_memory\_hybrid\_iswa\_context}}
+\doxysubsubsection{\texorpdfstring{next()}{next()}}
+{\footnotesize\ttfamily \label{classllama__memory__hybrid__iswa__context_aae51d3edb8058deed9432c680e6bea72} 
+bool llama\+\_\+memory\+\_\+hybrid\+\_\+iswa\+\_\+context::\+next (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__context__i}{llama\+\_\+memory\+\_\+context\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/memory-\/hybrid-\/iswa.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/memory-\/hybrid-\/iswa.\+cpp\end{DoxyCompactItemize}

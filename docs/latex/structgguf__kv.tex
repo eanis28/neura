@@ -1,0 +1,55 @@
+\doxysection{gguf\+\_\+kv Struct Reference}
+\hypertarget{structgguf__kv}{}\label{structgguf__kv}\index{gguf\_kv@{gguf\_kv}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgguf__kv_a6472953eeec4beb2e9a11fb0e77aadfe}\label{structgguf__kv_a6472953eeec4beb2e9a11fb0e77aadfe} 
+{\footnotesize template$<$typename T$>$ }\\{\bfseries gguf\+\_\+kv} (const std::\+string \&key, const T value)
+\item 
+\Hypertarget{structgguf__kv_a32e7b92a2dfc405f1b774e801a95c4cb}\label{structgguf__kv_a32e7b92a2dfc405f1b774e801a95c4cb} 
+{\footnotesize template$<$typename T$>$ }\\{\bfseries gguf\+\_\+kv} (const std::\+string \&key, const std::\+vector$<$ T $>$ \&value)
+\item 
+\Hypertarget{structgguf__kv_a98603d24d905f71414606daf99587756}\label{structgguf__kv_a98603d24d905f71414606daf99587756} 
+{\bfseries gguf\+\_\+kv} (const std::\+string \&key, const std::\+string \&value)
+\item 
+\Hypertarget{structgguf__kv_aafc5751aef428a30e3dac0defdb65c21}\label{structgguf__kv_aafc5751aef428a30e3dac0defdb65c21} 
+{\bfseries gguf\+\_\+kv} (const std::\+string \&key, const std::\+vector$<$ std::\+string $>$ \&value)
+\item 
+\Hypertarget{structgguf__kv_aa39f7bdb4261fc8ad330044a54e14d7f}\label{structgguf__kv_aa39f7bdb4261fc8ad330044a54e14d7f} 
+const std::\+string \& {\bfseries get\+\_\+key} () const
+\item 
+\Hypertarget{structgguf__kv_ae94fff24f708bbaafda3d3bf486d5252}\label{structgguf__kv_ae94fff24f708bbaafda3d3bf486d5252} 
+enum gguf\+\_\+type \& {\bfseries get\+\_\+type} () const
+\item 
+\Hypertarget{structgguf__kv_a065c43469c98eef52829cf3467266443}\label{structgguf__kv_a065c43469c98eef52829cf3467266443} 
+size\+\_\+t {\bfseries get\+\_\+ne} () const
+\item 
+\Hypertarget{structgguf__kv_aab4bbb03aa33b31d72403bcdfa538d74}\label{structgguf__kv_aab4bbb03aa33b31d72403bcdfa538d74} 
+{\footnotesize template$<$typename T$>$ }\\const T \& {\bfseries get\+\_\+val} (const size\+\_\+t i=0) const
+\item 
+\Hypertarget{structgguf__kv_ae1fd382e9284bf86bd156d08f17117cc}\label{structgguf__kv_ae1fd382e9284bf86bd156d08f17117cc} 
+void {\bfseries cast} (const enum gguf\+\_\+type new\+\_\+type)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgguf__kv_a8b9a78ea79f21e2c1f0de984858a5da6}\label{structgguf__kv_a8b9a78ea79f21e2c1f0de984858a5da6} 
+std::\+string {\bfseries key}
+\item 
+\Hypertarget{structgguf__kv_a142e3547a5a1f4f0fa02e70faeeefa58}\label{structgguf__kv_a142e3547a5a1f4f0fa02e70faeeefa58} 
+bool {\bfseries is\+\_\+array}
+\item 
+\Hypertarget{structgguf__kv_acca943c22277dfa5b009c1dc263694c4}\label{structgguf__kv_acca943c22277dfa5b009c1dc263694c4} 
+enum gguf\+\_\+type {\bfseries type}
+\item 
+\Hypertarget{structgguf__kv_aaa0324730f2641606a7b8414907aaf5f}\label{structgguf__kv_aaa0324730f2641606a7b8414907aaf5f} 
+std::\+vector$<$ int8\+\_\+t $>$ {\bfseries data}
+\item 
+\Hypertarget{structgguf__kv_a01834357a96fda5033e68dc7b47da7ac}\label{structgguf__kv_a01834357a96fda5033e68dc7b47da7ac} 
+std::\+vector$<$ std::\+string $>$ {\bfseries data\+\_\+string}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+gguf.\+cpp\end{DoxyCompactItemize}

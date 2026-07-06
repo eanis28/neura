@@ -1,0 +1,48 @@
+\doxysection{llama-\/sampler.h}
+\hypertarget{llama-sampler_8h_source}{}\label{llama-sampler_8h_source}\index{whisper.cpp/examples/talk-\/llama/llama-\/sampler.h@{whisper.cpp/examples/talk-\/llama/llama-\/sampler.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}llama.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__vocab}{llama\_vocab}};}
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__grammar}{llama\_grammar}};}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ sampler\ chain}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__chain}{llama\_sampler\_chain}}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \doxymbox{\hyperlink{structllama__sampler__chain__params}{llama\_sampler\_chain\_params}}\ params;}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{comment}{//\ has\ .backend\_init()\ been\ called?}}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_init\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler__chain_1_1info}{info}}\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_backend;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ ptr;}
+\DoxyCodeLine{00022\ \ \ \ \ \};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ std::vector<info>\ samplers;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ pre-\/allocated\ buffer\ for\ llama\_sampler\_sample\ to\ avoid\ repeated\ allocations}}
+\DoxyCodeLine{00027\ \ \ \ \ std::vector<llama\_token\_data>\ cur;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ timing}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{mutable}\ int64\_t\ t\_sample\_us;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{mutable}\ int32\_t\ n\_sample;}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structllama__sampler}{llama\_sampler}}\ *\ llama\_sampler\_init\_dry\_testing(}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ int32\_t\ context\_size,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ dry\_multiplier,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ dry\_base,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ int32\_t\ dry\_allowed\_length,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ int32\_t\ dry\_penalty\_last\_n,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::vector<llama\_token>>\ \&\ seq\_breakers);}
+
+\end{DoxyCode}

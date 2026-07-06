@@ -1,0 +1,26 @@
+\doxysection{unicode-\/data.h}
+\hypertarget{unicode-data_8h_source}{}\label{unicode-data_8h_source}\index{whisper.cpp/examples/talk-\/llama/unicode-\/data.h@{whisper.cpp/examples/talk-\/llama/unicode-\/data.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <unordered\_set>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structrange__nfd}{range\_nfd}}\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ uint32\_t\ first;}
+\DoxyCodeLine{00010\ \ \ \ \ uint32\_t\ last;}
+\DoxyCodeLine{00011\ \ \ \ \ uint32\_t\ nfd;}
+\DoxyCodeLine{00012\ \};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32\_t\ MAX\_CODEPOINTS\ =\ 0x110000;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ std::initializer\_list<std::pair<uint32\_t,\ uint16\_t>>\ unicode\_ranges\_flags;}
+\DoxyCodeLine{00017\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ std::unordered\_set<uint32\_t>\ unicode\_set\_whitespace;}
+\DoxyCodeLine{00018\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ std::initializer\_list<std::pair<uint32\_t,\ uint32\_t>>\ unicode\_map\_lowercase;}
+\DoxyCodeLine{00019\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ std::initializer\_list<std::pair<uint32\_t,\ uint32\_t>>\ unicode\_map\_uppercase;}
+\DoxyCodeLine{00020\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ std::initializer\_list<range\_nfd>\ unicode\_ranges\_nfd;}
+
+\end{DoxyCode}

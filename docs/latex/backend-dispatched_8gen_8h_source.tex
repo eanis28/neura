@@ -1,0 +1,79 @@
+\doxysection{backend-\/dispatched.gen.\+h}
+\hypertarget{backend-dispatched_8gen_8h_source}{}\label{backend-dispatched_8gen_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/backend-\/dispatched.gen.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/backend-\/dispatched.gen.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{/*\ device\ */}}
+\DoxyCodeLine{00004\ uint32\_t\ backend\_device\_get\_device\_count(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00005\ uint32\_t\ backend\_device\_get\_count(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00006\ uint32\_t\ backend\_device\_get\_name(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00007\ uint32\_t\ backend\_device\_get\_description(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00008\ uint32\_t\ backend\_device\_get\_type(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00009\ uint32\_t\ backend\_device\_get\_memory(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00010\ uint32\_t\ backend\_device\_supports\_op(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00011\ uint32\_t\ backend\_device\_get\_buffer\_type(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00012\ uint32\_t\ backend\_device\_get\_props(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00013\ uint32\_t\ backend\_device\_buffer\_from\_ptr(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{/*\ buffer-\/type\ */}}
+\DoxyCodeLine{00016\ uint32\_t\ backend\_buffer\_type\_get\_name(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00017\ uint32\_t\ backend\_buffer\_type\_get\_alignment(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00018\ uint32\_t\ backend\_buffer\_type\_get\_max\_size(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00019\ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_IS\_HOST\ is\ deprecated.\ Keeping\ the\ handler\ for\ backward\ compatibility.\ */}}
+\DoxyCodeLine{00020\ uint32\_t\ backend\_buffer\_type\_is\_host(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00021\ uint32\_t\ backend\_buffer\_type\_alloc\_buffer(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00022\ uint32\_t\ backend\_buffer\_type\_get\_alloc\_size(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{/*\ buffer\ */}}
+\DoxyCodeLine{00025\ uint32\_t\ backend\_buffer\_get\_base(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00026\ uint32\_t\ backend\_buffer\_set\_tensor(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00027\ uint32\_t\ backend\_buffer\_get\_tensor(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00028\ uint32\_t\ backend\_buffer\_cpy\_tensor(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00029\ uint32\_t\ backend\_buffer\_clear(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00030\ uint32\_t\ backend\_buffer\_free\_buffer(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{/*\ backend\ */}}
+\DoxyCodeLine{00033\ uint32\_t\ backend\_backend\_graph\_compute(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00036\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ backend\_dispatch\_t\ apir\_backend\_dispatch\_table[APIR\_BACKEND\_DISPATCH\_TABLE\_COUNT]\ =\ \{}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{/*\ device\ */}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_DEVICE\_COUNT\ \ =\ */}\ backend\_device\_get\_device\_count,}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_COUNT\ \ =\ */}\ backend\_device\_get\_count,}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_NAME\ \ =\ */}\ backend\_device\_get\_name,}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_DESCRIPTION\ \ =\ */}\ backend\_device\_get\_description,}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_TYPE\ \ =\ */}\ backend\_device\_get\_type,}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_MEMORY\ \ =\ */}\ backend\_device\_get\_memory,}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_SUPPORTS\_OP\ \ =\ */}\ backend\_device\_supports\_op,}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_BUFFER\_TYPE\ \ =\ */}\ backend\_device\_get\_buffer\_type,}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_PROPS\ \ =\ */}\ backend\_device\_get\_props,}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_DEVICE\_BUFFER\_FROM\_PTR\ \ =\ */}\ backend\_device\_buffer\_from\_ptr,}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{/*\ buffer-\/type\ */}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_NAME\ \ =\ */}\ backend\_buffer\_type\_get\_name,}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_ALIGNMENT\ \ =\ */}\ backend\_buffer\_type\_get\_alignment,}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_MAX\_SIZE\ \ =\ */}\ backend\_buffer\_type\_get\_max\_size,}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_IS\_HOST\ \ =\ */}\ backend\_buffer\_type\_is\_host\ \textcolor{comment}{/*\ DEPRECATED\ */},}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_ALLOC\_BUFFER\ \ =\ */}\ backend\_buffer\_type\_alloc\_buffer,}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_ALLOC\_SIZE\ \ =\ */}\ backend\_buffer\_type\_get\_alloc\_size,}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{/*\ buffer\ */}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_GET\_BASE\ \ =\ */}\ backend\_buffer\_get\_base,}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_SET\_TENSOR\ \ =\ */}\ backend\_buffer\_set\_tensor,}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_GET\_TENSOR\ \ =\ */}\ backend\_buffer\_get\_tensor,}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_CPY\_TENSOR\ \ =\ */}\ backend\_buffer\_cpy\_tensor,}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_CLEAR\ \ =\ */}\ backend\_buffer\_clear,}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BUFFER\_FREE\_BUFFER\ \ =\ */}\ backend\_buffer\_free\_buffer,}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{/*\ backend\ */}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{/*\ APIR\_COMMAND\_TYPE\_BACKEND\_GRAPH\_COMPUTE\ \ =\ */}\ backend\_backend\_graph\_compute,}
+\DoxyCodeLine{00072\ \};}
+\DoxyCodeLine{00073\ \}}
+
+\end{DoxyCode}

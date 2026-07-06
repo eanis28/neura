@@ -1,0 +1,292 @@
+\doxysection{Pill\+Text\+Field Struct Reference}
+\hypertarget{struct_pill_text_field}{}\label{struct_pill_text_field}\index{PillTextField@{PillTextField}}
+
+
+Pill-\/shaped text input field.  
+
+
+
+
+{\ttfamily \+\#include $<$UIWidgets.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{struct_pill_text_field_a204debe6b2ceadc3f0732a5ff5870882}{init}} (float x, float y, float width, float height, const std::\+string \&initial, const std::\+string \&ph="{}"{})
+\begin{DoxyCompactList}\small\item\em Initializes the text field. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{struct_pill_text_field_a8d33df70d43a646e594ebde014235023}{hit}} (sf::\+\+Vector2f p) const
+\begin{DoxyCompactList}\small\item\em Checks if a point is inside the text field. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_text_field_ac2d894a650898250d2dcae3961df93cb}{set\+Focus}} (bool f)
+\begin{DoxyCompactList}\small\item\em Sets focus state of the field. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_text_field_aebca3a0a74dc066b488abc7a0455e25b}{on\+Click}} ()
+\begin{DoxyCompactList}\small\item\em Handles mouse click behavior. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_text_field_aa9d44f0000d04510c5e58a569258bd74}{delete\+Selection}} ()
+\begin{DoxyCompactList}\small\item\em Deletes currently selected text. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{struct_pill_text_field_a3f05c918d34bb99ed1cf9e28829b0b6e}{has\+Selection}} () const
+\begin{DoxyCompactList}\small\item\em Checks if text is selected. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_text_field_abeb6ed3eb8f933a2b7e7f7e8334b9a98}{select\+All}} ()
+\begin{DoxyCompactList}\small\item\em Selects all text. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_text_field_a36450bac0d5e4a2991c0a7dafb671224}{clear\+Selection}} ()
+\begin{DoxyCompactList}\small\item\em Clears current selection. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_text_field_ab324d2277b7de59f77095539874dce63}{on\+Text\+Entered}} (uint32\+\_\+t u)
+\begin{DoxyCompactList}\small\item\em Handles text input events. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_text_field_ae8fc30fd80298c19e165baec6334ff73}{on\+Key\+Pressed}} (sf::\+\+Keyboard::\+\+Key key, bool modifier)
+\begin{DoxyCompactList}\small\item\em Handles key press events. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{struct_pill_text_field_a63d2c30d31005f3731bd2bd09ce6d583}{draw}} (sf::\+\+Render\+Window \&win, const sf::\+\+Font \&font, sf::\+\+Color accent)
+\begin{DoxyCompactList}\small\item\em Draws the text field. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_pill_text_field_ac17c6f345a86756999986ffbd3b4ad0f}\label{struct_pill_text_field_ac17c6f345a86756999986ffbd3b4ad0f} 
+float {\bfseries cx}
+\item 
+\Hypertarget{struct_pill_text_field_a754cbb209f565f17b3cf66ec84e1eeb1}\label{struct_pill_text_field_a754cbb209f565f17b3cf66ec84e1eeb1} 
+float {\bfseries cy}
+\item 
+\Hypertarget{struct_pill_text_field_acb4e41cdce082b39f8bd63fb2ee4c458}\label{struct_pill_text_field_acb4e41cdce082b39f8bd63fb2ee4c458} 
+float {\bfseries w}
+\item 
+\Hypertarget{struct_pill_text_field_a883328b9c21f58961b31fd306259595a}\label{struct_pill_text_field_a883328b9c21f58961b31fd306259595a} 
+float {\bfseries h}
+\item 
+\Hypertarget{struct_pill_text_field_a09a582a59fedefa8b734afc6199efd2b}\label{struct_pill_text_field_a09a582a59fedefa8b734afc6199efd2b} 
+std::\+string {\bfseries text}
+\item 
+\Hypertarget{struct_pill_text_field_af52cfd2676bfe1bbf09d8fdf8ba5307d}\label{struct_pill_text_field_af52cfd2676bfe1bbf09d8fdf8ba5307d} 
+std::\+string {\bfseries placeholder}
+\item 
+\Hypertarget{struct_pill_text_field_a2c6100b903de0cc51381f53e8ca9eeac}\label{struct_pill_text_field_a2c6100b903de0cc51381f53e8ca9eeac} 
+bool {\bfseries focused} = false
+\item 
+\Hypertarget{struct_pill_text_field_af23a8c8acfef8e1ff332733c454ead3d}\label{struct_pill_text_field_af23a8c8acfef8e1ff332733c454ead3d} 
+int {\bfseries cursor\+Pos} = 0
+\item 
+\Hypertarget{struct_pill_text_field_a52a05b9ad624b6b148720c8f6fa19c67}\label{struct_pill_text_field_a52a05b9ad624b6b148720c8f6fa19c67} 
+int {\bfseries sel\+Start} = 0
+\item 
+\Hypertarget{struct_pill_text_field_a5c38042bb62c47c709c88bf2ceae40ea}\label{struct_pill_text_field_a5c38042bb62c47c709c88bf2ceae40ea} 
+int {\bfseries sel\+End} = 0
+\item 
+\Hypertarget{struct_pill_text_field_a623db6d190c1a3e5543102737de6e43f}\label{struct_pill_text_field_a623db6d190c1a3e5543102737de6e43f} 
+sf::\+\+Clock {\bfseries blink\+Clock}
+\item 
+\Hypertarget{struct_pill_text_field_aaaa4e20bbaeb42ffa018718b68887d88}\label{struct_pill_text_field_aaaa4e20bbaeb42ffa018718b68887d88} 
+sf::\+\+Clock {\bfseries last\+Click\+Clock}
+\item 
+\Hypertarget{struct_pill_text_field_a484d76e32e45769db34cd8d55f7e7e94}\label{struct_pill_text_field_a484d76e32e45769db34cd8d55f7e7e94} 
+bool {\bfseries click\+Armed} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Pill-\/shaped text input field. 
+
+Supports cursor movement, text selection, clipboard operations, placeholder text, and double-\/click selection.
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{struct_pill_text_field_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_pill_text_field_a36450bac0d5e4a2991c0a7dafb671224}\index{PillTextField@{PillTextField}!clearSelection@{clearSelection}}
+\index{clearSelection@{clearSelection}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{clearSelection()}{clearSelection()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_a36450bac0d5e4a2991c0a7dafb671224} 
+void Pill\+Text\+Field::\+clear\+Selection (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Clears current selection. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_aa9d44f0000d04510c5e58a569258bd74}\index{PillTextField@{PillTextField}!deleteSelection@{deleteSelection}}
+\index{deleteSelection@{deleteSelection}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{deleteSelection()}{deleteSelection()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_aa9d44f0000d04510c5e58a569258bd74} 
+void Pill\+Text\+Field::\+delete\+Selection (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Deletes currently selected text. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_a63d2c30d31005f3731bd2bd09ce6d583}\index{PillTextField@{PillTextField}!draw@{draw}}
+\index{draw@{draw}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_a63d2c30d31005f3731bd2bd09ce6d583} 
+void Pill\+Text\+Field::\+draw (\begin{DoxyParamCaption}\item[{sf::\+\+Render\+Window \&}]{win}{, }\item[{const sf::\+\+Font \&}]{font}{, }\item[{sf::\+\+Color}]{accent}{}\end{DoxyParamCaption})}
+
+
+
+Draws the text field. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & Render window. \\
+\hline
+{\em font} & Font used for text. \\
+\hline
+{\em accent} & Accent color for focus state. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_a3f05c918d34bb99ed1cf9e28829b0b6e}\index{PillTextField@{PillTextField}!hasSelection@{hasSelection}}
+\index{hasSelection@{hasSelection}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{hasSelection()}{hasSelection()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_a3f05c918d34bb99ed1cf9e28829b0b6e} 
+bool Pill\+Text\+Field::\+has\+Selection (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if text is selected. 
+
+\begin{DoxyReturn}{Returns}
+bool True if selection exists. 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_a8d33df70d43a646e594ebde014235023}\index{PillTextField@{PillTextField}!hit@{hit}}
+\index{hit@{hit}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{hit()}{hit()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_a8d33df70d43a646e594ebde014235023} 
+bool Pill\+Text\+Field::\+hit (\begin{DoxyParamCaption}\item[{sf::\+\+Vector2f}]{p}{}\end{DoxyParamCaption}) const}
+
+
+
+Checks if a point is inside the text field. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Mouse position. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if inside. 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_a204debe6b2ceadc3f0732a5ff5870882}\index{PillTextField@{PillTextField}!init@{init}}
+\index{init@{init}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_a204debe6b2ceadc3f0732a5ff5870882} 
+void Pill\+Text\+Field::\+init (\begin{DoxyParamCaption}\item[{float}]{x}{, }\item[{float}]{y}{, }\item[{float}]{width}{, }\item[{float}]{height}{, }\item[{const std::\+string \&}]{initial}{, }\item[{const std::\+string \&}]{ph}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Initializes the text field. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Center X position. \\
+\hline
+{\em y} & Center Y position. \\
+\hline
+{\em width} & Width of the field. \\
+\hline
+{\em height} & Height of the field. \\
+\hline
+{\em initial} & Initial text value. \\
+\hline
+{\em ph} & Placeholder text. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_aebca3a0a74dc066b488abc7a0455e25b}\index{PillTextField@{PillTextField}!onClick@{onClick}}
+\index{onClick@{onClick}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{onClick()}{onClick()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_aebca3a0a74dc066b488abc7a0455e25b} 
+void Pill\+Text\+Field::\+on\+Click (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Handles mouse click behavior. 
+
+Supports double-\/click to select all text.
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_ae8fc30fd80298c19e165baec6334ff73}\index{PillTextField@{PillTextField}!onKeyPressed@{onKeyPressed}}
+\index{onKeyPressed@{onKeyPressed}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{onKeyPressed()}{onKeyPressed()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_ae8fc30fd80298c19e165baec6334ff73} 
+void Pill\+Text\+Field::\+on\+Key\+Pressed (\begin{DoxyParamCaption}\item[{sf::\+\+Keyboard::\+\+Key}]{key}{, }\item[{bool}]{modifier}{}\end{DoxyParamCaption})}
+
+
+
+Handles key press events. 
+
+Supports navigation, deletion, and clipboard shortcuts.
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & Key pressed. \\
+\hline
+{\em modifier} & Modifier key (Ctrl/\+\+Cmd). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_ab324d2277b7de59f77095539874dce63}\index{PillTextField@{PillTextField}!onTextEntered@{onTextEntered}}
+\index{onTextEntered@{onTextEntered}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{onTextEntered()}{onTextEntered()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_ab324d2277b7de59f77095539874dce63} 
+void Pill\+Text\+Field::\+on\+Text\+Entered (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{u}{}\end{DoxyParamCaption})}
+
+
+
+Handles text input events. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em u} & Unicode character entered. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_abeb6ed3eb8f933a2b7e7f7e8334b9a98}\index{PillTextField@{PillTextField}!selectAll@{selectAll}}
+\index{selectAll@{selectAll}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{selectAll()}{selectAll()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_abeb6ed3eb8f933a2b7e7f7e8334b9a98} 
+void Pill\+Text\+Field::\+select\+All (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Selects all text. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\Hypertarget{struct_pill_text_field_ac2d894a650898250d2dcae3961df93cb}\index{PillTextField@{PillTextField}!setFocus@{setFocus}}
+\index{setFocus@{setFocus}!PillTextField@{PillTextField}}
+\doxysubsubsection{\texorpdfstring{setFocus()}{setFocus()}}
+{\footnotesize\ttfamily \label{struct_pill_text_field_ac2d894a650898250d2dcae3961df93cb} 
+void Pill\+Text\+Field::\+set\+Focus (\begin{DoxyParamCaption}\item[{bool}]{f}{}\end{DoxyParamCaption})}
+
+
+
+Sets focus state of the field. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & True to focus, false to unfocus. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_u_i_widgets_8h}{UIWidgets.\+h}}\item 
+UIWidgets.\+cpp\end{DoxyCompactItemize}

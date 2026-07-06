@@ -1,0 +1,234 @@
+\doxysection{llama\+\_\+kv\+\_\+cache\+\_\+iswa Class Reference}
+\hypertarget{classllama__kv__cache__iswa}{}\label{classllama__kv__cache__iswa}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+Inheritance diagram for llama\+\_\+kv\+\_\+cache\+\_\+iswa:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classllama__kv__cache__iswa}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__kv__cache__iswa_a2c1c631ea63d05afd7f58190e17eea13}\label{classllama__kv__cache__iswa_a2c1c631ea63d05afd7f58190e17eea13} 
+{\bfseries llama\+\_\+kv\+\_\+cache\+\_\+iswa} (const \doxymbox{\hyperlink{structllama__model}{llama\+\_\+model}} \&model, ggml\+\_\+type type\+\_\+k, ggml\+\_\+type type\+\_\+v, bool v\+\_\+trans, bool offload, bool swa\+\_\+full, bool unified, uint32\+\_\+t kv\+\_\+size, uint32\+\_\+t n\+\_\+seq\+\_\+max, uint32\+\_\+t n\+\_\+ubatch, uint32\+\_\+t n\+\_\+pad, const layer\+\_\+filter\+\_\+cb \&filter, const layer\+\_\+reuse\+\_\+cb \&reuse)
+\item 
+llama\+\_\+memory\+\_\+context\+\_\+ptr \doxymbox{\hyperlink{classllama__kv__cache__iswa_ab3ddb71d1d8042a9eeaff50a9153f000}{init\+\_\+batch}} (\doxymbox{\hyperlink{classllama__batch__allocr}{llama\+\_\+batch\+\_\+allocr}} \&balloc, uint32\+\_\+t n\+\_\+ubatch, bool embd\+\_\+all) override
+\item 
+llama\+\_\+memory\+\_\+context\+\_\+ptr \doxymbox{\hyperlink{classllama__kv__cache__iswa_a6382e2bc5b882df4404ea26bf58810e0}{init\+\_\+full}} () override
+\item 
+llama\+\_\+memory\+\_\+context\+\_\+ptr \doxymbox{\hyperlink{classllama__kv__cache__iswa_a2e680ab3f6495f917dbe4e889b6151ae}{init\+\_\+update}} (\doxymbox{\hyperlink{structllama__context}{llama\+\_\+context}} \texorpdfstring{$\ast$}{*}lctx, bool optimize) override
+\item 
+bool \doxymbox{\hyperlink{classllama__kv__cache__iswa_a43aa68e59ccdb8e77007c0c495959552}{get\+\_\+can\+\_\+shift}} () const override
+\item 
+void \doxymbox{\hyperlink{classllama__kv__cache__iswa_a3696414a19da8ef46cd89c8a919a03c8}{clear}} (bool data) override
+\item 
+bool \doxymbox{\hyperlink{classllama__kv__cache__iswa_a405347e0d57f233fb1c3deb68e97ef8b}{seq\+\_\+rm}} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+pos p0, llama\+\_\+pos p1) override
+\item 
+void \doxymbox{\hyperlink{classllama__kv__cache__iswa_a12bde2d634213c1f5d7a68b1bdc85ccb}{seq\+\_\+cp}} (llama\+\_\+seq\+\_\+id seq\+\_\+id\+\_\+src, llama\+\_\+seq\+\_\+id seq\+\_\+id\+\_\+dst, llama\+\_\+pos p0, llama\+\_\+pos p1) override
+\item 
+void \doxymbox{\hyperlink{classllama__kv__cache__iswa_af54dadef4f4ad38bf0fd5df6f35b8699}{seq\+\_\+keep}} (llama\+\_\+seq\+\_\+id seq\+\_\+id) override
+\item 
+void \doxymbox{\hyperlink{classllama__kv__cache__iswa_a6b8f389674b035c300355537e5618f61}{seq\+\_\+add}} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+pos p0, llama\+\_\+pos p1, llama\+\_\+pos shift) override
+\item 
+void \doxymbox{\hyperlink{classllama__kv__cache__iswa_a9de262a72614ecff300e16f2673425fa}{seq\+\_\+div}} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+pos p0, llama\+\_\+pos p1, int d) override
+\item 
+llama\+\_\+pos \doxymbox{\hyperlink{classllama__kv__cache__iswa_ab957b6ecca6e5c7f4ccc92cfe0e08e45}{seq\+\_\+pos\+\_\+min}} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const override
+\item 
+llama\+\_\+pos \doxymbox{\hyperlink{classllama__kv__cache__iswa_a5ded2cb3e7619a6efbfa8079e0c39fc2}{seq\+\_\+pos\+\_\+max}} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const override
+\item 
+std::\+map$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t, size\+\_\+t $>$ \doxymbox{\hyperlink{classllama__kv__cache__iswa_ac67842d3212e935bd33660462a773b29}{memory\+\_\+breakdown}} () const override
+\item 
+void \doxymbox{\hyperlink{classllama__kv__cache__iswa_a937e0b8079d0118b69658e4dabc28824}{state\+\_\+write}} (\doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}} \&io, llama\+\_\+seq\+\_\+id seq\+\_\+id=-\/1, llama\+\_\+state\+\_\+seq\+\_\+flags flags=0) const override
+\item 
+void \doxymbox{\hyperlink{classllama__kv__cache__iswa_aecb709215b5ea79ac6c00fc99c050487}{state\+\_\+read}} (\doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}} \&io, llama\+\_\+seq\+\_\+id seq\+\_\+id=-\/1, llama\+\_\+state\+\_\+seq\+\_\+flags flags=0) override
+\item 
+\Hypertarget{classllama__kv__cache__iswa_a6960e07ab3dcfead0b0523eb28455380}\label{classllama__kv__cache__iswa_a6960e07ab3dcfead0b0523eb28455380} 
+\doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+base} () const
+\item 
+\Hypertarget{classllama__kv__cache__iswa_aeee003d2e2038360a874b2676bdf18f5}\label{classllama__kv__cache__iswa_aeee003d2e2038360a874b2676bdf18f5} 
+\doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+swa} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classllama__kv__cache__iswa_a9130514345da28598fe93e26d7958967}\label{classllama__kv__cache__iswa_a9130514345da28598fe93e26d7958967} 
+const \doxymbox{\hyperlink{structllama__hparams}{llama\+\_\+hparams}} \& {\bfseries hparams}
+\item 
+\Hypertarget{classllama__kv__cache__iswa_af5b18941ee39277ef1a4b64b1695aa25}\label{classllama__kv__cache__iswa_af5b18941ee39277ef1a4b64b1695aa25} 
+const bool {\bfseries unified}
+\item 
+\Hypertarget{classllama__kv__cache__iswa_aad32ac9ae473fd55f2949dd7a533a9b9}\label{classllama__kv__cache__iswa_aad32ac9ae473fd55f2949dd7a533a9b9} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} $>$ {\bfseries kv\+\_\+base}
+\item 
+\Hypertarget{classllama__kv__cache__iswa_aaebfb7720a5c64d8962c8e7326c53ac5}\label{classllama__kv__cache__iswa_aaebfb7720a5c64d8962c8e7326c53ac5} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classllama__kv__cache}{llama\+\_\+kv\+\_\+cache}} $>$ {\bfseries kv\+\_\+swa}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}}
+\begin{DoxyCompactItemize}
+\item 
+using {\bfseries layer\+\_\+filter\+\_\+cb} = std::\+function$<$bool(int32\+\_\+t il)$>$
+\item 
+using {\bfseries layer\+\_\+reuse\+\_\+cb} = std::\+function$<$int32\+\_\+t(int32\+\_\+t il)$>$
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classllama__kv__cache__iswa_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classllama__kv__cache__iswa_a3696414a19da8ef46cd89c8a919a03c8}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!clear@{clear}}
+\index{clear@{clear}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a3696414a19da8ef46cd89c8a919a03c8} 
+void llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+clear (\begin{DoxyParamCaption}\item[{bool}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_a43aa68e59ccdb8e77007c0c495959552}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!get\_can\_shift@{get\_can\_shift}}
+\index{get\_can\_shift@{get\_can\_shift}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{get\_can\_shift()}{get\_can\_shift()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a43aa68e59ccdb8e77007c0c495959552} 
+bool llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+get\+\_\+can\+\_\+shift (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_ab3ddb71d1d8042a9eeaff50a9153f000}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!init\_batch@{init\_batch}}
+\index{init\_batch@{init\_batch}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{init\_batch()}{init\_batch()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_ab3ddb71d1d8042a9eeaff50a9153f000} 
+llama\+\_\+memory\+\_\+context\+\_\+ptr llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+init\+\_\+batch (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classllama__batch__allocr}{llama\+\_\+batch\+\_\+allocr}} \&}]{balloc}{, }\item[{uint32\+\_\+t}]{n\+\_\+ubatch}{, }\item[{bool}]{embd\+\_\+all}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_a6382e2bc5b882df4404ea26bf58810e0}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!init\_full@{init\_full}}
+\index{init\_full@{init\_full}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{init\_full()}{init\_full()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a6382e2bc5b882df4404ea26bf58810e0} 
+llama\+\_\+memory\+\_\+context\+\_\+ptr llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+init\+\_\+full (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_a2e680ab3f6495f917dbe4e889b6151ae}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!init\_update@{init\_update}}
+\index{init\_update@{init\_update}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{init\_update()}{init\_update()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a2e680ab3f6495f917dbe4e889b6151ae} 
+llama\+\_\+memory\+\_\+context\+\_\+ptr llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+init\+\_\+update (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structllama__context}{llama\+\_\+context}} \texorpdfstring{$\ast$}{*}}]{lctx}{, }\item[{bool}]{optimize}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_ac67842d3212e935bd33660462a773b29}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!memory\_breakdown@{memory\_breakdown}}
+\index{memory\_breakdown@{memory\_breakdown}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{memory\_breakdown()}{memory\_breakdown()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_ac67842d3212e935bd33660462a773b29} 
+std::\+map$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t, size\+\_\+t $>$ llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+memory\+\_\+breakdown (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_a6b8f389674b035c300355537e5618f61}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!seq\_add@{seq\_add}}
+\index{seq\_add@{seq\_add}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{seq\_add()}{seq\_add()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a6b8f389674b035c300355537e5618f61} 
+void llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+seq\+\_\+add (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{, }\item[{llama\+\_\+pos}]{p0}{, }\item[{llama\+\_\+pos}]{p1}{, }\item[{llama\+\_\+pos}]{shift}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_a12bde2d634213c1f5d7a68b1bdc85ccb}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!seq\_cp@{seq\_cp}}
+\index{seq\_cp@{seq\_cp}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{seq\_cp()}{seq\_cp()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a12bde2d634213c1f5d7a68b1bdc85ccb} 
+void llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+seq\+\_\+cp (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id\+\_\+src}{, }\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id\+\_\+dst}{, }\item[{llama\+\_\+pos}]{p0}{, }\item[{llama\+\_\+pos}]{p1}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_a9de262a72614ecff300e16f2673425fa}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!seq\_div@{seq\_div}}
+\index{seq\_div@{seq\_div}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{seq\_div()}{seq\_div()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a9de262a72614ecff300e16f2673425fa} 
+void llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+seq\+\_\+div (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{, }\item[{llama\+\_\+pos}]{p0}{, }\item[{llama\+\_\+pos}]{p1}{, }\item[{int}]{d}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_af54dadef4f4ad38bf0fd5df6f35b8699}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!seq\_keep@{seq\_keep}}
+\index{seq\_keep@{seq\_keep}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{seq\_keep()}{seq\_keep()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_af54dadef4f4ad38bf0fd5df6f35b8699} 
+void llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+seq\+\_\+keep (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_a5ded2cb3e7619a6efbfa8079e0c39fc2}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!seq\_pos\_max@{seq\_pos\_max}}
+\index{seq\_pos\_max@{seq\_pos\_max}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{seq\_pos\_max()}{seq\_pos\_max()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a5ded2cb3e7619a6efbfa8079e0c39fc2} 
+llama\+\_\+pos llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+seq\+\_\+pos\+\_\+max (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_ab957b6ecca6e5c7f4ccc92cfe0e08e45}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!seq\_pos\_min@{seq\_pos\_min}}
+\index{seq\_pos\_min@{seq\_pos\_min}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{seq\_pos\_min()}{seq\_pos\_min()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_ab957b6ecca6e5c7f4ccc92cfe0e08e45} 
+llama\+\_\+pos llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+seq\+\_\+pos\+\_\+min (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_a405347e0d57f233fb1c3deb68e97ef8b}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!seq\_rm@{seq\_rm}}
+\index{seq\_rm@{seq\_rm}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{seq\_rm()}{seq\_rm()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a405347e0d57f233fb1c3deb68e97ef8b} 
+bool llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+seq\+\_\+rm (\begin{DoxyParamCaption}\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{, }\item[{llama\+\_\+pos}]{p0}{, }\item[{llama\+\_\+pos}]{p1}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_aecb709215b5ea79ac6c00fc99c050487}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!state\_read@{state\_read}}
+\index{state\_read@{state\_read}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{state\_read()}{state\_read()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_aecb709215b5ea79ac6c00fc99c050487} 
+void llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+state\+\_\+read (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}} \&}]{io}{, }\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{ = {\ttfamily -\/1}, }\item[{llama\+\_\+state\+\_\+seq\+\_\+flags}]{flags}{ = {\ttfamily 0}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+\Hypertarget{classllama__kv__cache__iswa_a937e0b8079d0118b69658e4dabc28824}\index{llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}!state\_write@{state\_write}}
+\index{state\_write@{state\_write}!llama\_kv\_cache\_iswa@{llama\_kv\_cache\_iswa}}
+\doxysubsubsection{\texorpdfstring{state\_write()}{state\_write()}}
+{\footnotesize\ttfamily \label{classllama__kv__cache__iswa_a937e0b8079d0118b69658e4dabc28824} 
+void llama\+\_\+kv\+\_\+cache\+\_\+iswa::\+state\+\_\+write (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}} \&}]{io}{, }\item[{llama\+\_\+seq\+\_\+id}]{seq\+\_\+id}{ = {\ttfamily -\/1}, }\item[{llama\+\_\+state\+\_\+seq\+\_\+flags}]{flags}{ = {\ttfamily 0}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structllama__memory__i}{llama\+\_\+memory\+\_\+i}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/kv-\/cache-\/iswa.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/kv-\/cache-\/iswa.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,100 @@
+\doxysection{apir\+\_\+backend.\+gen.\+h}
+\hypertarget{apir__backend_8gen_8h_source}{}\label{apir__backend_8gen_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_backend.gen.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/shared/apir\_backend.gen.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ ApirBackendCommandType\ \{}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \ \ \ \ \textcolor{comment}{/*\ device\ */}}
+\DoxyCodeLine{00004\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_DEVICE\_COUNT\ =\ 0,}
+\DoxyCodeLine{00005\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_COUNT\ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00006\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_NAME\ \ \ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00007\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_DESCRIPTION\ \ =\ 3,}
+\DoxyCodeLine{00008\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_TYPE\ \ \ \ \ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00009\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_MEMORY\ \ \ \ \ \ \ =\ 5,}
+\DoxyCodeLine{00010\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_SUPPORTS\_OP\ \ \ \ \ \ =\ 6,}
+\DoxyCodeLine{00011\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_BUFFER\_TYPE\ \ =\ 7,}
+\DoxyCodeLine{00012\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_PROPS\ \ \ \ \ \ \ \ =\ 8,}
+\DoxyCodeLine{00013\ \ \ \ \ APIR\_COMMAND\_TYPE\_DEVICE\_BUFFER\_FROM\_PTR\ \ =\ 9,}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{comment}{/*\ buffer-\/type\ */}}
+\DoxyCodeLine{00016\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_NAME\ \ \ \ \ \ \ =\ 10,}
+\DoxyCodeLine{00017\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_ALIGNMENT\ \ =\ 11,}
+\DoxyCodeLine{00018\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_MAX\_SIZE\ \ \ =\ 12,}
+\DoxyCodeLine{00019\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_IS\_HOST\ \ \ \ \ \ \ \ =\ 13,}
+\DoxyCodeLine{00020\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_ALLOC\_BUFFER\ \ \ =\ 14,}
+\DoxyCodeLine{00021\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_ALLOC\_SIZE\ =\ 15,}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{/*\ buffer\ */}}
+\DoxyCodeLine{00024\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_GET\_BASE\ \ \ \ =\ 16,}
+\DoxyCodeLine{00025\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_SET\_TENSOR\ \ =\ 17,}
+\DoxyCodeLine{00026\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_GET\_TENSOR\ \ =\ 18,}
+\DoxyCodeLine{00027\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_CPY\_TENSOR\ \ =\ 19,}
+\DoxyCodeLine{00028\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_CLEAR\ \ \ \ \ \ \ =\ 20,}
+\DoxyCodeLine{00029\ \ \ \ \ APIR\_COMMAND\_TYPE\_BUFFER\_FREE\_BUFFER\ =\ 21,}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{/*\ backend\ */}}
+\DoxyCodeLine{00032\ \ \ \ \ APIR\_COMMAND\_TYPE\_BACKEND\_GRAPH\_COMPUTE\ =\ 22,}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ last\ command\_type\ index\ +\ 1}}
+\DoxyCodeLine{00035\ \ \ \ \ APIR\_BACKEND\_DISPATCH\_TABLE\_COUNT\ =\ 23,}
+\DoxyCodeLine{00036\ \}\ ApirBackendCommandType;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ apir\_dispatch\_command\_name(ApirBackendCommandType\ type)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordflow}{switch}\ (type)\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ device\ */}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_DEVICE\_COUNT:}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_get\_device\_count"{}};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_COUNT:}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_get\_count"{}};}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_NAME:}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_get\_name"{}};}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_DESCRIPTION:}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_get\_description"{}};}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_TYPE:}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_get\_type"{}};}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_MEMORY:}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_get\_memory"{}};}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_SUPPORTS\_OP:}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_supports\_op"{}};}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_BUFFER\_TYPE:}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_get\_buffer\_type"{}};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_GET\_PROPS:}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_get\_props"{}};}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_DEVICE\_BUFFER\_FROM\_PTR:}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}device\_buffer\_from\_ptr"{}};}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ buffer-\/type\ */}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_NAME:}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_type\_get\_name"{}};}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_ALIGNMENT:}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_type\_get\_alignment"{}};}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_MAX\_SIZE:}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_type\_get\_max\_size"{}};}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_IS\_HOST:}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_type\_is\_host"{}};}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_ALLOC\_BUFFER:}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_type\_alloc\_buffer"{}};}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_TYPE\_GET\_ALLOC\_SIZE:}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_type\_get\_alloc\_size"{}};}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ buffer\ */}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_GET\_BASE:}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_get\_base"{}};}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_SET\_TENSOR:}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_set\_tensor"{}};}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_GET\_TENSOR:}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_get\_tensor"{}};}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_CPY\_TENSOR:}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_cpy\_tensor"{}};}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_CLEAR:}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_clear"{}};}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BUFFER\_FREE\_BUFFER:}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}buffer\_free\_buffer"{}};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ backend\ */}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ APIR\_COMMAND\_TYPE\_BACKEND\_GRAPH\_COMPUTE:}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}backend\_graph\_compute"{}};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unknown"{}};}
+\DoxyCodeLine{00093\ \ \ \ \ \}}
+\DoxyCodeLine{00094\ \}}
+
+\end{DoxyCode}

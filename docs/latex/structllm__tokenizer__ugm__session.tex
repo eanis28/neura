@@ -1,0 +1,43 @@
+\doxysection{llm\+\_\+tokenizer\+\_\+ugm\+\_\+session Struct Reference}
+\hypertarget{structllm__tokenizer__ugm__session}{}\label{structllm__tokenizer__ugm__session}\index{llm\_tokenizer\_ugm\_session@{llm\_tokenizer\_ugm\_session}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structllm__tokenizer__ugm__session_1_1normalization__result}{normalization\+\_\+result}}
+\item 
+struct \doxymbox{\hyperlink{structllm__tokenizer__ugm__session_1_1xcda__array__view}{xcda\+\_\+array\+\_\+view}}
+\item 
+struct \doxymbox{\hyperlink{structllm__tokenizer__ugm__session_1_1best__tokenization}{best\+\_\+tokenization}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__ugm__session_a106c439b22cf0bddd7baaf24e01b9679}\label{structllm__tokenizer__ugm__session_a106c439b22cf0bddd7baaf24e01b9679} 
+{\bfseries llm\+\_\+tokenizer\+\_\+ugm\+\_\+session} (const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \&vocab, const \doxymbox{\hyperlink{structllm__tokenizer__ugm}{llm\+\_\+tokenizer\+\_\+ugm}} \&tokenizer)
+\item 
+\Hypertarget{structllm__tokenizer__ugm__session_afb170eb695f81f67efdb8af22647635b}\label{structllm__tokenizer__ugm__session_afb170eb695f81f67efdb8af22647635b} 
+void {\bfseries tokenize} (const std::\+string \&text, std::\+vector$<$ llama\+\_\+token $>$ \&output)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__ugm__session_ad472b71c22ebea7c8614a79f035577f5}\label{structllm__tokenizer__ugm__session_ad472b71c22ebea7c8614a79f035577f5} 
+void {\bfseries normalize} (const std::\+string \&input, std::\+string \texorpdfstring{$\ast$}{*}normalized)
+\item 
+\Hypertarget{structllm__tokenizer__ugm__session_abec19ab79a0e218341905b77ad4a918f}\label{structllm__tokenizer__ugm__session_abec19ab79a0e218341905b77ad4a918f} 
+struct \doxymbox{\hyperlink{structllm__tokenizer__ugm__session_1_1normalization__result}{normalization\+\_\+result}} {\bfseries normalize\+\_\+prefix} (const std::\+string \&input, size\+\_\+t input\+\_\+offset)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllm__tokenizer__ugm__session_a6abcef126bd1fdef5c54115849fb4ff0}\label{structllm__tokenizer__ugm__session_a6abcef126bd1fdef5c54115849fb4ff0} 
+const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \& {\bfseries vocab}
+\item 
+\Hypertarget{structllm__tokenizer__ugm__session_a6327803164d5ea5df092f31a36bc0845}\label{structllm__tokenizer__ugm__session_a6327803164d5ea5df092f31a36bc0845} 
+const \doxymbox{\hyperlink{structllm__tokenizer__ugm}{llm\+\_\+tokenizer\+\_\+ugm}} \& {\bfseries tokenizer}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/vocab.\+cpp\end{DoxyCompactItemize}

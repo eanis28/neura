@@ -1,0 +1,128 @@
+\doxysection{dpct::\+dev\+\_\+mgr Class Reference}
+\hypertarget{classdpct_1_1dev__mgr}{}\label{classdpct_1_1dev__mgr}\index{dpct::dev\_mgr@{dpct::dev\_mgr}}
+
+
+device manager  
+
+
+
+
+{\ttfamily \+\#include $<$helper.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_acc0a6536944f59ab00b28d5a75cca6c4}\label{classdpct_1_1dev__mgr_acc0a6536944f59ab00b28d5a75cca6c4} 
+\doxymbox{\hyperlink{classdpct_1_1device__ext}{device\+\_\+ext}} \& {\bfseries current\+\_\+device} ()
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_aa2dfa58385839fa6175bc639d9e6328d}\label{classdpct_1_1dev__mgr_aa2dfa58385839fa6175bc639d9e6328d} 
+\doxymbox{\hyperlink{classdpct_1_1device__ext}{device\+\_\+ext}} \& {\bfseries cpu\+\_\+device} () const
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_ab4f4126362908821bf2d0dca376100fa}\label{classdpct_1_1dev__mgr_ab4f4126362908821bf2d0dca376100fa} 
+\doxymbox{\hyperlink{classdpct_1_1device__ext}{device\+\_\+ext}} \& {\bfseries get\+\_\+device} (unsigned int id) const
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_ab5330e2a8ba5d26499ad83f61b255ee2}\label{classdpct_1_1dev__mgr_ab5330e2a8ba5d26499ad83f61b255ee2} 
+unsigned int {\bfseries current\+\_\+device\+\_\+id} () const
+\item 
+void \doxymbox{\hyperlink{classdpct_1_1dev__mgr_a40cc1c028a92a150119539605d4979ea}{select\+\_\+device}} (unsigned int id)
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a70c332e898330135007a6c3a2ed62ed8}\label{classdpct_1_1dev__mgr_a70c332e898330135007a6c3a2ed62ed8} 
+unsigned int {\bfseries device\+\_\+count} ()
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a33a8ab025bde46f07cd25373d9a96ce8}\label{classdpct_1_1dev__mgr_a33a8ab025bde46f07cd25373d9a96ce8} 
+unsigned int {\bfseries get\+\_\+device\+\_\+id} (const sycl::\+device \&dev)
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a97ed6c96c9bd0307987efbcb9f27e16b}\label{classdpct_1_1dev__mgr_a97ed6c96c9bd0307987efbcb9f27e16b} 
+std::\+string {\bfseries get\+\_\+preferred\+\_\+gpu\+\_\+platform\+\_\+name} ()
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a1fb3d8b4c3d1d22e31c8b483e2572b1c}\label{classdpct_1_1dev__mgr_a1fb3d8b4c3d1d22e31c8b483e2572b1c} 
+{\footnotesize template$<$class Device\+Selector$>$ }\\std::\+enable\+\_\+if\+\_\+t$<$ std::\+is\+\_\+invocable\+\_\+r\+\_\+v$<$ int, Device\+Selector, const sycl::\+device \& $>$ $>$ {\bfseries select\+\_\+device} (const Device\+Selector \&selector=sycl::\+gpu\+\_\+selector\+\_\+v)
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a05bdb4f02dfe6556d19b35c97303ace6}\label{classdpct_1_1dev__mgr_a05bdb4f02dfe6556d19b35c97303ace6} 
+{\bfseries dev\+\_\+mgr} (const dev\+\_\+mgr \&)=delete
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_aaeeddfda9757a66b21d05c27b8bb8a9a}\label{classdpct_1_1dev__mgr_aaeeddfda9757a66b21d05c27b8bb8a9a} 
+dev\+\_\+mgr \& {\bfseries operator=} (const dev\+\_\+mgr \&)=delete
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a12ded533bed41dbf91d9e0f693a7d71e}\label{classdpct_1_1dev__mgr_a12ded533bed41dbf91d9e0f693a7d71e} 
+{\bfseries dev\+\_\+mgr} (dev\+\_\+mgr \&\&)=delete
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a55b9bbab9fea941988af25cd07fa11b0}\label{classdpct_1_1dev__mgr_a55b9bbab9fea941988af25cd07fa11b0} 
+dev\+\_\+mgr \& {\bfseries operator=} (dev\+\_\+mgr \&\&)=delete
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a02c5ec8ec72379b5351ee24fbb1ef3d6}\label{classdpct_1_1dev__mgr_a02c5ec8ec72379b5351ee24fbb1ef3d6} 
+static dev\+\_\+mgr \& {\bfseries instance} ()
+\begin{DoxyCompactList}\small\item\em Returns the instance of device manager singleton. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a140eef700c94d88ed62c57f0edf66936}\label{classdpct_1_1dev__mgr_a140eef700c94d88ed62c57f0edf66936} 
+void {\bfseries check\+\_\+id} (unsigned int id) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a70a90a1742f1f8895b3e7a99de727448}\label{classdpct_1_1dev__mgr_a70a90a1742f1f8895b3e7a99de727448} 
+static bool {\bfseries compare\+\_\+dev} (sycl::\+device \&device1, sycl::\+device \&device2)
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a1a97b62242043e609d6ed9e95928e76a}\label{classdpct_1_1dev__mgr_a1a97b62242043e609d6ed9e95928e76a} 
+static int {\bfseries convert\+\_\+backend\+\_\+index} (std::\+string \&backend)
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a552b27a28b3a74960fade4e0e1d64f8d}\label{classdpct_1_1dev__mgr_a552b27a28b3a74960fade4e0e1d64f8d} 
+static bool {\bfseries compare\+\_\+backend} (std::\+string \&backend1, std::\+string \&backend2)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a749dabebc2fbbe92e743a8d7bcdf84e2}\label{classdpct_1_1dev__mgr_a749dabebc2fbbe92e743a8d7bcdf84e2} 
+std::\+recursive\+\_\+mutex {\bfseries m\+\_\+mutex}
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_aa0b579bb4754f024e22dca82ae460bc9}\label{classdpct_1_1dev__mgr_aa0b579bb4754f024e22dca82ae460bc9} 
+std::\+vector$<$ std::\+shared\+\_\+ptr$<$ \doxymbox{\hyperlink{classdpct_1_1device__ext}{device\+\_\+ext}} $>$ $>$ {\bfseries \+\_\+devs}
+\item 
+const unsigned int \doxymbox{\hyperlink{classdpct_1_1dev__mgr_a6cde8b2ff99b34bdd2727a29393d08cb}{DEFAULT\+\_\+\+DEVICE\+\_\+\+ID}} = 0
+\item 
+\Hypertarget{classdpct_1_1dev__mgr_a593b6320a0e1fed01065da348553d3a7}\label{classdpct_1_1dev__mgr_a593b6320a0e1fed01065da348553d3a7} 
+std::\+map$<$ unsigned int, unsigned int $>$ {\bfseries \+\_\+thread2dev\+\_\+map}
+\begin{DoxyCompactList}\small\item\em thread-\/id to device-\/id map. \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1dev__mgr_a72da6da98559d31d80dc432425ac7eb7}\label{classdpct_1_1dev__mgr_a72da6da98559d31d80dc432425ac7eb7} 
+int {\bfseries \+\_\+cpu\+\_\+device} = -\/1
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+device manager 
+
+\label{doc-func-members}
+\Hypertarget{classdpct_1_1dev__mgr_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classdpct_1_1dev__mgr_a40cc1c028a92a150119539605d4979ea}\index{dpct::dev\_mgr@{dpct::dev\_mgr}!select\_device@{select\_device}}
+\index{select\_device@{select\_device}!dpct::dev\_mgr@{dpct::dev\_mgr}}
+\doxysubsubsection{\texorpdfstring{select\_device()}{select\_device()}}
+{\footnotesize\ttfamily \label{classdpct_1_1dev__mgr_a40cc1c028a92a150119539605d4979ea} 
+void dpct::\+dev\+\_\+mgr::\+select\+\_\+device (\begin{DoxyParamCaption}\item[{unsigned int}]{id}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Select device with a device ID. 
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em id} & \doxylink{requirements_The}{The} id of the device which can be obtained through get\+\_\+device\+\_\+id(const sycl::\+device). \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-variable-members}
+\Hypertarget{classdpct_1_1dev__mgr_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classdpct_1_1dev__mgr_a6cde8b2ff99b34bdd2727a29393d08cb}\index{dpct::dev\_mgr@{dpct::dev\_mgr}!DEFAULT\_DEVICE\_ID@{DEFAULT\_DEVICE\_ID}}
+\index{DEFAULT\_DEVICE\_ID@{DEFAULT\_DEVICE\_ID}!dpct::dev\_mgr@{dpct::dev\_mgr}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_DEVICE\_ID}{DEFAULT\_DEVICE\_ID}}
+{\footnotesize\ttfamily \label{classdpct_1_1dev__mgr_a6cde8b2ff99b34bdd2727a29393d08cb} 
+const unsigned int dpct::\+dev\+\_\+mgr::\+\+DEFAULT\+\_\+\+DEVICE\+\_\+\+ID = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+DEFAULT\+\_\+\+DEVICE\+\_\+\+ID is used, if current\+\_\+device\+\_\+id() can not find current thread id in \+\_\+thread2dev\+\_\+map, which means default device should be used for the current thread. 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+dpct/\+helper.\+hpp\end{DoxyCompactItemize}

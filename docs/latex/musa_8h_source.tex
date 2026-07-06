@@ -1,0 +1,153 @@
+\doxysection{musa.\+h}
+\hypertarget{musa_8h_source}{}\label{musa_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cuda/vendors/musa.h@{whisper.cpp/ggml/src/ggml-\/cuda/vendors/musa.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <musa\_runtime.h>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <musa.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <mublas.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <musa\_bf16.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <musa\_fp16.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_16F\ CUDA\_R\_16F}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_32F\ CUDA\_R\_32F}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ CUBLAS\_COMPUTE\_32F\_FAST\_16F\ MUBLAS\_COMPUTE\_32F\_FAST\_16F}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ CUBLAS\_GEMM\_DEFAULT\ MUBLAS\_GEMM\_DEFAULT}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ CUBLAS\_GEMM\_DEFAULT\_TENSOR\_OP\ MUBLAS\_GEMM\_DEFAULT}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ CUBLAS\_OP\_N\ MUBLAS\_OP\_N}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ CUBLAS\_OP\_T\ MUBLAS\_OP\_T}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ CUBLAS\_DEFAULT\_MATH\ MUBLAS\_DEFAULT\_MATH}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ CUBLAS\_SIDE\_RIGHT\ MUBLAS\_SIDE\_RIGHT}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ CUBLAS\_FILL\_MODE\_UPPER\ MUBLAS\_FILL\_MODE\_UPPER}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ CUBLAS\_DIAG\_NON\_UNIT\ MUBLAS\_DIAG\_NON\_UNIT}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ CUBLAS\_STATUS\_SUCCESS\ MUBLAS\_STATUS\_SUCCESS}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ CUBLAS\_TF32\_TENSOR\_OP\_MATH\ MUBLAS\_TENSOR\_OP\_MATH}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ CUDA\_R\_16F\ \ MUSA\_R\_16F}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ CUDA\_R\_16BF\ MUSA\_R\_16BF}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ CUDA\_R\_32F\ \ MUSA\_R\_32F}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ cublasStrsmBatched\ mublasStrsmBatched}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ cublasComputeType\_t\ cudaDataType\_t}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ cublasCreate\ mublasCreate}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ cublasDestroy\ mublasDestroy}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ cublasGemmEx\ mublasGemmEx}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ cublasGemmBatchedEx\ mublasGemmBatchedEx}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ cublasGemmStridedBatchedEx\ mublasGemmStridedBatchedEx}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ cublasHandle\_t\ mublasHandle\_t}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ cublasSetMathMode\ mublasSetMathMode}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ cublasSetStream\ mublasSetStream}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ cublasSgemm\ mublasSgemm}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ cublasStatus\_t\ mublasStatus\_t}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ cublasOperation\_t\ mublasOperation\_t}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ cublasGetStatusString\ mublasGetStatusString}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ cudaDataType\_t\ musaDataType\_t}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ cudaDeviceCanAccessPeer\ musaDeviceCanAccessPeer}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ cudaDeviceDisablePeerAccess\ musaDeviceDisablePeerAccess}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ cudaDeviceEnablePeerAccess\ musaDeviceEnablePeerAccess}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ cudaDeviceProp\ musaDeviceProp}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ cudaDeviceSynchronize\ musaDeviceSynchronize}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ cudaError\_t\ musaError\_t}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ cudaErrorPeerAccessAlreadyEnabled\ musaErrorPeerAccessAlreadyEnabled}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ cudaErrorPeerAccessNotEnabled\ musaErrorPeerAccessNotEnabled}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ cudaEventCreateWithFlags\ musaEventCreateWithFlags}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ cudaEventDisableTiming\ musaEventDisableTiming}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ cudaEventRecord\ musaEventRecord}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ cudaEventSynchronize\ musaEventSynchronize}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ cudaEvent\_t\ musaEvent\_t}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ cudaEventDestroy\ musaEventDestroy}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ cudaFree\ musaFree}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ cudaFreeHost\ musaFreeHost}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ cudaGetDevice\ musaGetDevice}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ cudaGetDeviceCount\ musaGetDeviceCount}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ cudaGetDeviceProperties\ musaGetDeviceProperties}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ cudaGetErrorString\ musaGetErrorString}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ cudaGetLastError\ musaGetLastError}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ cudaHostRegister\ musaHostRegister}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ cudaHostRegisterPortable\ musaHostRegisterPortable}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ cudaHostRegisterReadOnly\ musaHostRegisterReadOnly}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ cudaHostUnregister\ musaHostUnregister}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ cudaLaunchCooperativeKernel\ musaLaunchCooperativeKernel}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ cudaLaunchHostFunc\ musaLaunchHostFunc}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ cudaMalloc\ musaMalloc}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ cudaMallocHost\ musaMallocHost}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ cudaMallocManaged\ musaMallocManaged}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ cudaMemcpy\ musaMemcpy}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ cudaMemcpyAsync\ musaMemcpyAsync}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ cudaMemcpyPeerAsync\ musaMemcpyPeerAsync}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ cudaMemcpy2DAsync\ musaMemcpy2DAsync}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ cudaMemcpyDeviceToDevice\ musaMemcpyDeviceToDevice}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ cudaMemcpyDeviceToHost\ musaMemcpyDeviceToHost}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ cudaMemcpyHostToDevice\ musaMemcpyHostToDevice}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ cudaMemcpyKind\ musaMemcpyKind}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ cudaMemset\ musaMemset}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ cudaMemsetAsync\ musaMemsetAsync}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ cudaMemGetInfo\ musaMemGetInfo}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ cudaOccupancyMaxPotentialBlockSize\ musaOccupancyMaxPotentialBlockSize}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ cudaSetDevice\ musaSetDevice}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ cudaStreamCreateWithFlags\ musaStreamCreateWithFlags}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ cudaStreamDestroy\ musaStreamDestroy}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ cudaStreamFireAndForget\ musaStreamFireAndForget}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ cudaStreamNonBlocking\ musaStreamNonBlocking}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ cudaStreamPerThread\ musaStreamPerThread}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ cudaStreamSynchronize\ musaStreamSynchronize}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ cudaStreamWaitEvent\ musaStreamWaitEvent}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ cudaStream\_t\ musaStream\_t}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ cudaSuccess\ musaSuccess}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{comment}{//\ Additional\ mappings\ for\ MUSA\ virtual\ memory\ pool}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ CU\_DEVICE\_ATTRIBUTE\_VIRTUAL\_MEMORY\_MANAGEMENT\_SUPPORTED\ MU\_DEVICE\_ATTRIBUTE\_VIRTUAL\_ADDRESS\_MANAGEMENT\_SUPPORTED}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ CU\_MEM\_ACCESS\_FLAGS\_PROT\_READWRITE\ MU\_MEM\_ACCESS\_FLAGS\_PROT\_READWRITE}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ CU\_MEM\_ALLOC\_GRANULARITY\_RECOMMENDED\ MU\_MEM\_ALLOC\_GRANULARITY\_RECOMMENDED}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ CU\_MEM\_ALLOCATION\_TYPE\_PINNED\ MU\_MEM\_ALLOCATION\_TYPE\_PINNED}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ CU\_MEM\_LOCATION\_TYPE\_DEVICE\ MU\_MEM\_LOCATION\_TYPE\_DEVICE}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ CUdevice\ MUdevice}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ CUdeviceptr\ MUdeviceptr}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ CUmemAccessDesc\ MUmemAccessDesc}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ CUmemAllocationProp\ MUmemAllocationProp}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ CUmemGenericAllocationHandle\ MUmemGenericAllocationHandle}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ cuDeviceGet\ muDeviceGet}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ cuDeviceGetAttribute\ muDeviceGetAttribute}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ cuMemAddressFree\ muMemAddressFree}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ cuMemAddressReserve\ muMemAddressReserve}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ cuMemCreate\ muMemCreate}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ cuMemGetAllocationGranularity\ muMemGetAllocationGranularity}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ cuMemMap\ muMemMap}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ cuMemRelease\ muMemRelease}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ cuMemSetAccess\ muMemSetAccess}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ cuMemUnmap\ muMemUnmap}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ cudaFuncAttributeMaxDynamicSharedMemorySize\ musaFuncAttributeMaxDynamicSharedMemorySize}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ cudaFuncSetAttribute\ musaFuncSetAttribute}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ cudaMemcpy3DPeerParms\ musaMemcpy3DPeerParms}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ make\_cudaExtent\ make\_musaExtent}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ make\_cudaPitchedPtr\ make\_musaPitchedPtr}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{comment}{//\ Additional\ mappings\ for\ MUSA\ graphs}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ CUDA\_SUCCESS\ MUSA\_SUCCESS}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ CUresult\ MUresult}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ cuGetErrorString\ muGetErrorString}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ cudaErrorGraphExecUpdateFailure\ musaErrorGraphExecUpdateFailure}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ cudaErrorInvalidDeviceFunction\ musaErrorInvalidDeviceFunction}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ cudaGraphDestroy\ musaGraphDestroy}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ cudaGraphExecDestroy\ musaGraphExecDestroy}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ cudaGraphExec\_t\ musaGraphExec\_t}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ cudaGraphExecUpdate\ musaGraphExecUpdate}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ cudaGraphExecUpdateResult\ musaGraphExecUpdateResult}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ cudaGraphGetNodes\ musaGraphGetNodes}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ cudaGraphInstantiate\ musaGraphInstantiate}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ cudaGraphKernelNodeGetParams\ musaGraphKernelNodeGetParams}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ cudaGraphKernelNodeSetParams\ musaGraphKernelNodeSetParams}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ cudaGraphLaunch\ musaGraphLaunch}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ cudaGraphNodeGetType\ musaGraphNodeGetType}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ cudaGraphNode\_t\ musaGraphNode\_t}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ cudaGraphNodeType\ musaGraphNodeType}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ cudaGraphNodeTypeKernel\ musaGraphNodeTypeKernel}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ cudaGraph\_t\ musaGraph\_t}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ cudaKernelNodeParams\ musaKernelNodeParams}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ cudaStreamCaptureModeRelaxed\ musaStreamCaptureModeRelaxed}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ cudaStreamBeginCapture\ musaStreamBeginCapture}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ cudaStreamEndCapture\ musaStreamEndCapture}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ cudaOccupancyMaxActiveBlocksPerMultiprocessor\ musaOccupancyMaxActiveBlocksPerMultiprocessor}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{keyword}{typedef}\ \_\_mt\_bfloat16\ nv\_bfloat16;}
+\DoxyCodeLine{00147\ \textcolor{keyword}{typedef}\ \_\_mt\_bfloat162\ nv\_bfloat162;}
+
+\end{DoxyCode}

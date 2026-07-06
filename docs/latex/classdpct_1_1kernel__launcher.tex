@@ -1,0 +1,150 @@
+\doxysection{dpct::\+kernel\+\_\+launcher Class Reference}
+\hypertarget{classdpct_1_1kernel__launcher}{}\label{classdpct_1_1kernel__launcher}\index{dpct::kernel\_launcher@{dpct::kernel\_launcher}}
+
+
+{\ttfamily \+\#include $<$helper.\+hpp$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \doxymbox{\hyperlink{classdpct_1_1kernel__launcher_a7a02ddc9e23e537fcc78075a3b2651ab}{register\+\_\+kernel\+\_\+ptr}} (const void \texorpdfstring{$\ast$}{*}func, std::\+function$<$ void(\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}, void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, unsigned int, queue\+\_\+ptr)$>$ launcher)
+\item 
+{\footnotesize template$<$typename FuncT, typename... ArgsT$>$ }\\static std::\+enable\+\_\+if\+\_\+t$<$ std::\+is\+\_\+invocable\+\_\+v$<$ FuncT \texorpdfstring{$\ast$}{*}, Args\+T... $>$, void $>$ \doxymbox{\hyperlink{classdpct_1_1kernel__launcher_ac4c854d7b37bf6b68086d625a2b718a0}{launch}} (FuncT \texorpdfstring{$\ast$}{*}func, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}} group\+\_\+range, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}} local\+\_\+range, unsigned int local\+\_\+mem\+\_\+size, queue\+\_\+ptr que, Args\+T... args)
+\item 
+static void \doxymbox{\hyperlink{classdpct_1_1kernel__launcher_a9568cd827e073317dd55dd5f0522f3e3}{launch}} (const void \texorpdfstring{$\ast$}{*}func, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}} group\+\_\+range, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}} local\+\_\+range, void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}args, unsigned int local\+\_\+mem\+\_\+size, queue\+\_\+ptr que)
+\item 
+{\footnotesize template$<$typename FuncT$>$ }\\static std::\+enable\+\_\+if\+\_\+t$<$ std::\+is\+\_\+function\+\_\+v$<$ FuncT $>$, void $>$ \doxymbox{\hyperlink{classdpct_1_1kernel__launcher_aeb4d1139c991ba0857a1b613d10e6c31}{launch}} (FuncT \texorpdfstring{$\ast$}{*}func, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}} group\+\_\+range, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}} local\+\_\+range, void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}args, unsigned int local\+\_\+mem\+\_\+size, queue\+\_\+ptr que)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1kernel__launcher_ac75d928dd83fe2794beec49f5ae60c28}\label{classdpct_1_1kernel__launcher_ac75d928dd83fe2794beec49f5ae60c28} 
+static sycl::\+queue \texorpdfstring{$\ast$}{*} {\bfseries \+\_\+que} = nullptr
+\begin{DoxyCompactList}\small\item\em Variables for storing execution configuration. \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1kernel__launcher_aff8b420099ef223ca1a370632af716c3}\label{classdpct_1_1kernel__launcher_aff8b420099ef223ca1a370632af716c3} 
+static sycl::\+nd\+\_\+range$<$ 3 $>$ {\bfseries \+\_\+nr} = sycl::\+nd\+\_\+range$<$3$>$()
+\item 
+\Hypertarget{classdpct_1_1kernel__launcher_aa1b5b44d493a18a4cf361c556b53bc90}\label{classdpct_1_1kernel__launcher_aa1b5b44d493a18a4cf361c556b53bc90} 
+static unsigned int {\bfseries \+\_\+local\+\_\+mem\+\_\+size} = 0
+\item 
+\Hypertarget{classdpct_1_1kernel__launcher_aa6683e51cdd62adf18653b676ebbbecf}\label{classdpct_1_1kernel__launcher_aa6683e51cdd62adf18653b676ebbbecf} 
+static std::\+map$<$ const void \texorpdfstring{$\ast$}{*}, std::\+function$<$ void(\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}, void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, unsigned int, queue\+\_\+ptr)$>$ $>$ {\bfseries kernel\+\_\+function\+\_\+ptr\+\_\+map} = \{\}
+\begin{DoxyCompactList}\small\item\em Map for retrieving launchable functor from a raw pointer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1kernel__launcher_af22e019347cbf910452235ad54ab31b1}\label{classdpct_1_1kernel__launcher_af22e019347cbf910452235ad54ab31b1} 
+{\footnotesize template$<$typename FuncT, typename Arg\+Selector, std::\+size\+\_\+t... Index$>$ }\\static void {\bfseries launch\+\_\+helper} (FuncT \&\&func, Arg\+Selector \&selector, std::\+index\+\_\+sequence$<$ Index... $>$)
+\item 
+\Hypertarget{classdpct_1_1kernel__launcher_a917be9c46ee09ae5cad9adf3979d25ae}\label{classdpct_1_1kernel__launcher_a917be9c46ee09ae5cad9adf3979d25ae} 
+static void {\bfseries set\+\_\+execution\+\_\+config} (\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}} group\+\_\+range, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}} local\+\_\+range, unsigned int local\+\_\+mem\+\_\+size, queue\+\_\+ptr que)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1kernel__launcher_a19f17fc29ab7bdf5e9f657e7f717aab8}\label{classdpct_1_1kernel__launcher_a19f17fc29ab7bdf5e9f657e7f717aab8} 
+static std::\+mutex {\bfseries kernel\+\_\+function\+\_\+ptr\+\_\+map\+\_\+mutex}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Utility class for launching SYCL kernels through kernel function wrapper. For example:\+ A SYCL kernel function:\+ void kernel\+\_\+func(int \texorpdfstring{$\ast$}{*}ptr, sycl::\+nd\+\_\+item$<$3$>$ item); Kernel function wrapper:\+ void kernel\+\_\+func\+\_\+wrapper(int \texorpdfstring{$\ast$}{*}ptr) \{ sycl::\+queue queue = \texorpdfstring{$\ast$}{*}dpct::\+kernel\+\_\+launcher::\+\+\_\+que; unsigned int local\+Mem\+Size = dpct::\+kernel\+\_\+launcher::\+\+\_\+local\+\_\+mem\+\_\+size; sycl::\+nd\+\_\+range$<$3$>$ nr = dpct::\+kernel\+\_\+launcher::\+\+\_\+nr; queue.\+parallel\+\_\+for( nr, \+[=]\+(sycl::\+nd\+\_\+item$<$3$>$ item\+\_\+ct1) \{ kernel\+\_\+func(ptr, item\+\_\+ct1); \}); \} Then launch the kernel through wrapper like:\+ typedef void(\texorpdfstring{$\ast$}{*}fpt)(int \texorpdfstring{$\ast$}{*}); fpt fp = kernel\+\_\+func\+\_\+wrapper; \doxylink{classdpct_1_1kernel__launcher_ac4c854d7b37bf6b68086d625a2b718a0}{dpct::\+kernel\+\_\+launcher::\+launch}(fp, \doxylink{classdpct_1_1dim3}{dpct::\+dim3(1)}, \doxylink{classdpct_1_1dim3}{dpct::\+dim3(1)}, 0, 0, device\+\_\+ptr); If the origin function type is erased, then need to register it first:\+ void \texorpdfstring{$\ast$}{*}fp = (void \texorpdfstring{$\ast$}{*})wrapper\+\_\+register(\&kernel\+\_\+func\+\_\+wrapper).get(); \doxylink{classdpct_1_1kernel__launcher_ac4c854d7b37bf6b68086d625a2b718a0}{dpct::\+kernel\+\_\+launcher::\+launch}(fp, \doxylink{classdpct_1_1dim3}{dpct::\+dim3(1)}, \doxylink{classdpct_1_1dim3}{dpct::\+dim3(1)}, args, 0, 0); 
+
+\label{doc-func-members}
+\Hypertarget{classdpct_1_1kernel__launcher_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classdpct_1_1kernel__launcher_a9568cd827e073317dd55dd5f0522f3e3}\index{dpct::kernel\_launcher@{dpct::kernel\_launcher}!launch@{launch}}
+\index{launch@{launch}!dpct::kernel\_launcher@{dpct::kernel\_launcher}}
+\doxysubsubsection{\texorpdfstring{launch()}{launch()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classdpct_1_1kernel__launcher_a9568cd827e073317dd55dd5f0522f3e3} 
+void dpct::\+kernel\+\_\+launcher::\+launch (\begin{DoxyParamCaption}\item[{const void \texorpdfstring{$\ast$}{*}}]{func}{, }\item[{\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}}]{group\+\_\+range}{, }\item[{\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}}]{local\+\_\+range}{, }\item[{void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{args}{, }\item[{unsigned int}]{local\+\_\+mem\+\_\+size}{, }\item[{queue\+\_\+ptr}]{que}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Launches a kernel function through registered kernel function wrapper.
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em func} & Pointer to the registered kernel function wrapper.\\
+\hline
+\doxymbox{\texttt{in}}  & {\em group\+\_\+range} & SYCL group range.\\
+\hline
+\doxymbox{\texttt{in}}  & {\em local\+\_\+range} & SYCL local range.\\
+\hline
+\doxymbox{\texttt{in}}  & {\em args} & Array of pointers to kernel arguments.\\
+\hline
+\doxymbox{\texttt{in}}  & {\em local\+\_\+mem\+\_\+size} & \doxylink{requirements_The}{The} size of local memory required by the kernel function.\\
+\hline
+\doxymbox{\texttt{in}}  & {\em que} & SYCL queue used to execute kernel. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classdpct_1_1kernel__launcher_ac4c854d7b37bf6b68086d625a2b718a0}\index{dpct::kernel\_launcher@{dpct::kernel\_launcher}!launch@{launch}}
+\index{launch@{launch}!dpct::kernel\_launcher@{dpct::kernel\_launcher}}
+\doxysubsubsection{\texorpdfstring{launch()}{launch()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classdpct_1_1kernel__launcher_ac4c854d7b37bf6b68086d625a2b718a0} 
+template$<$typename FuncT, typename... ArgsT$>$ \\
+std::\+enable\+\_\+if\+\_\+t$<$ std::\+is\+\_\+invocable\+\_\+v$<$ FuncT \texorpdfstring{$\ast$}{*}, Args\+T... $>$, void $>$ dpct::\+kernel\+\_\+launcher::\+launch (\begin{DoxyParamCaption}\item[{FuncT \texorpdfstring{$\ast$}{*}}]{func}{, }\item[{\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}}]{group\+\_\+range}{, }\item[{\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}}]{local\+\_\+range}{, }\item[{unsigned int}]{local\+\_\+mem\+\_\+size}{, }\item[{queue\+\_\+ptr}]{que}{, }\item[{Args\+T...}]{args}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Launches a kernel function with arguments provided directly through kernel function wrapper. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em FuncT} & Type of the kernel function wrapper. \\
+\hline
+{\em ArgsT} & Types of kernel arguments. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em func} & Pointer to the kernel function wrapper. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em group\+\_\+range} & SYCL group range. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em local\+\_\+range} & SYCL local range. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em local\+\_\+mem\+\_\+size} & \doxylink{requirements_The}{The} size of local memory required by the kernel function.\\
+\hline
+\doxymbox{\texttt{in}}  & {\em que} & SYCL queue used to execute kernel. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em args} & Kernel arguments. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classdpct_1_1kernel__launcher_aeb4d1139c991ba0857a1b613d10e6c31}\index{dpct::kernel\_launcher@{dpct::kernel\_launcher}!launch@{launch}}
+\index{launch@{launch}!dpct::kernel\_launcher@{dpct::kernel\_launcher}}
+\doxysubsubsection{\texorpdfstring{launch()}{launch()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classdpct_1_1kernel__launcher_aeb4d1139c991ba0857a1b613d10e6c31} 
+template$<$typename FuncT$>$ \\
+std::\+enable\+\_\+if\+\_\+t$<$ std::\+is\+\_\+function\+\_\+v$<$ FuncT $>$, void $>$ dpct::\+kernel\+\_\+launcher::\+launch (\begin{DoxyParamCaption}\item[{FuncT \texorpdfstring{$\ast$}{*}}]{func}{, }\item[{\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}}]{group\+\_\+range}{, }\item[{\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}}]{local\+\_\+range}{, }\item[{void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{args}{, }\item[{unsigned int}]{local\+\_\+mem\+\_\+size}{, }\item[{queue\+\_\+ptr}]{que}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Launches a kernel function with packed arguments through kernel function wrapper. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em FuncT} & Type of the kernel function wrapper. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em func} & Pointer to the kernel function wrapper. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em group\+\_\+range} & SYCL group range. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em local\+\_\+range} & SYCL local range. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em args} & Array of pointers to kernel arguments. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em local\+\_\+mem\+\_\+size} & \doxylink{requirements_The}{The} size of local memory required by the kernel function.\\
+\hline
+\doxymbox{\texttt{in}}  & {\em que} & SYCL queue used to execute kernel. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classdpct_1_1kernel__launcher_a7a02ddc9e23e537fcc78075a3b2651ab}\index{dpct::kernel\_launcher@{dpct::kernel\_launcher}!register\_kernel\_ptr@{register\_kernel\_ptr}}
+\index{register\_kernel\_ptr@{register\_kernel\_ptr}!dpct::kernel\_launcher@{dpct::kernel\_launcher}}
+\doxysubsubsection{\texorpdfstring{register\_kernel\_ptr()}{register\_kernel\_ptr()}}
+{\footnotesize\ttfamily \label{classdpct_1_1kernel__launcher_a7a02ddc9e23e537fcc78075a3b2651ab} 
+void dpct::\+kernel\+\_\+launcher::\+register\+\_\+kernel\+\_\+ptr (\begin{DoxyParamCaption}\item[{const void \texorpdfstring{$\ast$}{*}}]{func}{, }\item[{std::\+function$<$ void(\doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}, \doxymbox{\hyperlink{classdpct_1_1dim3}{dim3}}, void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, unsigned int, queue\+\_\+ptr)$>$}]{launcher}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Registers a kernel function pointer with a corresponding launchable functor. 
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em func} & Pointer to the kernel function. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em launcher} & Functor to handle kernel invocation. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+dpct/\+helper.\+hpp\end{DoxyCompactItemize}

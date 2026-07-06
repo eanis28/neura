@@ -1,0 +1,166 @@
+\doxysection{ggml\+\_\+backend\+\_\+vk\+\_\+context Struct Reference}
+\hypertarget{structggml__backend__vk__context}{}\label{structggml__backend__vk__context}\index{ggml\_backend\_vk\_context@{ggml\_backend\_vk\_context}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structggml__backend__vk__context_a9f2d1a6865ee690ee64a87013b2c0ca5}\label{structggml__backend__vk__context_a9f2d1a6865ee690ee64a87013b2c0ca5} 
+std::\+string {\bfseries name}
+\item 
+\Hypertarget{structggml__backend__vk__context_a6bfebdfeb739ef66bbc9bc6b8f071107}\label{structggml__backend__vk__context_a6bfebdfeb739ef66bbc9bc6b8f071107} 
+vk\+\_\+device {\bfseries device}
+\item 
+\Hypertarget{structggml__backend__vk__context_adc9fd5d40dd05b90729efe33936d91c4}\label{structggml__backend__vk__context_adc9fd5d40dd05b90729efe33936d91c4} 
+size\+\_\+t {\bfseries semaphore\+\_\+idx}
+\item 
+\Hypertarget{structggml__backend__vk__context_aa6d19d01e2bfc1d99d67a0c74053c9ee}\label{structggml__backend__vk__context_aa6d19d01e2bfc1d99d67a0c74053c9ee} 
+size\+\_\+t {\bfseries event\+\_\+idx}
+\item 
+\Hypertarget{structggml__backend__vk__context_aeb7128ac3f40f1b7d94fe15ad513efb1}\label{structggml__backend__vk__context_aeb7128ac3f40f1b7d94fe15ad513efb1} 
+\doxymbox{\hyperlink{structggml__vk__garbage__collector}{ggml\+\_\+vk\+\_\+garbage\+\_\+collector}} {\bfseries gc}
+\item 
+\Hypertarget{structggml__backend__vk__context_a9175a32716e447b93f96512adad82730}\label{structggml__backend__vk__context_a9175a32716e447b93f96512adad82730} 
+size\+\_\+t {\bfseries prealloc\+\_\+size\+\_\+x}
+\item 
+\Hypertarget{structggml__backend__vk__context_a3955207a9e7e0fae78ecdcf3a385e129}\label{structggml__backend__vk__context_a3955207a9e7e0fae78ecdcf3a385e129} 
+size\+\_\+t {\bfseries prealloc\+\_\+size\+\_\+y}
+\item 
+\Hypertarget{structggml__backend__vk__context_ae06a3966a82b1c9d8c06d9a545869acb}\label{structggml__backend__vk__context_ae06a3966a82b1c9d8c06d9a545869acb} 
+size\+\_\+t {\bfseries prealloc\+\_\+size\+\_\+split\+\_\+k}
+\item 
+\Hypertarget{structggml__backend__vk__context_a9d0c60cc8d77b34b1a02a843314921c9}\label{structggml__backend__vk__context_a9d0c60cc8d77b34b1a02a843314921c9} 
+size\+\_\+t {\bfseries prealloc\+\_\+size\+\_\+add\+\_\+rms\+\_\+partials}
+\item 
+\Hypertarget{structggml__backend__vk__context_a3c9e61523dc71c36450ac6678f65467a}\label{structggml__backend__vk__context_a3c9e61523dc71c36450ac6678f65467a} 
+size\+\_\+t {\bfseries prealloc\+\_\+size\+\_\+add\+\_\+rms\+\_\+partials\+\_\+offset}
+\item 
+\Hypertarget{structggml__backend__vk__context_a1c017f92a972a98f55ef4c58e3a9722b}\label{structggml__backend__vk__context_a1c017f92a972a98f55ef4c58e3a9722b} 
+vk\+\_\+buffer {\bfseries prealloc\+\_\+x}
+\item 
+\Hypertarget{structggml__backend__vk__context_a9285e5ec37d1f9ce55e263a40e1397da}\label{structggml__backend__vk__context_a9285e5ec37d1f9ce55e263a40e1397da} 
+vk\+\_\+buffer {\bfseries prealloc\+\_\+y}
+\item 
+\Hypertarget{structggml__backend__vk__context_a11d5f17965ea87f2c257af2185e7a386}\label{structggml__backend__vk__context_a11d5f17965ea87f2c257af2185e7a386} 
+vk\+\_\+buffer {\bfseries prealloc\+\_\+split\+\_\+k}
+\item 
+\Hypertarget{structggml__backend__vk__context_a655371a4b856edcece2643f4e4f01daf}\label{structggml__backend__vk__context_a655371a4b856edcece2643f4e4f01daf} 
+vk\+\_\+buffer {\bfseries prealloc\+\_\+add\+\_\+rms\+\_\+partials}
+\item 
+\Hypertarget{structggml__backend__vk__context_a68b3d6c96c7172cbd10c3887b742f60e}\label{structggml__backend__vk__context_a68b3d6c96c7172cbd10c3887b742f60e} 
+vk\+\_\+buffer {\bfseries sync\+\_\+staging}
+\item 
+\Hypertarget{structggml__backend__vk__context_a44e57558df5178d19af09e3f96197a1b}\label{structggml__backend__vk__context_a44e57558df5178d19af09e3f96197a1b} 
+vk::\+\+Fence {\bfseries fence}
+\item 
+\Hypertarget{structggml__backend__vk__context_a5c3622c0703f7f65aeb5c4148b0c3bc0}\label{structggml__backend__vk__context_a5c3622c0703f7f65aeb5c4148b0c3bc0} 
+vk::\+\+Fence {\bfseries almost\+\_\+ready\+\_\+fence}
+\item 
+\Hypertarget{structggml__backend__vk__context_a23667b174b680ec6f866c62508eb28c3}\label{structggml__backend__vk__context_a23667b174b680ec6f866c62508eb28c3} 
+bool {\bfseries submit\+\_\+pending} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a752ebab00a921945dfe39faf56ebd49e}\label{structggml__backend__vk__context_a752ebab00a921945dfe39faf56ebd49e} 
+bool {\bfseries almost\+\_\+ready\+\_\+fence\+\_\+pending} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_ab15eadb05455bca2114591218c720d2f}\label{structggml__backend__vk__context_ab15eadb05455bca2114591218c720d2f} 
+bool {\bfseries do\+\_\+add\+\_\+rms\+\_\+partials\+\_\+offset\+\_\+calculation}
+\item 
+\Hypertarget{structggml__backend__vk__context_ab3e8242062caeec62972d737e3dd5bab}\label{structggml__backend__vk__context_ab3e8242062caeec62972d737e3dd5bab} 
+bool {\bfseries do\+\_\+add\+\_\+rms\+\_\+partials}
+\item 
+\Hypertarget{structggml__backend__vk__context_a3be4e809cdec16f10e3c59445ed895ff}\label{structggml__backend__vk__context_a3be4e809cdec16f10e3c59445ed895ff} 
+uint64\+\_\+t {\bfseries last\+\_\+total\+\_\+mul\+\_\+mat\+\_\+bytes} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a2056734c16f33411e2735085c1da0744}\label{structggml__backend__vk__context_a2056734c16f33411e2735085c1da0744} 
+\doxymbox{\hyperlink{structvk__pipeline__struct}{vk\+\_\+pipeline\+\_\+struct}} \texorpdfstring{$\ast$}{*} {\bfseries prealloc\+\_\+y\+\_\+last\+\_\+pipeline\+\_\+used} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a9b0d61ab59286d534eab4fd407761850}\label{structggml__backend__vk__context_a9b0d61ab59286d534eab4fd407761850} 
+const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} {\bfseries prealloc\+\_\+y\+\_\+last\+\_\+tensor\+\_\+used} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_abf880726f94ad68928b43afdaf7df209}\label{structggml__backend__vk__context_abf880726f94ad68928b43afdaf7df209} 
+std::\+vector$<$ const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries unsynced\+\_\+nodes\+\_\+written}
+\item 
+\Hypertarget{structggml__backend__vk__context_a0be05e7e7117b34ab20e556479638958}\label{structggml__backend__vk__context_a0be05e7e7117b34ab20e556479638958} 
+std::\+vector$<$ const \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries unsynced\+\_\+nodes\+\_\+read}
+\item 
+\Hypertarget{structggml__backend__vk__context_ab5ccb5857470f3026ebedb83e138eb05}\label{structggml__backend__vk__context_ab5ccb5857470f3026ebedb83e138eb05} 
+bool {\bfseries prealloc\+\_\+x\+\_\+need\+\_\+sync}
+\item 
+\Hypertarget{structggml__backend__vk__context_aba5d40c6aeda7b8a31238ed5755a152c}\label{structggml__backend__vk__context_aba5d40c6aeda7b8a31238ed5755a152c} 
+bool {\bfseries prealloc\+\_\+y\+\_\+need\+\_\+sync}
+\item 
+\Hypertarget{structggml__backend__vk__context_a6555c828c02f8928db2edce5220007c3}\label{structggml__backend__vk__context_a6555c828c02f8928db2edce5220007c3} 
+bool {\bfseries prealloc\+\_\+split\+\_\+k\+\_\+need\+\_\+sync}
+\item 
+\Hypertarget{structggml__backend__vk__context_ad5803bc3ca40153eeccc58de577820b4}\label{structggml__backend__vk__context_ad5803bc3ca40153eeccc58de577820b4} 
+vk\+\_\+context\+\_\+ref {\bfseries compute\+\_\+ctx}
+\item 
+\Hypertarget{structggml__backend__vk__context_afcf294db03dfe106ac04f4a33b62f787}\label{structggml__backend__vk__context_afcf294db03dfe106ac04f4a33b62f787} 
+vk\+\_\+context\+\_\+ref {\bfseries transfer\+\_\+ctx}
+\item 
+\Hypertarget{structggml__backend__vk__context_ac1ea669a5802767b9ad70384c445e296}\label{structggml__backend__vk__context_ac1ea669a5802767b9ad70384c445e296} 
+\doxymbox{\hyperlink{structvk__semaphore}{vk\+\_\+semaphore}} {\bfseries transfer\+\_\+semaphore}
+\item 
+\Hypertarget{structggml__backend__vk__context_a5caa450edb23ad0f8e019b3842a71679}\label{structggml__backend__vk__context_a5caa450edb23ad0f8e019b3842a71679} 
+uint64\+\_\+t {\bfseries transfer\+\_\+semaphore\+\_\+last\+\_\+submitted} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a351ad9414d69250d724f998c61f97708}\label{structggml__backend__vk__context_a351ad9414d69250d724f998c61f97708} 
+std::\+vector$<$ vk\+\_\+context\+\_\+ref $>$ {\bfseries tensor\+\_\+ctxs}
+\item 
+\Hypertarget{structggml__backend__vk__context_a718cbaa1da6154fb725c8f2dbbf4ea73}\label{structggml__backend__vk__context_a718cbaa1da6154fb725c8f2dbbf4ea73} 
+std::\+vector$<$ vk::\+\+Descriptor\+Pool $>$ {\bfseries descriptor\+\_\+pools}
+\item 
+\Hypertarget{structggml__backend__vk__context_abb70630300b6b3795c7bc00d4a171a57}\label{structggml__backend__vk__context_abb70630300b6b3795c7bc00d4a171a57} 
+std::\+vector$<$ vk::\+\+Descriptor\+Set $>$ {\bfseries descriptor\+\_\+sets}
+\item 
+\Hypertarget{structggml__backend__vk__context_a7bae2ae10a9e7fd50f236a25bdefb0dc}\label{structggml__backend__vk__context_a7bae2ae10a9e7fd50f236a25bdefb0dc} 
+uint32\+\_\+t {\bfseries descriptor\+\_\+set\+\_\+idx} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a235f0b181537a6bfc0b284eacfe08cfb}\label{structggml__backend__vk__context_a235f0b181537a6bfc0b284eacfe08cfb} 
+uint32\+\_\+t {\bfseries pipeline\+\_\+descriptor\+\_\+set\+\_\+requirements} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a117ced4b6e8118f4709c9e66f3d3394c}\label{structggml__backend__vk__context_a117ced4b6e8118f4709c9e66f3d3394c} 
+\doxymbox{\hyperlink{structvk__command__pool}{vk\+\_\+command\+\_\+pool}} {\bfseries compute\+\_\+cmd\+\_\+pool}
+\item 
+\Hypertarget{structggml__backend__vk__context_afe43e596f5abf2d4ce15225609a2d9e8}\label{structggml__backend__vk__context_afe43e596f5abf2d4ce15225609a2d9e8} 
+\doxymbox{\hyperlink{structvk__command__pool}{vk\+\_\+command\+\_\+pool}} {\bfseries transfer\+\_\+cmd\+\_\+pool}
+\item 
+\Hypertarget{structggml__backend__vk__context_a182f7828e0fb067bd8530b3a57a63d71}\label{structggml__backend__vk__context_a182f7828e0fb067bd8530b3a57a63d71} 
+int {\bfseries num\+\_\+additional\+\_\+fused\+\_\+ops} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a7e8a52e7d64fb5bc3fa50f8ba1fe5eaa}\label{structggml__backend__vk__context_a7e8a52e7d64fb5bc3fa50f8ba1fe5eaa} 
+int {\bfseries fused\+\_\+ops\+\_\+write\+\_\+mask} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a1e6a5c0d1c0929871bb6ab8d649c5617}\label{structggml__backend__vk__context_a1e6a5c0d1c0929871bb6ab8d649c5617} 
+topk\+\_\+moe\+\_\+mode {\bfseries fused\+\_\+topk\+\_\+moe\+\_\+mode} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a34970407bd3cae3ea97b485a94903534}\label{structggml__backend__vk__context_a34970407bd3cae3ea97b485a94903534} 
+bool {\bfseries fused\+\_\+topk\+\_\+moe\+\_\+scale} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a09c3d5a9192424b44edd126f9a71ca02}\label{structggml__backend__vk__context_a09c3d5a9192424b44edd126f9a71ca02} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{classvk__perf__logger}{vk\+\_\+perf\+\_\+logger}} $>$ {\bfseries perf\+\_\+logger}
+\item 
+\Hypertarget{structggml__backend__vk__context_aabdd1e78e7b16586a98b484fc5a34613}\label{structggml__backend__vk__context_aabdd1e78e7b16586a98b484fc5a34613} 
+vk::\+\+Query\+Pool {\bfseries query\+\_\+pool}
+\item 
+\Hypertarget{structggml__backend__vk__context_a980344ffa98137ccd08cadecc449bd62}\label{structggml__backend__vk__context_a980344ffa98137ccd08cadecc449bd62} 
+std::\+vector$<$ const char \texorpdfstring{$\ast$}{*} $>$ {\bfseries query\+\_\+fusion\+\_\+names}
+\item 
+\Hypertarget{structggml__backend__vk__context_a20e900fe9c2f17927a7785a5cb921b61}\label{structggml__backend__vk__context_a20e900fe9c2f17927a7785a5cb921b61} 
+std::\+vector$<$ int $>$ {\bfseries query\+\_\+fusion\+\_\+node\+\_\+count}
+\item 
+\Hypertarget{structggml__backend__vk__context_a1e65f5f86558e6d157397e1fa06de262}\label{structggml__backend__vk__context_a1e65f5f86558e6d157397e1fa06de262} 
+std::\+vector$<$ \doxymbox{\hyperlink{structggml__tensor}{ggml\+\_\+tensor}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries query\+\_\+nodes}
+\item 
+\Hypertarget{structggml__backend__vk__context_abf4d93bf24f653cc5d436795a1ff867f}\label{structggml__backend__vk__context_abf4d93bf24f653cc5d436795a1ff867f} 
+std::\+vector$<$ int $>$ {\bfseries query\+\_\+node\+\_\+idx}
+\item 
+\Hypertarget{structggml__backend__vk__context_aa4ee97cab18c389cdb96052758253984}\label{structggml__backend__vk__context_aa4ee97cab18c389cdb96052758253984} 
+int32\+\_\+t {\bfseries num\+\_\+queries} \{\}
+\item 
+\Hypertarget{structggml__backend__vk__context_a7b576451dda5eb1637a1cfa6d865d7ba}\label{structggml__backend__vk__context_a7b576451dda5eb1637a1cfa6d865d7ba} 
+int32\+\_\+t {\bfseries query\+\_\+idx} \{\}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/vulkan/\+ggml-\/vulkan.\+cpp\end{DoxyCompactItemize}

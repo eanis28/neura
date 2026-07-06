@@ -1,0 +1,288 @@
+\doxysection{System\+Command\+Action Class Reference}
+\hypertarget{class_system_command_action}{}\label{class_system_command_action}\index{SystemCommandAction@{SystemCommandAction}}
+
+
+Provides OS-\/level system command helpers for Neura.  
+
+
+
+
+{\ttfamily \+\#include $<$System\+Command\+Action.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_system_command_action_a1e472bba08d6791a92dc06710a5d0598}{change\+Volume}} (int delta)
+\begin{DoxyCompactList}\small\item\em Changes the system volume. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_system_command_action_a0a0529a095c7a2c781e880a6d7e8acfb}{change\+Brightness}} (int delta)
+\begin{DoxyCompactList}\small\item\em Changes the screen brightness. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_system_command_action_a9fa18526c98ff03705a8f1370b32316c}{take\+Screenshot}} ()
+\begin{DoxyCompactList}\small\item\em Takes a screenshot of the current screen. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_system_command_action_a370fab900941e3657dc6771497276044}{close\+Window}} ()
+\begin{DoxyCompactList}\small\item\em Closes the currently active window. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_system_command_action_ab33efba849c85a2d136f7d8eb2a27b1a}{switch\+Tabs}} ()
+\begin{DoxyCompactList}\small\item\em Switches to another browser tab. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_system_command_action_a9b7ce944256dd0ba04c2450e775af757}{switch\+Windows}} ()
+\begin{DoxyCompactList}\small\item\em Switches to another open application window. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_system_command_action_aaca41de9f275fe1beb2fa9e1edd5b112}{select\+All}} ()
+\begin{DoxyCompactList}\small\item\em Selects all text or content in the active context. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_system_command_action_ab67bcc169a8ff72e40b74280e9c3549f}{copy\+Text}} ()
+\begin{DoxyCompactList}\small\item\em Copies the currently selected text or content. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_system_command_action_a34dca6262be79829f0e5039ee076259a}{paste\+Text}} ()
+\begin{DoxyCompactList}\small\item\em Pastes clipboard contents into the active context. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_system_command_action_ae672ec34883aa0d5b126157600187424}{read\+Selected\+Text}} ()
+\begin{DoxyCompactList}\small\item\em Reads the currently selected text. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_system_command_action_a04d4d89a5b1631db95305bd9ac43274a}{search\+Computer}} (const std::\+string \&query)
+\begin{DoxyCompactList}\small\item\em Searches the computer for a given query. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_system_command_action_a9432127deb580a6264079804151a4869}{listen\+For\+Command}} ()
+\begin{DoxyCompactList}\small\item\em Listens for a spoken voice command. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Provides OS-\/level system command helpers for Neura. 
+
+This class is responsible for performing system-\/related actions such as adjusting volume and brightness, taking screenshots, switching tabs or windows, starting and stopping screen recordings, interacting with the clipboard, searching the computer, and listening for spoken commands.
+
+\doxylink{requirements_The}{The} implementation is intended to support cross-\/platform behavior where possible, with platform-\/specific logic handled in the source file. 
+
+\label{doc-func-members}
+\Hypertarget{class_system_command_action_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_system_command_action_a0a0529a095c7a2c781e880a6d7e8acfb}\index{SystemCommandAction@{SystemCommandAction}!changeBrightness@{changeBrightness}}
+\index{changeBrightness@{changeBrightness}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{changeBrightness()}{changeBrightness()}}
+{\footnotesize\ttfamily \label{class_system_command_action_a0a0529a095c7a2c781e880a6d7e8acfb} 
+void System\+Command\+Action::\+change\+Brightness (\begin{DoxyParamCaption}\item[{int}]{delta}{}\end{DoxyParamCaption})}
+
+
+
+Changes the screen brightness. 
+
+Increases or decreases the display brightness depending on the value of {\ttfamily delta}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em delta} & \doxylink{requirements_The}{The} amount to change the brightness by. Positive values increase brightness, negative values decrease it.\\
+\hline
+\end{DoxyParams}
+On mac\+OS, simulates brightness key presses. On Linux, uses {\ttfamily brightnessctl} to adjust backlight brightness.
+
+
+\begin{DoxyParams}{Parameters}
+{\em delta} & \doxylink{requirements_The}{The} amount to change the brightness by. Positive values increase brightness and negative values decrease it. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_system_command_action_a1e472bba08d6791a92dc06710a5d0598}\index{SystemCommandAction@{SystemCommandAction}!changeVolume@{changeVolume}}
+\index{changeVolume@{changeVolume}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{changeVolume()}{changeVolume()}}
+{\footnotesize\ttfamily \label{class_system_command_action_a1e472bba08d6791a92dc06710a5d0598} 
+void System\+Command\+Action::\+change\+Volume (\begin{DoxyParamCaption}\item[{int}]{delta}{}\end{DoxyParamCaption})}
+
+
+
+Changes the system volume. 
+
+Changes the system output volume.
+
+Increases or decreases the output volume depending on the value of {\ttfamily delta}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em delta} & \doxylink{requirements_The}{The} amount to change the volume by. Positive values increase volume, negative values decrease it.\\
+\hline
+\end{DoxyParams}
+On mac\+OS, adjusts the current output volume directly. On Linux, uses {\ttfamily pactl} (Pulse\+Audio/\+\+Pipe\+Wire) to adjust the sink volume.
+
+
+\begin{DoxyParams}{Parameters}
+{\em delta} & \doxylink{requirements_The}{The} amount to change the volume by. Positive values increase volume and negative values decrease it. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_system_command_action_a370fab900941e3657dc6771497276044}\index{SystemCommandAction@{SystemCommandAction}!closeWindow@{closeWindow}}
+\index{closeWindow@{closeWindow}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{closeWindow()}{closeWindow()}}
+{\footnotesize\ttfamily \label{class_system_command_action_a370fab900941e3657dc6771497276044} 
+bool System\+Command\+Action::\+close\+Window (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Closes the currently active window. 
+
+Executes the platform-\/specific shortcut or command to close the focused application window.
+
+\begin{DoxyReturn}{Returns}
+true if the command was executed successfully, false otherwise.
+\end{DoxyReturn}
+On mac\+OS, avoids closing the Neura app itself when it is frontmost. On Linux, uses {\ttfamily xdotool} to send Alt+\+F4 to the active window.
+
+\begin{DoxyReturn}{Returns}
+true if the window close command succeeded, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_system_command_action_ab67bcc169a8ff72e40b74280e9c3549f}\index{SystemCommandAction@{SystemCommandAction}!copyText@{copyText}}
+\index{copyText@{copyText}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{copyText()}{copyText()}}
+{\footnotesize\ttfamily \label{class_system_command_action_ab67bcc169a8ff72e40b74280e9c3549f} 
+void System\+Command\+Action::\+copy\+Text (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Copies the currently selected text or content. 
+
+Simulates the system shortcut commonly used for copying.
+
+Simulates the standard Copy keyboard shortcut. \Hypertarget{class_system_command_action_a9432127deb580a6264079804151a4869}\index{SystemCommandAction@{SystemCommandAction}!listenForCommand@{listenForCommand}}
+\index{listenForCommand@{listenForCommand}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{listenForCommand()}{listenForCommand()}}
+{\footnotesize\ttfamily \label{class_system_command_action_a9432127deb580a6264079804151a4869} 
+std::\+string System\+Command\+Action::\+listen\+For\+Command (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Listens for a spoken voice command. 
+
+Listens for a voice command using the Python voice listener script.
+
+Captures and returns a voice command as text, depending on the implementation of the system\textquotesingle{}s speech input mechanism.
+
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} recognized spoken command as a string.
+\end{DoxyReturn}
+Runs the external Python script responsible for capturing and recognizing spoken commands.
+
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} recognized command as a trimmed string, or an empty string if unavailable. 
+\end{DoxyReturn}
+\Hypertarget{class_system_command_action_a34dca6262be79829f0e5039ee076259a}\index{SystemCommandAction@{SystemCommandAction}!pasteText@{pasteText}}
+\index{pasteText@{pasteText}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{pasteText()}{pasteText()}}
+{\footnotesize\ttfamily \label{class_system_command_action_a34dca6262be79829f0e5039ee076259a} 
+void System\+Command\+Action::\+paste\+Text (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Pastes clipboard contents into the active context. 
+
+Pastes the current clipboard contents.
+
+Simulates the system shortcut commonly used for pasting.
+
+Simulates the standard Paste keyboard shortcut. \Hypertarget{class_system_command_action_ae672ec34883aa0d5b126157600187424}\index{SystemCommandAction@{SystemCommandAction}!readSelectedText@{readSelectedText}}
+\index{readSelectedText@{readSelectedText}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{readSelectedText()}{readSelectedText()}}
+{\footnotesize\ttfamily \label{class_system_command_action_ae672ec34883aa0d5b126157600187424} 
+std::\+string System\+Command\+Action::\+read\+Selected\+Text (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Reads the currently selected text. 
+
+Attempts to access or retrieve the text currently selected by the user.
+
+\begin{DoxyReturn}{Returns}
+A string containing the selected text, or an empty string if no text could be read.
+\end{DoxyReturn}
+Temporarily copies the current selection into the clipboard, reads it, and then restores the previous clipboard contents.
+
+\begin{DoxyReturn}{Returns}
+\doxylink{requirements_The}{The} selected text as a string, or an empty string if nothing was read. 
+\end{DoxyReturn}
+\Hypertarget{class_system_command_action_a04d4d89a5b1631db95305bd9ac43274a}\index{SystemCommandAction@{SystemCommandAction}!searchComputer@{searchComputer}}
+\index{searchComputer@{searchComputer}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{searchComputer()}{searchComputer()}}
+{\footnotesize\ttfamily \label{class_system_command_action_a04d4d89a5b1631db95305bd9ac43274a} 
+void System\+Command\+Action::\+search\+Computer (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{query}{}\end{DoxyParamCaption})}
+
+
+
+Searches the computer for a given query. 
+
+Opens the system search interface and types a query.
+
+Opens the platform\textquotesingle{}s search interface and enters the provided query.
+
+
+\begin{DoxyParams}{Parameters}
+{\em query} & \doxylink{requirements_The}{The} search text to look up on the computer.\\
+\hline
+\end{DoxyParams}
+On mac\+OS, opens Spotlight search. On Linux, opens the desktop search via Super key and types the query.
+
+
+\begin{DoxyParams}{Parameters}
+{\em query} & \doxylink{requirements_The}{The} text to search for on the computer. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_system_command_action_aaca41de9f275fe1beb2fa9e1edd5b112}\index{SystemCommandAction@{SystemCommandAction}!selectAll@{selectAll}}
+\index{selectAll@{selectAll}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{selectAll()}{selectAll()}}
+{\footnotesize\ttfamily \label{class_system_command_action_aaca41de9f275fe1beb2fa9e1edd5b112} 
+void System\+Command\+Action::\+select\+All (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Selects all text or content in the active context. 
+
+Selects all text or content in the active application.
+
+Simulates the system shortcut commonly used for "{}\+Select All"{}.
+
+Simulates the standard Select All keyboard shortcut. \Hypertarget{class_system_command_action_ab33efba849c85a2d136f7d8eb2a27b1a}\index{SystemCommandAction@{SystemCommandAction}!switchTabs@{switchTabs}}
+\index{switchTabs@{switchTabs}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{switchTabs()}{switchTabs()}}
+{\footnotesize\ttfamily \label{class_system_command_action_ab33efba849c85a2d136f7d8eb2a27b1a} 
+bool System\+Command\+Action::\+switch\+Tabs (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Switches to another browser tab. 
+
+Switches to the next browser tab.
+
+Executes the platform-\/specific shortcut for moving between tabs in the active application, typically a browser.
+
+\begin{DoxyReturn}{Returns}
+true if the command was executed successfully, false otherwise.
+\end{DoxyReturn}
+On mac\+OS, this implementation specifically targets Safari. On Linux, simulates Ctrl+\+Tab using {\ttfamily xdotool}.
+
+\begin{DoxyReturn}{Returns}
+true if the tab switch command succeeded, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_system_command_action_a9b7ce944256dd0ba04c2450e775af757}\index{SystemCommandAction@{SystemCommandAction}!switchWindows@{switchWindows}}
+\index{switchWindows@{switchWindows}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{switchWindows()}{switchWindows()}}
+{\footnotesize\ttfamily \label{class_system_command_action_a9b7ce944256dd0ba04c2450e775af757} 
+bool System\+Command\+Action::\+switch\+Windows (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Switches to another open application window. 
+
+Executes the platform-\/specific shortcut for cycling through currently open windows.
+
+\begin{DoxyReturn}{Returns}
+true if the command was executed successfully, false otherwise.
+\end{DoxyReturn}
+On mac\+OS, uses Command+\+Tab behavior. On Linux, simulates Alt+\+Tab using {\ttfamily xdotool}.
+
+\begin{DoxyReturn}{Returns}
+true if the window switch command succeeded, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_system_command_action_a9fa18526c98ff03705a8f1370b32316c}\index{SystemCommandAction@{SystemCommandAction}!takeScreenshot@{takeScreenshot}}
+\index{takeScreenshot@{takeScreenshot}!SystemCommandAction@{SystemCommandAction}}
+\doxysubsubsection{\texorpdfstring{takeScreenshot()}{takeScreenshot()}}
+{\footnotesize\ttfamily \label{class_system_command_action_a9fa18526c98ff03705a8f1370b32316c} 
+bool System\+Command\+Action::\+take\+Screenshot (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Takes a screenshot of the current screen. 
+
+Captures the user\textquotesingle{}s current screen and saves it using the platform-\/specific screenshot mechanism.
+
+Saves a screenshot to the user\textquotesingle{}s desktop using the platform-\/specific screenshot method. 
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_system_command_action_8h}{System\+Command\+Action.\+h}}\item 
+System\+Command\+Action.\+cpp\end{DoxyCompactItemize}

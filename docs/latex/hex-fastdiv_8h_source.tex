@@ -1,0 +1,43 @@
+\doxysection{hex-\/fastdiv.h}
+\hypertarget{hex-fastdiv_8h_source}{}\label{hex-fastdiv_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hex-\/fastdiv.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hex-\/fastdiv.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HEX\_FASTDIV\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HEX\_FASTDIV\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ See\ https://gmplib.org/\string~tege/divcnst-\/pldi94.pdf\ figure\ 4.1.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ Precompute\ mp\ (m'\ in\ the\ paper)\ and\ L\ such\ that\ division}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ can\ be\ computed\ using\ a\ multiply\ (high\ 32b\ of\ 64b\ result)}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ and\ a\ shift:}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ n/d\ =\ (mulhi(n,\ mp)\ +\ n)\ >>\ L;}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}}\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ uint32\_t\ mp;}
+\DoxyCodeLine{00012\ \ \ \ \ uint32\_t\ l;}
+\DoxyCodeLine{00013\ \};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}}\ init\_fastdiv\_values(uint32\_t\ d)\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}}\ result\ =\ \{\ 0,\ 0\ \};}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{//\ compute\ L\ =\ ceil(log2(d));}}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordflow}{while}\ (result.l\ <\ 32\ \&\&\ ((uint32\_t)\ 1\ <<\ result.l)\ <\ d)\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ ++(result.l);}
+\DoxyCodeLine{00020\ \ \ \ \ \}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ result.mp\ =\ (uint32\_t)\ (((uint64\_t)\ 1\ <<\ 32)\ *\ (((uint64\_t)\ 1\ <<\ result.l)\ -\/\ d)\ /\ d\ +\ 1);}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint32\_t\ fastdiv(uint32\_t\ n,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}}\ *\ vals)\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ Compute\ high\ 32\ bits\ of\ n\ *\ mp}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ hi\ =\ (uint32\_t)\ (((uint64\_t)\ n\ *\ vals-\/>mp)\ >>\ 32);\ \ \textcolor{comment}{//\ mulhi(n,\ mp)}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ add\ n,\ apply\ bit\ shift}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{return}\ (hi\ +\ n)\ >>\ vals-\/>l;}
+\DoxyCodeLine{00031\ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint32\_t\ fastmodulo(uint32\_t\ n,\ uint32\_t\ d,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structfastdiv__values}{fastdiv\_values}}\ *\ vals)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordflow}{return}\ n\ -\/\ fastdiv(n,\ vals)\ *\ d;}
+\DoxyCodeLine{00035\ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HEX\_FASTDIV\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

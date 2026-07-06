@@ -1,0 +1,22 @@
+\doxysection{Browser\+Action.\+h File Reference}
+\hypertarget{_browser_action_8h}{}\label{_browser_action_8h}\index{BrowserAction.h@{BrowserAction.h}}
+
+
+\doxylink{class_action}{Action} that finds and plays the first You\+Tube result for a given song.  
+
+
+{\ttfamily \+\#include "{}action.\+h"{}}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_browser_action}{Browser\+Action}}
+\begin{DoxyCompactList}\small\item\em Opens the first You\+Tube video matching a song title and artist. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_action}{Action} that finds and plays the first You\+Tube result for a given song. 
+
+Uses the You\+Tube Data API v3 (when an API key is present in config.\+ini) to resolve the best matching video ID, then opens the resulting youtube.\+com/\+watch URL in the OS default browser. If the API key is absent or the search call fails, a You\+Tube search-\/results page URL is opened as a fallback. \begin{DoxyAuthor}{Author}
+Meridith Shang 
+\end{DoxyAuthor}

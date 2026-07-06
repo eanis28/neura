@@ -1,0 +1,45 @@
+\doxysection{ggml-\/cpp.h}
+\hypertarget{ggml-cpp_8h_source}{}\label{ggml-cpp_8h_source}\index{whisper.cpp/ggml/include/ggml-\/cpp.h@{whisper.cpp/ggml/include/ggml-\/cpp.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ \_\_cplusplus}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#error\ "{}This\ header\ is\ for\ C++\ only"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}ggml-\/alloc.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}gguf.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ Smart\ pointers\ for\ ggml\ types}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ ggml}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__context__deleter}{ggml\_context\_deleter}}\ \{\ \textcolor{keywordtype}{void}\ operator()(\doxymbox{\hyperlink{structggml__context}{ggml\_context}}\ *\ ctx)\ \{\ ggml\_free(ctx);\ \}\ \};}
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgguf__context__deleter}{gguf\_context\_deleter}}\ \{\ \textcolor{keywordtype}{void}\ operator()(\doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx)\ \{\ gguf\_free(ctx);\ \}\ \};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{typedef}\ std::unique\_ptr<ggml\_context,\ ggml\_context\_deleter>\ ggml\_context\_ptr;}
+\DoxyCodeLine{00021\ \textcolor{keyword}{typedef}\ std::unique\_ptr<gguf\_context,\ gguf\_context\_deleter>\ gguf\_context\_ptr;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ ggml-\/alloc}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__gallocr__deleter}{ggml\_gallocr\_deleter}}\ \{\ \textcolor{keywordtype}{void}\ operator()(ggml\_gallocr\_t\ galloc)\ \{\ ggml\_gallocr\_free(galloc);\ \}\ \};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ std::unique\_ptr<ggml\_gallocr,\ ggml\_gallocr\_deleter>\ ggml\_gallocr\_ptr;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ ggml-\/backend}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__deleter}{ggml\_backend\_deleter}}\ \ \ \ \ \ \ \ \{\ \textcolor{keywordtype}{void}\ operator()(ggml\_backend\_t\ backend)\ \ \ \ \ \ \ \{\ ggml\_backend\_free(backend);\ \}\ \};}
+\DoxyCodeLine{00032\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__buffer__deleter}{ggml\_backend\_buffer\_deleter}}\ \{\ \textcolor{keywordtype}{void}\ operator()(ggml\_backend\_buffer\_t\ buffer)\ \{\ ggml\_backend\_buffer\_free(buffer);\ \}\ \};}
+\DoxyCodeLine{00033\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__event__deleter}{ggml\_backend\_event\_deleter}}\ \ \{\ \textcolor{keywordtype}{void}\ operator()(ggml\_backend\_event\_t\ event)\ \ \ \{\ ggml\_backend\_event\_free(event);\ \}\ \};}
+\DoxyCodeLine{00034\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__sched__deleter}{ggml\_backend\_sched\_deleter}}\ \ \{\ \textcolor{keywordtype}{void}\ operator()(ggml\_backend\_sched\_t\ sched)\ \ \ \{\ ggml\_backend\_sched\_free(sched);\ \}\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ std::unique\_ptr<ggml\_backend,\ \ \ \ \ \ \ \ ggml\_backend\_deleter>\ \ \ \ \ \ \ \ ggml\_backend\_ptr;}
+\DoxyCodeLine{00037\ \textcolor{keyword}{typedef}\ std::unique\_ptr<ggml\_backend\_buffer,\ ggml\_backend\_buffer\_deleter>\ ggml\_backend\_buffer\_ptr;}
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ std::unique\_ptr<ggml\_backend\_event,\ \ ggml\_backend\_event\_deleter>\ \ ggml\_backend\_event\_ptr;}
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ std::unique\_ptr<ggml\_backend\_sched,\ \ ggml\_backend\_sched\_deleter>\ \ ggml\_backend\_sched\_ptr;}
+
+\end{DoxyCode}

@@ -1,0 +1,93 @@
+\doxysection{Voice\+Command\+Listener.\+h}
+\hypertarget{_voice_command_listener_8h_source}{}\label{_voice_command_listener_8h_source}\doxymbox{\hyperlink{_voice_command_listener_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}whisper.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_timer_action_8h}{TimerAction.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_system_command_action_8h}{SystemCommandAction.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_audio_manager_8h}{AudioManager.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_a_p_i_action_8h}{APIAction.h}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_8h}{UI.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_a_p_i_action_8h}{APIAction.h}}"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_voice_command_listener_a73ebfb0fe314ef45d56dd8935ba6d282}{VoiceCommandListener}}\ \{}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00051\ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_a73ebfb0fe314ef45d56dd8935ba6d282}{VoiceCommandListener}}(\textcolor{keyword}{const}\ std::string\&\ modelPath,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_shared_audio_buffer}{SharedAudioBuffer}}\&\ sharedBuf,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::atomic<bool>\&\ micMuted,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_shared_response}{SharedResponse}}\&\ sharedResponse);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00061\ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_a3549ca73ac8aaa2087dc4d2b61066b54}{\string~VoiceCommandListener}}();}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_voice_command_listener_a249eb1518a7d6f355a9fa9d065a9a066}{start}}();}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_voice_command_listener_a2893b72a70288b053f19093b14be0c74}{stop}}();}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247a}{CalendarPromptStep}}\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aab50339a10e1de285ac99d4c3990b8693}{NONE}},\ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aa8f696bec03db96fb2a63980d8760fdcb}{ASK\_TITLE}},\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aa0314ad9163fbabbad97a54f3bca37e8b}{ASK\_WHEN}},\ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aad40cda581867e9748dbc9aa432bb07b5}{ASK\_DURATION}},\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aad3e1677b5d191507cbeb848847c4d4f7}{ASK\_RECURRENCE}}\ }
+\DoxyCodeLine{00096\ \ \ \ \ \};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request}{PendingCalendarRequest}}\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247a}{CalendarPromptStep}}\ step\ =\ \doxymbox{\hyperlink{class_voice_command_listener_aa9704ecd8024ac8bd22ca349acb0247aab50339a10e1de285ac99d4c3990b8693}{CalendarPromptStep::NONE}};}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request_af36b46d9284929510dd3e49cd6a0fb0e}{title}};\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request_aa3cdd431ca8e83868ed34c0648b79f03}{date}};\ \ }
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request_acf182306231c1dd71b0eeac6d35b67d4}{time24h}};\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request_ad6376d157002618c626d31fda4c64db0}{durationMinutes}}\ =\ 30;\ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5aca}{Recurrence}}\ \doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request_a8f94195e7d6ef9b55e9e5501c4e7bfab}{recurrence}}\ =\ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaab50339a10e1de285ac99d4c3990b8693}{Recurrence::NONE}};\ }
+\DoxyCodeLine{00113\ \ \ \ \ \};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_voice_command_listener_a684a74fc7b528b58be4862f6b656027e}{runLoop}}();}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_voice_command_listener_a082d7dd5337c8cfa0b9f739e25338fe2}{dispatch}}(\textcolor{keyword}{const}\ std::string\&\ text);}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_voice_command_listener_a68e10ba623f039a8344bc8414c689476}{respond}}(\textcolor{keyword}{const}\ std::string\&\ msg);}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_voice_command_listener_a8613df4bdd7cf5e131d3e2e1b977b96b}{finishPendingCalendarRequest}}();}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ whisper\_context*\ \ \ \doxymbox{\hyperlink{class_voice_command_listener_a22083284d9c6e06df2756689e11539b7}{m\_ctx}}\ =\ \textcolor{keyword}{nullptr};\ }
+\DoxyCodeLine{00163\ \ \ \ \ \doxymbox{\hyperlink{struct_shared_audio_buffer}{SharedAudioBuffer}}\&\ \doxymbox{\hyperlink{class_voice_command_listener_a17b0d1c84a0d347a2e4443e3a04521a6}{m\_buf}};\ }
+\DoxyCodeLine{00164\ \ \ \ \ std::atomic<bool>\&\ \doxymbox{\hyperlink{class_voice_command_listener_a0471c4f2b280f2c7db4efe147ce24fca}{m\_micMuted}};\ }
+\DoxyCodeLine{00165\ \ \ \ \ \doxymbox{\hyperlink{struct_shared_response}{SharedResponse}}\&\ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_a7e2c6f4d69abbb4276c712216d531146}{m\_response}};\ }
+\DoxyCodeLine{00166\ \ \ \ \ std::atomic<bool>\ \ \doxymbox{\hyperlink{class_voice_command_listener_a805cf5f28d4b2f551fc1e76c76ff2b6e}{m\_running}}\{\textcolor{keyword}{false}\};\ }
+\DoxyCodeLine{00167\ \ \ \ \ std::thread\ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_aad68d14a3a666e00f1e3262598ae6406}{m\_thread}};\ }
+\DoxyCodeLine{00168\ \ \ \ \ std::atomic<bool>\ \doxymbox{\hyperlink{class_voice_command_listener_a64d469febd29fbd56b3967860fea8696}{m\_assistantPaused}}\{\textcolor{keyword}{false}\};\ }
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \doxymbox{\hyperlink{class_timer_action}{TimerAction}}\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_a467904bcf62acfec2b66756462c7c298}{m\_timer}};\ }
+\DoxyCodeLine{00171\ \ \ \ \ \doxymbox{\hyperlink{class_system_command_action}{SystemCommandAction}}\ \doxymbox{\hyperlink{class_voice_command_listener_abe81c4dddd7bfec2ade1328bdb9a32c9}{m\_sys}};\ }
+\DoxyCodeLine{00172\ \ \ \ \ \doxymbox{\hyperlink{class_configuration}{Configuration}}\ \ \ \ \ \ \ \doxymbox{\hyperlink{class_voice_command_listener_a0bf25e79e3d2bad258c7381278ffce3d}{m\_config}}\{\textcolor{stringliteral}{"{}config.ini"{}}\};\ }
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_voice_command_listener_ae23922fdfcc68c1db5efee8a768ff375}{WINDOW\_SECONDS}}\ =\ 3;\ }
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_voice_command_listener_a7e3a78294dc0291a9ac09121294f6d5c}{SAMPLE\_RATE}}\ \ \ \ =\ 16000;\ }
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \doxymbox{\hyperlink{struct_voice_command_listener_1_1_pending_calendar_request}{PendingCalendarRequest}}\ \doxymbox{\hyperlink{class_voice_command_listener_ac65aece90a6a65ef99c7b36b7ea0506a}{m\_pendingCalendar}};\ }
+\DoxyCodeLine{00178\ \};}
+
+\end{DoxyCode}

@@ -1,0 +1,735 @@
+\doxysection{ggml-\/impl.h}
+\hypertarget{ggml-impl_8h_source}{}\label{ggml-impl_8h_source}\index{whisper.cpp/ggml/src/ggml-\/impl.h@{whisper.cpp/ggml/src/ggml-\/impl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ GGML\ internal\ header}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}gguf.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stdlib.h>}\ \textcolor{comment}{//\ load\ \`{}stdlib.h`\ before\ other\ headers\ to\ work\ around\ MinGW\ bug:\ https://sourceforge.net/p/mingw-\/w64/bugs/192/}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifdef\ \_\_ARM\_FEATURE\_SVE}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <arm\_sve.h>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_ARM\_FEATURE\_SVE}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_NEON)\ \&\&\ !defined(\_\_CUDACC\_\_)\ \&\&\ !defined(\_\_MUSACC\_\_)}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ if\ YCM\ cannot\ find\ <arm\_neon.h>,\ make\ a\ symbolic\ link\ to\ it,\ for\ example:}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ \ \ \$\ ln\ -\/sfn\ /Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include/arm\_neon.h\ ./src/}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <arm\_neon.h>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ ggml\_print\_backtrace(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ MIN}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#\ \ \ \ define\ MIN(a,\ b)\ ((a)\ <\ (b)\ ?\ (a)\ :\ (b))}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#ifndef\ MAX}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#\ \ \ \ define\ MAX(a,\ b)\ ((a)\ >\ (b)\ ?\ (a)\ :\ (b))}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ required\ for\ mmap\ as\ gguf\ only\ guarantees\ 32-\/byte\ alignment}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ TENSOR\_ALIGNMENT\ 32}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ static\_assert\ should\ be\ a\ \#define,\ but\ if\ it's\ not,}}
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ fall\ back\ to\ the\ \_Static\_assert\ C11\ keyword.}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ if\ C99\ -\/\ static\_assert\ is\ noop}}
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ ref:\ https://stackoverflow.com/a/53923785/4039976}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#ifndef\ \_\_cplusplus}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\ \ \ \ \#ifndef\ static\_assert}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#if\ defined(\_\_STDC\_VERSION\_\_)\ \&\&\ (\_\_STDC\_VERSION\_\_\ >=\ 201100L)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#define\ static\_assert(cond,\ msg)\ \_Static\_assert(cond,\ msg)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#else}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#define\ static\_assert(cond,\ msg)\ struct\ global\_scope\_noop\_trick}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#endif}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ ggml\_up32(\textcolor{keywordtype}{int}\ n)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordflow}{return}\ (n\ +\ 31)\ \&\ \string~31;}
+\DoxyCodeLine{00060\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{//static\ inline\ int\ ggml\_up64(int\ n)\ \{}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ \ \ \ return\ (n\ +\ 63)\ \&\ \string~63;}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//\}}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ ggml\_up(\textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{int}\ m)\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ assert\ m\ is\ a\ power\ of\ 2}}
+\DoxyCodeLine{00068\ \ \ \ \ GGML\_ASSERT((m\ \&\ (m\ -\/\ 1))\ ==\ 0);}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{return}\ (n\ +\ m\ -\/\ 1)\ \&\ \string~(m\ -\/\ 1);}
+\DoxyCodeLine{00070\ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ TODO:\ move\ to\ ggml.h?\ (won't\ be\ able\ to\ inline)}}
+\DoxyCodeLine{00073\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ ggml\_are\_same\_layout(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ a,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ b)\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordflow}{if}\ (a-\/>type\ !=\ b-\/>type)\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00076\ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ GGML\_MAX\_DIMS;\ i++)\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (a-\/>ne[i]\ !=\ b-\/>ne[i])\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (a-\/>nb[i]\ !=\ b-\/>nb[i])\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00084\ \ \ \ \ \}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00086\ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ ggml\_op\_is\_empty(\textcolor{keyword}{enum}\ ggml\_op\ op)\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{switch}\ (op)\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_OP\_NONE:}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_OP\_RESHAPE:}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_OP\_TRANSPOSE:}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_OP\_VIEW:}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ GGML\_OP\_PERMUTE:}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00098\ \ \ \ \ \}}
+\DoxyCodeLine{00099\ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ ggml\_impl\_is\_view(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordflow}{return}\ t-\/>view\_src\ !=\ NULL;}
+\DoxyCodeLine{00103\ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ ggml\_compute\_softplus\_f32(\textcolor{keywordtype}{float}\ input)\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordflow}{return}\ (input\ >\ 20.0f)\ ?\ input\ :\ logf(1\ +\ expf(input));}
+\DoxyCodeLine{00107\ \}}
+\DoxyCodeLine{00108\ \textcolor{comment}{//}}
+\DoxyCodeLine{00109\ \textcolor{comment}{//\ logging}}
+\DoxyCodeLine{00110\ \textcolor{comment}{//}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ GGML\_ATTRIBUTE\_FORMAT(2,\ 3)}
+\DoxyCodeLine{00113\ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_log\_internal\ \ \ \ \ \ \ \ (enum\ ggml\_log\_level\ level,\ const\ \textcolor{keywordtype}{char}\ *\ format,\ ...);}
+\DoxyCodeLine{00114\ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_log\_callback\_default(enum\ ggml\_log\_level\ level,\ const\ \textcolor{keywordtype}{char}\ *\ text,\ \textcolor{keywordtype}{void}\ *\ user\_data);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ GGML\_LOG(...)\ \ \ \ \ \ \ ggml\_log\_internal(GGML\_LOG\_LEVEL\_NONE\ ,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ GGML\_LOG\_INFO(...)\ \ ggml\_log\_internal(GGML\_LOG\_LEVEL\_INFO\ ,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ GGML\_LOG\_WARN(...)\ \ ggml\_log\_internal(GGML\_LOG\_LEVEL\_WARN\ ,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ GGML\_LOG\_ERROR(...)\ ggml\_log\_internal(GGML\_LOG\_LEVEL\_ERROR,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ GGML\_LOG\_DEBUG(...)\ ggml\_log\_internal(GGML\_LOG\_LEVEL\_DEBUG,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ GGML\_LOG\_CONT(...)\ \ ggml\_log\_internal(GGML\_LOG\_LEVEL\_CONT\ ,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ GGML\_DEBUG\ 0}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#if\ (GGML\_DEBUG\ >=\ 1)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ GGML\_PRINT\_DEBUG(...)\ GGML\_LOG\_DEBUG(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ GGML\_PRINT\_DEBUG(...)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#if\ (GGML\_DEBUG\ >=\ 5)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ GGML\_PRINT\_DEBUG\_5(...)\ GGML\_LOG\_DEBUG(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ GGML\_PRINT\_DEBUG\_5(...)}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#if\ (GGML\_DEBUG\ >=\ 10)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ GGML\_PRINT\_DEBUG\_10(...)\ GGML\_LOG\_DEBUG(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ GGML\_PRINT\_DEBUG\_10(...)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{comment}{//\ tensor\ params}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_set\_op\_params(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ params,\ \textcolor{keywordtype}{size\_t}\ params\_size)\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ GGML\_ASSERT(tensor\ !=\ NULL);\ \textcolor{comment}{//\ silence\ -\/Warray-\/bounds\ warnings}}
+\DoxyCodeLine{00147\ \ \ \ \ assert(params\_size\ <=\ GGML\_MAX\_OP\_PARAMS);}
+\DoxyCodeLine{00148\ \ \ \ \ memcpy(tensor-\/>op\_params,\ params,\ params\_size);}
+\DoxyCodeLine{00149\ \}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{keyword}{static}\ int32\_t\ ggml\_get\_op\_params\_i32(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ uint32\_t\ i)\ \{}
+\DoxyCodeLine{00152\ \ \ \ \ assert(i\ <\ GGML\_MAX\_OP\_PARAMS\ /\ \textcolor{keyword}{sizeof}(int32\_t));}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordflow}{return}\ ((\textcolor{keyword}{const}\ int32\_t\ *)(tensor-\/>op\_params))[i];}
+\DoxyCodeLine{00154\ \}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ ggml\_get\_op\_params\_f32(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ uint32\_t\ i)\ \{}
+\DoxyCodeLine{00157\ \ \ \ \ assert(i\ <\ GGML\_MAX\_OP\_PARAMS\ /\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}));}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordflow}{return}\ ((\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)(tensor-\/>op\_params))[i];}
+\DoxyCodeLine{00159\ \}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_set\_op\_params\_i32(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ uint32\_t\ i,\ int32\_t\ value)\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ assert(i\ <\ GGML\_MAX\_OP\_PARAMS\ /\ \textcolor{keyword}{sizeof}(int32\_t));}
+\DoxyCodeLine{00163\ \ \ \ \ ((int32\_t\ *)(tensor-\/>op\_params))[i]\ =\ value;}
+\DoxyCodeLine{00164\ \}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ggml\_set\_op\_params\_f32(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ uint32\_t\ i,\ \textcolor{keywordtype}{float}\ value)\ \{}
+\DoxyCodeLine{00167\ \ \ \ \ assert(i\ <\ GGML\_MAX\_OP\_PARAMS\ /\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}));}
+\DoxyCodeLine{00168\ \ \ \ \ ((\textcolor{keywordtype}{float}\ *)(tensor-\/>op\_params))[i]\ =\ value;}
+\DoxyCodeLine{00169\ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__map__custom1__op__params}{ggml\_map\_custom1\_op\_params}}\ \{}
+\DoxyCodeLine{00172\ \ \ \ \ ggml\_custom1\_op\_t\ \ fun;}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_tasks;}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ *\ userdata;}
+\DoxyCodeLine{00175\ \};}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__map__custom2__op__params}{ggml\_map\_custom2\_op\_params}}\ \{}
+\DoxyCodeLine{00178\ \ \ \ \ ggml\_custom2\_op\_t\ \ \ fun;}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_tasks;}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ userdata;}
+\DoxyCodeLine{00181\ \};}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__map__custom3__op__params}{ggml\_map\_custom3\_op\_params}}\ \{}
+\DoxyCodeLine{00184\ \ \ \ \ ggml\_custom3\_op\_t\ fun;}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_tasks;}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ *\ userdata;}
+\DoxyCodeLine{00187\ \};}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__custom__op__params}{ggml\_custom\_op\_params}}\ \{}
+\DoxyCodeLine{00190\ \ \ \ \ ggml\_custom\_op\_t\ fun;}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ n\_tasks;}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ *\ userdata;}
+\DoxyCodeLine{00193\ \};}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{comment}{//\ bitset}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{keyword}{typedef}\ uint32\_t\ ggml\_bitset\_t;}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \textcolor{keyword}{static\_assert}(\textcolor{keyword}{sizeof}(ggml\_bitset\_t)\ ==\ 4,\ \textcolor{stringliteral}{"{}bitset\_t\ constants\ must\ be\ updated"{}});}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#define\ BITSET\_SHR\ 5\ }\textcolor{comment}{//\ log2(sizeof(ggml\_bitset\_t)*8)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#define\ BITSET\_MASK\ (sizeof(ggml\_bitset\_t)*8\ -\/\ 1)}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ ggml\_bitset\_size(\textcolor{keywordtype}{size\_t}\ n)\ \{}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordflow}{return}\ (n\ +\ BITSET\_MASK)\ >>\ BITSET\_SHR;}
+\DoxyCodeLine{00205\ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ ggml\_bitset\_get(\textcolor{keyword}{const}\ ggml\_bitset\_t\ *\ bitset,\ \textcolor{keywordtype}{size\_t}\ i)\ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordflow}{return}\ !!(bitset[i\ >>\ BITSET\_SHR]\ \&\ (1u\ <<\ (i\ \&\ BITSET\_MASK)));}
+\DoxyCodeLine{00209\ \}}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ ggml\_bitset\_set(ggml\_bitset\_t\ *\ bitset,\ \textcolor{keywordtype}{size\_t}\ i)\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ bitset[i\ >>\ BITSET\_SHR]\ |=\ (1u\ <<\ (i\ \&\ BITSET\_MASK));}
+\DoxyCodeLine{00213\ \}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ ggml\_bitset\_clear(ggml\_bitset\_t\ *\ bitset,\ \textcolor{keywordtype}{size\_t}\ i)\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ bitset[i\ >>\ BITSET\_SHR]\ \&=\ \string~(1u\ <<\ (i\ \&\ BITSET\_MASK));}
+\DoxyCodeLine{00217\ \}}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{comment}{//\ hash\ set}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ GGML\_HASHSET\_FULL\ ((size\_t)-\/1)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ GGML\_HASHSET\_ALREADY\_EXISTS\ ((size\_t)-\/2)}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ \{}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size;}
+\DoxyCodeLine{00226\ \ \ \ \ ggml\_bitset\_t\ *\ used;\ \ \ \ \ \ \ \textcolor{comment}{//\ whether\ or\ not\ the\ keys\ are\ in\ use\ i.e.\ set}}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ **\ keys;\ \textcolor{comment}{//\ actual\ tensors\ in\ the\ set,\ keys[i]\ is\ only\ defined\ if\ ggml\_bitset\_get(used,\ i)}}
+\DoxyCodeLine{00228\ \};}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ ggml\_hash\_set\_new(size\_t\ size);}
+\DoxyCodeLine{00231\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_hash\_set\_free(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \textcolor{comment}{//\ returns\ the\ minimum\ size\ for\ a\ hash\ set\ that\ can\ hold\ min\_sz\ elements}}
+\DoxyCodeLine{00234\ \textcolor{keywordtype}{size\_t}\ ggml\_hash\_size(\textcolor{keywordtype}{size\_t}\ min\_sz);}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{comment}{//\ remove\ all\ elements\ from\ the\ hash\ set}}
+\DoxyCodeLine{00237\ \textcolor{keywordtype}{void}\ ggml\_hash\_set\_reset(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set);}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{comment}{//\ returns\ true\ if\ key\ is\ in\ the\ hash\ set}}
+\DoxyCodeLine{00240\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ ggml\_hash\_contains(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ key);}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{comment}{//\ returns\ GGML\_HASHSET\_FULL\ if\ table\ is\ full,\ otherwise\ the\ current\ index\ of\ the\ key\ or\ where\ it\ should\ be\ inserted}}
+\DoxyCodeLine{00243\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ ggml\_hash\_find(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ key);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \textcolor{comment}{//\ returns\ GGML\_HASHSET\_ALREADY\_EXISTS\ if\ key\ already\ exists,\ index\ otherwise,\ asserts\ if\ table\ is\ full}}
+\DoxyCodeLine{00246\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ ggml\_hash\_insert(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ key);}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{comment}{//\ return\ index,\ asserts\ if\ table\ is\ full}}
+\DoxyCodeLine{00249\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ ggml\_hash\_find\_or\_insert(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ key);}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \textcolor{comment}{//\ hash\ function\ for\ ggml\_tensor}}
+\DoxyCodeLine{00252\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ ggml\_hash(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ p)\ \{}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{//\ the\ last\ 4\ bits\ are\ always\ zero\ due\ to\ alignment}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{size\_t})(uintptr\_t)p\ >>\ 4;}
+\DoxyCodeLine{00255\ \}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ ggml\_hash\_find(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ key)\ \{}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ h\ =\ ggml\_hash(key)\ \%\ hash\_set-\/>size;}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{comment}{//\ linear\ probing}}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ h;}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keywordflow}{while}\ (ggml\_bitset\_get(hash\_set-\/>used,\ i)\ \&\&\ hash\_set-\/>keys[i]\ !=\ key)\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ i\ =\ (i\ +\ 1)\ \%\ hash\_set-\/>size;}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ h)\ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ visited\ all\ hash\ table\ entries\ -\/>\ not\ found}}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ GGML\_HASHSET\_FULL;}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00268\ \ \ \ \ \}}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00270\ \}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ ggml\_hash\_contains(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ key)\ \{}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ ggml\_hash\_find(hash\_set,\ key);}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keywordflow}{return}\ i\ !=\ GGML\_HASHSET\_FULL\ \&\&\ ggml\_bitset\_get(hash\_set-\/>used,\ i);}
+\DoxyCodeLine{00275\ \}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ ggml\_hash\_insert(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ key)\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ h\ =\ ggml\_hash(key)\ \%\ hash\_set-\/>size;}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{comment}{//\ linear\ probing}}
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ h;}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ggml\_bitset\_get(hash\_set-\/>used,\ i))\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_bitset\_set(hash\_set-\/>used,\ i);}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ hash\_set-\/>keys[i]\ =\ key;}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hash\_set-\/>keys[i]\ ==\ key)\ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ GGML\_HASHSET\_ALREADY\_EXISTS;}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ i\ =\ (i\ +\ 1)\ \%\ hash\_set-\/>size;}
+\DoxyCodeLine{00292\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (i\ !=\ h);}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{comment}{//\ visited\ all\ hash\ table\ entries\ -\/>\ not\ found}}
+\DoxyCodeLine{00295\ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}fatal\ error"{}});}
+\DoxyCodeLine{00296\ \}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ ggml\_hash\_find\_or\_insert(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ *\ hash\_set,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ key)\ \{}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ h\ =\ ggml\_hash(key)\ \%\ hash\_set-\/>size;}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{comment}{//\ linear\ probing}}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ h;}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ggml\_bitset\_get(hash\_set-\/>used,\ i))\ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_bitset\_set(hash\_set-\/>used,\ i);}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ hash\_set-\/>keys[i]\ =\ key;}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hash\_set-\/>keys[i]\ ==\ key)\ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ i\ =\ (i\ +\ 1)\ \%\ hash\_set-\/>size;}
+\DoxyCodeLine{00313\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (i\ !=\ h);}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{comment}{//\ visited\ all\ hash\ table\ entries\ -\/>\ not\ found}}
+\DoxyCodeLine{00316\ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}fatal\ error"{}});}
+\DoxyCodeLine{00317\ \}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \textcolor{comment}{//\ computation\ graph}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{keyword}{enum}\ ggml\_cgraph\_eval\_order\ \{}
+\DoxyCodeLine{00322\ \ \ \ \ GGML\_CGRAPH\_EVAL\_ORDER\_LEFT\_TO\_RIGHT\ =\ 0,}
+\DoxyCodeLine{00323\ \ \ \ \ GGML\_CGRAPH\_EVAL\_ORDER\_RIGHT\_TO\_LEFT,}
+\DoxyCodeLine{00324\ \ \ \ \ GGML\_CGRAPH\_EVAL\_ORDER\_COUNT}
+\DoxyCodeLine{00325\ \};}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ \{}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keywordtype}{int}\ size;\ \ \ \ \textcolor{comment}{//\ maximum\ number\ of\ nodes/leafs/grads/grad\_accs}}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordtype}{int}\ n\_nodes;\ \textcolor{comment}{//\ number\ of\ nodes\ currently\ in\ use}}
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keywordtype}{int}\ n\_leafs;\ \textcolor{comment}{//\ number\ of\ leafs\ currently\ in\ use}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ **\ nodes;\ \ \ \ \ \textcolor{comment}{//\ tensors\ with\ data\ that\ can\ change\ if\ the\ graph\ is\ evaluated}}
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ **\ grads;\ \ \ \ \ \textcolor{comment}{//\ the\ outputs\ of\ these\ tensors\ are\ the\ gradients\ of\ the\ nodes}}
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ **\ grad\_accs;\ \textcolor{comment}{//\ accumulators\ for\ node\ gradients}}
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ **\ leafs;\ \ \ \ \ \textcolor{comment}{//\ tensors\ with\ constant\ data}}
+\DoxyCodeLine{00336\ \ \ \ \ int32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ *\ use\_counts;\textcolor{comment}{//\ number\ of\ uses\ of\ each\ tensor,\ indexed\ by\ hash\ table\ slot}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__hash__set}{ggml\_hash\_set}}\ visited\_hash\_set;}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keyword}{enum}\ ggml\_cgraph\_eval\_order\ order;}
+\DoxyCodeLine{00341\ \};}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \textcolor{comment}{//\ returns\ a\ slice\ of\ cgraph\ with\ nodes\ [i0,\ i1)}}
+\DoxyCodeLine{00344\ \textcolor{comment}{//\ the\ slice\ does\ not\ have\ leafs\ or\ gradients}}
+\DoxyCodeLine{00345\ \textcolor{comment}{//\ if\ you\ need\ the\ gradients,\ get\ them\ from\ the\ original\ graph}}
+\DoxyCodeLine{00346\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ ggml\_graph\_view(struct\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ \textcolor{keywordtype}{int}\ i0,\ \textcolor{keywordtype}{int}\ i1);}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \textcolor{comment}{//\ ggml-\/alloc.c:\ true\ if\ the\ operation\ can\ reuse\ memory\ from\ its\ sources}}
+\DoxyCodeLine{00349\ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_op\_can\_inplace(\textcolor{keyword}{enum}\ ggml\_op\ op);}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \textcolor{comment}{//\ Memory\ allocation}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ GGML\_API\ \textcolor{keywordtype}{void}\ *\ ggml\_aligned\_malloc(\textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00355\ GGML\_API\ \textcolor{keywordtype}{void}\ ggml\_aligned\_free(\textcolor{keywordtype}{void}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \textcolor{comment}{//\ FP16\ <-\/>\ FP32}}
+\DoxyCodeLine{00358\ \textcolor{comment}{//\ ref:\ https://github.com/Maratyszcza/FP16}}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ fp32\_from\_bits(uint32\_t\ w)\ \{}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ uint32\_t\ as\_bits;}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ as\_value;}
+\DoxyCodeLine{00364\ \ \ \ \ \}\ fp32;}
+\DoxyCodeLine{00365\ \ \ \ \ fp32.as\_bits\ =\ w;}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keywordflow}{return}\ fp32.as\_value;}
+\DoxyCodeLine{00367\ \}}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint32\_t\ fp32\_to\_bits(\textcolor{keywordtype}{float}\ f)\ \{}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ as\_value;}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ uint32\_t\ as\_bits;}
+\DoxyCodeLine{00373\ \ \ \ \ \}\ fp32;}
+\DoxyCodeLine{00374\ \ \ \ \ fp32.as\_value\ =\ f;}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordflow}{return}\ fp32.as\_bits;}
+\DoxyCodeLine{00376\ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ ggml\_compute\_fp16\_to\_fp32(ggml\_fp16\_t\ h)\ \{}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ w\ =\ (uint32\_t)\ h\ <<\ 16;}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ sign\ =\ w\ \&\ UINT32\_C(0x80000000);}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ two\_w\ =\ w\ +\ w;}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ exp\_offset\ =\ UINT32\_C(0xE0)\ <<\ 23;}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\#if\ (defined(\_\_STDC\_VERSION\_\_)\ \&\&\ (\_\_STDC\_VERSION\_\_\ >=\ 199901L)\ ||\ defined(\_\_GNUC\_\_)\ \&\&\ !defined(\_\_STRICT\_ANSI\_\_))\ \&\&\ (!defined(\_\_cplusplus)\ ||\ \_\_cplusplus\ >=\ 201703L)}}
+\DoxyCodeLine{00385\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ exp\_scale\ =\ 0x1.0p-\/112f;}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ exp\_scale\ =\ fp32\_from\_bits(UINT32\_C(0x7800000));}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ normalized\_value\ =\ fp32\_from\_bits((two\_w\ >>\ 4)\ +\ exp\_offset)\ *\ exp\_scale;}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ magic\_mask\ =\ UINT32\_C(126)\ <<\ 23;}
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ magic\_bias\ =\ 0.5f;}
+\DoxyCodeLine{00393\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ denormalized\_value\ =\ fp32\_from\_bits((two\_w\ >>\ 17)\ |\ magic\_mask)\ -\/\ magic\_bias;}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ denormalized\_cutoff\ =\ UINT32\_C(1)\ <<\ 27;}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ result\ =\ sign\ |}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ (two\_w\ <\ denormalized\_cutoff\ ?\ fp32\_to\_bits(denormalized\_value)\ :\ fp32\_to\_bits(normalized\_value));}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keywordflow}{return}\ fp32\_from\_bits(result);}
+\DoxyCodeLine{00399\ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ ggml\_fp16\_t\ ggml\_compute\_fp32\_to\_fp16(\textcolor{keywordtype}{float}\ f)\ \{}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#if\ (defined(\_\_STDC\_VERSION\_\_)\ \&\&\ (\_\_STDC\_VERSION\_\_\ >=\ 199901L)\ ||\ defined(\_\_GNUC\_\_)\ \&\&\ !defined(\_\_STRICT\_ANSI\_\_))\ \&\&\ (!defined(\_\_cplusplus)\ ||\ \_\_cplusplus\ >=\ 201703L)}}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ scale\_to\_inf\ =\ 0x1.0p+112f;}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ scale\_to\_zero\ =\ 0x1.0p-\/110f;}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ scale\_to\_inf\ =\ fp32\_from\_bits(UINT32\_C(0x77800000));}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ scale\_to\_zero\ =\ fp32\_from\_bits(UINT32\_C(0x08800000));}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keywordtype}{float}\ base\ =\ (fabsf(f)\ *\ scale\_to\_inf)\ *\ scale\_to\_zero;}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ w\ =\ fp32\_to\_bits(f);}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ shl1\_w\ =\ w\ +\ w;}
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ sign\ =\ w\ \&\ UINT32\_C(0x80000000);}
+\DoxyCodeLine{00414\ \ \ \ \ uint32\_t\ bias\ =\ shl1\_w\ \&\ UINT32\_C(0xFF000000);}
+\DoxyCodeLine{00415\ \ \ \ \ \textcolor{keywordflow}{if}\ (bias\ <\ UINT32\_C(0x71000000))\ \{}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ bias\ =\ UINT32\_C(0x71000000);}
+\DoxyCodeLine{00417\ \ \ \ \ \}}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \ \ \ \ base\ =\ fp32\_from\_bits((bias\ >>\ 1)\ +\ UINT32\_C(0x07800000))\ +\ base;}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ bits\ =\ fp32\_to\_bits(base);}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ exp\_bits\ =\ (bits\ >>\ 13)\ \&\ UINT32\_C(0x00007C00);}
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ mantissa\_bits\ =\ bits\ \&\ UINT32\_C(0x00000FFF);}
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ nonsign\ =\ exp\_bits\ +\ mantissa\_bits;}
+\DoxyCodeLine{00424\ \ \ \ \ \textcolor{keywordflow}{return}\ (sign\ >>\ 16)\ |\ (shl1\_w\ >\ UINT32\_C(0xFF000000)\ ?\ UINT16\_C(0x7E00)\ :\ nonsign);}
+\DoxyCodeLine{00425\ \}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#define\ GGML\_COMPUTE\_FP16\_TO\_FP32(x)\ ggml\_compute\_fp16\_to\_fp32(x)}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#define\ GGML\_COMPUTE\_FP32\_TO\_FP16(x)\ ggml\_compute\_fp32\_to\_fp16(x)}}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#define\ GGML\_FP16\_TO\_FP32(x)\ GGML\_COMPUTE\_FP16\_TO\_FP32(x)}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#define\ GGML\_FP32\_TO\_FP16(x)\ GGML\_COMPUTE\_FP32\_TO\_FP16(x)}}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ ggml\_e8m0\_to\_fp32(uint8\_t\ x)\ \{}
+\DoxyCodeLine{00434\ \ \ \ \ uint32\_t\ bits;\ \ \textcolor{comment}{//\ Stores\ the\ raw\ bit\ representation\ of\ the\ float}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{comment}{//\ Handle\ special\ case\ for\ minimum\ exponent\ (denormalized\ float)}}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ ==\ 0)\ \{}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Bit\ pattern\ for\ 2\string^(-\/127):}}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Sign\ bit:\ 0\ (positive)}}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Exponent:\ 0\ (denormalized\ number)}}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Mantissa:\ 0x400000\ (0.5\ in\ fractional\ form)}}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Value\ =\ 0.5\ *\ 2\string^(-\/126)\ =\ 2\string^(-\/127)}}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ bits\ =\ 0x00400000;}
+\DoxyCodeLine{00444\ \ \ \ \ \}}
+\DoxyCodeLine{00445\ \ \ \ \ \textcolor{comment}{//\ note:\ disabled\ as\ we\ don't\ need\ to\ handle\ NaNs}}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{comment}{//else\ if\ (x\ ==\ 0xFF)\ \{}}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ Standard\ quiet\ NaN\ pattern:}}
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ -\/\ Sign\ bit:\ 0}}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ -\/\ Exponent:\ all\ 1s\ (0xFF)}}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ -\/\ Mantissa:\ 0x400000\ (quiet\ NaN\ flag)}}
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{comment}{//\ \ \ \ bits\ =\ 0x7FC00000;}}
+\DoxyCodeLine{00453\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{comment}{//\ Normalized\ values\ (most\ common\ case)}}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Construct\ normalized\ float\ by\ shifting\ exponent\ into\ position:}}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Exponent\ field:\ 8\ bits\ (positions\ 30-\/23)}}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Mantissa:\ 0\ (implicit\ leading\ 1)}}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Value\ =\ 2\string^(x\ -\/\ 127)}}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ bits\ =\ (uint32\_t)\ x\ <<\ 23;}
+\DoxyCodeLine{00461\ \ \ \ \ \}}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keywordtype}{float}\ result;\ \ \textcolor{comment}{//\ Final\ float\ value}}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Safely\ reinterpret\ bit\ pattern\ as\ float\ without\ type-\/punning\ issues}}
+\DoxyCodeLine{00465\ \ \ \ \ memcpy(\&result,\ \&bits,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}));}
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00467\ \}}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \textcolor{comment}{//\ Equal\ to\ ggml\_e8m0\_to\_fp32/2}}
+\DoxyCodeLine{00470\ \textcolor{comment}{//\ Useful\ with\ MXFP4\ quantization\ since\ the\ E0M2\ values\ are\ doubled}}
+\DoxyCodeLine{00471\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ ggml\_e8m0\_to\_fp32\_half(uint8\_t\ x)\ \{}
+\DoxyCodeLine{00472\ \ \ \ \ uint32\_t\ bits;}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \ \ \ \ \textcolor{comment}{//\ For\ x\ <\ 2:\ use\ precomputed\ denormal\ patterns}}
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ <\ 2)\ \{}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x00200000\ =\ 2\string^(-\/128),\ 0x00400000\ =\ 2\string^(-\/127)}}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ bits\ =\ 0x00200000\ <<\ x;}
+\DoxyCodeLine{00478\ \ \ \ \ \}}
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{comment}{//\ For\ x\ >=\ 2:\ normalized\ exponent\ adjustment}}
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0.5\ *\ 2\string^(x-\/127)\ =\ 2\string^(x-\/128)\ =\ normalized\ with\ exponent\ (x-\/1)}}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ bits\ =\ (uint32\_t)(x\ -\/\ 1)\ <<\ 23;}
+\DoxyCodeLine{00483\ \ \ \ \ \}}
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{comment}{//\ Note:\ NaNs\ are\ not\ handled\ here}}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \ \ \ \ \textcolor{keywordtype}{float}\ result;}
+\DoxyCodeLine{00487\ \ \ \ \ memcpy(\&result,\ \&bits,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}));}
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00489\ \}}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\#define\ GGML\_E8M0\_TO\_FP32(x)\ ggml\_e8m0\_to\_fp32(x)}}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#define\ GGML\_E8M0\_TO\_FP32\_HALF(x)\ ggml\_e8m0\_to\_fp32\_half(x)}}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \textcolor{comment}{//\ UE4M3:\ unsigned,\ 4\ exp\ bits\ (bias=7),\ 3\ mantissa\ bits}}
+\DoxyCodeLine{00495\ \textcolor{comment}{//\ Returns\ value\ *\ 0.5\ to\ match\ kvalues\_mxfp4\ convention\ (kvalues\ =\ 2\ *\ E2M1\_float)}}
+\DoxyCodeLine{00496\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ ggml\_ue4m3\_to\_fp32(uint8\_t\ x)\ \{}
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ ==\ 0\ ||\ x\ ==\ 0x7F)\ \{}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0.0f;}
+\DoxyCodeLine{00499\ \ \ \ \ \}}
+\DoxyCodeLine{00500\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ exp\ =\ (x\ >>\ 3)\ \&\ 0xF;}
+\DoxyCodeLine{00501\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ man\ =\ x\ \&\ 0x7;}
+\DoxyCodeLine{00502\ \ \ \ \ \textcolor{keywordtype}{float}\ raw;}
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{keywordflow}{if}\ (exp\ ==\ 0)\ \{}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ raw\ =\ ldexpf((\textcolor{keywordtype}{float})\ man,\ -\/9);}
+\DoxyCodeLine{00505\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ raw\ =\ ldexpf(1.0f\ +\ (\textcolor{keywordtype}{float})\ man\ /\ 8.0f,\ exp\ -\/\ 7);}
+\DoxyCodeLine{00507\ \ \ \ \ \}}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keywordflow}{return}\ raw\ *\ 0.5f;}
+\DoxyCodeLine{00509\ \}}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ uint8\_t\ ggml\_fp32\_to\_ue4m3(\textcolor{keywordtype}{float}\ x)\ \{}
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{keywordflow}{if}\ (!(x\ >\ 0.0f))\ \{}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00514\ \ \ \ \ \}}
+\DoxyCodeLine{00515\ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ >\ 448.0f)\ \{}
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ x\ =\ 448.0f;}
+\DoxyCodeLine{00517\ \ \ \ \ \}}
+\DoxyCodeLine{00518\ \ \ \ \ uint32\_t\ bits;}
+\DoxyCodeLine{00519\ \ \ \ \ memcpy(\&bits,\ \&x,\ 4);}
+\DoxyCodeLine{00520\ \ \ \ \ \textcolor{keywordtype}{int}\ fp32\_exp\ \ =\ ((bits\ >>\ 23)\ \&\ 0xFF)\ -\/\ 127;}
+\DoxyCodeLine{00521\ \ \ \ \ \textcolor{keywordtype}{int}\ fp32\_man\ \ =\ (bits\ >>\ 20)\ \&\ 0x7;}
+\DoxyCodeLine{00522\ \ \ \ \ \textcolor{keywordtype}{int}\ ue4m3\_exp\ =\ fp32\_exp\ +\ 7;}
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{keywordflow}{if}\ (ue4m3\_exp\ <=\ 0)\ \{}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ subnormal:\ value\ =\ man\ *\ 2\string^-\/9,\ man\ =\ round(x\ *\ 2\string^9)}}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ man\ =\ (int)\ (x\ *\ 512.0f\ +\ 0.5f);}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (man\ >\ 7)\ \{}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ man\ =\ 7;}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (man\ <\ 1)\ \{}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (uint8\_t)\ man;}
+\DoxyCodeLine{00533\ \ \ \ \ \}}
+\DoxyCodeLine{00534\ \ \ \ \ \textcolor{keywordflow}{if}\ (ue4m3\_exp\ >=\ 15)\ \{}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0x7E;}
+\DoxyCodeLine{00536\ \ \ \ \ \}}
+\DoxyCodeLine{00537\ \ \ \ \ \textcolor{keywordtype}{int}\ round\_bit\ =\ (bits\ >>\ 19)\ \&\ 1;}
+\DoxyCodeLine{00538\ \ \ \ \ \textcolor{keywordtype}{int}\ ue4m3\_man\ =\ fp32\_man\ +\ round\_bit;}
+\DoxyCodeLine{00539\ \ \ \ \ \textcolor{keywordflow}{if}\ (ue4m3\_man\ >\ 7)\ \{}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ ue4m3\_man\ =\ 0;}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ ue4m3\_exp++;}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ue4m3\_exp\ >=\ 15)\ \{}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0x7E;}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00545\ \ \ \ \ \}}
+\DoxyCodeLine{00546\ \ \ \ \ \textcolor{keywordflow}{return}\ (uint8\_t)\ ((ue4m3\_exp\ <<\ 3)\ |\ ue4m3\_man);}
+\DoxyCodeLine{00547\ \}}
+\DoxyCodeLine{00548\ }
+\DoxyCodeLine{00588\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ ggml\_compute\_bf16\_to\_fp32(\doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ h)\ \{}
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ f;}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ uint32\_t\ i;}
+\DoxyCodeLine{00592\ \ \ \ \ \}\ u;}
+\DoxyCodeLine{00593\ \ \ \ \ u.i\ =\ (uint32\_t)h.bits\ <<\ 16;}
+\DoxyCodeLine{00594\ \ \ \ \ \textcolor{keywordflow}{return}\ u.f;}
+\DoxyCodeLine{00595\ \}}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00605\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ ggml\_compute\_fp32\_to\_bf16(\textcolor{keywordtype}{float}\ s)\ \{}
+\DoxyCodeLine{00606\ \ \ \ \ \doxymbox{\hyperlink{structggml__bf16__t}{ggml\_bf16\_t}}\ h;}
+\DoxyCodeLine{00607\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ f;}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ uint32\_t\ i;}
+\DoxyCodeLine{00610\ \ \ \ \ \}\ u;}
+\DoxyCodeLine{00611\ \ \ \ \ u.f\ =\ s;}
+\DoxyCodeLine{00612\ \ \ \ \ \textcolor{keywordflow}{if}\ ((u.i\ \&\ 0x7fffffff)\ >\ 0x7f800000)\ \{\ \textcolor{comment}{/*\ nan\ */}}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ h.bits\ =\ (u.i\ >>\ 16)\ |\ 64;\ \textcolor{comment}{/*\ force\ to\ quiet\ */}}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ h;}
+\DoxyCodeLine{00615\ \ \ \ \ \}}
+\DoxyCodeLine{00616\ \ \ \ \ h.bits\ =\ (u.i\ +\ (0x7fff\ +\ ((u.i\ >>\ 16)\ \&\ 1)))\ >>\ 16;}
+\DoxyCodeLine{00617\ \ \ \ \ \textcolor{keywordflow}{return}\ h;}
+\DoxyCodeLine{00618\ \}}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\#define\ GGML\_FP32\_TO\_BF16(x)\ ggml\_compute\_fp32\_to\_bf16(x)}}
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\#define\ GGML\_BF16\_TO\_FP32(x)\ ggml\_compute\_bf16\_to\_fp32(x)}}
+\DoxyCodeLine{00622\ }
+\DoxyCodeLine{00623\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ int32\_t\ ggml\_node\_get\_use\_count(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ \textcolor{keywordtype}{int}\ node\_idx)\ \{}
+\DoxyCodeLine{00624\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ node\ =\ cgraph-\/>nodes[node\_idx];}
+\DoxyCodeLine{00625\ }
+\DoxyCodeLine{00626\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ hash\_pos\ =\ ggml\_hash\_find(\&cgraph-\/>visited\_hash\_set,\ node);}
+\DoxyCodeLine{00627\ \ \ \ \ \textcolor{keywordflow}{if}\ (!ggml\_bitset\_get(cgraph-\/>visited\_hash\_set.used,\ hash\_pos))\ \{}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00629\ \ \ \ \ \}}
+\DoxyCodeLine{00630\ \ \ \ \ \textcolor{keywordflow}{return}\ cgraph-\/>use\_counts[hash\_pos];}
+\DoxyCodeLine{00631\ \}}
+\DoxyCodeLine{00632\ }
+\DoxyCodeLine{00633\ \textcolor{comment}{//\ return\ true\ if\ the\ node's\ results\ are\ only\ used\ by\ N\ other\ nodes}}
+\DoxyCodeLine{00634\ \textcolor{comment}{//\ and\ can\ be\ fused\ into\ their\ calculations.}}
+\DoxyCodeLine{00635\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ ggml\_node\_has\_n\_uses(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ \textcolor{keywordtype}{int}\ node\_idx,\ int32\_t\ n\_uses)\ \{}
+\DoxyCodeLine{00636\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ node\ =\ cgraph-\/>nodes[node\_idx];}
+\DoxyCodeLine{00637\ }
+\DoxyCodeLine{00638\ \ \ \ \ \textcolor{comment}{//\ check\ the\ use\ count\ against\ how\ many\ we're\ replacing}}
+\DoxyCodeLine{00639\ \ \ \ \ \textcolor{keywordflow}{if}\ (ggml\_node\_get\_use\_count(cgraph,\ node\_idx)\ !=\ n\_uses)\ \{}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00641\ \ \ \ \ \}}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00643\ \ \ \ \ \textcolor{comment}{//\ if\ node\ is\ a\ view,\ some\ other\ node\ might\ be\ using\ the\ intermediate\ result}}
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{comment}{//\ via\ the\ view\ source.}}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>view\_src)\ \{}
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00647\ \ \ \ \ \}}
+\DoxyCodeLine{00648\ }
+\DoxyCodeLine{00649\ \ \ \ \ \textcolor{comment}{//\ If\ the\ user\ requested\ output\ for\ the\ node,\ can't\ fuse}}
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>flags\ \&\ GGML\_TENSOR\_FLAG\_OUTPUT)\ \{}
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00652\ \ \ \ \ \}}
+\DoxyCodeLine{00653\ }
+\DoxyCodeLine{00654\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00655\ \}}
+\DoxyCodeLine{00656\ }
+\DoxyCodeLine{00657\ \textcolor{comment}{//\ Returns\ true\ if\ nodes\ with\ indices\ \{\ node\_idxs\ \}\ are\ the\ sequence\ of\ ggml\_ops\ in\ ops[]}}
+\DoxyCodeLine{00658\ \textcolor{comment}{//\ and\ are\ fusable.\ Nodes\ are\ considered\ fusable\ according\ to\ this\ function\ if:}}
+\DoxyCodeLine{00659\ \textcolor{comment}{//\ -\/\ all\ nodes\ except\ the\ last\ have\ only\ one\ use\ and\ are\ not\ views/outputs\ (see\ ggml\_node\_has\_N\_uses).}}
+\DoxyCodeLine{00660\ \textcolor{comment}{//\ -\/\ all\ nodes\ except\ the\ last\ are\ a\ src\ of\ the\ following\ node.}}
+\DoxyCodeLine{00661\ \textcolor{comment}{//\ -\/\ all\ nodes\ are\ the\ same\ shape.}}
+\DoxyCodeLine{00662\ \textcolor{comment}{//\ TODO:\ Consider\ allowing\ GGML\_OP\_NONE\ nodes\ in\ between}}
+\DoxyCodeLine{00663\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ ggml\_can\_fuse\_ext(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ node\_idxs,\ \textcolor{keyword}{const}\ \textcolor{keyword}{enum}\ ggml\_op\ *\ ops,\ \textcolor{keywordtype}{int}\ num\_ops)\ \{}
+\DoxyCodeLine{00664\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ num\_ops;\ ++i)\ \{}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node\_idxs[i]\ >=\ cgraph-\/>n\_nodes)\ \{}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00668\ }
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ node\ =\ cgraph-\/>nodes[node\_idxs[i]];}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>op\ !=\ ops[i])\ \{}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((node-\/>flags\ \&\ GGML\_TENSOR\_FLAG\_COMPUTE)\ ==\ 0)\ \{}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ <\ num\_ops\ -\/\ 1\ \&\&\ !ggml\_node\_has\_n\_uses(cgraph,\ node\_idxs[i],\ 1))\ \{}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ 0)\ \{}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ prev\ =\ cgraph-\/>nodes[node\_idxs[i\ -\/\ 1]];}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>src[0]\ !=\ prev\ \&\&\ node-\/>src[1]\ !=\ prev)\ \{}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ggml\_are\_same\_shape(node,\ prev))\ \{}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00688\ \ \ \ \ \}}
+\DoxyCodeLine{00689\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00690\ \}}
+\DoxyCodeLine{00691\ }
+\DoxyCodeLine{00692\ \textcolor{comment}{//\ same\ as\ above,\ for\ sequential\ indices\ starting\ at\ node\_idx}}
+\DoxyCodeLine{00693\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ ggml\_can\_fuse(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ \textcolor{keywordtype}{int}\ node\_idx,\ \textcolor{keyword}{const}\ \textcolor{keyword}{enum}\ ggml\_op\ *\ ops,\ \textcolor{keywordtype}{int}\ num\_ops)\ \{}
+\DoxyCodeLine{00694\ \ \ \ \ assert(num\_ops\ <\ 32);}
+\DoxyCodeLine{00695\ }
+\DoxyCodeLine{00696\ \ \ \ \ \textcolor{keywordflow}{if}\ (node\_idx\ +\ num\_ops\ >\ cgraph-\/>n\_nodes)\ \{}
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00698\ \ \ \ \ \}}
+\DoxyCodeLine{00699\ }
+\DoxyCodeLine{00700\ \ \ \ \ \textcolor{keywordtype}{int}\ idxs[32];}
+\DoxyCodeLine{00701\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ num\_ops;\ ++i)\ \{}
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ idxs[i]\ =\ node\_idx\ +\ i;}
+\DoxyCodeLine{00703\ \ \ \ \ \}}
+\DoxyCodeLine{00704\ }
+\DoxyCodeLine{00705\ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_can\_fuse\_ext(cgraph,\ idxs,\ ops,\ num\_ops);}
+\DoxyCodeLine{00706\ \}}
+\DoxyCodeLine{00707\ }
+\DoxyCodeLine{00708\ GGML\_API\ \textcolor{keywordtype}{bool}\ ggml\_can\_fuse\_subgraph\_ext(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\_idxs,}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ count,}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{enum}\ ggml\_op\ *\ \ \ \ \ \ \ ops,}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ outputs,}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_outputs);}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00715\ \textcolor{comment}{//\ Returns\ true\ if\ the\ subgraph\ formed\ by\ \{node\_idxs\}\ can\ be\ fused}}
+\DoxyCodeLine{00716\ \textcolor{comment}{//\ checks\ whethers\ all\ nodes\ which\ are\ not\ part\ of\ outputs\ can\ be\ elided}}
+\DoxyCodeLine{00717\ \textcolor{comment}{//\ by\ checking\ if\ their\ num\_uses\ are\ confined\ to\ the\ subgraph}}
+\DoxyCodeLine{00718\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ ggml\_can\_fuse\_subgraph(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\_idx,}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ count,}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{enum}\ ggml\_op\ *\ \ \ \ \ \ \ ops,}
+\DoxyCodeLine{00722\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ outputs,}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_outputs)\ \{}
+\DoxyCodeLine{00724\ \ \ \ \ GGML\_ASSERT(count\ <\ 32);}
+\DoxyCodeLine{00725\ \ \ \ \ \textcolor{keywordflow}{if}\ (node\_idx\ +\ count\ >\ cgraph-\/>n\_nodes)\ \{}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00727\ \ \ \ \ \}}
+\DoxyCodeLine{00728\ }
+\DoxyCodeLine{00729\ \ \ \ \ \textcolor{keywordtype}{int}\ idxs[32];}
+\DoxyCodeLine{00730\ }
+\DoxyCodeLine{00731\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ count;\ ++i)\ \{}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ idxs[i]\ =\ node\_idx\ +\ i;}
+\DoxyCodeLine{00733\ \ \ \ \ \}}
+\DoxyCodeLine{00734\ }
+\DoxyCodeLine{00735\ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_can\_fuse\_subgraph\_ext(cgraph,\ idxs,\ count,\ ops,\ outputs,\ num\_outputs);}
+\DoxyCodeLine{00736\ \}}
+\DoxyCodeLine{00737\ }
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00739\ \}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00741\ }
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#include\ <initializer\_list>}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00746\ }
+\DoxyCodeLine{00747\ \textcolor{comment}{//\ nicer\ C++\ syntax\ for\ ggml\_can\_fuse}}
+\DoxyCodeLine{00748\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ ggml\_can\_fuse(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ cgraph,\ \textcolor{keywordtype}{int}\ node\_idx,\ std::initializer\_list<enum\ ggml\_op>\ ops)\ \{}
+\DoxyCodeLine{00749\ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_can\_fuse(cgraph,\ node\_idx,\ ops.begin(),\ (\textcolor{keywordtype}{int})ops.size());}
+\DoxyCodeLine{00750\ \}}
+\DoxyCodeLine{00751\ }
+\DoxyCodeLine{00752\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ ggml\_can\_fuse\_subgraph(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ \ \ \ \ \ \ \ \ \ cgraph,}
+\DoxyCodeLine{00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ start\_idx,}
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::initializer\_list<enum\ ggml\_op>\ ops,}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::initializer\_list<int>\ \ \ \ \ \ \ \ \ \ outputs\ =\ \{\})\ \{}
+\DoxyCodeLine{00756\ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_can\_fuse\_subgraph(cgraph,\ start\_idx,\ ops.size(),\ ops.begin(),\ outputs.begin(),\ outputs.size());}
+\DoxyCodeLine{00757\ \}}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \textcolor{comment}{//\ Return\ true\ if\ the\ edges\ in\ the\ graph\ match\ expectations.}}
+\DoxyCodeLine{00760\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ ggml\_check\_edges(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__cgraph}{ggml\_cgraph}}\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cgraph,}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ start\_idx,}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::initializer\_list<std::array<int,\ 3>>\ edges)\ \{}
+\DoxyCodeLine{00763\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ edge\ :\ edges)\ \{}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dst\_node\ =\ edge[0];}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ src\_idx\ \ =\ edge[1];}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ src\_node\ =\ edge[2];}
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cgraph-\/>nodes[start\_idx\ +\ dst\_node]-\/>src[src\_idx]\ !=\ cgraph-\/>nodes[start\_idx\ +\ src\_node])\ \{}
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00770\ \ \ \ \ \}}
+\DoxyCodeLine{00771\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00772\ \}}
+\DoxyCodeLine{00773\ }
+\DoxyCodeLine{00774\ \textcolor{comment}{//\ expose\ GGUF\ internals\ for\ test\ code}}
+\DoxyCodeLine{00775\ GGML\_API\ \textcolor{keywordtype}{size\_t}\ gguf\_type\_size(\textcolor{keyword}{enum}\ gguf\_type\ type);}
+\DoxyCodeLine{00776\ GGML\_API\ \textcolor{keywordtype}{void}\ gguf\_write\_to\_buf(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structgguf__context}{gguf\_context}}\ *\ ctx,\ std::vector<int8\_t>\ \&\ buf,\ \textcolor{keywordtype}{bool}\ only\_meta);}
+\DoxyCodeLine{00777\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_cplusplus}}
+
+\end{DoxyCode}

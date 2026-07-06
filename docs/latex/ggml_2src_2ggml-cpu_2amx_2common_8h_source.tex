@@ -1,0 +1,121 @@
+\doxysection{common.\+h}
+\hypertarget{ggml_2src_2ggml-cpu_2amx_2common_8h_source}{}\label{ggml_2src_2ggml-cpu_2amx_2common_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/amx/common.h@{whisper.cpp/ggml/src/ggml-\/cpu/amx/common.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}ggml-\/cpu-\/impl.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#if\ defined(GGML\_USE\_OPENMP)}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <omp.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ TILE\_M\ 16}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ TILE\_N\ 16}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ TILE\_K\ 32}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ VNNI\_BLK\ 4}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ AMX\_BLK\_SIZE\ 32}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ TMM0\ 0}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ TMM1\ 1}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ TMM2\ 2}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ TMM3\ 3}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ TMM4\ 4}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ TMM5\ 5}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ TMM6\ 6}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ TMM7\ 7}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ parallel\ routines}}
+\DoxyCodeLine{00033\ template\ <typename\ T,\ typename\ std::enable\_if<std::is\_integral<T>::value,\ \textcolor{keywordtype}{int}>::type\ =\ 0>}
+\DoxyCodeLine{00034\ \textcolor{keyword}{inline}\ T\ div\_up(T\ x,\ T\ y)\ \{\ \textcolor{keywordflow}{return}\ (x\ +\ y\ -\/\ 1)\ /\ y;\ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00037\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ balance211(T\ n,\ T\ nth,\ T\ ith,\ T\&\ n\_start,\ T\&\ n\_end)\ \{}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ onednn\ partition\ pattern}}
+\DoxyCodeLine{00040\ \ \ \ \ T\&\ n\_my\ =\ n\_end;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{if}\ (nth\ <=\ 1\ ||\ n\ ==\ 0)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ n\_start\ =\ 0;}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ n\_my\ =\ n;}
+\DoxyCodeLine{00044\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ T\ n1\ =\ div\_up(n,\ nth);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ T\ n2\ =\ n1\ -\/\ 1;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ T\ T1\ =\ n\ -\/\ n2\ *\ nth;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ n\_my\ =\ ith\ <\ T1\ ?\ n1\ :\ n2;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ n\_start\ =\ ith\ <=\ T1\ ?\ ith*n1\ :\ T1\ *\ n1\ +\ (ith\ -\/\ T1)\ *\ n2;}
+\DoxyCodeLine{00050\ \ \ \ \ \}}
+\DoxyCodeLine{00051\ \ \ \ \ n\_end\ +=\ n\_start;}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ pytorch\ aten\ partition\ pattern}}
+\DoxyCodeLine{00054\ \ \ \ \ T\ n\_my\ =\ div\_up(n,\ nth);}
+\DoxyCodeLine{00055\ \ \ \ \ n\_start\ =\ ith\ *\ n\_my;}
+\DoxyCodeLine{00056\ \ \ \ \ n\_end\ =\ std::min(n\_start\ +\ n\_my,\ n);}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00058\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ func\_t>}
+\DoxyCodeLine{00061\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ parallel\_for(\textcolor{keywordtype}{int}\ n,\ \textcolor{keyword}{const}\ func\_t\ \&\ f)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{if}\ (n\ <=\ 0)\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#if\ defined(GGML\_USE\_OPENMP)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ parallel}}
+\DoxyCodeLine{00067\ \ \ \ \ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nth\ =\ omp\_get\_num\_threads();}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ith\ =\ omp\_get\_thread\_num();}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tbegin,\ tend;}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ balance211(n,\ nth,\ ith,\ tbegin,\ tend);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ f(tbegin,\ tend);}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{int}\ nth\ =\ std::thread::hardware\_concurrency();}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{if}\ (nth\ <=\ 1)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ f(0,\ n);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{if}\ (nth\ >\ n)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ nth\ =\ n;}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \ \ \ \ std::vector<std::thread>\ threads;}
+\DoxyCodeLine{00084\ \ \ \ \ threads.reserve(nth);}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ ith\ =\ 0;\ ith\ <\ nth;\ ++ith)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ threads.emplace\_back([\&f,\ n,\ ith,\ nth]\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tbegin,\ tend;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ balance211(n,\ nth,\ ith,\ tbegin,\ tend);}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ f(tbegin,\ tend);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&\ t\ :\ threads)\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ t.join();}
+\DoxyCodeLine{00094\ \ \ \ \ \}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00096\ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ func\_t>}
+\DoxyCodeLine{00099\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ parallel\_for\_ggml(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ *\ params,\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keyword}{const}\ func\_t\ \&\ f)\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{int}\ tbegin,\ tend;}
+\DoxyCodeLine{00101\ \ \ \ \ balance211(n,\ params-\/>nth,\ params-\/>ith,\ tbegin,\ tend);}
+\DoxyCodeLine{00102\ \ \ \ \ f(tbegin,\ tend);}
+\DoxyCodeLine{00103\ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{comment}{//\ quantized\ types\ that\ have\ AMX\ support}}
+\DoxyCodeLine{00106\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ qtype\_has\_amx\_kernels(\textcolor{keyword}{const}\ \textcolor{keyword}{enum}\ ggml\_type\ type)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ TODO:\ fix\ padding\ for\ vnni\ format}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordflow}{return}\ (type\ ==\ GGML\_TYPE\_Q4\_0)\ ||}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ (type\ ==\ GGML\_TYPE\_Q4\_1)\ ||}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ (type\ ==\ GGML\_TYPE\_Q8\_0)\ ||}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ (type\ ==\ GGML\_TYPE\_Q4\_K)\ ||}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ (type\ ==\ GGML\_TYPE\_Q5\_K)\ ||}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ (type\ ==\ GGML\_TYPE\_Q6\_K)\ ||}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ (type\ ==\ GGML\_TYPE\_IQ4\_XS);}
+\DoxyCodeLine{00115\ \}}
+
+\end{DoxyCode}

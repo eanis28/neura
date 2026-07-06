@@ -1,0 +1,64 @@
+\doxysection{gpt\+\_\+params Struct Reference}
+\hypertarget{structgpt__params}{}\label{structgpt__params}\index{gpt\_params@{gpt\_params}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgpt__params_a090148452d7008d15709df1c7e71f0e6}\label{structgpt__params_a090148452d7008d15709df1c7e71f0e6} 
+int32\+\_\+t {\bfseries seed} = -\/1
+\item 
+\Hypertarget{structgpt__params_aca6584be1735957918c9c9bf31cc4ac1}\label{structgpt__params_aca6584be1735957918c9c9bf31cc4ac1} 
+int32\+\_\+t {\bfseries n\+\_\+threads} = std::\+min(4, (int32\+\_\+t) std::\+thread::\+hardware\+\_\+concurrency())
+\item 
+\Hypertarget{structgpt__params_a730a090008fa1c5d6e134e651b65c4eb}\label{structgpt__params_a730a090008fa1c5d6e134e651b65c4eb} 
+int32\+\_\+t {\bfseries n\+\_\+predict} = 200
+\item 
+\Hypertarget{structgpt__params_aac309cf1760ac7101312ed2ec3188232}\label{structgpt__params_aac309cf1760ac7101312ed2ec3188232} 
+int32\+\_\+t {\bfseries n\+\_\+parallel} = 1
+\item 
+\Hypertarget{structgpt__params_a68c46638e21e395264544cc1a1559607}\label{structgpt__params_a68c46638e21e395264544cc1a1559607} 
+int32\+\_\+t {\bfseries n\+\_\+batch} = 32
+\item 
+\Hypertarget{structgpt__params_a778984a92c25005b5ed246d08aa78d8e}\label{structgpt__params_a778984a92c25005b5ed246d08aa78d8e} 
+int32\+\_\+t {\bfseries n\+\_\+ctx} = 2048
+\item 
+\Hypertarget{structgpt__params_a0917c18785b8a241c0623da195c9c720}\label{structgpt__params_a0917c18785b8a241c0623da195c9c720} 
+int32\+\_\+t {\bfseries n\+\_\+gpu\+\_\+layers} = 0
+\item 
+\Hypertarget{structgpt__params_aecdea055edfa6a31c1abb607bf851e48}\label{structgpt__params_aecdea055edfa6a31c1abb607bf851e48} 
+bool {\bfseries ignore\+\_\+eos} = false
+\item 
+\Hypertarget{structgpt__params_ad72c13ee0f5dcd89eab95011547f35e8}\label{structgpt__params_ad72c13ee0f5dcd89eab95011547f35e8} 
+int32\+\_\+t {\bfseries top\+\_\+k} = 40
+\item 
+\Hypertarget{structgpt__params_ae2885069532cda4fe6d90ea10d8bc81a}\label{structgpt__params_ae2885069532cda4fe6d90ea10d8bc81a} 
+float {\bfseries top\+\_\+p} = 0.\+9f
+\item 
+\Hypertarget{structgpt__params_a8d9a7e0c7178319a21c5382a014982e7}\label{structgpt__params_a8d9a7e0c7178319a21c5382a014982e7} 
+float {\bfseries temp} = 0.\+9f
+\item 
+\Hypertarget{structgpt__params_a1f688ca634717f3ab1aecfe1fb4526ec}\label{structgpt__params_a1f688ca634717f3ab1aecfe1fb4526ec} 
+int32\+\_\+t {\bfseries repeat\+\_\+last\+\_\+n} = 64
+\item 
+\Hypertarget{structgpt__params_ab774fd2aad5a401263bf11bb5d6dab2e}\label{structgpt__params_ab774fd2aad5a401263bf11bb5d6dab2e} 
+float {\bfseries repeat\+\_\+penalty} = 1.\+00f
+\item 
+\Hypertarget{structgpt__params_a436067db4405ba2bde011cf432c18c4f}\label{structgpt__params_a436067db4405ba2bde011cf432c18c4f} 
+std::\+string {\bfseries model} = "{}models/\+gpt-\/2-\/117M/\+ggml-\/model.\+bin"{}
+\item 
+\Hypertarget{structgpt__params_a186e0eab575e12d8cef9bf443f930339}\label{structgpt__params_a186e0eab575e12d8cef9bf443f930339} 
+std::\+string {\bfseries prompt} = "{}"{}
+\item 
+\Hypertarget{structgpt__params_a13b82231f67cf3aeaa683614ce694e52}\label{structgpt__params_a13b82231f67cf3aeaa683614ce694e52} 
+std::\+string {\bfseries token\+\_\+test} = "{}"{}
+\item 
+\Hypertarget{structgpt__params_aa9e76cb38f0d4bfadf13ad640e0fddf2}\label{structgpt__params_aa9e76cb38f0d4bfadf13ad640e0fddf2} 
+bool {\bfseries interactive} = false
+\item 
+\Hypertarget{structgpt__params_a3b0c2f7f3414f64d3f1d26e3ba2e89ba}\label{structgpt__params_a3b0c2f7f3414f64d3f1d26e3ba2e89ba} 
+int32\+\_\+t {\bfseries interactive\+\_\+port} = -\/1
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+common.\+h\end{DoxyCompactItemize}

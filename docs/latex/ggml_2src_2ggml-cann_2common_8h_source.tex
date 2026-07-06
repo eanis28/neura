@@ -1,0 +1,472 @@
+\doxysection{common.\+h}
+\hypertarget{ggml_2src_2ggml-cann_2common_8h_source}{}\label{ggml_2src_2ggml-cann_2common_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cann/common.h@{whisper.cpp/ggml/src/ggml-\/cann/common.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2023-\/2026\ The\ ggml\ authors}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ Permission\ is\ hereby\ granted,\ free\ of\ charge,\ to\ any\ person\ obtaining\ a\ copy}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ of\ this\ software\ and\ associated\ documentation\ files\ (the\ "{}Software"{}),\ to}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ deal\ in\ the\ Software\ without\ restriction,\ including\ without\ limitation\ the}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ rights\ to\ use,\ copy,\ modify,\ merge,\ publish,\ distribute,\ sublicense,\ and/or}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ sell\ copies\ of\ the\ Software,\ and\ to\ permit\ persons\ to\ whom\ the\ Software\ is}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ furnished\ to\ do\ so,\ subject\ to\ the\ following\ conditions:}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ The\ above\ copyright\ notice\ and\ this\ permission\ notice\ shall\ be\ included\ in}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ all\ copies\ or\ substantial\ portions\ of\ the\ Software.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ THE\ SOFTWARE\ IS\ PROVIDED\ "{}AS\ IS"{},\ WITHOUT\ WARRANTY\ OF\ ANY\ KIND,\ EXPRESS\ OR}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ IMPLIED,\ INCLUDING\ BUT\ NOT\ LIMITED\ TO\ THE\ WARRANTIES\ OF\ MERCHANTABILITY,}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ AND\ NONINFRINGEMENT.\ IN\ NO\ EVENT\ SHALL\ THE}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ AUTHORS\ OR\ COPYRIGHT\ HOLDERS\ BE\ LIABLE\ FOR\ ANY\ CLAIM,\ DAMAGES\ OR\ OTHER}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ LIABILITY,\ WHETHER\ IN\ AN\ ACTION\ OF\ CONTRACT,\ TORT\ OR\ OTHERWISE,\ ARISING}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ FROM,\ OUT\ OF\ OR\ IN\ CONNECTION\ WITH\ THE\ SOFTWARE\ OR\ THE\ USE\ OR\ OTHER\ DEALINGS}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ IN\ THE\ SOFTWARE.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ CANN\_COMMON\_H}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ CANN\_COMMON\_H}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../ggml-\/impl.h"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../include/ggml-\/cann.h"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}../include/ggml.h"{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <acl/acl.h>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ <condition\_variable>}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <cstdio>}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <list>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ MATRIX\_ROW\_PADDING\ \ \ \ 512}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ GGML\_CANN\_MAX\_STREAMS\ 8}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00059\ [[noreturn]]\ \textcolor{keywordtype}{void}\ ggml\_cann\_error(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ stmt,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ func,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ msg);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ ACL\_CHECK\_GEN(stmt,\ success,\ error\_fn)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ err\_code\ =\ (stmt);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (err\_code\ !=\ (success))\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ ggml\_cann\_error(\#stmt,\ \_\_func\_\_,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ error\_fn());\ \(\backslash\)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0);}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ ACL\_CHECK(stmt)\ ACL\_CHECK\_GEN(stmt,\ 0,\ aclGetRecentErrMsg)}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cann__device__info}{ggml\_cann\_device\_info}}\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ int32\_t\ \doxymbox{\hyperlink{structggml__cann__device__info_adb2333df137d8652e217a9f504c749fa}{device\_count}};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cann__device__info_1_1cann__device__info}{cann\_device\_info}}\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \doxymbox{\hyperlink{structggml__cann__device__info_1_1cann__device__info_a943052eda3fb145d77772f2f9544cb80}{cc}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{structggml__cann__device__info_1_1cann__device__info_a5d33e88e4a08c2f8e194f85dd00d8f90}{smpb}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \doxymbox{\hyperlink{structggml__cann__device__info_1_1cann__device__info_a9805f0557be0f271ea498c41877a09f4}{vmm}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{structggml__cann__device__info_1_1cann__device__info_af08fb2904596d8d66459ea4e726285fc}{vmm\_granularity}};\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{structggml__cann__device__info_1_1cann__device__info_afaf09ed244f2bff7d7d9a9bfb21ceab2}{total\_vram}};\ \ \ \ \ \ }
+\DoxyCodeLine{00096\ \ \ \ \ \};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__device__info_1_1cann__device__info}{cann\_device\_info}}\ \doxymbox{\hyperlink{structggml__cann__device__info_ad38babb429fcf01e8325be21e5df3d37}{devices}}[GGML\_CANN\_MAX\_DEVICES]\ =\ \{\};\ }
+\DoxyCodeLine{00099\ \};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__cann__device__info}{ggml\_cann\_device\_info}}\ \&\ ggml\_cann\_info();}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keywordtype}{void}\ \ \ \ ggml\_cann\_set\_device(int32\_t\ device);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ std::optional<std::string>\ get\_env\_as\_lowercase(\textcolor{keyword}{const}\ std::string\ \&\ name);}
+\DoxyCodeLine{00106\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parse\_bool(\textcolor{keyword}{const}\ std::string\ \&\ value);}
+\DoxyCodeLine{00107\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parse\_integer(\textcolor{keyword}{const}\ std::string\ \&\ value);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cann__pool}{ggml\_cann\_pool}}\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{structggml__cann__pool_adb7c9d428f618ea6cc1e03ee01bac2ef}{\string~ggml\_cann\_pool}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ *\ \doxymbox{\hyperlink{structggml__cann__pool_a1db69310420e48bc125a435b031bdc4d}{alloc}}(\textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{size\_t}\ *\ actual\_size)\ =\ 0;}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{structggml__cann__pool_a8119eb4c8490390a7ebabbb94b40d1ee}{free}}(\textcolor{keywordtype}{void}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ size)\ =\ 0;}
+\DoxyCodeLine{00137\ \};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00142\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cann__pool__alloc_a08f974db7a807b09911c811e136d67c7}{ggml\_cann\_pool\_alloc}}\ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool}{ggml\_cann\_pool}}\ *\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}}\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3}{ptr}}\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ }
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a5faf2e9be49360a10735c790b00e38b5}{actual\_size}}\ =\ 0;\ \ \ \ \ \ \ }
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00150\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a08f974db7a807b09911c811e136d67c7}{ggml\_cann\_pool\_alloc}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a1e703f37527210c545f2e450cf5988c3}{ggml\_cann\_pool\_alloc}}(\doxymbox{\hyperlink{structggml__cann__pool}{ggml\_cann\_pool}}\ \&\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}})\ :\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}}(\&\doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}})\ \{\}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00163\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc_aa748e999d674c831cdeab25251f3fd6d}{ggml\_cann\_pool\_alloc}}(\doxymbox{\hyperlink{structggml__cann__pool}{ggml\_cann\_pool}}\ \&\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}},\ \textcolor{keywordtype}{size\_t}\ size)\ :\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}}(\&\doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}})\ \{\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a2abf418b665068714b7aab9b51338ec2}{alloc}}(size);\ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00168\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a76914c439dece94c5c64169a8dba5aea}{\string~ggml\_cann\_pool\_alloc}}()\ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3}{ptr}}\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}}-\/>free(\doxymbox{\hyperlink{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3}{ptr}},\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a5faf2e9be49360a10735c790b00e38b5}{actual\_size}});}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00172\ \ \ \ \ \}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a2abf418b665068714b7aab9b51338ec2}{alloc}}(\textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ GGML\_ASSERT(\doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}}\ !=\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ GGML\_ASSERT(\doxymbox{\hyperlink{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3}{ptr}}\ ==\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3}{ptr}}\ =\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}}-\/>alloc(size,\ \&this-\/>actual\_size);}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3}{ptr}};}
+\DoxyCodeLine{00184\ \ \ \ \ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_ae365f99595ee890dcf37622a5322db95}{alloc}}(\doxymbox{\hyperlink{structggml__cann__pool}{ggml\_cann\_pool}}\ \&\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}},\ \textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ this-\/>pool\ =\ \&\doxymbox{\hyperlink{structggml__cann__pool__alloc_a24f8c633369a3f7dd518a69aa1215235}{pool}};}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a2abf418b665068714b7aab9b51338ec2}{alloc}}(size);}
+\DoxyCodeLine{00195\ \ \ \ \ \}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_ac507c90844d1ad1b92bc3a25e90cd148}{get}}()\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a74ab6fdf226d4f7b8f5aec3991eab1f3}{ptr}};\ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ Deleted\ copy\ constructor}}
+\DoxyCodeLine{00204\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a08f974db7a807b09911c811e136d67c7}{ggml\_cann\_pool\_alloc}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\_cann\_pool\_alloc}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{comment}{//\ Deleted\ move\ constructor}}
+\DoxyCodeLine{00207\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc_a08f974db7a807b09911c811e136d67c7}{ggml\_cann\_pool\_alloc}}(\doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\_cann\_pool\_alloc}}\ \&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{comment}{//\ Deleted\ copy\ assignment\ operator}}
+\DoxyCodeLine{00210\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\_cann\_pool\_alloc}}\ \&\ operator=(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\_cann\_pool\_alloc}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{comment}{//\ Deleted\ move\ assignment\ operator}}
+\DoxyCodeLine{00213\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\_cann\_pool\_alloc}}\ \&\ operator=(\doxymbox{\hyperlink{structggml__cann__pool__alloc}{ggml\_cann\_pool\_alloc}}\ \&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00214\ \};}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#ifdef\ USE\_ACL\_GRAPH}}
+\DoxyCodeLine{00217\ \textcolor{keyword}{struct\ }ggml\_graph\_node\_properties\ \{}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{comment}{//\ dst\ tensor}}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ node\_address;}
+\DoxyCodeLine{00220\ \ \ \ \ int64\_t\ ne[GGML\_MAX\_DIMS];}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ nb[GGML\_MAX\_DIMS];}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{comment}{//\ src\ tensor}}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ src\_address[GGML\_MAX\_SRC];}
+\DoxyCodeLine{00225\ \ \ \ \ int64\_t\ src\_ne[GGML\_MAX\_SRC][GGML\_MAX\_DIMS];}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ src\_nb[GGML\_MAX\_SRC][GGML\_MAX\_DIMS];}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ op}}
+\DoxyCodeLine{00229\ \ \ \ \ ggml\_op\ node\_op;}
+\DoxyCodeLine{00230\ \ \ \ \ int32\_t\ op\_params[GGML\_MAX\_OP\_PARAMS\ /\ \textcolor{keyword}{sizeof}(int32\_t)];}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_matching\_properties(ggml\_tensor\ *\ node)\ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>data\ !=\ this-\/>node\_address\ \&\&\ node-\/>op\ !=\ GGML\_OP\_VIEW)\ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>op\ !=\ this-\/>node\_op)\ \{}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ GGML\_MAX\_DIMS;\ i++)\ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>ne[i]\ !=\ this-\/>ne[i])\ \{}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>nb[i]\ !=\ this-\/>nb[i])\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ GGML\_MAX\_SRC;\ i++)\ \{}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>src[i])\ \{}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>src[i]-\/>data\ !=\ this-\/>src\_address[i]\ \&\&\ node-\/>op\ !=\ GGML\_OP\_VIEW)\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ d\ =\ 0;\ d\ <\ GGML\_MAX\_DIMS;\ d++)\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>src[i]-\/>ne[d]\ !=\ this-\/>src\_ne[i][d])\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>src[i]-\/>nb[d]\ !=\ this-\/>src\_nb[i][d])\ \{}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>src\_address[i]\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>op\ ==\ GGML\_OP\_SCALE\ ||\ node-\/>op\ ==\ GGML\_OP\_UNARY\ ||\ node-\/>op\ ==\ GGML\_OP\_GLU\ ||\ node-\/>op\ ==\ GGML\_OP\_ROPE)\{}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ memcmp(this-\/>op\_params,\ node-\/>op\_params,\ GGML\_MAX\_OP\_PARAMS)\ ==\ 0;}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00284\ \ \ \ \ \}}
+\DoxyCodeLine{00285\ \};}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \textcolor{keyword}{struct\ }ggml\_cann\_graph\ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \string~ggml\_cann\_graph()\ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (graph\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclmdlRIDestroy(graph));}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00292\ \ \ \ \ \}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ aclmdlRI\ graph\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ std::vector<ggml\_graph\_node\_properties>\ ggml\_graph\_properties;}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{keyword}{static}\ ggml\_cann\_graph\ *\ create\_from\_cgraph(ggml\_cgraph\ *\ cgraph)\ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ ggml\_cann\_graph\ *\ new\_graph\ =\ \textcolor{keyword}{new}\ ggml\_cann\_graph();}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ new\_graph-\/>ggml\_graph\_properties.resize(cgraph-\/>n\_nodes);}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ node\_idx\ =\ 0;\ node\_idx\ <\ cgraph-\/>n\_nodes;\ ++node\_idx)\ \{}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_tensor\ *\ node\ =\ cgraph-\/>nodes[node\_idx];}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \&\ \ \ \ \ \ \ \ prop\ =\ new\_graph-\/>ggml\_graph\_properties[node\_idx];}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ prop.node\_address\ =\ node-\/>data;}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ prop.node\_op\ \ \ \ \ \ =\ node-\/>op;}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ std::copy\_n(node-\/>ne,\ GGML\_MAX\_DIMS,\ prop.ne);}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ std::copy\_n(node-\/>nb,\ GGML\_MAX\_DIMS,\ prop.nb);}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ src\ =\ 0;\ src\ <\ GGML\_MAX\_SRC;\ ++src)\ \{}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>src[src])\ \{}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prop.src\_address[src]\ =\ node-\/>src[src]-\/>data;}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::copy\_n(node-\/>src[src]-\/>ne,\ GGML\_MAX\_DIMS,\ prop.src\_ne[src]);}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::copy\_n(node-\/>src[src]-\/>nb,\ GGML\_MAX\_DIMS,\ prop.src\_nb[src]);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prop.src\_address[src]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::fill\_n(prop.src\_ne[src],\ GGML\_MAX\_DIMS,\ 0);}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::fill\_n(prop.src\_nb[src],\ GGML\_MAX\_DIMS,\ 0);}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(prop.op\_params,\ node-\/>op\_params,\ GGML\_MAX\_OP\_PARAMS);}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ new\_graph;}
+\DoxyCodeLine{00345\ \ \ \ \ \}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{keywordtype}{bool}\ matches\_cgraph(ggml\_cgraph\ *\ cgraph)\ \{}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>ggml\_graph\_properties.size()\ !=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(cgraph-\/>n\_nodes))\ \{}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ cgraph-\/>n\_nodes;\ ++i)\ \{}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!this-\/>ggml\_graph\_properties[i].has\_matching\_properties(cgraph-\/>nodes[i]))\ \{}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00369\ \ \ \ \ \}}
+\DoxyCodeLine{00370\ \};}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00379\ \textcolor{keyword}{struct\ }ggml\_cann\_graph\_lru\_cache\ \{}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ capacity;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \ \ \ \ std::list<ggml\_cann\_graph\ *>\ cache\_list;\ }
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \ \ \ \ ggml\_cann\_graph\_lru\_cache()\ \{\ capacity\ =\ parse\_integer(get\_env\_as\_lowercase(\textcolor{stringliteral}{"{}GGML\_CANN\_GRAPH\_CACHE\_CAPACITY"{}}).value\_or(\textcolor{stringliteral}{"{}12"{}}));\ \}}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keywordtype}{void}\ push(ggml\_cann\_graph\ *\ new\_node)\ \{}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cache\_list.size()\ >=\ capacity)\ \{}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_cann\_graph\ *\ old\ =\ cache\_list.back();}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ cache\_list.pop\_back();}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ old;\ \ \textcolor{comment}{//\ free\ the\ old\ graph}}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ cache\_list.push\_front(new\_node);}
+\DoxyCodeLine{00399\ \ \ \ \ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keywordtype}{void}\ clear()\ \{}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ ptr\ :\ cache\_list)\ \{}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ ptr;}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ cache\_list.clear();}
+\DoxyCodeLine{00409\ \ \ \ \ \}}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00414\ \ \ \ \ \string~ggml\_cann\_graph\_lru\_cache()\ \{\ clear();\ \}}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{keywordtype}{bool}\ find\_and\_move\_to\_front(ggml\_cgraph\ *\ cgraph)\ \{}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&\ graph\_ptr\ :\ this-\/>cache\_list)\ \{}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (graph\_ptr-\/>matches\_cgraph(cgraph))\ \{}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cache\_list.remove(graph\_ptr);}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cache\_list.push\_front(graph\_ptr);}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00436\ \ \ \ \ \}}
+\DoxyCodeLine{00437\ \};}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ USE\_ACL\_GRAPH}}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00440\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cann__rope__cache}{ggml\_cann\_rope\_cache}}\ \{}
+\DoxyCodeLine{00441\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__rope__cache}{\string~ggml\_cann\_rope\_cache}}()\ \{}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (theta\_scale\_cache)\ \{}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtFree(theta\_scale\_cache));}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sin\_cache)\ \{}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtFree(sin\_cache));}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cos\_cache)\ \{}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtFree(cos\_cache));}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (position\_select\_index)\ \{}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtFree(position\_select\_index));}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (theta\_scale\_exp\_host)\ \{}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ free(theta\_scale\_exp\_host);}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (position\_select\_index\_host)\ \{}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ free(position\_select\_index\_host);}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (yarn\_ramp\_cache)\ \{}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtFree(yarn\_ramp\_cache));}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00463\ \ \ \ \ \}}
+\DoxyCodeLine{00464\ }
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{keywordtype}{bool}\ equal(int64\_t\ theta\_scale\_length,}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ position\_length,}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ ext\_factor,}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ theta\_scale,}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ freq\_scale,}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ attn\_factor,}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ is\_neox,}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ indep\_sects,}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ mrope\_used,}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ is\_imrope,}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ sections[4])\ \{}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>theta\_scale\_length\ ==\ theta\_scale\_length\ \&\&\ this-\/>position\_length\ ==\ position\_length\ \&\&}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>ext\_factor\ ==\ ext\_factor\ \&\&\ this-\/>theta\_scale\ ==\ theta\_scale\ \&\&\ this-\/>freq\_scale\ ==\ freq\_scale\ \&\&}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>attn\_factor\ ==\ attn\_factor\ \&\&\ this-\/>is\_neox\ ==\ is\_neox\ \&\&\ this-\/>indep\_sects\ ==\ indep\_sects\ \&\&}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>mrope\_used\ ==\ mrope\_used\ \&\&\ this-\/>is\_imrope\ ==\ is\_imrope\ \&\&\ this-\/>sections[0]\ ==\ sections[0]\ \&\&}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>sections[1]\ ==\ sections[1]\ \&\&\ this-\/>sections[2]\ ==\ sections[2]\ \&\&\ this-\/>sections[3]\ ==\ sections[3];}
+\DoxyCodeLine{00481\ \ \ \ \ \}}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{keywordtype}{void}\ set(int64\_t\ theta\_scale\_length,}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ position\_length,}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ ext\_factor,}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ theta\_scale,}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ freq\_scale,}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ attn\_factor,}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ is\_neox,}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ indep\_sects,}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ mrope\_used,}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ is\_imrope,}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ sections[4])\ \{}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ this-\/>theta\_scale\_length\ =\ theta\_scale\_length;}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ this-\/>position\_length\ \ \ \ =\ position\_length;}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ this-\/>ext\_factor\ \ \ \ \ \ \ \ \ =\ ext\_factor;}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ this-\/>theta\_scale\ \ \ \ \ \ \ \ =\ theta\_scale;}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ this-\/>freq\_scale\ \ \ \ \ \ \ \ \ =\ freq\_scale;}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ this-\/>attn\_factor\ \ \ \ \ \ \ \ =\ attn\_factor;}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ this-\/>is\_neox\ \ \ \ \ \ \ \ \ \ \ \ =\ is\_neox;}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ this-\/>indep\_sects\ \ \ \ \ \ \ \ =\ indep\_sects;}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ this-\/>mrope\_used\ \ \ \ \ \ \ \ \ =\ mrope\_used;}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ this-\/>is\_imrope\ \ \ \ \ \ \ \ \ \ =\ is\_imrope;}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ this-\/>sections[0]\ \ \ \ \ \ \ \ =\ sections[0];}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ this-\/>sections[1]\ \ \ \ \ \ \ \ =\ sections[1];}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ this-\/>sections[2]\ \ \ \ \ \ \ \ =\ sections[2];}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ this-\/>sections[3]\ \ \ \ \ \ \ \ =\ sections[3];}
+\DoxyCodeLine{00508\ \ \ \ \ \}}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00510\ \ \ \ \ \textcolor{comment}{//\ memory\ cache,\ prepare\ before\ inferencing.}}
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ theta\_scale\_cache\ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{keywordtype}{float}\ *\ theta\_scale\_exp\_host\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00513\ \ \ \ \ \textcolor{keywordtype}{int}\ *\ \ \ position\_select\_index\_host\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00514\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ position\_select\_index\ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00515\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ yarn\_ramp\_cache\ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{comment}{//\ sin/cos\ cache,\ used\ only\ to\ accelerate\ first\ layer\ on\ each\ device}}
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ sin\_cache\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ cos\_cache\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00519\ \ \ \ \ \textcolor{comment}{//\ Properties\ to\ check\ before\ reusing\ the\ sincos\ cache}}
+\DoxyCodeLine{00520\ \ \ \ \ int64\_t\ theta\_scale\_length\ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00521\ \ \ \ \ int64\_t\ position\_length\ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00522\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ cached\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ ext\_factor\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0.0f;}
+\DoxyCodeLine{00524\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ theta\_scale\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0.0f;}
+\DoxyCodeLine{00525\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ freq\_scale\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0.0f;}
+\DoxyCodeLine{00526\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ attn\_factor\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0.0f;}
+\DoxyCodeLine{00527\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ is\_neox\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00528\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ indep\_sects\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ mrope\_used\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ sections[4]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \{\ 0,\ 0,\ 0,\ 0\ \};}
+\DoxyCodeLine{00531\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ is\_imrope\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00532\ \};}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__cann__tensor__cache}{ggml\_cann\_tensor\_cache}}\ \{}
+\DoxyCodeLine{00535\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__tensor__cache}{\string~ggml\_cann\_tensor\_cache}}()\ \{}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cache\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtFree(cache));}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00539\ \ \ \ \ \}}
+\DoxyCodeLine{00540\ }
+\DoxyCodeLine{00541\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ \ cache\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00542\ \ \ \ \ int64\_t\ size\ \ =\ 0;}
+\DoxyCodeLine{00543\ \};}
+\DoxyCodeLine{00544\ }
+\DoxyCodeLine{00548\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__backend__cann__context_a6e67ed93a0efc566f1c3b25c36293e05}{ggml\_backend\_cann\_context}}\ \{}
+\DoxyCodeLine{00549\ \ \ \ \ int32\_t\ \ \ \ \ \doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00550\ \ \ \ \ std::string\ \doxymbox{\hyperlink{structggml__backend__cann__context_a5b6f307333d0318c07b26114a27d4473}{name}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00551\ \ \ \ \ std::string\ \doxymbox{\hyperlink{structggml__backend__cann__context_acbbbf24cdaf508000445c981f44bf504}{description}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00552\ \ \ \ \ aclrtEvent\ \ \doxymbox{\hyperlink{structggml__backend__cann__context_a63900e52c1fdc5954945f05ad4f40472}{copy\_event}}\ =\ \textcolor{keyword}{nullptr};\ }
+\DoxyCodeLine{00553\ \textcolor{preprocessor}{\#ifdef\ USE\_ACL\_GRAPH}}
+\DoxyCodeLine{00555\ \ \ \ \ ggml\_cann\_graph\_lru\_cache\ graph\_lru\_cache;}
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_graph\_mode\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00558\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ async\_mode;}
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{comment}{//\ Rope\ Cache}}
+\DoxyCodeLine{00560\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__rope__cache}{ggml\_cann\_rope\_cache}}\ \ \ rope\_cache;}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{comment}{//\ Constant\ Pool}}
+\DoxyCodeLine{00562\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__tensor__cache}{ggml\_cann\_tensor\_cache}}\ rms\_norm\_one\_tensor\_cache;}
+\DoxyCodeLine{00563\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__tensor__cache}{ggml\_cann\_tensor\_cache}}\ rms\_norm\_zero\_tensor\_cache;}
+\DoxyCodeLine{00564\ }
+\DoxyCodeLine{00565\ \ \ \ \ aclrtStream\ \doxymbox{\hyperlink{structggml__backend__cann__context_ac001d802395593ff05fc8f10ff81ec08}{streams}}[GGML\_CANN\_MAX\_STREAMS]\ =\ \{\ \textcolor{keyword}{nullptr}\ \};\ }
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00571\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{structggml__backend__cann__context_a6e67ed93a0efc566f1c3b25c36293e05}{ggml\_backend\_cann\_context}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}})\ :\ \doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}}(\doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}}),\ \doxymbox{\hyperlink{structggml__backend__cann__context_a5b6f307333d0318c07b26114a27d4473}{name}}(\textcolor{stringliteral}{"{}CANN"{}}\ +\ std::to\_string(\doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}}))\ \{}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ ggml\_cann\_set\_device(\doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}});}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__backend__cann__context_acbbbf24cdaf508000445c981f44bf504}{description}}\ =\ aclrtGetSocName();}
+\DoxyCodeLine{00574\ }
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#ifdef\ USE\_ACL\_GRAPH}}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ acl\_graph\_mode\ =\ parse\_bool(get\_env\_as\_lowercase(\textcolor{stringliteral}{"{}GGML\_CANN\_ACL\_GRAPH"{}}).value\_or(\textcolor{stringliteral}{"{}on"{}}));}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ GGML\_LOG\_INFO(\textcolor{stringliteral}{"{}\%s:\ device\ \%d\ execution\ mode\ is\ \%s\ (\%s)\(\backslash\)n"{}},\ \_\_func\_\_,\ \doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}},\ acl\_graph\_mode\ ?\ \textcolor{stringliteral}{"{}GRAPH"{}}\ :\ \textcolor{stringliteral}{"{}EAGER"{}},}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acl\_graph\_mode\ ?\ \textcolor{stringliteral}{"{}acl\ graph\ enabled"{}}\ :\ \textcolor{stringliteral}{"{}acl\ graph\ disabled"{}});}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00580\ \ \ \ \ \}}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00585\ \ \ \ \ \doxymbox{\hyperlink{structggml__backend__cann__context_af346a401df3f8eed8fd83c12587b20d8}{\string~ggml\_backend\_cann\_context}}()\ \{}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ ggml\_cann\_set\_device(\doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}});}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{structggml__backend__cann__context_a63900e52c1fdc5954945f05ad4f40472}{copy\_event}}\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtDestroyEvent(\doxymbox{\hyperlink{structggml__backend__cann__context_a63900e52c1fdc5954945f05ad4f40472}{copy\_event}}));}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ GGML\_CANN\_MAX\_STREAMS;\ ++i)\ \{}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{structggml__backend__cann__context_ac001d802395593ff05fc8f10ff81ec08}{streams}}[i]\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtDestroyStream(\doxymbox{\hyperlink{structggml__backend__cann__context_ac001d802395593ff05fc8f10ff81ec08}{streams}}[i]));}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00595\ \ \ \ \ \}}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00602\ \ \ \ \ aclrtStream\ \doxymbox{\hyperlink{structggml__backend__cann__context_ad4cd0970bfe32feaa1067bda0fe3eb5d}{stream}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structggml__backend__cann__context_ad4cd0970bfe32feaa1067bda0fe3eb5d}{stream}})\ \{}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{structggml__backend__cann__context_ac001d802395593ff05fc8f10ff81ec08}{streams}}[\doxymbox{\hyperlink{structggml__backend__cann__context_ad4cd0970bfe32feaa1067bda0fe3eb5d}{stream}}]\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ the\ device\ is\ not\ set\ here,\ destroying\ the\ stream\ later\ may\ cause\ a\ mismatch}}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ between\ the\ thread\ contexts\ where\ the\ stream\ was\ created\ and\ destroyed.}}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ However,\ I\ printed\ the\ device\_id,\ thread\_id,\ and\ stream,\ and\ they\ are\ all\ consistent.}}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtSetDevice(\doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}}));}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ ACL\_CHECK(aclrtCreateStream(\&\doxymbox{\hyperlink{structggml__backend__cann__context_ac001d802395593ff05fc8f10ff81ec08}{streams}}[\doxymbox{\hyperlink{structggml__backend__cann__context_ad4cd0970bfe32feaa1067bda0fe3eb5d}{stream}}]));}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structggml__backend__cann__context_ac001d802395593ff05fc8f10ff81ec08}{streams}}[\doxymbox{\hyperlink{structggml__backend__cann__context_ad4cd0970bfe32feaa1067bda0fe3eb5d}{stream}}];}
+\DoxyCodeLine{00611\ \ \ \ \ \}}
+\DoxyCodeLine{00612\ }
+\DoxyCodeLine{00617\ \ \ \ \ aclrtStream\ \doxymbox{\hyperlink{structggml__backend__cann__context_a74a4e8ee2ec2100e363c495746b1214a}{stream}}()\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structggml__backend__cann__context_a74a4e8ee2ec2100e363c495746b1214a}{stream}}(0);\ \}}
+\DoxyCodeLine{00618\ }
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{comment}{//\ TODO:\ each\ stream\ should\ have\ a\ memory\ pool.}}
+\DoxyCodeLine{00620\ \ \ \ \ std::unique\_ptr<ggml\_cann\_pool>\ \doxymbox{\hyperlink{structggml__backend__cann__context_a752cc6612fb02dcf2796a4a29a6c075f}{mem\_pool}};\ }
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00627\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<ggml\_cann\_pool>\ \doxymbox{\hyperlink{structggml__backend__cann__context_a9686a46eaa1eeeadaa099a7f527482b6}{new\_pool\_for\_device}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}});}
+\DoxyCodeLine{00628\ }
+\DoxyCodeLine{00633\ \ \ \ \ \doxymbox{\hyperlink{structggml__cann__pool}{ggml\_cann\_pool}}\ \&\ \doxymbox{\hyperlink{structggml__backend__cann__context_a74d07c253672e05fa61443cae5e8e047}{pool}}()\ \{}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{structggml__backend__cann__context_a752cc6612fb02dcf2796a4a29a6c075f}{mem\_pool}}\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structggml__backend__cann__context_a752cc6612fb02dcf2796a4a29a6c075f}{mem\_pool}}\ =\ \doxymbox{\hyperlink{structggml__backend__cann__context_a9686a46eaa1eeeadaa099a7f527482b6}{new\_pool\_for\_device}}(\doxymbox{\hyperlink{structggml__backend__cann__context_a2fcd1cbbc1503e6876eba79e351d4b35}{device}});}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\doxymbox{\hyperlink{structggml__backend__cann__context_a752cc6612fb02dcf2796a4a29a6c075f}{mem\_pool}};}
+\DoxyCodeLine{00638\ \ \ \ \ \}}
+\DoxyCodeLine{00639\ \};}
+\DoxyCodeLine{00640\ }
+\DoxyCodeLine{00641\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ CANN\_COMMON\_H}}
+
+\end{DoxyCode}

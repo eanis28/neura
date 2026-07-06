@@ -1,0 +1,70 @@
+\doxysection{llama\+\_\+memory\+\_\+i Struct Reference}
+\hypertarget{structllama__memory__i}{}\label{structllama__memory__i}\index{llama\_memory\_i@{llama\_memory\_i}}
+Inheritance diagram for llama\+\_\+memory\+\_\+i:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.280000cm]{structllama__memory__i}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__memory__i_adec74dce5eec4cb910ab8021d6e759b4}\label{structllama__memory__i_adec74dce5eec4cb910ab8021d6e759b4} 
+using {\bfseries layer\+\_\+filter\+\_\+cb} = std::\+function$<$bool(int32\+\_\+t il)$>$
+\item 
+\Hypertarget{structllama__memory__i_a471a85e4acdb63554139464b34b6ebeb}\label{structllama__memory__i_a471a85e4acdb63554139464b34b6ebeb} 
+using {\bfseries layer\+\_\+reuse\+\_\+cb} = std::\+function$<$int32\+\_\+t(int32\+\_\+t il)$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__memory__i_ae9e3128413ac4358f25111b31173b90c}\label{structllama__memory__i_ae9e3128413ac4358f25111b31173b90c} 
+virtual llama\+\_\+memory\+\_\+context\+\_\+ptr {\bfseries init\+\_\+batch} (\doxymbox{\hyperlink{classllama__batch__allocr}{llama\+\_\+batch\+\_\+allocr}} \&balloc, uint32\+\_\+t n\+\_\+ubatch, bool embd\+\_\+all)=0
+\item 
+\Hypertarget{structllama__memory__i_a70a3abb8a4a105a08ba5c7900c356444}\label{structllama__memory__i_a70a3abb8a4a105a08ba5c7900c356444} 
+virtual llama\+\_\+memory\+\_\+context\+\_\+ptr {\bfseries init\+\_\+full} ()=0
+\item 
+\Hypertarget{structllama__memory__i_ade07bb8d856fd89eb214c600fa531cca}\label{structllama__memory__i_ade07bb8d856fd89eb214c600fa531cca} 
+virtual llama\+\_\+memory\+\_\+context\+\_\+ptr {\bfseries init\+\_\+update} (\doxymbox{\hyperlink{structllama__context}{llama\+\_\+context}} \texorpdfstring{$\ast$}{*}lctx, bool optimize)=0
+\item 
+\Hypertarget{structllama__memory__i_adc7469ddfa0353753792221b0094f311}\label{structllama__memory__i_adc7469ddfa0353753792221b0094f311} 
+virtual bool {\bfseries get\+\_\+can\+\_\+shift} () const =0
+\item 
+\Hypertarget{structllama__memory__i_a3159dea2fb2c0b03bf47196e32d48d99}\label{structllama__memory__i_a3159dea2fb2c0b03bf47196e32d48d99} 
+virtual void {\bfseries clear} (bool data)=0
+\item 
+\Hypertarget{structllama__memory__i_af49ba2bc7d3b5c087ee6d166707a2db0}\label{structllama__memory__i_af49ba2bc7d3b5c087ee6d166707a2db0} 
+virtual bool {\bfseries seq\+\_\+rm} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+pos p0, llama\+\_\+pos p1)=0
+\item 
+\Hypertarget{structllama__memory__i_a00a0bc50f1489b6bdecc393188278e4a}\label{structllama__memory__i_a00a0bc50f1489b6bdecc393188278e4a} 
+virtual void {\bfseries seq\+\_\+cp} (llama\+\_\+seq\+\_\+id seq\+\_\+id\+\_\+src, llama\+\_\+seq\+\_\+id seq\+\_\+id\+\_\+dst, llama\+\_\+pos p0, llama\+\_\+pos p1)=0
+\item 
+\Hypertarget{structllama__memory__i_a14266e86712a864d5dfc87bebb1e74b1}\label{structllama__memory__i_a14266e86712a864d5dfc87bebb1e74b1} 
+virtual void {\bfseries seq\+\_\+keep} (llama\+\_\+seq\+\_\+id seq\+\_\+id)=0
+\item 
+\Hypertarget{structllama__memory__i_a1540e9506b9620e6097649c37dbc1051}\label{structllama__memory__i_a1540e9506b9620e6097649c37dbc1051} 
+virtual void {\bfseries seq\+\_\+add} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+pos p0, llama\+\_\+pos p1, llama\+\_\+pos shift)=0
+\item 
+\Hypertarget{structllama__memory__i_acb23ef3273ea726b9549c0bbc56fb084}\label{structllama__memory__i_acb23ef3273ea726b9549c0bbc56fb084} 
+virtual void {\bfseries seq\+\_\+div} (llama\+\_\+seq\+\_\+id seq\+\_\+id, llama\+\_\+pos p0, llama\+\_\+pos p1, int d)=0
+\item 
+\Hypertarget{structllama__memory__i_a987b2dbe634d428fcd18b28242feb76d}\label{structllama__memory__i_a987b2dbe634d428fcd18b28242feb76d} 
+virtual llama\+\_\+pos {\bfseries seq\+\_\+pos\+\_\+min} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const =0
+\item 
+\Hypertarget{structllama__memory__i_aacff8d3413065eb69030074bb345763e}\label{structllama__memory__i_aacff8d3413065eb69030074bb345763e} 
+virtual llama\+\_\+pos {\bfseries seq\+\_\+pos\+\_\+max} (llama\+\_\+seq\+\_\+id seq\+\_\+id) const =0
+\item 
+\Hypertarget{structllama__memory__i_ac1aba9d29a04f7752c459cbf6b32a485}\label{structllama__memory__i_ac1aba9d29a04f7752c459cbf6b32a485} 
+virtual std::\+map$<$ ggml\+\_\+backend\+\_\+buffer\+\_\+type\+\_\+t, size\+\_\+t $>$ {\bfseries memory\+\_\+breakdown} () const =0
+\item 
+\Hypertarget{structllama__memory__i_a9034d9b86ebead5a03d34f045616475d}\label{structllama__memory__i_a9034d9b86ebead5a03d34f045616475d} 
+virtual void {\bfseries state\+\_\+write} (\doxymbox{\hyperlink{classllama__io__write__i}{llama\+\_\+io\+\_\+write\+\_\+i}} \&io, llama\+\_\+seq\+\_\+id seq\+\_\+id=-\/1, llama\+\_\+state\+\_\+seq\+\_\+flags flags=0) const =0
+\item 
+\Hypertarget{structllama__memory__i_abc2e2ca667f988585ec17f3b200e729e}\label{structllama__memory__i_abc2e2ca667f988585ec17f3b200e729e} 
+virtual void {\bfseries state\+\_\+read} (\doxymbox{\hyperlink{classllama__io__read__i}{llama\+\_\+io\+\_\+read\+\_\+i}} \&io, llama\+\_\+seq\+\_\+id seq\+\_\+id=-\/1, llama\+\_\+state\+\_\+seq\+\_\+flags flags=0)=0
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/memory.\+h\end{DoxyCompactItemize}

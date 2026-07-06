@@ -1,0 +1,298 @@
+\doxysection{ggml-\/metal-\/device.h}
+\hypertarget{ggml-metal-device_8h_source}{}\label{ggml-metal-device_8h_source}\index{whisper.cpp/ggml/src/ggml-\/metal/ggml-\/metal-\/device.h@{whisper.cpp/ggml/src/ggml-\/metal/ggml-\/metal-\/device.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00006\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__buffer__id}{ggml\_metal\_buffer\_id}}\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ metal;\ \textcolor{comment}{//\ id<MTLBuffer>}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ offs;}
+\DoxyCodeLine{00012\ \};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__device}{ggml\_metal\_device}}\ *\ ggml\_metal\_device\_t;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ MTLFunctionConstantValues\ wrapper}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__cv}{ggml\_metal\_cv}}\ *\ ggml\_metal\_cv\_t;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ ggml\_metal\_cv\_t\ ggml\_metal\_cv\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{void}\ ggml\_metal\_cv\_free(ggml\_metal\_cv\_t\ cv);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{void}\ ggml\_metal\_cv\_set\_int16(ggml\_metal\_cv\_t\ cv,\ int16\_t\ value,\ int32\_t\ idx);}
+\DoxyCodeLine{00026\ \textcolor{keywordtype}{void}\ ggml\_metal\_cv\_set\_int32(ggml\_metal\_cv\_t\ cv,\ int32\_t\ value,\ int32\_t\ idx);}
+\DoxyCodeLine{00027\ \textcolor{keywordtype}{void}\ ggml\_metal\_cv\_set\_bool\ (ggml\_metal\_cv\_t\ cv,\ \textcolor{keywordtype}{bool}\ \ \ \ value,\ int32\_t\ idx);}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ MTLComputePipelineState\ wrapper}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline}{ggml\_metal\_pipeline}}\ *\ ggml\_metal\_pipeline\_t;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ ggml\_metal\_pipeline\_t\ ggml\_metal\_pipeline\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00036\ \textcolor{keywordtype}{void}\ ggml\_metal\_pipeline\_free(ggml\_metal\_pipeline\_t\ pipeline);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ a\ collection\ of\ pipelines}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipelines}{ggml\_metal\_pipelines}}\ *\ ggml\_metal\_pipelines\_t;}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ ggml\_metal\_pipelines\_t\ ggml\_metal\_pipelines\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{void}\ ggml\_metal\_pipelines\_free(ggml\_metal\_pipelines\_t\ ppls);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_metal\_pipelines\_add(ggml\_metal\_pipelines\_t\ ppls,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name,\ ggml\_metal\_pipeline\_t\ pipeline);}
+\DoxyCodeLine{00045\ ggml\_metal\_pipeline\_t\ ggml\_metal\_pipelines\_get(ggml\_metal\_pipelines\_t\ ppls,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ ggml\_metal\_pipeline\_t\ pipeline;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ nsg;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{int}\ nr0;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{int}\ nr1;}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ smem;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{bool}\ c4;}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{bool}\ cnt;}
+\DoxyCodeLine{00059\ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keywordtype}{int}\ ggml\_metal\_pipeline\_max\_theads\_per\_threadgroup(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ pipeline);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{//}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ MTLCommandBuffer\ wrapper}}
+\DoxyCodeLine{00065\ \textcolor{comment}{//}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *\ ggml\_metal\_cmd\_buf\_t;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{comment}{//}}
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ MTLComputeCommandEncoder\ wrapper}}
+\DoxyCodeLine{00071\ \textcolor{comment}{//}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__encoder}{ggml\_metal\_encoder}}\ *\ ggml\_metal\_encoder\_t;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ ggml\_metal\_encoder\_t\ ggml\_metal\_encoder\_init(ggml\_metal\_cmd\_buf\_t\ cmd\_buf\_raw,\ \textcolor{keywordtype}{bool}\ concurrent);}
+\DoxyCodeLine{00076\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_free(ggml\_metal\_encoder\_t\ encoder);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_debug\_group\_push(ggml\_metal\_encoder\_t\ encoder,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name);}
+\DoxyCodeLine{00079\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_debug\_group\_pop\ (ggml\_metal\_encoder\_t\ encoder);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_set\_pipeline(ggml\_metal\_encoder\_t\ encoder,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ pipeline);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_set\_bytes\ (ggml\_metal\_encoder\_t\ encoder,\ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00084\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_set\_buffer(ggml\_metal\_encoder\_t\ encoder,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__metal__buffer__id}{ggml\_metal\_buffer\_id}}\ buffer,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_set\_threadgroup\_memory\_size(ggml\_metal\_encoder\_t\ encoder,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{int}\ idx);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_dispatch\_threadgroups(ggml\_metal\_encoder\_t\ encoder,\ \textcolor{keywordtype}{int}\ tg0,\ \textcolor{keywordtype}{int}\ tg1,\ \textcolor{keywordtype}{int}\ tg2,\ \textcolor{keywordtype}{int}\ tptg0,\ \textcolor{keywordtype}{int}\ tptg1,\ \textcolor{keywordtype}{int}\ tptg2);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_memory\_barrier(ggml\_metal\_encoder\_t\ encoder);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keywordtype}{void}\ ggml\_metal\_encoder\_end\_encoding(ggml\_metal\_encoder\_t\ encoder);}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{comment}{//}}
+\DoxyCodeLine{00095\ \textcolor{comment}{//\ MTLLibrary\ wrapper}}
+\DoxyCodeLine{00096\ \textcolor{comment}{//}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__library}{ggml\_metal\_library}}\ *\ ggml\_metal\_library\_t;}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ ggml\_metal\_library\_t\ ggml\_metal\_library\_init\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_device\_t\ dev);}
+\DoxyCodeLine{00101\ ggml\_metal\_library\_t\ ggml\_metal\_library\_init\_from\_source(ggml\_metal\_device\_t\ dev,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ source,\ \textcolor{keywordtype}{bool}\ verbose);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keywordtype}{void}\ ggml\_metal\_library\_free(ggml\_metal\_library\_t\ lib);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ char\ *\ name);}
+\DoxyCodeLine{00106\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_compile\_pipeline(ggml\_metal\_library\_t\ lib,\ const\ char\ *\ base,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name,\ ggml\_metal\_cv\_t\ cv);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_base\ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ enum\ ggml\_op\ op);}
+\DoxyCodeLine{00109\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_cpy\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ enum\ ggml\_type\ tsrc,\ enum\ ggml\_type\ tdst);}
+\DoxyCodeLine{00110\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_pool\_1d\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,\ \textcolor{keyword}{enum}\ ggml\_op\_pool\ op\_pool);}
+\DoxyCodeLine{00111\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_pool\_2d\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,\ \textcolor{keyword}{enum}\ ggml\_op\_pool\ op\_pool);}
+\DoxyCodeLine{00112\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_get\_rows\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ enum\ ggml\_type\ tsrc);}
+\DoxyCodeLine{00113\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_set\_rows\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ enum\ ggml\_type\ tidx,\ enum\ ggml\_type\ tdst);}
+\DoxyCodeLine{00114\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_diag\ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00115\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_repeat\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ enum\ ggml\_type\ tsrc);}
+\DoxyCodeLine{00116\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_unary\ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00117\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_glu\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00118\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_sum\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00119\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_sum\_rows\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00120\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_cumsum\_blk\ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00121\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_cumsum\_add\ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00122\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_tri\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00123\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_soft\_max\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00124\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_ssm\_conv\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00125\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_ssm\_conv\_batched\ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,\ \textcolor{keywordtype}{int}\ ssm\_conv\_bs);}
+\DoxyCodeLine{00126\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_ssm\_scan\ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00127\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_rwkv\ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00128\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_gated\_delta\_net\ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00129\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_solve\_tri\ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00130\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_mul\_mv\_ext\ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ enum\ ggml\_type\ tsrc0,\ enum\ ggml\_type\ tsrc1,\ int\ nsg,\ int\ nxpsg,\ int\ r1ptg);}
+\DoxyCodeLine{00131\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_mul\_mm\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00132\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_mul\_mv\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00133\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_mul\_mm\_id\_map0\ \ \ \ (ggml\_metal\_library\_t\ lib,\ int\ ne02,\ int\ ne20);}
+\DoxyCodeLine{00134\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_mul\_mm\_id\ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00135\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_mul\_mv\_id\ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00136\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_argmax\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00137\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_argsort\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00138\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_argsort\_merge\ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00139\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_top\_k\ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00140\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_top\_k\_merge\ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00141\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_bin\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,\ int32\_t\ n\_fuse\ );}
+\DoxyCodeLine{00142\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_bin\_one\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ enum\ ggml\_op\ op);}
+\DoxyCodeLine{00143\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_l2\_norm\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00144\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_group\_norm\ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00145\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_norm\ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,\ int32\_t\ n\_fuse);}
+\DoxyCodeLine{00146\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_rope\ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00147\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_im2col\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00148\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_conv\_transpose\_1d\ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00149\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_conv\_transpose\_2d\ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00150\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_conv\_2d\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00151\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_conv\_3d\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00152\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_upscale\ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00153\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_pad\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00154\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_pad\_reflect\_1d\ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00155\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_arange\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00156\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_timestep\_embedding(ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00157\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_opt\_step\_adamw\ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00158\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_opt\_step\_sgd\ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00159\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_memset\ \ \ \ \ \ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00160\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_count\_equal\ \ \ \ \ \ \ (ggml\_metal\_library\_t\ lib,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_flash\_attn\_ext\_pad(}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ ggml\_metal\_library\_t\ lib,}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_mask,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ int32\_t\ ncpsg);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_flash\_attn\_ext\_blk(}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ ggml\_metal\_library\_t\ lib,}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ int32\_t\ nqptg,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ int32\_t\ ncpsg);}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_flash\_attn\_ext(}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ ggml\_metal\_library\_t\ lib,}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_mask,}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_sinks,}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_bias,}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_scap,}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_kvpad,}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ int32\_t\ nsg);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_flash\_attn\_ext\_vec(}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ ggml\_metal\_library\_t\ lib,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_mask,}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_sinks,}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_bias,}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_scap,}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ has\_kvpad,}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ int32\_t\ nsg,}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ int32\_t\ nwg);}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__pipeline__with__params}{ggml\_metal\_pipeline\_with\_params}}\ ggml\_metal\_library\_get\_pipeline\_flash\_attn\_ext\_vec\_reduce(}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ ggml\_metal\_library\_t\ lib,}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op,}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ int32\_t\ dv,}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ int32\_t\ nwg);}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \textcolor{comment}{//\ MTLResidencySet\ wrapper}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *\ ggml\_metal\_rset\_t;}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{comment}{//\ a\ collection\ of\ residency\ sets\ (non-\/owning)}}
+\DoxyCodeLine{00206\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__rsets}{ggml\_metal\_rsets}}\ *\ ggml\_metal\_rsets\_t;}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ ggml\_metal\_rsets\_t\ ggml\_metal\_rsets\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00209\ \textcolor{keywordtype}{void}\ ggml\_metal\_rsets\_free(ggml\_metal\_rsets\_t\ rsets);}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{comment}{//}}
+\DoxyCodeLine{00212\ \textcolor{comment}{//\ device}}
+\DoxyCodeLine{00213\ \textcolor{comment}{//}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__device__props}{ggml\_metal\_device\_props}}\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keywordtype}{int}\ device;}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keywordtype}{char}\ name[128];}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordtype}{char}\ desc[128];}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ max\_buffer\_size;}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ max\_working\_set\_size;}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ max\_theadgroup\_memory\_size;}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_simdgroup\_reduction;}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_simdgroup\_mm;}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_unified\_memory;}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_bfloat;}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_tensor;}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_residency\_sets;}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_shared\_buffers;}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordtype}{bool}\ supports\_gpu\_family\_apple7;}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keywordtype}{int}\ op\_offload\_min\_batch\_size;}
+\DoxyCodeLine{00235\ \};}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__event}{ggml\_metal\_event}}\ *\ ggml\_metal\_event\_t;}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{keywordtype}{void}\ ggml\_metal\_event\_encode\_signal(ggml\_metal\_event\_t\ ev,\ ggml\_metal\_cmd\_buf\_t\ cmd\_buf);}
+\DoxyCodeLine{00240\ \textcolor{keywordtype}{void}\ ggml\_metal\_event\_encode\_wait\ \ (ggml\_metal\_event\_t\ ev,\ ggml\_metal\_cmd\_buf\_t\ cmd\_buf);}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ ggml\_metal\_device\_t\ ggml\_metal\_device\_init(\textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00243\ \textcolor{keywordtype}{void}\ ggml\_metal\_device\_free(ggml\_metal\_device\_t\ dev);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ ggml\_metal\_device\_t\ ggml\_metal\_device\_get(\textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{keywordtype}{void}\ *\ ggml\_metal\_device\_get\_obj\ \ (ggml\_metal\_device\_t\ dev);\ \textcolor{comment}{//\ id<MTLDevice>}}
+\DoxyCodeLine{00248\ \textcolor{keywordtype}{void}\ *\ ggml\_metal\_device\_get\_queue(ggml\_metal\_device\_t\ dev);\ \textcolor{comment}{//\ id<MTLCommandQueue>}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ ggml\_metal\_library\_t\ ggml\_metal\_device\_get\_library(ggml\_metal\_device\_t\ dev);}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \textcolor{keywordtype}{void}\ ggml\_metal\_device\_rsets\_add(ggml\_metal\_device\_t\ dev,\ ggml\_metal\_rset\_t\ rset);}
+\DoxyCodeLine{00253\ \textcolor{keywordtype}{void}\ ggml\_metal\_device\_rsets\_rm\ (ggml\_metal\_device\_t\ dev,\ ggml\_metal\_rset\_t\ rset);}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{keywordtype}{void}\ ggml\_metal\_device\_rsets\_keep\_alive(ggml\_metal\_device\_t\ dev);}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ ggml\_metal\_event\_t\ ggml\_metal\_device\_event\_init(ggml\_metal\_device\_t\ dev);}
+\DoxyCodeLine{00258\ \textcolor{keywordtype}{void}\ ggml\_metal\_device\_event\_free(ggml\_metal\_device\_t\ dev,\ ggml\_metal\_event\_t\ ev);}
+\DoxyCodeLine{00259\ \textcolor{keywordtype}{void}\ ggml\_metal\_device\_event\_synchronize(ggml\_metal\_device\_t\ dev,\ ggml\_metal\_event\_t\ ev);}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{keywordtype}{void}\ ggml\_metal\_device\_get\_memory(ggml\_metal\_device\_t\ dev,\ \textcolor{keywordtype}{size\_t}\ *\ free,\ \textcolor{keywordtype}{size\_t}\ *\ total);}
+\DoxyCodeLine{00262\ \textcolor{keywordtype}{bool}\ ggml\_metal\_device\_supports\_op(ggml\_metal\_device\_t\ dev,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op);}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__device__props}{ggml\_metal\_device\_props}}\ *\ ggml\_metal\_device\_get\_props(ggml\_metal\_device\_t\ dev);}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{comment}{//}}
+\DoxyCodeLine{00267\ \textcolor{comment}{//\ device\ buffers}}
+\DoxyCodeLine{00268\ \textcolor{comment}{//}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__buffer}{ggml\_metal\_buffer}}\ *\ ggml\_metal\_buffer\_t;}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ ggml\_metal\_buffer\_t\ ggml\_metal\_buffer\_init(ggml\_metal\_device\_t\ dev,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{bool}\ shared);}
+\DoxyCodeLine{00273\ ggml\_metal\_buffer\_t\ ggml\_metal\_buffer\_map\ (ggml\_metal\_device\_t\ dev,\ \textcolor{keywordtype}{void}\ *\ ptr,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{size\_t}\ max\_tensor\_size);}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \textcolor{keywordtype}{void}\ \ \ ggml\_metal\_buffer\_free\ \ \ \ \ (ggml\_metal\_buffer\_t\ buf);}
+\DoxyCodeLine{00276\ \textcolor{keywordtype}{void}\ *\ ggml\_metal\_buffer\_get\_base\ (ggml\_metal\_buffer\_t\ buf);}
+\DoxyCodeLine{00277\ \textcolor{keywordtype}{bool}\ \ \ ggml\_metal\_buffer\_is\_shared(ggml\_metal\_buffer\_t\ buf);}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \textcolor{keywordtype}{void}\ \ \ ggml\_metal\_buffer\_memset\_tensor(ggml\_metal\_buffer\_t\ buf,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ uint8\_t\ value,\ \textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00280\ \textcolor{keywordtype}{void}\ \ \ ggml\_metal\_buffer\_set\_tensor\ \ \ (ggml\_metal\_buffer\_t\ buf,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00281\ \textcolor{keywordtype}{void}\ \ \ ggml\_metal\_buffer\_get\_tensor\ \ \ (ggml\_metal\_buffer\_t\ buf,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ tensor,\ \textcolor{keywordtype}{void}\ *\ data,\ \textcolor{keywordtype}{size\_t}\ offset,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00282\ \textcolor{keywordtype}{void}\ \ \ ggml\_metal\_buffer\_clear\ \ \ \ \ \ \ \ (ggml\_metal\_buffer\_t\ buf,\ uint8\_t\ value);}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{comment}{//\ finds\ the\ Metal\ buffer\ that\ contains\ the\ tensor\ data\ on\ the\ GPU\ device}}
+\DoxyCodeLine{00285\ \textcolor{comment}{//\ the\ assumption\ is\ that\ there\ is\ 1-\/to-\/1\ mapping\ between\ the\ host\ and\ device\ memory\ buffers,\ so\ we\ can\ find\ the}}
+\DoxyCodeLine{00286\ \textcolor{comment}{//\ Metal\ buffer\ based\ on\ the\ host\ memory\ pointer}}
+\DoxyCodeLine{00287\ \textcolor{comment}{//}}
+\DoxyCodeLine{00288\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__metal__buffer__id}{ggml\_metal\_buffer\_id}}\ ggml\_metal\_buffer\_get\_id(ggml\_metal\_buffer\_t\ buf,\ const\ struct\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t);}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00291\ \}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

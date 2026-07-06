@@ -1,0 +1,106 @@
+\doxysection{hvx-\/floor.h}
+\hypertarget{hvx-floor_8h_source}{}\label{hvx-floor_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/floor.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/floor.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HVX\_FLOOR\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HVX\_FLOOR\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}hvx-\/base.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ IEEE\_VSF\_EXPLEN\ \ \ (8)}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ IEEE\_VSF\_EXPBIAS\ \ (127)}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ IEEE\_VSF\_EXPMASK\ \ (0xFF)}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ IEEE\_VSF\_MANTLEN\ \ (23)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ IEEE\_VSF\_MANTMASK\ (0x7FFFFF)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ IEEE\_VSF\_MIMPMASK\ (0x800000)}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_truncate\_f32(HVX\_Vector\ in\_vec)\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ HVX\_Vector\ mask\_mant\_v\ \ =\ Q6\_V\_vsplat\_R(IEEE\_VSF\_MANTMASK);}
+\DoxyCodeLine{00018\ \ \ \ \ HVX\_Vector\ mask\_impl\_v\ \ =\ Q6\_V\_vsplat\_R(IEEE\_VSF\_MIMPMASK);}
+\DoxyCodeLine{00019\ \ \ \ \ HVX\_Vector\ const\_zero\_v\ =\ Q6\_V\_vzero();}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ HVX\_VectorPred\ q\_negative\ =\ Q6\_Q\_vcmp\_gt\_VwVw(const\_zero\_v,\ in\_vec);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ HVX\_Vector\ expval\_v\ =\ in\_vec\ >>\ IEEE\_VSF\_MANTLEN;}
+\DoxyCodeLine{00024\ \ \ \ \ expval\_v\ \&=\ IEEE\_VSF\_EXPMASK;}
+\DoxyCodeLine{00025\ \ \ \ \ expval\_v\ -\/=\ IEEE\_VSF\_EXPBIAS;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ negative\ exp\ ==\ fractional\ value}}
+\DoxyCodeLine{00028\ \ \ \ \ HVX\_VectorPred\ q\_negexp\ =\ Q6\_Q\_vcmp\_gt\_VwVw(const\_zero\_v,\ expval\_v);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ HVX\_Vector\ rshift\_v\ =\ IEEE\_VSF\_MANTLEN\ -\/\ expval\_v;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fractional\ bits\ -\/\ exp\ shift}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ HVX\_Vector\ mant\_v\ =\ in\_vec\ \&\ mask\_mant\_v;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ obtain\ mantissa}}
+\DoxyCodeLine{00033\ \ \ \ \ HVX\_Vector\ vout\ \ \ =\ Q6\_Vw\_vadd\_VwVw(mant\_v,\ mask\_impl\_v);\ \ \textcolor{comment}{//\ add\ implicit\ 1.0}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ vout\ =\ Q6\_Vw\_vasr\_VwVw(vout,\ rshift\_v);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ shift\ to\ obtain\ truncated\ integer}}
+\DoxyCodeLine{00036\ \ \ \ \ vout\ =\ Q6\_V\_vmux\_QVV(q\_negexp,\ const\_zero\_v,\ vout);\ \ \ \ \ \ \ \ \textcolor{comment}{//\ expval<0\ -\/>\ 0}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ HVX\_Vector\ neg\_vout\ =\ -\/vout;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ vout\ =\ Q6\_V\_vmux\_QVV(q\_negative,\ neg\_vout,\ vout);\ \ \textcolor{comment}{//\ handle\ negatives}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordflow}{return}\ (vout);}
+\DoxyCodeLine{00043\ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ HVX\_Vector\ hvx\_vec\_floor\_f32(HVX\_Vector\ in\_vec)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ HVX\_Vector\ mask\_mant\_v\ \ \ \ =\ Q6\_V\_vsplat\_R(IEEE\_VSF\_MANTMASK);}
+\DoxyCodeLine{00047\ \ \ \ \ HVX\_Vector\ mask\_impl\_v\ \ \ \ =\ Q6\_V\_vsplat\_R(IEEE\_VSF\_MIMPMASK);}
+\DoxyCodeLine{00048\ \ \ \ \ HVX\_Vector\ const\_mnlen\_v\ \ =\ Q6\_V\_vsplat\_R(IEEE\_VSF\_MANTLEN);}
+\DoxyCodeLine{00049\ \ \ \ \ HVX\_Vector\ const\_zero\_v\ \ \ =\ Q6\_V\_vzero();}
+\DoxyCodeLine{00050\ \ \ \ \ HVX\_Vector\ const\_negone\_v\ =\ Q6\_V\_vsplat\_R(0xbf800000);\ \ \textcolor{comment}{//\ -\/1\ IEEE\ vsf}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ HVX\_VectorPred\ q\_negative\ =\ Q6\_Q\_vcmp\_gt\_VwVw(const\_zero\_v,\ in\_vec);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ HVX\_Vector\ expval\_v\ =\ in\_vec\ >>\ IEEE\_VSF\_MANTLEN;}
+\DoxyCodeLine{00055\ \ \ \ \ expval\_v\ \&=\ IEEE\_VSF\_EXPMASK;}
+\DoxyCodeLine{00056\ \ \ \ \ expval\_v\ -\/=\ IEEE\_VSF\_EXPBIAS;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ HVX\_VectorPred\ q\_negexp\ \ \ \ \ =\ Q6\_Q\_vcmp\_gt\_VwVw(const\_zero\_v,\ expval\_v);}
+\DoxyCodeLine{00059\ \ \ \ \ HVX\_VectorPred\ q\_expltmn\ \ \ \ =\ Q6\_Q\_vcmp\_gt\_VwVw(const\_mnlen\_v,\ expval\_v);}
+\DoxyCodeLine{00060\ \ \ \ \ HVX\_VectorPred\ q\_negexp\_pos\ =\ Q6\_Q\_vcmp\_gtand\_QVwVw(q\_negexp,\ in\_vec,\ const\_zero\_v);}
+\DoxyCodeLine{00061\ \ \ \ \ HVX\_VectorPred\ q\_negexp\_neg\ =\ Q6\_Q\_vcmp\_gtand\_QVwVw(q\_negexp,\ const\_zero\_v,\ in\_vec);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ if\ expval\ <\ 0\ (q\_negexp)\ \ \ \ \ \ \ \ \ //\ <0,\ floor\ is\ 0}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ \ \ \ if\ vin\ >\ 0}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ floor\ =\ 0}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//\ \ \ \ if\ vin\ <\ 0}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ floor\ =\ -\/1}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ if\ expval\ <\ mant\_len\ (q\_expltmn)\ //\ >0,\ but\ fraction\ may\ exist}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ \ \ \ get\ sign\ (q\_negative)}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ \ \ \ mask\ >>\ expval\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ fraction\ bits\ to\ mask\ off}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ \ \ \ vout\ =\ \string~(mask)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ apply\ mask\ to\ remove\ fraction}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//\ \ \ \ if\ (qneg)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ negative\ floor\ is\ one\ less\ (more,\ sign\ bit\ for\ neg)}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ vout\ +=\ ((impl\_mask)\ >>\ expval)}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ \ \ \ if\ (mask\ \&\&\ vin)}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ vout\ =\ vin}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//\ else\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ already\ an\ integer}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ \ \ \ ;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ no\ change}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{//\ compute\ floor}}
+\DoxyCodeLine{00080\ \ \ \ \ mask\_mant\_v\ >>=\ expval\_v;}
+\DoxyCodeLine{00081\ \ \ \ \ HVX\_Vector\ neg\_addin\_v\ \ \ \ =\ mask\_impl\_v\ >>\ expval\_v;}
+\DoxyCodeLine{00082\ \ \ \ \ HVX\_Vector\ vout\_neg\_addin\ =\ Q6\_Vw\_vadd\_VwVw(in\_vec,\ neg\_addin\_v);}
+\DoxyCodeLine{00083\ \ \ \ \ HVX\_Vector\ vout\ \ \ \ \ \ \ \ \ \ \ =\ Q6\_V\_vmux\_QVV(q\_negative,\ vout\_neg\_addin,\ in\_vec);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ HVX\_Vector\ \ \ \ \ mask\_chk\_v\ =\ Q6\_V\_vand\_VV(in\_vec,\ mask\_mant\_v);\ \ \textcolor{comment}{//\ chk\ if\ bits\ set}}
+\DoxyCodeLine{00086\ \ \ \ \ HVX\_VectorPred\ q\_integral\ =\ Q6\_Q\_vcmp\_eq\_VwVw(const\_zero\_v,\ mask\_chk\_v);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ HVX\_Vector\ not\_mask\_v\ =\ Q6\_V\_vnot\_V(mask\_mant\_v);\ \ \ \ \ \ \ \ \textcolor{comment}{//\ frac\ bits\ to\ clear}}
+\DoxyCodeLine{00089\ \ \ \ \ HVX\_Vector\ vfrfloor\_v\ =\ Q6\_V\_vand\_VV(vout,\ not\_mask\_v);\ \ \textcolor{comment}{//\ clear\ frac\ bits}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ vout\ =\ in\_vec;}
+\DoxyCodeLine{00092\ \ \ \ \ vout\ =\ Q6\_V\_vmux\_QVV(q\_expltmn,\ vfrfloor\_v,\ vout);\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ expval<mant}}
+\DoxyCodeLine{00093\ \ \ \ \ vout\ =\ Q6\_V\_vmux\_QVV(q\_integral,\ in\_vec,\ vout);\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ integral\ values}}
+\DoxyCodeLine{00094\ \ \ \ \ vout\ =\ Q6\_V\_vmux\_QVV(q\_negexp\_pos,\ const\_zero\_v,\ vout);\ \ \ \ \textcolor{comment}{//\ expval<0\ x>0\ -\/>\ 0}}
+\DoxyCodeLine{00095\ \ \ \ \ vout\ =\ Q6\_V\_vmux\_QVV(q\_negexp\_neg,\ const\_negone\_v,\ vout);\ \ \textcolor{comment}{//\ expval<0\ x<0\ -\/>\ -\/1}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{return}\ vout;}
+\DoxyCodeLine{00098\ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HVX\_FLOOR\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

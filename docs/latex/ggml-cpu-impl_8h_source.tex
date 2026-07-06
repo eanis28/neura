@@ -1,0 +1,532 @@
+\doxysection{ggml-\/cpu-\/impl.h}
+\hypertarget{ggml-cpu-impl_8h_source}{}\label{ggml-cpu-impl_8h_source}\index{whisper.cpp/ggml/src/ggml-\/cpu/ggml-\/cpu-\/impl.h@{whisper.cpp/ggml/src/ggml-\/cpu/ggml-\/cpu-\/impl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ GGML\ CPU\ internal\ header}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}ggml-\/impl.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stdlib.h>}\ \textcolor{comment}{//\ load\ \`{}stdlib.h`\ before\ other\ headers\ to\ work\ around\ MinGW\ bug:\ https://sourceforge.net/p/mingw-\/w64/bugs/192/}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\#include\ <stddef.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <string.h>}\ \textcolor{comment}{//\ memcpy}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <math.h>}\ \ \ \textcolor{comment}{//\ fabsf}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__compute__params}{ggml\_compute\_params}}\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{comment}{//\ ith\ =\ thread\ index,\ nth\ =\ number\ of\ threads}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{int}\ ith,\ nth;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//\ work\ buffer\ for\ all\ threads}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ wsize;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ *\ wdata;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ threadpool;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ use\ reference\ implementation}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_ref;}
+\DoxyCodeLine{00030\ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ m512bh(p)\ p}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ m512i(p)\ p}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ m512bh(p)\ (\_\_m512bh)(p)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ m512i(p)\ (\_\_m512i)(p)}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ \_\_FMA\_\_\ and\ \_\_F16C\_\_\ are\ not\ defined\ in\ MSVC,\ however\ they\ are\ implied\ with\ AVX2/AVX512}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)\ \&\&\ (defined(\_\_AVX2\_\_)\ ||\ defined(\_\_AVX512F\_\_))}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#ifndef\ \_\_FMA\_\_}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ \_\_FMA\_\_}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#ifndef\ \_\_F16C\_\_}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ \_\_F16C\_\_}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ \_\_SSE3\_\_\ and\ \_\_SSSE3\_\_\ are\ not\ defined\ in\ MSVC,\ but\ SSE3/SSSE3\ are\ present\ when\ AVX/AVX2/AVX512\ are\ available}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)\ \&\&\ (defined(\_\_AVX\_\_)\ ||\ defined(\_\_AVX2\_\_)\ ||\ defined(\_\_AVX512F\_\_))}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#ifndef\ \_\_SSE3\_\_}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ \_\_SSE3\_\_}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#ifndef\ \_\_SSSE3\_\_}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ \_\_SSSE3\_\_}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#if\ defined(\_\_s390x\_\_)\ \&\&\ defined(\_\_VEC\_\_)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#ifndef\ \_\_VXE\_\_}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ \_\_VXE\_\_}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ \_\_VXE\_\_}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#ifndef\ \_\_VXE2\_\_}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ \_\_VXE2\_\_}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ \_\_VXE2\_\_}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ \_\_s390x\_\_\ \&\&\ \_\_VEC\_\_}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_FEATURE\_SVE)\ \&\&\ defined(\_\_linux\_\_)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#include\ <sys/prctl.h>}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#if\ defined(\_\_ARM\_NEON)}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{comment}{//\ ref:\ https://github.com/ggml-\/org/llama.cpp/pull/5404}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ ggml\_vld1q\_u32(w,x,y,z)\ \{\ ((w)\ +\ ((uint64\_t)(x)\ <<\ 32)),\ ((y)\ +\ ((uint64\_t)(z)\ <<\ 32))\ \}}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ ggml\_vld1q\_u32(w,x,y,z)\ \{\ (w),\ (x),\ (y),\ (z)\ \}}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_MSC\_VER}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#if\ !defined(\_\_aarch64\_\_)}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ 32-\/bit\ ARM\ compatibility}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{comment}{//\ vaddlvq\_s16}}
+\DoxyCodeLine{00092\ \textcolor{comment}{//\ vpaddq\_s16}}
+\DoxyCodeLine{00093\ \textcolor{comment}{//\ vpaddq\_s32}}
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ vaddvq\_s32}}
+\DoxyCodeLine{00095\ \textcolor{comment}{//\ vaddvq\_f32}}
+\DoxyCodeLine{00096\ \textcolor{comment}{//\ vmaxvq\_f32}}
+\DoxyCodeLine{00097\ \textcolor{comment}{//\ vcvtnq\_s32\_f32}}
+\DoxyCodeLine{00098\ \textcolor{comment}{//\ vzip1\_u8}}
+\DoxyCodeLine{00099\ \textcolor{comment}{//\ vzip2\_u8}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int32\_t\ vaddlvq\_s16(int16x8\_t\ v)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ int32x4\_t\ v0\ =\ vreinterpretq\_s32\_s64(vpaddlq\_s32(vpaddlq\_s16(v)));}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{return}\ vgetq\_lane\_s32(v0,\ 0)\ +\ vgetq\_lane\_s32(v0,\ 2);}
+\DoxyCodeLine{00104\ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int16x8\_t\ vpaddq\_s16(int16x8\_t\ a,\ int16x8\_t\ b)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ int16x4\_t\ a0\ =\ vpadd\_s16(vget\_low\_s16(a),\ vget\_high\_s16(a));}
+\DoxyCodeLine{00108\ \ \ \ \ int16x4\_t\ b0\ =\ vpadd\_s16(vget\_low\_s16(b),\ vget\_high\_s16(b));}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordflow}{return}\ vcombine\_s16(a0,\ b0);}
+\DoxyCodeLine{00110\ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int32x4\_t\ vpaddq\_s32(int32x4\_t\ a,\ int32x4\_t\ b)\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ int32x2\_t\ a0\ =\ vpadd\_s32(vget\_low\_s32(a),\ vget\_high\_s32(a));}
+\DoxyCodeLine{00114\ \ \ \ \ int32x2\_t\ b0\ =\ vpadd\_s32(vget\_low\_s32(b),\ vget\_high\_s32(b));}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordflow}{return}\ vcombine\_s32(a0,\ b0);}
+\DoxyCodeLine{00116\ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int32\_t\ vaddvq\_s32(int32x4\_t\ v)\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordflow}{return}\ vgetq\_lane\_s32(v,\ 0)\ +\ vgetq\_lane\_s32(v,\ 1)\ +\ vgetq\_lane\_s32(v,\ 2)\ +\ vgetq\_lane\_s32(v,\ 3);}
+\DoxyCodeLine{00120\ \}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ vaddvq\_f32(float32x4\_t\ v)\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordflow}{return}\ vgetq\_lane\_f32(v,\ 0)\ +\ vgetq\_lane\_f32(v,\ 1)\ +\ vgetq\_lane\_f32(v,\ 2)\ +\ vgetq\_lane\_f32(v,\ 3);}
+\DoxyCodeLine{00124\ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ vmaxvq\_f32(float32x4\_t\ v)\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ MAX(MAX(vgetq\_lane\_f32(v,\ 0),\ vgetq\_lane\_f32(v,\ 1)),}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ MAX(vgetq\_lane\_f32(v,\ 2),\ vgetq\_lane\_f32(v,\ 3)));}
+\DoxyCodeLine{00130\ \}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int32x4\_t\ vcvtnq\_s32\_f32(float32x4\_t\ v)\ \{}
+\DoxyCodeLine{00133\ \ \ \ \ int32x4\_t\ res;}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ res[0]\ =\ roundf(vgetq\_lane\_f32(v,\ 0));}
+\DoxyCodeLine{00136\ \ \ \ \ res[1]\ =\ roundf(vgetq\_lane\_f32(v,\ 1));}
+\DoxyCodeLine{00137\ \ \ \ \ res[2]\ =\ roundf(vgetq\_lane\_f32(v,\ 2));}
+\DoxyCodeLine{00138\ \ \ \ \ res[3]\ =\ roundf(vgetq\_lane\_f32(v,\ 3));}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00141\ \}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ uint8x8\_t\ vzip1\_u8(uint8x8\_t\ a,\ uint8x8\_t\ b)\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ uint8x8\_t\ res;}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ res[0]\ =\ a[0];\ res[1]\ =\ b[0];}
+\DoxyCodeLine{00147\ \ \ \ \ res[2]\ =\ a[1];\ res[3]\ =\ b[1];}
+\DoxyCodeLine{00148\ \ \ \ \ res[4]\ =\ a[2];\ res[5]\ =\ b[2];}
+\DoxyCodeLine{00149\ \ \ \ \ res[6]\ =\ a[3];\ res[7]\ =\ b[3];}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00152\ \}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ uint8x8\_t\ vzip2\_u8(uint8x8\_t\ a,\ uint8x8\_t\ b)\ \{}
+\DoxyCodeLine{00155\ \ \ \ \ uint8x8\_t\ res;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ res[0]\ =\ a[4];\ res[1]\ =\ b[4];}
+\DoxyCodeLine{00158\ \ \ \ \ res[2]\ =\ a[5];\ res[3]\ =\ b[5];}
+\DoxyCodeLine{00159\ \ \ \ \ res[4]\ =\ a[6];\ res[5]\ =\ b[6];}
+\DoxyCodeLine{00160\ \ \ \ \ res[6]\ =\ a[7];\ res[7]\ =\ b[7];}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00163\ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{comment}{//\ vld1q\_s16\_x2}}
+\DoxyCodeLine{00166\ \textcolor{comment}{//\ vld1q\_u8\_x2}}
+\DoxyCodeLine{00167\ \textcolor{comment}{//\ vld1q\_u8\_x4}}
+\DoxyCodeLine{00168\ \textcolor{comment}{//\ vld1q\_s8\_x2}}
+\DoxyCodeLine{00169\ \textcolor{comment}{//\ vld1q\_s8\_x4}}
+\DoxyCodeLine{00170\ \textcolor{comment}{//\ TODO:\ double-\/check\ these\ work\ correctly}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ggml\_int16x8x2\_t\ \{}
+\DoxyCodeLine{00173\ \ \ \ \ int16x8\_t\ val[2];}
+\DoxyCodeLine{00174\ \}\ ggml\_int16x8x2\_t;}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_int16x8x2\_t\ ggml\_vld1q\_s16\_x2(\textcolor{keyword}{const}\ int16\_t\ *\ ptr)\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ ggml\_int16x8x2\_t\ res;}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ res.val[0]\ =\ vld1q\_s16(ptr\ +\ 0);}
+\DoxyCodeLine{00180\ \ \ \ \ res.val[1]\ =\ vld1q\_s16(ptr\ +\ 8);}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00183\ \}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ggml\_uint8x16x2\_t\ \{}
+\DoxyCodeLine{00186\ \ \ \ \ uint8x16\_t\ val[2];}
+\DoxyCodeLine{00187\ \}\ ggml\_uint8x16x2\_t;}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_uint8x16x2\_t\ ggml\_vld1q\_u8\_x2(\textcolor{keyword}{const}\ uint8\_t\ *\ ptr)\ \{}
+\DoxyCodeLine{00190\ \ \ \ \ ggml\_uint8x16x2\_t\ res;}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ res.val[0]\ =\ vld1q\_u8(ptr\ +\ 0);}
+\DoxyCodeLine{00193\ \ \ \ \ res.val[1]\ =\ vld1q\_u8(ptr\ +\ 16);}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00196\ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ggml\_uint8x16x4\_t\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ uint8x16\_t\ val[4];}
+\DoxyCodeLine{00200\ \}\ ggml\_uint8x16x4\_t;}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_uint8x16x4\_t\ ggml\_vld1q\_u8\_x4(\textcolor{keyword}{const}\ uint8\_t\ *\ ptr)\ \{}
+\DoxyCodeLine{00203\ \ \ \ \ ggml\_uint8x16x4\_t\ res;}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ res.val[0]\ =\ vld1q\_u8(ptr\ +\ 0);}
+\DoxyCodeLine{00206\ \ \ \ \ res.val[1]\ =\ vld1q\_u8(ptr\ +\ 16);}
+\DoxyCodeLine{00207\ \ \ \ \ res.val[2]\ =\ vld1q\_u8(ptr\ +\ 32);}
+\DoxyCodeLine{00208\ \ \ \ \ res.val[3]\ =\ vld1q\_u8(ptr\ +\ 48);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00211\ \}}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ggml\_int8x16x2\_t\ \{}
+\DoxyCodeLine{00214\ \ \ \ \ int8x16\_t\ val[2];}
+\DoxyCodeLine{00215\ \}\ ggml\_int8x16x2\_t;}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_int8x16x2\_t\ ggml\_vld1q\_s8\_x2(\textcolor{keyword}{const}\ int8\_t\ *\ ptr)\ \{}
+\DoxyCodeLine{00218\ \ \ \ \ ggml\_int8x16x2\_t\ res;}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ res.val[0]\ =\ vld1q\_s8(ptr\ +\ 0);}
+\DoxyCodeLine{00221\ \ \ \ \ res.val[1]\ =\ vld1q\_s8(ptr\ +\ 16);}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00224\ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ggml\_int8x16x4\_t\ \{}
+\DoxyCodeLine{00227\ \ \ \ \ int8x16\_t\ val[4];}
+\DoxyCodeLine{00228\ \}\ ggml\_int8x16x4\_t;}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_int8x16x4\_t\ ggml\_vld1q\_s8\_x4(\textcolor{keyword}{const}\ int8\_t\ *\ ptr)\ \{}
+\DoxyCodeLine{00231\ \ \ \ \ ggml\_int8x16x4\_t\ res;}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ res.val[0]\ =\ vld1q\_s8(ptr\ +\ 0);}
+\DoxyCodeLine{00234\ \ \ \ \ res.val[1]\ =\ vld1q\_s8(ptr\ +\ 16);}
+\DoxyCodeLine{00235\ \ \ \ \ res.val[2]\ =\ vld1q\_s8(ptr\ +\ 32);}
+\DoxyCodeLine{00236\ \ \ \ \ res.val[3]\ =\ vld1q\_s8(ptr\ +\ 48);}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00239\ \}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \textcolor{comment}{//\ NOTE:\ not\ tested}}
+\DoxyCodeLine{00242\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int8x16\_t\ ggml\_vqtbl1q\_s8(int8x16\_t\ a,\ uint8x16\_t\ b)\ \{}
+\DoxyCodeLine{00243\ \ \ \ \ int8x16\_t\ res;}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ res[\ 0]\ =\ a[b[\ 0]];}
+\DoxyCodeLine{00246\ \ \ \ \ res[\ 1]\ =\ a[b[\ 1]];}
+\DoxyCodeLine{00247\ \ \ \ \ res[\ 2]\ =\ a[b[\ 2]];}
+\DoxyCodeLine{00248\ \ \ \ \ res[\ 3]\ =\ a[b[\ 3]];}
+\DoxyCodeLine{00249\ \ \ \ \ res[\ 4]\ =\ a[b[\ 4]];}
+\DoxyCodeLine{00250\ \ \ \ \ res[\ 5]\ =\ a[b[\ 5]];}
+\DoxyCodeLine{00251\ \ \ \ \ res[\ 6]\ =\ a[b[\ 6]];}
+\DoxyCodeLine{00252\ \ \ \ \ res[\ 7]\ =\ a[b[\ 7]];}
+\DoxyCodeLine{00253\ \ \ \ \ res[\ 8]\ =\ a[b[\ 8]];}
+\DoxyCodeLine{00254\ \ \ \ \ res[\ 9]\ =\ a[b[\ 9]];}
+\DoxyCodeLine{00255\ \ \ \ \ res[10]\ =\ a[b[10]];}
+\DoxyCodeLine{00256\ \ \ \ \ res[11]\ =\ a[b[11]];}
+\DoxyCodeLine{00257\ \ \ \ \ res[12]\ =\ a[b[12]];}
+\DoxyCodeLine{00258\ \ \ \ \ res[13]\ =\ a[b[13]];}
+\DoxyCodeLine{00259\ \ \ \ \ res[14]\ =\ a[b[14]];}
+\DoxyCodeLine{00260\ \ \ \ \ res[15]\ =\ a[b[15]];}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00263\ \}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \textcolor{comment}{//\ NOTE:\ not\ tested}}
+\DoxyCodeLine{00266\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ uint8x16\_t\ ggml\_vqtbl1q\_u8(uint8x16\_t\ a,\ uint8x16\_t\ b)\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ uint8x16\_t\ res;}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ res[\ 0]\ =\ a[b[\ 0]];}
+\DoxyCodeLine{00270\ \ \ \ \ res[\ 1]\ =\ a[b[\ 1]];}
+\DoxyCodeLine{00271\ \ \ \ \ res[\ 2]\ =\ a[b[\ 2]];}
+\DoxyCodeLine{00272\ \ \ \ \ res[\ 3]\ =\ a[b[\ 3]];}
+\DoxyCodeLine{00273\ \ \ \ \ res[\ 4]\ =\ a[b[\ 4]];}
+\DoxyCodeLine{00274\ \ \ \ \ res[\ 5]\ =\ a[b[\ 5]];}
+\DoxyCodeLine{00275\ \ \ \ \ res[\ 6]\ =\ a[b[\ 6]];}
+\DoxyCodeLine{00276\ \ \ \ \ res[\ 7]\ =\ a[b[\ 7]];}
+\DoxyCodeLine{00277\ \ \ \ \ res[\ 8]\ =\ a[b[\ 8]];}
+\DoxyCodeLine{00278\ \ \ \ \ res[\ 9]\ =\ a[b[\ 9]];}
+\DoxyCodeLine{00279\ \ \ \ \ res[10]\ =\ a[b[10]];}
+\DoxyCodeLine{00280\ \ \ \ \ res[11]\ =\ a[b[11]];}
+\DoxyCodeLine{00281\ \ \ \ \ res[12]\ =\ a[b[12]];}
+\DoxyCodeLine{00282\ \ \ \ \ res[13]\ =\ a[b[13]];}
+\DoxyCodeLine{00283\ \ \ \ \ res[14]\ =\ a[b[14]];}
+\DoxyCodeLine{00284\ \ \ \ \ res[15]\ =\ a[b[15]];}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00287\ \}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#define\ ggml\_int16x8x2\_t\ \ int16x8x2\_t}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#define\ ggml\_uint8x16x2\_t\ uint8x16x2\_t}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#define\ ggml\_uint8x16x4\_t\ uint8x16x4\_t}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ ggml\_int8x16x2\_t\ \ int8x16x2\_t}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#define\ ggml\_int8x16x4\_t\ \ int8x16x4\_t}}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#define\ ggml\_vld1q\_s16\_x2\ vld1q\_s16\_x2}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#define\ ggml\_vld1q\_u8\_x2\ \ vld1q\_u8\_x2}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#define\ ggml\_vld1q\_u8\_x4\ \ vld1q\_u8\_x4}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#define\ ggml\_vld1q\_s8\_x2\ \ vld1q\_s8\_x2}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#define\ ggml\_vld1q\_s8\_x4\ \ vld1q\_s8\_x4}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#define\ ggml\_vqtbl1q\_s8\ \ \ vqtbl1q\_s8}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#define\ ggml\_vqtbl1q\_u8\ \ \ vqtbl1q\_u8}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !defined(\_\_aarch64\_\_)}}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#if\ !defined(\_\_ARM\_FEATURE\_DOTPROD)}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int32x4\_t\ ggml\_vdotq\_s32(int32x4\_t\ acc,\ int8x16\_t\ a,\ int8x16\_t\ b)\ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keyword}{const}\ int16x8\_t\ p0\ =\ vmull\_s8(vget\_low\_s8\ (a),\ vget\_low\_s8\ (b));}
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{keyword}{const}\ int16x8\_t\ p1\ =\ vmull\_s8(vget\_high\_s8(a),\ vget\_high\_s8(b));}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keywordflow}{return}\ vaddq\_s32(acc,\ vaddq\_s32(vpaddlq\_s16(p0),\ vpaddlq\_s16(p1)));}
+\DoxyCodeLine{00314\ \}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#define\ ggml\_vdotq\_s32(a,\ b,\ c)\ vdotq\_s32(a,\ b,\ c)}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !defined(\_\_ARM\_FEATURE\_DOTPROD)}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(\_\_ARM\_NEON)}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#ifdef\ \_\_wasm\_simd128\_\_}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#include\ <wasm\_simd128.h>}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#ifdef\ \_\_POWER9\_VECTOR\_\_}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#include\ <altivec.h>}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)\ ||\ defined(\_\_MINGW32\_\_)}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#include\ <intrin.h>}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#elif\ defined(\_\_SSE\_\_)\ ||\ defined(\_\_SSE3\_\_)\ ||\ defined(\_\_SSSE3\_\_)\ ||\ defined(\_\_AVX\_\_)\ ||\ defined(\_\_F16C\_\_)\ ||\ defined(\_\_AVX2\_\_)\ ||\ defined(\_\_AVX512F\_\_)\ ||\ defined(\_\_AVX512BF16\_\_)}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#include\ <immintrin.h>}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#ifdef\ \_\_riscv\_v\_intrinsic}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#include\ <riscv\_vector.h>}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#if\ defined(\_\_loongarch64)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#if\ defined(\_\_loongarch\_asx)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#include\ <lasxintrin.h>}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#if\ defined(\_\_loongarch\_sx)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#include\ <lsxintrin.h>}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#if\ defined(\_\_VXE\_\_)\ ||\ defined(\_\_VXE2\_\_)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#include\ <vecintrin.h>}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#define\ vec\_neg(a)\ \ \ \ (-\/(a))\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Vector\ Negate}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#define\ vec\_add(a,\ b)\ ((a)\ +\ (b))\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Vector\ Add}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#define\ vec\_sub(a,\ b)\ ((a)\ -\/\ (b))\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Vector\ Subtract}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#define\ vec\_mul(a,\ b)\ ((a)\ *\ (b))\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Vector\ Multiply}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#define\ vec\_div(a,\ b)\ ((a)\ /\ (b))\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Vector\ Divide}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\#define\ vec\_sl(a,\ b)\ \ ((a)\ <<\ (b))\ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Vector\ Shift\ Left}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\#define\ vec\_sra(a,\ b)\ ((a)\ >>\ (b))\ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Vector\ Shift\ Right}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#define\ vec\_sr(a,\ b)\ \ ((a)\ >>\ (b))\ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Vector\ Shift\ Right\ Algebraic}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#define\ vec\_slo(a,\ b)\ vec\_slb(a,\ (b)\ <<\ 64)\ }\textcolor{comment}{//\ Vector\ Shift\ Left\ by\ Octet}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\#define\ vec\_sro(a,\ b)\ vec\_srb(a,\ (b)\ <<\ 64)\ }\textcolor{comment}{//\ Vector\ Shift\ Right\ by\ Octet}}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#ifndef\ vec\_and}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#define\ vec\_and(a,\ b)\ ((a)\ \&\ (b))\ }\textcolor{comment}{//\ Vector\ AND}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#ifndef\ vec\_or}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\#define\ vec\_or(a,\ b)\ \ ((a)\ |\ (b))\ }\textcolor{comment}{//\ Vector\ OR}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#ifndef\ vec\_xor}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\#define\ vec\_xor(a,\ b)\ ((a)\ \string^\ (b))\ }\textcolor{comment}{//\ Vector\ XOR}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00376\ }
+\DoxyCodeLine{00377\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{signed}\ \ \ \textcolor{keywordtype}{char}\ char8x16\_t\ \ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00378\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ uchar8x16\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \textcolor{keyword}{typedef}\ int8\_t\ \ int8x16\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00381\ \textcolor{keyword}{typedef}\ int16\_t\ int16x8\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00382\ \textcolor{keyword}{typedef}\ int32\_t\ int32x4\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \textcolor{keyword}{typedef}\ uint8\_t\ \ uint8x16\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00385\ \textcolor{keyword}{typedef}\ uint16\_t\ uint16x8\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00386\ \textcolor{keyword}{typedef}\ uint32\_t\ uint32x4\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00388\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ \ float32x4\_t\ \ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00389\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ double64x2\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{signed}\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ long64x2\_t\ \ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00392\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ ulong64x2\_t\ \doxymbox{\hyperlink{union____attribute____}{\_\_attribute\_\_}}((vector\_size(16)));}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ggml\_uint8x16x2\_t\ \{}
+\DoxyCodeLine{00395\ \ \ \ \ uint8x16\_t\ val[2];}
+\DoxyCodeLine{00396\ \}\ ggml\_uint8x16x2\_t;}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_uint8x16x2\_t\ ggml\_vec\_xl\_u8x2(\textcolor{keyword}{const}\ uint8\_t\ *\ ptr)\ \{}
+\DoxyCodeLine{00399\ \ \ \ \ ggml\_uint8x16x2\_t\ res;}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \ \ res.val[0]\ =\ vec\_xl(\ 0,\ ptr);}
+\DoxyCodeLine{00402\ \ \ \ \ res.val[1]\ =\ vec\_xl(16,\ ptr);}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00405\ \}}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ggml\_uint8x16x4\_t\ \{}
+\DoxyCodeLine{00408\ \ \ \ \ uint8x16\_t\ val[4];}
+\DoxyCodeLine{00409\ \}\ ggml\_uint8x16x4\_t;}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_uint8x16x4\_t\ ggml\_vec\_xl\_u8x4(\textcolor{keyword}{const}\ uint8\_t\ *\ ptr)\ \{}
+\DoxyCodeLine{00412\ \ \ \ \ ggml\_uint8x16x4\_t\ res;}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \ \ \ \ res.val[0]\ =\ vec\_xl(\ 0,\ ptr);}
+\DoxyCodeLine{00415\ \ \ \ \ res.val[1]\ =\ vec\_xl(16,\ ptr);}
+\DoxyCodeLine{00416\ \ \ \ \ res.val[2]\ =\ vec\_xl(32,\ ptr);}
+\DoxyCodeLine{00417\ \ \ \ \ res.val[3]\ =\ vec\_xl(48,\ ptr);}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00420\ \}}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ggml\_int8x16x4\_t\ \{}
+\DoxyCodeLine{00423\ \ \ \ \ int8x16\_t\ val[4];}
+\DoxyCodeLine{00424\ \}\ ggml\_int8x16x4\_t;}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_int8x16x4\_t\ ggml\_vec\_xl\_s8x4(\textcolor{keyword}{const}\ int8\_t\ *\ ptr)\ \{}
+\DoxyCodeLine{00427\ \ \ \ \ ggml\_int8x16x4\_t\ res;}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \ \ \ \ res.val[0]\ =\ vec\_xl(\ 0,\ ptr);}
+\DoxyCodeLine{00430\ \ \ \ \ res.val[1]\ =\ vec\_xl(16,\ ptr);}
+\DoxyCodeLine{00431\ \ \ \ \ res.val[2]\ =\ vec\_xl(32,\ ptr);}
+\DoxyCodeLine{00432\ \ \ \ \ res.val[3]\ =\ vec\_xl(48,\ ptr);}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00435\ \}}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ggml\_int16x8x2\_t\ \{}
+\DoxyCodeLine{00438\ \ \ \ \ int16x8\_t\ val[2];}
+\DoxyCodeLine{00439\ \}\ ggml\_int16x8x2\_t;}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ ggml\_int16x8x2\_t\ ggml\_vec\_xl\_s16x2(\textcolor{keyword}{const}\ int16\_t\ *\ ptr)\ \{}
+\DoxyCodeLine{00442\ \ \ \ \ ggml\_int16x8x2\_t\ res;}
+\DoxyCodeLine{00443\ }
+\DoxyCodeLine{00444\ \ \ \ \ res.val[0]\ =\ vec\_xl(\ 0,\ ptr);}
+\DoxyCodeLine{00445\ \ \ \ \ res.val[1]\ =\ vec\_xl(16,\ ptr);}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00448\ \}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00451\ \textcolor{comment}{\ \ \ \ !\ WARNING:\ Very\ slow.\ Use\ vec\_perm\ if\ possible.\ Refer\ to\ iq4\_xs}}
+\DoxyCodeLine{00452\ \textcolor{comment}{\ \ \ \ !\ \ \ \ \ \ \ \ \ \ or\ iq4\_nl\ for\ example\ implementation.}}
+\DoxyCodeLine{00453\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00454\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int8x16\_t\ ggml\_vec\_tbl(int8x16\_t\ a,\ uint8x16\_t\ b)\ \{}
+\DoxyCodeLine{00455\ \ \ \ \ int8x16\_t\ res;}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \ \ \ \ res[\ 0]\ =\ a[b[\ 0]];}
+\DoxyCodeLine{00458\ \ \ \ \ res[\ 1]\ =\ a[b[\ 1]];}
+\DoxyCodeLine{00459\ \ \ \ \ res[\ 2]\ =\ a[b[\ 2]];}
+\DoxyCodeLine{00460\ \ \ \ \ res[\ 3]\ =\ a[b[\ 3]];}
+\DoxyCodeLine{00461\ \ \ \ \ res[\ 4]\ =\ a[b[\ 4]];}
+\DoxyCodeLine{00462\ \ \ \ \ res[\ 5]\ =\ a[b[\ 5]];}
+\DoxyCodeLine{00463\ \ \ \ \ res[\ 6]\ =\ a[b[\ 6]];}
+\DoxyCodeLine{00464\ \ \ \ \ res[\ 7]\ =\ a[b[\ 7]];}
+\DoxyCodeLine{00465\ \ \ \ \ res[\ 8]\ =\ a[b[\ 8]];}
+\DoxyCodeLine{00466\ \ \ \ \ res[\ 9]\ =\ a[b[\ 9]];}
+\DoxyCodeLine{00467\ \ \ \ \ res[10]\ =\ a[b[10]];}
+\DoxyCodeLine{00468\ \ \ \ \ res[11]\ =\ a[b[11]];}
+\DoxyCodeLine{00469\ \ \ \ \ res[12]\ =\ a[b[12]];}
+\DoxyCodeLine{00470\ \ \ \ \ res[13]\ =\ a[b[13]];}
+\DoxyCodeLine{00471\ \ \ \ \ res[14]\ =\ a[b[14]];}
+\DoxyCodeLine{00472\ \ \ \ \ res[15]\ =\ a[b[15]];}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00475\ \}}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int16x8\_t\ vec\_padd\_s16(int16x8\_t\ a,\ int16x8\_t\ b)\ \{}
+\DoxyCodeLine{00478\ \ \ \ \ \textcolor{keyword}{const}\ uchar8x16\_t\ v\_maske\ =\ \{\ \ 0,\ \ 1,\ \ 4,\ \ 5,\ \ 8,\ \ 9,\ 12,\ 13,}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 16,\ 17,\ 20,\ 21,\ 24,\ 25,\ 28,\ 29\ \};}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00481\ \ \ \ \ \textcolor{keyword}{const}\ int16x8\_t\ v\_abo\ =\ vec\_pack((int32x4\_t)a,\ (int32x4\_t)b);}
+\DoxyCodeLine{00482\ \ \ \ \ \textcolor{keyword}{const}\ int16x8\_t\ v\_abe\ =\ vec\_perm(a,\ b,\ v\_maske);}
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{keywordflow}{return}\ v\_abo\ +\ v\_abe;}
+\DoxyCodeLine{00484\ \}}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00489\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{float}\ vec\_hsum\_f32x4(float32x4\_t\ v)\ \{}
+\DoxyCodeLine{00490\ \ \ \ \ float32x4\_t\ v\_temp\ =\ v\ +\ vec\_reve(v);}
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{keywordflow}{return}\ v\_temp[0]\ +\ v\_temp[1];}
+\DoxyCodeLine{00492\ \}}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int32\_t\ vec\_hsum\_i32x4(int32x4\_t\ v)\ \{}
+\DoxyCodeLine{00495\ \ \ \ \ int32x4\_t\ v\_temp\ =\ v\ +\ vec\_reve(v);}
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keywordflow}{return}\ v\_temp[0]\ +\ v\_temp[1];}
+\DoxyCodeLine{00497\ \}}
+\DoxyCodeLine{00498\ }
+\DoxyCodeLine{00499\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ int32x4\_t\ ggml\_vec\_dot(int32x4\_t\ acc,\ int8x16\_t\ a,\ int8x16\_t\ b)\ \{}
+\DoxyCodeLine{00500\ \ \ \ \ \textcolor{keyword}{const}\ int16x8\_t\ p\ =\ vec\_mule(a,\ b)\ +\ vec\_mulo(a,\ b);}
+\DoxyCodeLine{00501\ \ \ \ \ \textcolor{keywordflow}{return}\ acc\ +\ (vec\_unpackh(p)\ +\ vec\_unpackl(p));}
+\DoxyCodeLine{00502\ \}}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\#if\ defined(\_\_loongarch\_sx)}}
+\DoxyCodeLine{00507\ \textcolor{comment}{/*\ float\ type\ data\ load\ instructions\ */}}
+\DoxyCodeLine{00508\ \textcolor{keyword}{static}\ \_\_m128\ \_\_lsx\_vreplfr2vr\_s(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ val)\ \{}
+\DoxyCodeLine{00509\ \ \ \ \ v4f32\ res\ =\ \{val,\ val,\ val,\ val\};}
+\DoxyCodeLine{00510\ \ \ \ \ \textcolor{keywordflow}{return}\ (\_\_m128)res;}
+\DoxyCodeLine{00511\ \}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\#if\ defined(\_\_loongarch\_asx)}}
+\DoxyCodeLine{00515\ \textcolor{keyword}{static}\ \_\_m256\ \_\_lasx\_xvreplfr2vr\_s(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ val)\ \{}
+\DoxyCodeLine{00516\ \ \ \ \ v8f32\ res\ =\ \{val,\ val,\ val,\ val,\ val,\ val,\ val,\ val\};}
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{keywordflow}{return}\ (\_\_m256)res;}
+\DoxyCodeLine{00518\ \}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00521\ \textcolor{comment}{//\ TODO:\ move\ to\ ggml-\/threading}}
+\DoxyCodeLine{00522\ \textcolor{keywordtype}{void}\ ggml\_barrier(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ tp);}
+\DoxyCodeLine{00523\ }
+\DoxyCodeLine{00524\ \textcolor{keywordtype}{void}\ ggml\_threadpool\_chunk\_set(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ tp,\ \textcolor{keywordtype}{int}\ value);}
+\DoxyCodeLine{00525\ \textcolor{keywordtype}{int}\ \ ggml\_threadpool\_chunk\_add(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__threadpool}{ggml\_threadpool}}\ *\ tp,\ \textcolor{keywordtype}{int}\ value);}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00528\ \}}
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

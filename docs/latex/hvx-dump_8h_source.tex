@@ -1,0 +1,135 @@
+\doxysection{hvx-\/dump.h}
+\hypertarget{hvx-dump_8h_source}{}\label{hvx-dump_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/dump.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hvx-\/dump.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HVX\_DUMP\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HVX\_DUMP\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <HAP\_farf.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}hex-\/utils.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}hvx-\/types.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_f16\_n(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ HVX\_VectorAlias\ u\ =\ \{\ .v\ =\ v\ \};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ n0\ =\ n\ /\ 16;}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ n1\ =\ n\ \%\ 16;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ i\ \ =\ 0;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ i\ <\ n0;\ i++)\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ hex\_dump\_f16\_line(pref,\ u.fp16\ +\ (16\ *\ i),\ 16);}
+\DoxyCodeLine{00020\ \ \ \ \ \}}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordflow}{if}\ (n1)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ hex\_dump\_f16\_line(pref,\ u.fp16\ +\ (16\ *\ i),\ n1);}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_f16(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ hvx\_vec\_dump\_f16\_n(pref,\ v,\ 64);}
+\DoxyCodeLine{00028\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_f32\_n(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ HVX\_VectorAlias\ u\ =\ \{\ .v\ =\ v\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ n0\ =\ n\ /\ 16;}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ n1\ =\ n\ \%\ 16;}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ i\ \ =\ 0;}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ i\ <\ n0;\ i++)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ hex\_dump\_f32\_line(pref,\ u.fp32\ +\ (16\ *\ i),\ 16);}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordflow}{if}\ (n1)\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ hex\_dump\_f32\_line(pref,\ u.fp32\ +\ (16\ *\ i),\ n1);}
+\DoxyCodeLine{00041\ \ \ \ \ \}}
+\DoxyCodeLine{00042\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_f32\_hmt(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ HVX\_Vector\ v;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ d[32];}
+\DoxyCodeLine{00048\ \ \ \ \ \}\ u\ =\ \{\ .v\ =\ v\ \};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}\%s:\ \%.6f\ \%.6f\ \%.6f\ \%.6f\ ...\ \ \%.6f\ \%.6f\ \%.6f\ \%.6f\ ...\ \%.6f\ \%.6f\ \%.6f\ \%.6f\(\backslash\)n"{}},\ pref,\ u.d[0],\ u.d[1],}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ u.d[2],\ u.d[3],\ u.d[12],\ u.d[13],\ u.d[14],\ u.d[15],\ u.d[28],\ u.d[29],\ u.d[30],\ u.d[31]);}
+\DoxyCodeLine{00052\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_f32(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ hvx\_vec\_dump\_f32\_n(pref,\ v,\ 32);}
+\DoxyCodeLine{00056\ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_int32(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ HVX\_Vector\ v;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ int32\_t\ \ \ \ d[32];}
+\DoxyCodeLine{00062\ \ \ \ \ \}\ u\ =\ \{\ .v\ =\ v\ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 32\ /\ 16;\ i++)\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ hex\_dump\_int32\_line(pref,\ u.d\ +\ (16\ *\ i),\ 16);}
+\DoxyCodeLine{00066\ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_int32\_hmt(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ HVX\_Vector\ v;}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ int32\_t\ \ \ \ d[32];}
+\DoxyCodeLine{00073\ \ \ \ \ \}\ u\ =\ \{\ .v\ =\ v\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}\%s:\ \%d\ \%d\ \%d\ \%d\ ...\ \%d\ \%d\ \%d\ \%d\ ...\ \%d\ \%d\ \%d\ \%d\(\backslash\)n"{}},\ pref,\ u.d[0],\ u.d[1],\ u.d[2],\ u.d[3],\ u.d[12],}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ u.d[13],\ u.d[14],\ u.d[15],\ u.d[28],\ u.d[29],\ u.d[30],\ u.d[31]);}
+\DoxyCodeLine{00077\ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_int8\_hmt(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ HVX\_Vector\ v;}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ int8\_t\ \ \ \ \ d[128];}
+\DoxyCodeLine{00083\ \ \ \ \ \}\ u\ =\ \{\ .v\ =\ v\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}\%s:\ \%d\ \%d\ \%d\ \%d\ ...\ \%d\ \%d\ \%d\ \%d\ ...\ \%d\ \%d\ \%d\ \%d\(\backslash\)n"{}},\ pref,\ u.d[0],\ u.d[1],\ u.d[2],\ u.d[3],\ u.d[60],}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ u.d[61],\ u.d[62],\ u.d[63],\ u.d[124],\ u.d[125],\ u.d[126],\ u.d[127]);}
+\DoxyCodeLine{00087\ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_int8(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ HVX\_Vector\ v;}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ int8\_t\ \ \ \ \ d[128];}
+\DoxyCodeLine{00093\ \ \ \ \ \}\ u\ =\ \{\ .v\ =\ v\ \};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 128\ /\ 16;\ i++)\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ hex\_dump\_int8\_line(pref,\ u.d\ +\ (16\ *\ i),\ 16);}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hvx\_vec\_dump\_uint8(\textcolor{keywordtype}{char}\ *\ pref,\ HVX\_Vector\ v)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ HVX\_Vector\ v;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ uint8\_t\ \ \ \ d[128];}
+\DoxyCodeLine{00104\ \ \ \ \ \}\ u\ =\ \{\ .v\ =\ v\ \};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 128\ /\ 16;\ i++)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ hex\_dump\_uint8\_line(pref,\ u.d\ +\ (16\ *\ i),\ 16);}
+\DoxyCodeLine{00108\ \ \ \ \ \}}
+\DoxyCodeLine{00109\ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ hvx\_vec\_eq(HVX\_Vector\ v0,\ HVX\_Vector\ v1,\ \textcolor{keywordtype}{size\_t}\ n)\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ HVX\_Vector\ v;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ int8\_t\ \ \ \ \ d[128];}
+\DoxyCodeLine{00115\ \ \ \ \ \}\ U;}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ U\ u0\ =\ \{\ .v\ =\ v0\ \};}
+\DoxyCodeLine{00118\ \ \ \ \ U\ u1\ =\ \{\ .v\ =\ v1\ \};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ i++)\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (u0.d[i]\ !=\ u1.d[i])\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00124\ \ \ \ \ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00127\ \}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HVX\_DUMP\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

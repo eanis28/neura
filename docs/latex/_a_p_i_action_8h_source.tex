@@ -1,0 +1,56 @@
+\doxysection{APIAction.\+h}
+\hypertarget{_a_p_i_action_8h_source}{}\label{_a_p_i_action_8h_source}\doxymbox{\hyperlink{_a_p_i_action_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{action_8h}{action.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5aca}{Recurrence}}\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaab50339a10e1de285ac99d4c3990b8693}{NONE}},\ \ \ \ \ \ \ }
+\DoxyCodeLine{00026\ \ \ \ \ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaa791490f9f4842958f00f3791f6c01576}{DAILY}},\ \ \ \ \ \ }
+\DoxyCodeLine{00027\ \ \ \ \ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaa3a86a54f045d944e570fb644b7e3f9da}{WEEKDAYS}},\ \ \ }
+\DoxyCodeLine{00028\ \ \ \ \ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaa35f20feb221d809190e45545c933c9dc}{WEEKLY}},\ \ \ \ \ }
+\DoxyCodeLine{00029\ \ \ \ \ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaa0ed7351505ff0fd32e2e3e29f381ca81}{BIWEEKLY}},\ \ \ }
+\DoxyCodeLine{00030\ \ \ \ \ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaac107927c39e34b357b10099c2d852c75}{MONTHLY}},\ \ \ \ }
+\DoxyCodeLine{00031\ \ \ \ \ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaae50d62d1ede0a4ea1acb310ff6ca4d5b}{YEARLY}}\ \ \ \ \ \ }
+\DoxyCodeLine{00032\ \};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_calendar_event}{CalendarEvent}}\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_calendar_event_a2b5f5b41796fb1634635632f9c001c19}{title}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00044\ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_calendar_event_af95eb7c915ad3f1534698de7c1336491}{startDateTimeISO}};\ \ }
+\DoxyCodeLine{00045\ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_calendar_event_a8eb422724e54f3e87e75968d9df88cf3}{endDateTimeISO}};\ \ \ \ }
+\DoxyCodeLine{00046\ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_calendar_event_aea29f1cab12caffc87755d7ef54a39b3}{timeZone}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ std::optional<std::string>\ \doxymbox{\hyperlink{struct_calendar_event_adc8cc82e56ad2ce8d7c348631a21c1db}{location}};\ }
+\DoxyCodeLine{00049\ \ \ \ \ std::optional<std::string>\ \doxymbox{\hyperlink{struct_calendar_event_a43cdf5b7831ddbfa197b52246c50aba8}{notes}};\ \ \ \ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5aca}{Recurrence}}\ \doxymbox{\hyperlink{struct_calendar_event_a519915e100a28b52e0c8c5dc458a9625}{recurrence}}\ =\ \doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5acaab50339a10e1de285ac99d4c3990b8693}{Recurrence::NONE}};\ }
+\DoxyCodeLine{00052\ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_a_p_i_action_a5a61ad2d90143dff596b6df599b88f55}{APIAction}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_action_adf6d17666645657d71bee9f12386db6b}{Action}}\ \{}
+\DoxyCodeLine{00065\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00074\ \ \ \ \ \doxymbox{\hyperlink{class_a_p_i_action_a5a61ad2d90143dff596b6df599b88f55}{APIAction}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_configuration}{Configuration}}\&\ cfg,\ \doxymbox{\hyperlink{struct_calendar_event}{CalendarEvent}}\ \doxymbox{\hyperlink{class_a_p_i_action_a2c85976b238058bb2e56d5db8102f03f}{event}});}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_a_p_i_action_a926ae55195eb5e8b0bf8756e19227c90}{execute}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00094\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_action_a5f0877e38a578a46d9c757491c072d99}{describe}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00103\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_action_a10551664da21fab58fe02d9eecfc5b68}{getCreatedEventId}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_a_p_i_action_a27db62675200a32d7a2987a1223da217}{createdEventId}};\ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00106\ \ \ \ \ \doxymbox{\hyperlink{struct_calendar_event}{CalendarEvent}}\ \doxymbox{\hyperlink{class_a_p_i_action_a2c85976b238058bb2e56d5db8102f03f}{event}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00107\ \ \ \ \ std::string\ \ \ \doxymbox{\hyperlink{class_a_p_i_action_a27db62675200a32d7a2987a1223da217}{createdEventId}};\ }
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00116\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_action_affdb27f841388fca4b0b2805b3f2b6a7}{refreshAccessToken}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ \doxymbox{\hyperlink{class_a_p_i_action_ab8d6f1dfe439dc954cbb3245cc8d1ba4}{buildRRule}}(\doxymbox{\hyperlink{_a_p_i_action_8h_a8e1e5bc3b1623d3d44c2a3a360af5aca}{Recurrence}}\ r);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00137\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_a_p_i_action_a77248e3fe4d07f7dc399f822b540032a}{buildEventJson}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_a_p_i_action_a0c9a0e7eb5a698630fcaaae6a38c10df}{validateEvent}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00149\ \};}
+
+\end{DoxyCode}

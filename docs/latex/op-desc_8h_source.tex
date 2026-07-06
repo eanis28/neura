@@ -1,0 +1,159 @@
+\doxysection{op-\/desc.h}
+\hypertarget{op-desc_8h_source}{}\label{op-desc_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/op-\/desc.h@{whisper.cpp/ggml/src/ggml-\/hexagon/op-\/desc.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ OP\_DESC\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ OP\_DESC\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ GGML\_COMMON\_IMPL\_CPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}ggml-\/backend-\/impl.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}ggml-\/common.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }op\_desc\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{char}\ strides[64\ *\ GGML\_MAX\_SRC];}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{char}\ dims[64\ *\ GGML\_MAX\_SRC];}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{char}\ types[16\ *\ GGML\_MAX\_SRC];}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{char}\ buffs[64\ *\ GGML\_MAX\_SRC];}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{char}\ names[64\ *\ GGML\_MAX\_SRC];}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{int}\ format\_tensor\_dims(\textcolor{keywordtype}{char}\ *\ str,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t)\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>ne[2]\ ==\ 1\ \&\&\ t-\/>ne[3]\ ==\ 1)\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sprintf(str,\ \textcolor{stringliteral}{"{}\%d:\%d"{}},\ (\textcolor{keywordtype}{int})\ t-\/>ne[0],\ (\textcolor{keywordtype}{int})\ t-\/>ne[1]);}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sprintf(str,\ \textcolor{stringliteral}{"{}\%d:\%d:\%d:\%d"{}},\ (\textcolor{keywordtype}{int})\ t-\/>ne[0],\ (\textcolor{keywordtype}{int})\ t-\/>ne[1],\ (\textcolor{keywordtype}{int})\ t-\/>ne[2],\ (\textcolor{keywordtype}{int})\ t-\/>ne[3]);}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{void}\ format\_op\_dims(\textcolor{keywordtype}{char}\ *\ str,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t)\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ p\ =\ str;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ append\ src0\ and\ src1\ (if\ any)}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>src[0])\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ format\_tensor\_dims(p,\ t-\/>src[0]);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ GGML\_MAX\_SRC\ \&\&\ t-\/>src[i];\ i++)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ x\ "{}});}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ format\_tensor\_dims(p,\ t-\/>src[i]);}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ -\/>\ "{}});}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ format\ self\ dims\ separately\ for\ better\ visual\ alignment}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ self[64];}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ format\_tensor\_dims(self,\ t);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ self);}
+\DoxyCodeLine{00046\ \ \ \ \ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{int}\ format\_tensor\_strides(\textcolor{keywordtype}{char}\ *\ str,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t)\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ c\ =\ ggml\_is\_contiguous(t)\ ?\ \textcolor{stringliteral}{"{}"{}}\ :\ \textcolor{stringliteral}{"{}!"{}};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>ne[2]\ ==\ 1\ \&\&\ t-\/>ne[3]\ ==\ 1)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sprintf(str,\ \textcolor{stringliteral}{"{}\%zu:\%zu\%s"{}},\ (\textcolor{keywordtype}{size\_t})\ t-\/>nb[0],\ (\textcolor{keywordtype}{size\_t})\ t-\/>nb[1],\ c);}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sprintf(str,\ \textcolor{stringliteral}{"{}\%zu:\%zu:\%zu:\%zu\%s"{}},\ (\textcolor{keywordtype}{size\_t})\ t-\/>nb[0],\ (\textcolor{keywordtype}{size\_t})\ t-\/>nb[1],\ (\textcolor{keywordtype}{size\_t})\ t-\/>nb[2],\ (\textcolor{keywordtype}{size\_t})\ t-\/>nb[3],\ c);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ format\_op\_strides(\textcolor{keywordtype}{char}\ *\ str,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ p\ =\ str;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ append\ src0\ and\ src1\ (if\ any)}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>src[0])\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ format\_tensor\_strides(p,\ t-\/>src[0]);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ GGML\_MAX\_SRC\ \&\&\ t-\/>src[i];\ i++)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ x\ "{}});}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ format\_tensor\_strides(p,\ t-\/>src[i]);}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ -\/>\ "{}});}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ format\ self\ dims\ separately\ for\ better\ visual\ alignment}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ self[64];}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ format\_tensor\_strides(self,\ t);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ self);}
+\DoxyCodeLine{00078\ \ \ \ \ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{void}\ format\_op\_types(\textcolor{keywordtype}{char}\ *\ str,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ p\ =\ str;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ append\ src0\ and\ src1\ (if\ any)}}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>src[0])\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ ggml\_type\_name(t-\/>src[0]-\/>type));}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ GGML\_MAX\_SRC\ \&\&\ t-\/>src[i];\ i++)\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ x\ "{}});}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ ggml\_type\_name(t-\/>src[i]-\/>type));}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ -\/>\ "{}});}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ ggml\_type\_name(t-\/>type));}
+\DoxyCodeLine{00096\ \ \ \ \ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ tensor\_buff\_name(\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t)\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>buffer)\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_backend\_buffer\_name(t-\/>buffer);}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}NONE"{}};}
+\DoxyCodeLine{00103\ \ \ \ \ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{void}\ format\_op\_buffs(\textcolor{keywordtype}{char}\ *\ str,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t)\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ p\ =\ str;}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ append\ src0\ and\ src1\ (if\ any)}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>src[0])\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ tensor\_buff\_name(t-\/>src[0]));}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ GGML\_MAX\_SRC\ \&\&\ t-\/>src[i];\ i++)\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ x\ "{}});}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ tensor\_buff\_name(t-\/>src[i]));}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ -\/>\ "{}});}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ tensor\_buff\_name(t));}
+\DoxyCodeLine{00121\ \ \ \ \ \}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{void}\ format\_op\_names(\textcolor{keywordtype}{char}\ *\ str,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ t)\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\ p\ =\ str;}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ append\ src0\ and\ src1\ (if\ any)}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>src[0])\ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ t-\/>src[0]-\/>name);}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ GGML\_MAX\_SRC\ \&\&\ t-\/>src[i];\ i++)\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ x\ "{}});}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ t-\/>src[i]-\/>name);}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\ -\/>\ "{}});}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ p\ +=\ sprintf(p,\ \textcolor{stringliteral}{"{}\%s"{}},\ t-\/>name);}
+\DoxyCodeLine{00139\ \ \ \ \ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{void}\ format(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op)\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ format\_op\_dims(dims,\ op);}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ format\_op\_strides(strides,\ op);}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ format\_op\_types(types,\ op);}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ format\_op\_buffs(buffs,\ op);}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ format\_op\_names(names,\ op);}
+\DoxyCodeLine{00147\ \ \ \ \ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ op\_desc()\ \{\}}
+\DoxyCodeLine{00150\ \ \ \ \ op\_desc(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ op)\ \{\ format(op);\ \}}
+\DoxyCodeLine{00151\ \};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ OP\_DESC\_H}}
+
+\end{DoxyCode}

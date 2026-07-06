@@ -1,0 +1,33 @@
+\doxysection{backend-\/dispatched.h}
+\hypertarget{backend-dispatched_8h_source}{}\label{backend-dispatched_8h_source}\index{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/backend-\/dispatched.h@{whisper.cpp/ggml/src/ggml-\/virtgpu/backend/backend-\/dispatched.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <ggml-\/backend.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}backend-\/convert.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}backend-\/virgl-\/apir.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}shared/apir\_backend.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}shared/apir\_cs.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}shared/apir\_cs\_ggml.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ GGML\_VIRTGPU\_BCK\ "{}ggml-\/virtgpu-\/backend:\ "{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ctx\_id;}
+\DoxyCodeLine{00020\ \ \ \ \ \doxymbox{\hyperlink{structvirgl__apir__callbacks}{virgl\_apir\_callbacks}}\ *\ iface;}
+\DoxyCodeLine{00021\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{typedef}\ uint32\_t\ (*backend\_dispatch\_t)(\doxymbox{\hyperlink{structapir__encoder}{apir\_encoder}}\ *\ enc,\ \doxymbox{\hyperlink{structapir__decoder}{apir\_decoder}}\ *\ dec,\ \doxymbox{\hyperlink{structvirgl__apir__context}{virgl\_apir\_context}}\ *\ ctx);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}backend-\/dispatched.gen.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ uint32\_t\ backend\_dispatch\_initialize(\textcolor{keywordtype}{void}\ *\ ggml\_backend\_reg\_fct\_p);}
+
+\end{DoxyCode}

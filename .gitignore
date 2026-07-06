@@ -1,0 +1,13 @@
+build/
+ggml-base.en.bin
+whisper.cpp
+*.dylib
+*.o
+venv/
+.vscode
+SFML
+neura-venv/
+*.bin
+config.ini
+conversation.json
+mainAssistant

@@ -1,0 +1,32 @@
+\doxysection{Camera\+Thread.\+h}
+\hypertarget{_camera_thread_8h_source}{}\label{_camera_thread_8h_source}\doxymbox{\hyperlink{_camera_thread_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <opencv2/opencv.hpp>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_camera_thread_ad211746a1634aca32caf4e901e23dd6f}{CameraThread}}\ \{}
+\DoxyCodeLine{00022\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ \doxymbox{\hyperlink{class_camera_thread_ad211746a1634aca32caf4e901e23dd6f}{CameraThread}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00031\ \ \ \ \ \doxymbox{\hyperlink{class_camera_thread_ae61825f6372639b7ecd669dd30d32fd4}{\string~CameraThread}}();}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_camera_thread_a648589297ded97de7b19679232e6ee04}{start}}(\textcolor{keywordtype}{unsigned}\ panelW,\ \textcolor{keywordtype}{unsigned}\ panelH);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_camera_thread_a472a2dba5a2f18b2d8c717aab9ec3b72}{stop}}();}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_camera_thread_ad4b7cff1425ff627dfc15542442cf6f7}{copyLatest}}(cv::Mat\&\ dst);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_camera_thread_a3d8a1368c2f628c6aa457101f9f62acf}{loop}}(\textcolor{keywordtype}{unsigned}\ panelW,\ \textcolor{keywordtype}{unsigned}\ panelH);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ cv::Mat\ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_camera_thread_a84cc31b2e67d7e2b5ff25cd906c739f9}{m\_latest}};\ \ \ \ \ \ }
+\DoxyCodeLine{00077\ \ \ \ \ std::mutex\ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_camera_thread_a212ea49fb82284884e8a03f23becdd2d}{m\_mtx}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00078\ \ \ \ \ std::thread\ \ \ \ \ \ \ \doxymbox{\hyperlink{class_camera_thread_a5dd0eb409717eae2bdad2792de4b16cf}{m\_thread}};\ \ \ \ \ \ }
+\DoxyCodeLine{00079\ \ \ \ \ std::atomic<bool>\ \doxymbox{\hyperlink{class_camera_thread_a24f6aaa01dd27f289be2b925bd55c5f5}{m\_running}}\{\textcolor{keyword}{false}\};\ }
+\DoxyCodeLine{00080\ \};}
+
+\end{DoxyCode}

@@ -1,0 +1,53 @@
+\doxysection{llama\+\_\+grammar\+\_\+parser Struct Reference}
+\hypertarget{structllama__grammar__parser}{}\label{structllama__grammar__parser}\index{llama\_grammar\_parser@{llama\_grammar\_parser}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__grammar__parser_aba304eb084dc165185cf446df6f64735}\label{structllama__grammar__parser_aba304eb084dc165185cf446df6f64735} 
+{\bfseries llama\+\_\+grammar\+\_\+parser} (const struct \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \texorpdfstring{$\ast$}{*}vocab=nullptr)
+\item 
+\Hypertarget{structllama__grammar__parser_add85c38e7fa9101eeac93b8a80b50daf}\label{structllama__grammar__parser_add85c38e7fa9101eeac93b8a80b50daf} 
+llama\+\_\+grammar\+\_\+stack {\bfseries c\+\_\+rules} () const
+\item 
+\Hypertarget{structllama__grammar__parser_aee5d8452d551ac4786eb68751a5880a5}\label{structllama__grammar__parser_aee5d8452d551ac4786eb68751a5880a5} 
+uint32\+\_\+t {\bfseries get\+\_\+symbol\+\_\+id} (const char \texorpdfstring{$\ast$}{*}src, size\+\_\+t len)
+\item 
+\Hypertarget{structllama__grammar__parser_a16a8bd1d44bcdb8f9442ed63cf8d0289}\label{structllama__grammar__parser_a16a8bd1d44bcdb8f9442ed63cf8d0289} 
+uint32\+\_\+t {\bfseries generate\+\_\+symbol\+\_\+id} (const std::\+string \&base\+\_\+name)
+\item 
+\Hypertarget{structllama__grammar__parser_a648683aab15d6a6d78fb724d0a3e39f9}\label{structllama__grammar__parser_a648683aab15d6a6d78fb724d0a3e39f9} 
+void {\bfseries add\+\_\+rule} (uint32\+\_\+t rule\+\_\+id, const llama\+\_\+grammar\+\_\+rule \&rule)
+\item 
+\Hypertarget{structllama__grammar__parser_a6193f37d313cd6cc614b28bc7231bf57}\label{structllama__grammar__parser_a6193f37d313cd6cc614b28bc7231bf57} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries parse\+\_\+alternates} (const char \texorpdfstring{$\ast$}{*}src, const std::\+string \&rule\+\_\+name, uint32\+\_\+t rule\+\_\+id, bool is\+\_\+nested)
+\item 
+\Hypertarget{structllama__grammar__parser_a02393650f8beccb87783d18b902c5a1a}\label{structllama__grammar__parser_a02393650f8beccb87783d18b902c5a1a} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries parse\+\_\+sequence} (const char \texorpdfstring{$\ast$}{*}src, const std::\+string \&rule\+\_\+name, llama\+\_\+grammar\+\_\+rule \&rule, bool is\+\_\+nested)
+\item 
+\Hypertarget{structllama__grammar__parser_a536f6f8a0af23f29b398c90999abcd12}\label{structllama__grammar__parser_a536f6f8a0af23f29b398c90999abcd12} 
+const char \texorpdfstring{$\ast$}{*} {\bfseries parse\+\_\+rule} (const char \texorpdfstring{$\ast$}{*}src)
+\item 
+\Hypertarget{structllama__grammar__parser_abf475f360d04b74577eff5f8764cc1af}\label{structllama__grammar__parser_abf475f360d04b74577eff5f8764cc1af} 
+bool {\bfseries parse} (const char \texorpdfstring{$\ast$}{*}src)
+\item 
+\Hypertarget{structllama__grammar__parser_a75ef610b7b2d5bb597081edce8b41f34}\label{structllama__grammar__parser_a75ef610b7b2d5bb597081edce8b41f34} 
+void {\bfseries print} (FILE \texorpdfstring{$\ast$}{*}file)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structllama__grammar__parser_a88f2f18cbbe6ce529c1fe30fbd91eba9}\label{structllama__grammar__parser_a88f2f18cbbe6ce529c1fe30fbd91eba9} 
+const \doxymbox{\hyperlink{structllama__vocab}{llama\+\_\+vocab}} \texorpdfstring{$\ast$}{*} {\bfseries vocab}
+\item 
+\Hypertarget{structllama__grammar__parser_a9a08ecc8eb456ac1e5f9d593f4759cb7}\label{structllama__grammar__parser_a9a08ecc8eb456ac1e5f9d593f4759cb7} 
+std::\+map$<$ std::\+string, uint32\+\_\+t $>$ {\bfseries symbol\+\_\+ids}
+\item 
+\Hypertarget{structllama__grammar__parser_a14825d88c03ad310595f7f6139afba0a}\label{structllama__grammar__parser_a14825d88c03ad310595f7f6139afba0a} 
+llama\+\_\+grammar\+\_\+rules {\bfseries rules}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/grammar.\+h\item 
+whisper.\+cpp/\+examples/\+talk-\/llama/\+llama-\/grammar.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,53 @@
+\doxysection{whisper.\+cpp/\+examples/\+vad-\/speech-\/segments Directory Reference}
+\hypertarget{dir_a3260f99555f7c3f9f173b7d7e55af7a}{}\label{dir_a3260f99555f7c3f9f173b7d7e55af7a}\index{whisper.cpp/examples/vad-\/speech-\/segments Directory Reference@{whisper.cpp/examples/vad-\/speech-\/segments Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_a3260f99555f7c3f9f173b7d7e55af7a_autotoc_md96}{}\doxysubsection{\texorpdfstring{whisper.\+cpp/\+examples/\+vad-\/speech-\/segments}{whisper.\+cpp/\+examples/\+vad-\/speech-\/segments}}\label{dir_a3260f99555f7c3f9f173b7d7e55af7a_autotoc_md96}
+This examples demonstrates how to use a VAD (Voice Activity Detection) model to segment an audio file into speech segments.\hypertarget{dir_a3260f99555f7c3f9f173b7d7e55af7a_autotoc_md97}{}\doxysubsubsection{\texorpdfstring{Building the example}{Building the example}}\label{dir_a3260f99555f7c3f9f173b7d7e55af7a_autotoc_md97}
+\doxylink{requirements_The}{The} example can be built using the following command:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build}
+\DoxyCodeLine{cmake\ -\/-\/build\ build\ -\/j8\ -\/-\/target\ vad-\/speech-\/segments}
+
+\end{DoxyCode}
+\hypertarget{dir_a3260f99555f7c3f9f173b7d7e55af7a_autotoc_md98}{}\doxysubsubsection{\texorpdfstring{Running the example}{Running the example}}\label{dir_a3260f99555f7c3f9f173b7d7e55af7a_autotoc_md98}
+\doxylink{requirements_The}{The} examples can be run using the following command, which uses a model that we use internally for testing:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/bin/vad-\/speech-\/segments\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ -\/-\/vad-\/model\ models/for-\/tests-\/silero-\/v6.2.0-\/ggml.bin\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ -\/-\/file\ samples/jfk.wav\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ -\/-\/no-\/prints}
+\DoxyCodeLine{}
+\DoxyCodeLine{Detected\ 5\ speech\ segments:}
+\DoxyCodeLine{Speech\ segment\ 0:\ start\ =\ 0.29,\ end\ =\ 2.21}
+\DoxyCodeLine{Speech\ segment\ 1:\ start\ =\ 3.30,\ end\ =\ 3.77}
+\DoxyCodeLine{Speech\ segment\ 2:\ start\ =\ 4.00,\ end\ =\ 4.35}
+\DoxyCodeLine{Speech\ segment\ 3:\ start\ =\ 5.38,\ end\ =\ 7.65}
+\DoxyCodeLine{Speech\ segment\ 4:\ start\ =\ 8.16,\ end\ =\ 10.59}
+
+\end{DoxyCode}
+ To see more output from whisper.\+cpp remove the {\ttfamily -\/-\/no-\/prints} argument.\hypertarget{dir_a3260f99555f7c3f9f173b7d7e55af7a_autotoc_md99}{}\doxysubsubsection{\texorpdfstring{Command line options}{Command line options}}\label{dir_a3260f99555f7c3f9f173b7d7e55af7a_autotoc_md99}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./build/bin/vad-\/speech-\/segments\ -\/-\/help}
+\DoxyCodeLine{}
+\DoxyCodeLine{usage:\ ./build/bin/vad-\/speech-\/segments\ [options]\ file}
+\DoxyCodeLine{supported\ audio\ formats:\ flac,\ mp3,\ ogg,\ wav}
+\DoxyCodeLine{}
+\DoxyCodeLine{options:}
+\DoxyCodeLine{\ \ -\/h,\ \ \ \ \ \ \ \ -\/-\/help\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [default]\ show\ this\ help\ message\ and\ exit}
+\DoxyCodeLine{\ \ -\/f\ FNAME,\ \ -\/-\/file\ FNAME\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ input\ audio\ file\ path}
+\DoxyCodeLine{\ \ -\/t\ N,\ \ \ \ \ \ -\/-\/threads\ N\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [4\ \ \ \ \ \ ]\ number\ of\ threads\ to\ use\ during\ computation}
+\DoxyCodeLine{\ \ -\/ug,\ \ \ \ \ \ \ -\/-\/use-\/gpu\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [true\ \ \ ]\ use\ GPU}
+\DoxyCodeLine{\ \ -\/vm\ FNAME,\ -\/-\/vad-\/model\ FNAME\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\ \ \ \ \ \ \ ]\ VAD\ model\ path}
+\DoxyCodeLine{\ \ -\/vt\ N,\ \ \ \ \ -\/-\/vad-\/threshold\ N\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [0.50\ \ \ ]\ VAD\ threshold\ for\ speech\ recognition}
+\DoxyCodeLine{\ \ -\/vspd\ N,\ \ \ -\/-\/vad-\/min-\/speech-\/duration-\/ms\ \ N\ [250\ \ \ \ ]\ VAD\ min\ speech\ duration\ (0.0-\/1.0)}
+\DoxyCodeLine{\ \ -\/vsd\ N,\ \ \ \ -\/-\/vad-\/min-\/silence-\/duration-\/ms\ N\ [100\ \ \ \ ]\ VAD\ min\ silence\ duration\ (to\ split\ segments)}
+\DoxyCodeLine{\ \ -\/vmsd\ N,\ \ \ -\/-\/vad-\/max-\/speech-\/duration-\/s\ \ \ N\ [FLT\_MAX]\ VAD\ max\ speech\ duration\ (auto-\/split\ longer)}
+\DoxyCodeLine{\ \ -\/vp\ N,\ \ \ \ \ -\/-\/vad-\/speech-\/pad-\/ms\ \ \ \ \ \ \ \ \ \ \ N\ [30\ \ \ \ \ ]\ VAD\ speech\ padding\ (extend\ segments)}
+\DoxyCodeLine{\ \ -\/vo\ N,\ \ \ \ \ -\/-\/vad-\/samples-\/overlap\ \ \ \ \ \ \ \ \ N\ [0.10\ \ \ ]\ VAD\ samples\ overlap\ (seconds\ between\ segments)}
+\DoxyCodeLine{\ \ -\/np,\ \ \ \ \ \ \ -\/-\/no-\/prints\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [false\ \ ]\ do\ not\ print\ anything\ other\ than\ the\ results}
+
+\end{DoxyCode}
+ 

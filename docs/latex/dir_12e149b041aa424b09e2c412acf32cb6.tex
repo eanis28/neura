@@ -1,0 +1,56 @@
+\doxysection{whisper.\+cpp/\+examples/\+whisper.swiftui Directory Reference}
+\hypertarget{dir_12e149b041aa424b09e2c412acf32cb6}{}\label{dir_12e149b041aa424b09e2c412acf32cb6}\index{whisper.cpp/examples/whisper.swiftui Directory Reference@{whisper.cpp/examples/whisper.swiftui Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_12e149b041aa424b09e2c412acf32cb6_autotoc_md123}{}\doxysubsection{\texorpdfstring{whisper.\+cpp/\+examples/\+whisper.swiftui}{whisper.\+cpp/\+examples/\+whisper.swiftui}}\label{dir_12e149b041aa424b09e2c412acf32cb6_autotoc_md123}
+A sample Swift\+UI app using \href{https://github.com/ggerganov/whisper.cpp/}{\texttt{whisper.\+cpp}} to do voice-\/to-\/text transcriptions. See also:\+ \href{https://github.com/ggerganov/whisper.cpp/tree/master/examples/whisper.objc}{\texttt{whisper.\+objc}}.\hypertarget{dir_12e149b041aa424b09e2c412acf32cb6_autotoc_md124}{}\doxysubsubsection{\texorpdfstring{Building}{Building}}\label{dir_12e149b041aa424b09e2c412acf32cb6_autotoc_md124}
+First whisper.\+cpp need to be built and a XCFramework needs to be created. This can be done by running the following script from the whisper.\+cpp project root:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ ./build-\/xcframework.sh}
+
+\end{DoxyCode}
+
+
+Note:\+ if you get the error "{}iphoneos is not an i\+OS SDK"{} then you probably need to run this command first:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo\ xcode-\/select\ -\/switch\ /Applications/Xcode.app/Contents/Developer}
+
+\end{DoxyCode}
+
+
+Open {\ttfamily whisper.\+swiftui.\+xcodeproj} project in Xcode and you should be able to build and run the app on a simulator or a real device.
+
+To use the framework with a different project, the XCFramework can be added to the project by adding {\ttfamily build-\/apple/\+whisper.\+xcframework} by dragging and dropping it into the project navigator, or by manually selecting the framework in the "{}\+Frameworks, Libraries, and Embedded Content"{} section of the project settings.\hypertarget{dir_12e149b041aa424b09e2c412acf32cb6_autotoc_md125}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{dir_12e149b041aa424b09e2c412acf32cb6_autotoc_md125}
+
+\begin{DoxyEnumerate}
+\item Select a model from the \href{https://github.com/ggerganov/whisper.cpp/tree/master/models}{\texttt{whisper.\+cpp repository}}.\+[\texorpdfstring{$^\wedge$}{\string^}1]\+
+\item \doxylink{struct_add}{Add} the model to {\ttfamily whisper.\+swiftui.\+demo/\+\+Resources/\+models} {\bfseries{via Xcode}}.
+\item Select a sample audio file (for example, \href{https://github.com/ggerganov/whisper.cpp/raw/master/samples/jfk.wav}{\texttt{jfk.\+wav}}).
+\item \doxylink{struct_add}{Add} the sample audio file to {\ttfamily whisper.\+swiftui.\+demo/\+\+Resources/\+samples} {\bfseries{via Xcode}}.
+\item Select the "{}\+Release"{} \+[\texorpdfstring{$^\wedge$}{\string^}2]\+ build configuration under "{}\+Run"{}, then deploy and run to your device.
+\end{DoxyEnumerate}
+
+{\bfseries{Note:\+}} Pay attention to the folder path:\+ {\ttfamily whisper.\+swiftui.\+demo/\+\+Resources/\+models} is the appropriate directory to place resources whilst {\ttfamily whisper.\+swiftui.\+demo/\+\+Models} is related to actual code.\hypertarget{dir_12e149b041aa424b09e2c412acf32cb6_autotoc_md126}{}\doxysubsubsection{\texorpdfstring{Core ML support}{Core ML support}}\label{dir_12e149b041aa424b09e2c412acf32cb6_autotoc_md126}
+
+\begin{DoxyEnumerate}
+\item Follow all the steps in the {\ttfamily Usage} section, including adding the ggml model file. ~\newline
+ \doxylink{requirements_The}{The} ggml model file is required as the Core ML model is only used for the encoder. \doxylink{requirements_The}{The} decoder which is in the ggml model is still required.
+\item Follow the \href{../../README.md\#core-ml-support}{\texttt{{\ttfamily Core ML support} section of readme}} to convert the model.
+\item \doxylink{struct_add}{Add} the Core ML model ({\ttfamily models/\+ggml-\/base.\+en-\/encoder.\+mlmodelc/\+}) to {\ttfamily whisper.\+swiftui.\+demo/\+\+Resources/\+models} {\bfseries{via Xcode}}.
+\end{DoxyEnumerate}
+
+When the example starts running you should now see that it is using the Core ML model:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{whisper\_init\_state:\ loading\ Core\ ML\ model\ from\ '/Library/Developer/CoreSimulator/Devices/25E8C27D-\/0253-\/4281-\/AF17-\/C3F2A4D1D8F4/data/Containers/Bundle/Application/3ADA7D59-\/7B9C-\/43B4-\/A7E1-\/A87183FC546A/whisper.swiftui.app/models/ggml-\/base.en-\/encoder.mlmodelc'}
+\DoxyCodeLine{whisper\_init\_state:\ first\ run\ on\ a\ device\ may\ take\ a\ while\ ...}
+\DoxyCodeLine{whisper\_init\_state:\ Core\ ML\ model\ loaded}
+
+\end{DoxyCode}
+
+
+\+[\texorpdfstring{$^\wedge$}{\string^}1]\+:\+ I recommend the tiny, base or small models for running on an i\+OS device.
+
+\+[\texorpdfstring{$^\wedge$}{\string^}2]\+:\+ \doxylink{requirements_The}{The} {\ttfamily Release} build can boost performance of transcription. In this project, it also added {\ttfamily -\/O3 -\/DNDEBUG} to {\ttfamily Other C Flags}, but adding flags to app proj is not ideal in real world (applies to all C/\+\+C++ files), consider splitting xcodeproj in workspace in your own project.
+
+ 

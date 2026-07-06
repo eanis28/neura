@@ -1,0 +1,69 @@
+\doxysection{WChess.\+h}
+\hypertarget{_w_chess_8h_source}{}\label{_w_chess_8h_source}\index{whisper.cpp/examples/wchess/libwchess/WChess.h@{whisper.cpp/examples/wchess/libwchess/WChess.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}whisper.h"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_chessboard}{Chessboard}};}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }WChess\ \{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{using\ }CheckRunningCb\ =\ bool\ (*)();}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{using\ }GetAudioCb\ =\ bool\ (*)(std::vector<float>\ \&);}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{using\ }SetMovesCb\ =\ void\ (*)(\textcolor{keyword}{const}\ std::string\ \&,\ float);}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{using\ }SetGrammarCb\ =\ void\ (*)(\textcolor{keyword}{const}\ std::string\ \&);}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{using\ }ClearAudioCb\ =\ void\ (*)();}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_w_chess_1_1callbacks}{callbacks}}\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ GetAudioCb\ get\_audio\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ SetMovesCb\ set\_move\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ SetGrammarCb\ set\_grammar\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00021\ \ \ \ \ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_w_chess_1_1settings}{settings}}\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ int32\_t\ vad\_ms\ \ \ \ \ =\ 2000;}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ int32\_t\ prompt\_ms\ \ =\ 5000;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ int32\_t\ command\_ms\ =\ 4000;}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ vad\_thold\ \ \ \ =\ 0.2f;}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ freq\_thold\ \ \ =\ 100.0f;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ print\_energy\ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00030\ \ \ \ \ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ WChess(}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ ctx,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ \&\ wparams,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_w_chess_1_1callbacks}{callbacks}}\ cb,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_w_chess_1_1settings}{settings}}\ s}
+\DoxyCodeLine{00037\ \ \ \ \ );}
+\DoxyCodeLine{00038\ \ \ \ \ \string~WChess();}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ run();}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ std::string\ stringify\_board()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ std::string\ get\_grammar()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{bool}\ get\_audio(std::vector<float>\&\ pcmf32)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_move(\textcolor{keyword}{const}\ std::string\&\ moves,\ \textcolor{keywordtype}{float}\ prob)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_grammar(\textcolor{keyword}{const}\ std::string\&\ grammar)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ std::string\ transcribe(}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<float>\ \&\ pcmf32,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \&\ logprob\_min,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \&\ logprob\_sum,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \&\ n\_tokens,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ \&\ t\_ms);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \doxymbox{\hyperlink{structwhisper__context}{whisper\_context}}\ *\ m\_ctx;}
+\DoxyCodeLine{00059\ \ \ \ \ \doxymbox{\hyperlink{structwhisper__full__params}{whisper\_full\_params}}\ m\_wparams;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_w_chess_1_1callbacks}{callbacks}}\ m\_cb;}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_w_chess_1_1settings}{settings}}\ m\_settings;}
+\DoxyCodeLine{00062\ \ \ \ \ std::unique\_ptr<Chessboard>\ m\_board;}
+\DoxyCodeLine{00063\ \};}
+
+\end{DoxyCode}

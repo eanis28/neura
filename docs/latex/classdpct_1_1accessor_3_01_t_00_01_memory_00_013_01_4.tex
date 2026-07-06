@@ -1,0 +1,49 @@
+\doxysection{dpct::\+accessor\texorpdfstring{$<$}{<} T, Memory, 3 \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4}{}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4}\index{dpct::accessor$<$ T, Memory, 3 $>$@{dpct::accessor$<$ T, Memory, 3 $>$}}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a0b740659003ac306b87459cdc0b72629}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a0b740659003ac306b87459cdc0b72629} 
+using {\bfseries memory\+\_\+t} = \doxymbox{\hyperlink{classdpct_1_1detail_1_1memory__traits}{detail::\+memory\+\_\+traits}}$<$Memory, T$>$
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_aab2955669cedcd2a566572c91b5ac0a1}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_aab2955669cedcd2a566572c91b5ac0a1} 
+using {\bfseries element\+\_\+t} = typename memory\+\_\+t::\+element\+\_\+t
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_ac53aacc7e588f3043bf3858ac0952508}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_ac53aacc7e588f3043bf3858ac0952508} 
+using {\bfseries pointer\+\_\+t} = typename memory\+\_\+t::\+pointer\+\_\+t
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a07bd907eca49d89159d9ad159ba9682c}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a07bd907eca49d89159d9ad159ba9682c} 
+using {\bfseries accessor\+\_\+t} = typename memory\+\_\+t::\+template accessor\+\_\+t$<$3$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a779cf0243f8424c2f3335f869c9afaa5}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a779cf0243f8424c2f3335f869c9afaa5} 
+{\bfseries accessor} (pointer\+\_\+t data, const sycl::\+range$<$ 3 $>$ \&in\+\_\+range)
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_ad4fdb93aa14c7fe6d6fba304609a126c}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_ad4fdb93aa14c7fe6d6fba304609a126c} 
+{\footnotesize template$<$memory\+\_\+region M = Memory$>$ }\\{\bfseries accessor} (typename std::\+enable\+\_\+if$<$ M !=local, const accessor\+\_\+t $>$::\+type \&acc)
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_acdf0eec1cf1fd8e1e76d03dff54c9d07}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_acdf0eec1cf1fd8e1e76d03dff54c9d07} 
+{\bfseries accessor} (const accessor\+\_\+t \&acc, const sycl::\+range$<$ 3 $>$ \&in\+\_\+range)
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a392f749cde57f902f6f1b6b40b611f23}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a392f749cde57f902f6f1b6b40b611f23} 
+accessor$<$ T, Memory, 2 $>$ {\bfseries operator\+[$\,$]\+} (size\+\_\+t index) const
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_acb92894ec8fe96ef4896c44e005afd93}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_acb92894ec8fe96ef4896c44e005afd93} 
+pointer\+\_\+t {\bfseries get\+\_\+ptr} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a18ae5bdd748bb571a95d81107f1e77cb}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a18ae5bdd748bb571a95d81107f1e77cb} 
+pointer\+\_\+t {\bfseries \+\_\+data}
+\item 
+\Hypertarget{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a94edfa20431761dbb59ebfde0044078e}\label{classdpct_1_1accessor_3_01_t_00_01_memory_00_013_01_4_a94edfa20431761dbb59ebfde0044078e} 
+sycl::\+range$<$ 3 $>$ {\bfseries \+\_\+range}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+dpct/\+helper.\+hpp\end{DoxyCompactItemize}

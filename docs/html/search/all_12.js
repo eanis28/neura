@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['r_0',['r',['../struct_colour_preset.html#a435bffdff19a52f789e8862a70682cd9',1,'ColourPreset']]],
+  ['readselectedtext_1',['readSelectedText',['../class_system_command_action.html#ae672ec34883aa0d5b126157600187424',1,'SystemCommandAction']]],
+  ['recurrence_2',['Recurrence',['../_a_p_i_action_8h.html#a8e1e5bc3b1623d3d44c2a3a360af5aca',1,'APIAction.h']]],
+  ['recurrence_3',['recurrence',['../struct_calendar_event.html#a519915e100a28b52e0c8c5dc458a9625',1,'CalendarEvent::recurrence'],['../struct_voice_command_listener_1_1_pending_calendar_request.html#a8f94195e7d6ef9b55e9e5501c4e7bfab',1,'VoiceCommandListener::PendingCalendarRequest::recurrence']]],
+  ['ref_5fstack_4',['ref_stack',['../classdetail_1_1json__sax__dom__parser.html#a7abe0305cc4bcfa1cee1bbe25a722e1a',1,'detail::json_sax_dom_parser::ref_stack'],['../classdetail_1_1json__sax__dom__callback__parser.html#a86ef162619a50b28eccb9111b22f9563',1,'detail::json_sax_dom_callback_parser::ref_stack']]],
+  ['refreshaccesstoken_5',['refreshAccessToken',['../class_a_p_i_action.html#affdb27f841388fca4b0b2805b3f2b6a7',1,'APIAction']]],
+  ['replace_6',['replace',['../namespacedetail.html#abe7cfa1fd8fa706ff4392bff9d1a8298a9dde360102c103867bd2f45872f1129c',1,'detail']]],
+  ['replace_5fsubstring_7',['replace_substring',['../namespacedetail.html#a6fd295e53b1dd4f46e235e6afee26d5e',1,'detail']]],
+  ['requestpermission_8',['requestPermission',['../class_permissions.html#af1de5079834ea2198f81f444cf050f7c',1,'Permissions']]],
+  ['required_20permissions_20all_20systems_9',['Required Permissions (All Systems)',['../md__r_e_a_d_m_e.html#autotoc_md9',1,'']]],
+  ['requirements_10',['Requirements',['../requirements.html',1,'Requirements'],['../requirements.html#missing_satisfies',1,'Unsatisfied Requirements'],['../requirements.html#missing_verifies',1,'Unverified Requirements']]],
+  ['requirements_3a_11',['class satisfies the following concept requirements:',['../requirements.html#The',1,'']]],
+  ['reset_12',['reset',['../classdetail_1_1lexer.html#a049f7268496ebdbb16573a5ef1bc96b7',1,'detail::lexer']]],
+  ['resolvelocation_13',['resolveLocation',['../class_weather_action.html#a299e67e6357ac92a207842b82b5013e2',1,'WeatherAction']]],
+  ['respond_14',['respond',['../class_voice_command_listener.html#a68e10ba623f039a8344bc8414c689476',1,'VoiceCommandListener']]],
+  ['response_15',['response',['../struct_conversation_entry.html#a9db4934de81f0fa851fabaf567c0ab3b',1,'ConversationEntry']]],
+  ['responses_16',['responses',['../namespaceresponses.html',1,'']]],
+  ['returning_20to_20the_20project_17',['Returning to the Project',['../md__r_e_a_d_m_e.html#autotoc_md3',1,'']]],
+  ['root_18',['root',['../classdetail_1_1json__sax__dom__parser.html#aab35aee2aec35d99681400832a404109',1,'detail::json_sax_dom_parser::root'],['../classdetail_1_1json__sax__dom__callback__parser.html#a2310afcdbe121566febbe9f2efeab5ac',1,'detail::json_sax_dom_callback_parser::root']]],
+  ['runhistorypage_19',['runHistoryPage',['../_history_8h.html#afe09add2795b6a8e08f54e5c03a0821b',1,'History.cpp']]],
+  ['runlandingpage_20',['runLandingPage',['../_landing_8cpp.html#a8e78e4dc209a56d251b1f702a4bd8043',1,'runLandingPage():&#160;Landing.cpp'],['../_landing_8h.html#a8e78e4dc209a56d251b1f702a4bd8043',1,'runLandingPage():&#160;Landing.cpp']]],
+  ['runloop_21',['runLoop',['../class_voice_command_listener.html#a684a74fc7b528b58be4862f6b656027e',1,'VoiceCommandListener']]],
+  ['runquickreference_22',['runQuickReference',['../_quick_reference_8h.html#a8aed6530260fb5b1ed73156b85545965',1,'runQuickReference():&#160;QuickReference.cpp'],['../_u_i_8h.html#a8aed6530260fb5b1ed73156b85545965',1,'runQuickReference():&#160;QuickReference.cpp']]],
+  ['runsettingspage_23',['runSettingsPage',['../_settings_8cpp.html#a3a3ae429eaee72eafd35bc91b919f2fa',1,'runSettingsPage():&#160;Settings.cpp'],['../_settings_8h.html#a3a3ae429eaee72eafd35bc91b919f2fa',1,'runSettingsPage():&#160;Settings.cpp']]],
+  ['runui_24',['runUI',['../_u_i_8h.html#a3ee23ffe58ed9860deea5ee8702d8b01',1,'UI.cpp']]]
+];

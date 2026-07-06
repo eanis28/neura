@@ -1,0 +1,68 @@
+\doxysection{Chessboard Class Reference}
+\hypertarget{class_chessboard}{}\label{class_chessboard}\index{Chessboard@{Chessboard}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_chessboard_ad951c761d14386ed46c963004c1f46cf}\label{class_chessboard_ad951c761d14386ed46c963004c1f46cf} 
+std::\+string {\bfseries process} (const std::\+string \&\doxymbox{\hyperlink{structcommand}{command}})
+\item 
+\Hypertarget{class_chessboard_a543d9ec8926f975cc5703301303ac594}\label{class_chessboard_a543d9ec8926f975cc5703301303ac594} 
+std::\+string {\bfseries stringify\+Board} ()
+\item 
+\Hypertarget{class_chessboard_a5927d75b81285bcfaafa021ea8cce0a2}\label{class_chessboard_a5927d75b81285bcfaafa021ea8cce0a2} 
+const std::\+string \& {\bfseries grammar} ()
+\item 
+\Hypertarget{class_chessboard_ae7abcb289a74c96763b473dac22a2bc8}\label{class_chessboard_ae7abcb289a74c96763b473dac22a2bc8} 
+const std::\+string \& {\bfseries prompt} ()
+\item 
+\Hypertarget{class_chessboard_a8fc9b394fbcbbae4e655f72c052ab60b}\label{class_chessboard_a8fc9b394fbcbbae4e655f72c052ab60b} 
+void {\bfseries set\+Prompt} (const std::\+string \&prompt)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_chessboard_addbeb341a996b25fba8b18c4c4e61c9a}\label{class_chessboard_addbeb341a996b25fba8b18c4c4e61c9a} 
+bool {\bfseries parse\+Command} (const std::\+string \&\doxymbox{\hyperlink{structcommand}{command}}, \doxymbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*}\&piece, char \&pos\+\_\+to)
+\item 
+\Hypertarget{class_chessboard_acd3f3552f7a7efa1da976e15c750b8d4}\label{class_chessboard_acd3f3552f7a7efa1da976e15c750b8d4} 
+bool {\bfseries move} (\doxymbox{\hyperlink{class_piece}{Piece}} \&piece, char pos)
+\item 
+\Hypertarget{class_chessboard_aaf080ff1b2b33c12e01a709e53b40392}\label{class_chessboard_aaf080ff1b2b33c12e01a709e53b40392} 
+void {\bfseries flag\+Updates} (char pos\+\_\+from, char pos\+\_\+to)
+\item 
+\Hypertarget{class_chessboard_ad1d9381fdf5726f20b4669b49fc0775f}\label{class_chessboard_ad1d9381fdf5726f20b4669b49fc0775f} 
+void {\bfseries update\+Pins} (\doxymbox{\hyperlink{class_piece}{Piece}} \&piece)
+\item 
+\Hypertarget{class_chessboard_aff3c9221fc9b61e8120b8e543785d139}\label{class_chessboard_aff3c9221fc9b61e8120b8e543785d139} 
+void {\bfseries detect\+Checks} ()
+\item 
+\Hypertarget{class_chessboard_ac3636da448b89456748c20572d32bab8}\label{class_chessboard_ac3636da448b89456748c20572d32bab8} 
+void {\bfseries set\+Grammar} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_chessboard_aef31ef03b8fbb9435c32e3c6e4c18fde}\label{class_chessboard_aef31ef03b8fbb9435c32e3c6e4c18fde} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{struct_state}{State}} $>$ {\bfseries m\+\_\+state}
+\item 
+\Hypertarget{class_chessboard_ad57ad8fb291cc16acc6513c1bf82539d}\label{class_chessboard_ad57ad8fb291cc16acc6513c1bf82539d} 
+std::\+set$<$ char $>$ {\bfseries m\+\_\+allowed\+In\+Check}
+\item 
+\Hypertarget{class_chessboard_a3b9d4f624c07d7ae58fe09248b0d4939}\label{class_chessboard_a3b9d4f624c07d7ae58fe09248b0d4939} 
+bool {\bfseries m\+\_\+in\+Check} = false
+\item 
+\Hypertarget{class_chessboard_a81313a08ef1600c6c3dd0ef4e1f8e948}\label{class_chessboard_a81313a08ef1600c6c3dd0ef4e1f8e948} 
+int {\bfseries m\+\_\+move\+Counter} = 0
+\item 
+\Hypertarget{class_chessboard_aaa4f58531b0b86c6c5d018d10570724f}\label{class_chessboard_aaa4f58531b0b86c6c5d018d10570724f} 
+std::\+string {\bfseries m\+\_\+grammar}
+\item 
+\Hypertarget{class_chessboard_acfb75ba62af27226270757ee188fb2b7}\label{class_chessboard_acfb75ba62af27226270757ee188fb2b7} 
+std::\+string {\bfseries m\+\_\+prompt}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+examples/\+wchess/\+libwchess/\+Chessboard.\+h\item 
+whisper.\+cpp/\+examples/\+wchess/\+libwchess/\+Chessboard.\+cpp\end{DoxyCompactItemize}

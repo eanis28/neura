@@ -1,0 +1,180 @@
+\doxysection{dpct::\+device\+\_\+ext Class Reference}
+\hypertarget{classdpct_1_1device__ext}{}\label{classdpct_1_1device__ext}\index{dpct::device\_ext@{dpct::device\_ext}}
+
+
+dpct device extension  
+
+
+
+
+{\ttfamily \+\#include $<$helper.\+hpp$>$}
+
+Inheritance diagram for dpct::\+device\+\_\+ext:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classdpct_1_1device__ext}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1device__ext_a36e1d75f3ac3624aee702df72a8e99dd}\label{classdpct_1_1device__ext_a36e1d75f3ac3624aee702df72a8e99dd} 
+{\bfseries device\+\_\+ext} (const sycl::\+device \&base)
+\item 
+\Hypertarget{classdpct_1_1device__ext_af5699ef4309c83dbe6aeacd54fe6a97b}\label{classdpct_1_1device__ext_af5699ef4309c83dbe6aeacd54fe6a97b} 
+int {\bfseries is\+\_\+native\+\_\+atomic\+\_\+supported} ()
+\item 
+\Hypertarget{classdpct_1_1device__ext_acf853ee88ffea5dcd110047dbca8faa3}\label{classdpct_1_1device__ext_acf853ee88ffea5dcd110047dbca8faa3} 
+int {\bfseries get\+\_\+major\+\_\+version} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_a7ce1ecc532586e3641ceb9be3a0ff0f4}\label{classdpct_1_1device__ext_a7ce1ecc532586e3641ceb9be3a0ff0f4} 
+int {\bfseries get\+\_\+minor\+\_\+version} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_a719a277d940ace176087d7b44bcf8971}\label{classdpct_1_1device__ext_a719a277d940ace176087d7b44bcf8971} 
+int {\bfseries get\+\_\+max\+\_\+compute\+\_\+units} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_abcdae176acf88801f070bcc874959d75}\label{classdpct_1_1device__ext_abcdae176acf88801f070bcc874959d75} 
+int {\bfseries get\+\_\+max\+\_\+clock\+\_\+frequency} () const
+\begin{DoxyCompactList}\small\item\em Return the maximum clock frequency of this device in KHz. \end{DoxyCompactList}\item 
+\Hypertarget{classdpct_1_1device__ext_af11250bc92e2fa797ef97d6c41f547b6}\label{classdpct_1_1device__ext_af11250bc92e2fa797ef97d6c41f547b6} 
+int {\bfseries get\+\_\+integrated} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_a5585eedbc14d3ee28f9456e85d1e1ae5}\label{classdpct_1_1device__ext_a5585eedbc14d3ee28f9456e85d1e1ae5} 
+int {\bfseries get\+\_\+max\+\_\+sub\+\_\+group\+\_\+size} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_a0768a96a54366bced54d89f721f2aff5}\label{classdpct_1_1device__ext_a0768a96a54366bced54d89f721f2aff5} 
+int {\bfseries get\+\_\+max\+\_\+register\+\_\+size\+\_\+per\+\_\+work\+\_\+group} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_afc62b0daff93641920e5b8fe3f3b30ad}\label{classdpct_1_1device__ext_afc62b0daff93641920e5b8fe3f3b30ad} 
+int {\bfseries get\+\_\+max\+\_\+work\+\_\+group\+\_\+size} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_a87a3c991d6d7ac1b6e3a9bac06032f62}\label{classdpct_1_1device__ext_a87a3c991d6d7ac1b6e3a9bac06032f62} 
+int {\bfseries get\+\_\+mem\+\_\+base\+\_\+addr\+\_\+align} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_a4173a2f9bc2d5d25a2de9b473cebf499}\label{classdpct_1_1device__ext_a4173a2f9bc2d5d25a2de9b473cebf499} 
+size\+\_\+t {\bfseries get\+\_\+global\+\_\+mem\+\_\+size} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_a0cc6e262408ba57a248501cf849dcac6}\label{classdpct_1_1device__ext_a0cc6e262408ba57a248501cf849dcac6} 
+size\+\_\+t {\bfseries get\+\_\+max\+\_\+mem\+\_\+alloc\+\_\+size} () const
+\item 
+void \doxymbox{\hyperlink{classdpct_1_1device__ext_a3089cbf53ca62e7e59496e9ae42bdac9}{get\+\_\+memory\+\_\+info}} (size\+\_\+t \&free\+\_\+memory, size\+\_\+t \&total\+\_\+memory)
+\item 
+\Hypertarget{classdpct_1_1device__ext_a27b66a13044230083b3e5b60486176bc}\label{classdpct_1_1device__ext_a27b66a13044230083b3e5b60486176bc} 
+void {\bfseries get\+\_\+device\+\_\+info} (\doxymbox{\hyperlink{classdpct_1_1device__info}{device\+\_\+info}} \&out) const
+\item 
+\Hypertarget{classdpct_1_1device__ext_a7ec0021ae9feb56171a86c780301bc34}\label{classdpct_1_1device__ext_a7ec0021ae9feb56171a86c780301bc34} 
+\doxymbox{\hyperlink{classdpct_1_1device__info}{device\+\_\+info}} {\bfseries get\+\_\+device\+\_\+info} () const
+\item 
+\Hypertarget{classdpct_1_1device__ext_a13142b55af73862cb86582ecdd0efb7a}\label{classdpct_1_1device__ext_a13142b55af73862cb86582ecdd0efb7a} 
+void {\bfseries reset} ()
+\item 
+\Hypertarget{classdpct_1_1device__ext_af65c136ebc543c79b9475f4090ba462d}\label{classdpct_1_1device__ext_af65c136ebc543c79b9475f4090ba462d} 
+sycl::\+queue \& {\bfseries in\+\_\+order\+\_\+queue} ()
+\item 
+\Hypertarget{classdpct_1_1device__ext_a3ce6f99cf871147bce91da79b6bcbcca}\label{classdpct_1_1device__ext_a3ce6f99cf871147bce91da79b6bcbcca} 
+sycl::\+queue \& {\bfseries out\+\_\+of\+\_\+order\+\_\+queue} ()
+\item 
+\Hypertarget{classdpct_1_1device__ext_a80170b74dc70ecbf4e38bffd8a3177dc}\label{classdpct_1_1device__ext_a80170b74dc70ecbf4e38bffd8a3177dc} 
+sycl::\+queue \& {\bfseries default\+\_\+queue} ()
+\item 
+\Hypertarget{classdpct_1_1device__ext_abc27c1435ad127b1abe4ebb18ce5ed39}\label{classdpct_1_1device__ext_abc27c1435ad127b1abe4ebb18ce5ed39} 
+void {\bfseries queues\+\_\+wait\+\_\+and\+\_\+throw} ()
+\item 
+\Hypertarget{classdpct_1_1device__ext_a480bb04e7e46116856b58e19bdac05c6}\label{classdpct_1_1device__ext_a480bb04e7e46116856b58e19bdac05c6} 
+sycl::\+queue {\bfseries create\+\_\+queue} (bool enable\+\_\+exception\+\_\+handler=false)
+\item 
+\Hypertarget{classdpct_1_1device__ext_ab77066ebcbb305b7fcd5f9b160ff93c5}\label{classdpct_1_1device__ext_ab77066ebcbb305b7fcd5f9b160ff93c5} 
+sycl::\+queue {\bfseries create\+\_\+queue} (sycl::\+device device, bool enable\+\_\+exception\+\_\+handler=false)
+\item 
+\Hypertarget{classdpct_1_1device__ext_a7214f47370ee3f0feabce0d2bba3130c}\label{classdpct_1_1device__ext_a7214f47370ee3f0feabce0d2bba3130c} 
+sycl::\+queue {\bfseries create\+\_\+in\+\_\+order\+\_\+queue} (bool enable\+\_\+exception\+\_\+handler=false)
+\item 
+\Hypertarget{classdpct_1_1device__ext_a2797a7a5cfa018ccb79bd5256612cb61}\label{classdpct_1_1device__ext_a2797a7a5cfa018ccb79bd5256612cb61} 
+sycl::\+queue {\bfseries create\+\_\+in\+\_\+order\+\_\+queue} (sycl::\+device device, bool enable\+\_\+exception\+\_\+handler=false)
+\item 
+\Hypertarget{classdpct_1_1device__ext_ac9acd640c468cf2e774914edb71c98e7}\label{classdpct_1_1device__ext_ac9acd640c468cf2e774914edb71c98e7} 
+sycl::\+queue {\bfseries create\+\_\+out\+\_\+of\+\_\+order\+\_\+queue} (bool enable\+\_\+exception\+\_\+handler=false)
+\item 
+\Hypertarget{classdpct_1_1device__ext_a5563bd1eff23d59e18bf4882ad767414}\label{classdpct_1_1device__ext_a5563bd1eff23d59e18bf4882ad767414} 
+void {\bfseries destroy\+\_\+queue} (sycl::\+queue queue)
+\item 
+\Hypertarget{classdpct_1_1device__ext_ac03571abb68e9e24e78e4ac95cf42f6d}\label{classdpct_1_1device__ext_ac03571abb68e9e24e78e4ac95cf42f6d} 
+void {\bfseries set\+\_\+saved\+\_\+queue} (sycl::\+queue q)
+\item 
+\Hypertarget{classdpct_1_1device__ext_a2afc7fea1431c69cfc7c0844717f2875}\label{classdpct_1_1device__ext_a2afc7fea1431c69cfc7c0844717f2875} 
+sycl::\+queue {\bfseries get\+\_\+saved\+\_\+queue} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1device__ext_aaadb6249683ffd099acb7c46146ea5b2}\label{classdpct_1_1device__ext_aaadb6249683ffd099acb7c46146ea5b2} 
+typedef std::\+mutex {\bfseries mutex\+\_\+type}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1device__ext_ae928b93fed0e9280f41b734d10aff697}\label{classdpct_1_1device__ext_ae928b93fed0e9280f41b734d10aff697} 
+void {\bfseries clear\+\_\+queues} ()
+\item 
+\Hypertarget{classdpct_1_1device__ext_a7a0e9cc5177849e203b1ca8b87424d3a}\label{classdpct_1_1device__ext_a7a0e9cc5177849e203b1ca8b87424d3a} 
+void {\bfseries init\+\_\+queues} ()
+\item 
+{\footnotesize template$<$class... Properties$>$ }\\sycl::\+queue \doxymbox{\hyperlink{classdpct_1_1device__ext_ae040c8b00be1418d3935bc3c27268965}{create\+\_\+queue\+\_\+impl}} (bool enable\+\_\+exception\+\_\+handler, Properties... properties)
+\item 
+\Hypertarget{classdpct_1_1device__ext_a9ee575247ffb79df3ae276bb2f2f2921}\label{classdpct_1_1device__ext_a9ee575247ffb79df3ae276bb2f2f2921} 
+{\footnotesize template$<$class... Properties$>$ }\\sycl::\+queue {\bfseries create\+\_\+queue\+\_\+impl} (sycl::\+device device, bool enable\+\_\+exception\+\_\+handler, Properties... properties)
+\item 
+\Hypertarget{classdpct_1_1device__ext_ac32b4961710ce7f4e9aa0469e5122e42}\label{classdpct_1_1device__ext_ac32b4961710ce7f4e9aa0469e5122e42} 
+void {\bfseries get\+\_\+version} (int \&major, int \&minor) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdpct_1_1device__ext_acacb53b96792105395affb6abb583bcc}\label{classdpct_1_1device__ext_acacb53b96792105395affb6abb583bcc} 
+sycl::\+queue {\bfseries \+\_\+q\+\_\+in\+\_\+order}
+\item 
+\Hypertarget{classdpct_1_1device__ext_a732635003f64413faf1cf5f5915f5f96}\label{classdpct_1_1device__ext_a732635003f64413faf1cf5f5915f5f96} 
+sycl::\+queue {\bfseries \+\_\+q\+\_\+out\+\_\+of\+\_\+order}
+\item 
+\Hypertarget{classdpct_1_1device__ext_a017fa2944bb58e703304484e991ae598}\label{classdpct_1_1device__ext_a017fa2944bb58e703304484e991ae598} 
+sycl::\+queue {\bfseries \+\_\+saved\+\_\+queue}
+\item 
+\Hypertarget{classdpct_1_1device__ext_a765fbbff2b660145fc83ac47cd061d8b}\label{classdpct_1_1device__ext_a765fbbff2b660145fc83ac47cd061d8b} 
+std::\+vector$<$ sycl::\+queue $>$ {\bfseries \+\_\+queues}
+\item 
+\Hypertarget{classdpct_1_1device__ext_a21f71c59278b8d0ee2e4ae9e4e734cbc}\label{classdpct_1_1device__ext_a21f71c59278b8d0ee2e4ae9e4e734cbc} 
+mutex\+\_\+type {\bfseries m\+\_\+mutex}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+dpct device extension 
+
+\label{doc-func-members}
+\Hypertarget{classdpct_1_1device__ext_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classdpct_1_1device__ext_ae040c8b00be1418d3935bc3c27268965}\index{dpct::device\_ext@{dpct::device\_ext}!create\_queue\_impl@{create\_queue\_impl}}
+\index{create\_queue\_impl@{create\_queue\_impl}!dpct::device\_ext@{dpct::device\_ext}}
+\doxysubsubsection{\texorpdfstring{create\_queue\_impl()}{create\_queue\_impl()}}
+{\footnotesize\ttfamily \label{classdpct_1_1device__ext_ae040c8b00be1418d3935bc3c27268965} 
+template$<$class... Properties$>$ \\
+sycl::\+queue dpct::\+device\+\_\+ext::\+create\+\_\+queue\+\_\+impl (\begin{DoxyParamCaption}\item[{bool}]{enable\+\_\+exception\+\_\+handler}{, }\item[{Properties...}]{properties}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Caller should acquire resource {\ttfamily m\+\_\+mutex} before calling this function. \Hypertarget{classdpct_1_1device__ext_a3089cbf53ca62e7e59496e9ae42bdac9}\index{dpct::device\_ext@{dpct::device\_ext}!get\_memory\_info@{get\_memory\_info}}
+\index{get\_memory\_info@{get\_memory\_info}!dpct::device\_ext@{dpct::device\_ext}}
+\doxysubsubsection{\texorpdfstring{get\_memory\_info()}{get\_memory\_info()}}
+{\footnotesize\ttfamily \label{classdpct_1_1device__ext_a3089cbf53ca62e7e59496e9ae42bdac9} 
+void dpct::\+device\+\_\+ext::\+get\+\_\+memory\+\_\+info (\begin{DoxyParamCaption}\item[{size\+\_\+t \&}]{free\+\_\+memory}{, }\item[{size\+\_\+t \&}]{total\+\_\+memory}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Get the number of bytes of free and total memory on the SYCL device. 
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em free\+\_\+memory} & \doxylink{requirements_The}{The} number of bytes of free memory on the SYCL device.\\
+\hline
+\doxymbox{\texttt{out}}  & {\em total\+\_\+memory} & \doxylink{requirements_The}{The} number of bytes of total memory on the SYCL device. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/sycl/\+dpct/\+helper.\+hpp\end{DoxyCompactItemize}

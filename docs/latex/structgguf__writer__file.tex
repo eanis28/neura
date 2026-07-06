@@ -1,0 +1,113 @@
+\doxysection{gguf\+\_\+writer\+\_\+file Struct Reference}
+\hypertarget{structgguf__writer__file}{}\label{structgguf__writer__file}\index{gguf\_writer\_file@{gguf\_writer\_file}}
+Inheritance diagram for gguf\+\_\+writer\+\_\+file:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{structgguf__writer__file}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgguf__writer__file_a5dda2c8c3abd5cdf2f71fb06699cd0f9}\label{structgguf__writer__file_a5dda2c8c3abd5cdf2f71fb06699cd0f9} 
+{\bfseries gguf\+\_\+writer\+\_\+file} (FILE \texorpdfstring{$\ast$}{*}file)
+\item 
+void \doxymbox{\hyperlink{structgguf__writer__file_a358d025dc5ecdbc5819dbe331fce18d8}{write}} (const int8\+\_\+t val) override
+\item 
+void \doxymbox{\hyperlink{structgguf__writer__file_a4f4d59bfc42aaac3cf976e2917a82abb}{write}} (const std::\+vector$<$ int8\+\_\+t $>$ \&val) override
+\item 
+void \doxymbox{\hyperlink{structgguf__writer__file_ac57ffb01482ee9be07e05ceb95446266}{write\+\_\+tensor\+\_\+data}} (const struct \doxymbox{\hyperlink{structgguf__tensor__info}{gguf\+\_\+tensor\+\_\+info}} \&info, const size\+\_\+t offset\+\_\+data, const size\+\_\+t alignment) override
+\item 
+\Hypertarget{structgguf__writer__file_a7c99e876a2c234db44379738eeddfff9}\label{structgguf__writer__file_a7c99e876a2c234db44379738eeddfff9} 
+{\footnotesize template$<$typename T$>$ }\\void {\bfseries write} (const T \&val)
+\item 
+\Hypertarget{structgguf__writer__file_a78f834d3b3967357dae7c0e4a18f4d26}\label{structgguf__writer__file_a78f834d3b3967357dae7c0e4a18f4d26} 
+void {\bfseries write} (const bool \&val)
+\item 
+\Hypertarget{structgguf__writer__file_af32742a4a4ddfd6c7c50208b27c7d501}\label{structgguf__writer__file_af32742a4a4ddfd6c7c50208b27c7d501} 
+void {\bfseries write} (const std::\+string \&val)
+\item 
+\Hypertarget{structgguf__writer__file_a151cdbd10e303ffcc6c4ddab9df85dd7}\label{structgguf__writer__file_a151cdbd10e303ffcc6c4ddab9df85dd7} 
+void {\bfseries write} (const char \texorpdfstring{$\ast$}{*}val)
+\item 
+\Hypertarget{structgguf__writer__file_a2a9b80447cd8d80ac4034172a09aed07}\label{structgguf__writer__file_a2a9b80447cd8d80ac4034172a09aed07} 
+void {\bfseries write} (const enum ggml\+\_\+type \&val)
+\item 
+\Hypertarget{structgguf__writer__file_a1368827bef3647bc54ef45955642a3c8}\label{structgguf__writer__file_a1368827bef3647bc54ef45955642a3c8} 
+void {\bfseries write} (const enum gguf\+\_\+type \&val)
+\item 
+\Hypertarget{structgguf__writer__file_af640d540473d89d9274a39c5b19e6913}\label{structgguf__writer__file_af640d540473d89d9274a39c5b19e6913} 
+void {\bfseries write} (const struct \doxymbox{\hyperlink{structgguf__kv}{gguf\+\_\+kv}} \&kv)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{structgguf__writer__base}{gguf\+\_\+writer\+\_\+base}}}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\void {\bfseries write} (const T \&val)
+\item 
+void {\bfseries write} (const bool \&val)
+\item 
+void {\bfseries write} (const std::\+string \&val)
+\item 
+void {\bfseries write} (const char \texorpdfstring{$\ast$}{*}val)
+\item 
+void {\bfseries write} (const enum ggml\+\_\+type \&val)
+\item 
+void {\bfseries write} (const enum gguf\+\_\+type \&val)
+\item 
+void {\bfseries write} (const struct \doxymbox{\hyperlink{structgguf__kv}{gguf\+\_\+kv}} \&kv)
+\item 
+void {\bfseries write\+\_\+tensor\+\_\+meta} (const struct \doxymbox{\hyperlink{structgguf__tensor__info}{gguf\+\_\+tensor\+\_\+info}} \&info)
+\item 
+void {\bfseries pad} (const size\+\_\+t alignment)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structgguf__writer__file_a0c00631ece883db68ac084557df33265}\label{structgguf__writer__file_a0c00631ece883db68ac084557df33265} 
+FILE \texorpdfstring{$\ast$}{*} {\bfseries file}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \doxymbox{\hyperlink{structgguf__writer__base}{gguf\+\_\+writer\+\_\+base}}}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t {\bfseries written\+\_\+bytes} \{0u\}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{structgguf__writer__file_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structgguf__writer__file_a358d025dc5ecdbc5819dbe331fce18d8}\index{gguf\_writer\_file@{gguf\_writer\_file}!write@{write}}
+\index{write@{write}!gguf\_writer\_file@{gguf\_writer\_file}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{structgguf__writer__file_a358d025dc5ecdbc5819dbe331fce18d8} 
+void gguf\+\_\+writer\+\_\+file::\+write (\begin{DoxyParamCaption}\item[{const int8\+\_\+t}]{val}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structgguf__writer__base}{gguf\+\_\+writer\+\_\+base}}.
+
+\Hypertarget{structgguf__writer__file_a4f4d59bfc42aaac3cf976e2917a82abb}\index{gguf\_writer\_file@{gguf\_writer\_file}!write@{write}}
+\index{write@{write}!gguf\_writer\_file@{gguf\_writer\_file}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{structgguf__writer__file_a4f4d59bfc42aaac3cf976e2917a82abb} 
+void gguf\+\_\+writer\+\_\+file::\+write (\begin{DoxyParamCaption}\item[{const std::\+vector$<$ int8\+\_\+t $>$ \&}]{val}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structgguf__writer__base}{gguf\+\_\+writer\+\_\+base}}.
+
+\Hypertarget{structgguf__writer__file_ac57ffb01482ee9be07e05ceb95446266}\index{gguf\_writer\_file@{gguf\_writer\_file}!write\_tensor\_data@{write\_tensor\_data}}
+\index{write\_tensor\_data@{write\_tensor\_data}!gguf\_writer\_file@{gguf\_writer\_file}}
+\doxysubsubsection{\texorpdfstring{write\_tensor\_data()}{write\_tensor\_data()}}
+{\footnotesize\ttfamily \label{structgguf__writer__file_ac57ffb01482ee9be07e05ceb95446266} 
+void gguf\+\_\+writer\+\_\+file::\+write\+\_\+tensor\+\_\+data (\begin{DoxyParamCaption}\item[{const struct \doxymbox{\hyperlink{structgguf__tensor__info}{gguf\+\_\+tensor\+\_\+info}} \&}]{info}{, }\item[{const size\+\_\+t}]{offset\+\_\+data}{, }\item[{const size\+\_\+t}]{alignment}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{structgguf__writer__base}{gguf\+\_\+writer\+\_\+base}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+gguf.\+cpp\end{DoxyCompactItemize}

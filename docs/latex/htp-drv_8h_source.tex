@@ -1,0 +1,105 @@
+\doxysection{htp-\/drv.h}
+\hypertarget{htp-drv_8h_source}{}\label{htp-drv_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp-\/drv.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp-\/drv.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00004\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#\ \ \ \ pragma\ clang\ diagnostic\ ignored\ "{}-\/Wignored-\/attributes"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <AEEStdErr.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <rpcmem.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <remote.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <dspqueue.h>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#if\ defined(\_WIN32)\ \&\&\ !defined(\_\_MINGW32\_\_)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ \ \ \ ifdef\ GGML\_BACKEND\_BUILD}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ HTPDRV\_API\ \_\_declspec(dllexport)\ extern}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ HTPDRV\_API\ \_\_declspec(dllimport)\ extern}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ \ \ \ define\ HTPDRV\_API\ \_\_attribute\_\_\ ((visibility\ ("{}default"{})))\ extern}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{/*\ Offset\ to\ differentiate\ HLOS\ and\ Hexagon\ error\ codes.}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ \ \ Stores\ the\ value\ of\ AEE\_EOFFSET\ for\ Hexagon.\ */}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#ifndef\ DSP\_OFFSET}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ \ \ \ define\ DSP\_OFFSET\ 0x80000400}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{/*\ Errno\ for\ connection\ reset\ by\ peer.\ */}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ ECONNRESET}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#\ \ \ \ ifdef\ \_\_hexagon\_\_}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ ECONNRESET\ 104}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{/*\ Abstraction\ of\ different\ OS\ specific\ sleep\ APIs.}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ \ \ SLEEP\ accepts\ input\ in\ seconds.\ */}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#ifndef\ SLEEP}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#\ \ \ \ ifdef\ \_\_hexagon\_\_}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ SLEEP(x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \{\ }\textcolor{comment}{/*\ Do\ nothing\ for\ simulator.\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ ifdef\ \_WIN32}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ define\ SLEEP(x)\ Sleep(1000\ *\ x)\ }\textcolor{comment}{/*\ Sleep\ accepts\ input\ in\ milliseconds.\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ define\ SLEEP(x)\ sleep(x)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ sleep\ accepts\ input\ in\ seconds.\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{/*\ Include\ windows\ specific\ header\ files.\ */}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#\ \ \ \ include\ <windows.h>}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#\ \ \ \ include\ <sysinfoapi.h>}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ \ \ \ define\ \_CRT\_SECURE\_NO\_WARNINGS\ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#\ \ \ \ define\ \_WINSOCK\_DEPRECATED\_NO\_WARNINGS\ 1}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{/*\ Includes\ and\ defines\ for\ all\ HLOS\ except\ windows\ */}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#if\ !defined(\_\_hexagon\_\_)\ \&\&\ !defined(\_WIN32)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#\ \ \ \ include\ "{}unistd.h"{}}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#\ \ \ \ include\ <sys/time.h>}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{/*\ Includes\ and\ defines\ for\ Hexagon\ and\ all\ HLOS\ except\ Windows.\ */}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#if\ !defined(\_WIN32)}}
+\DoxyCodeLine{00072\ \textcolor{comment}{/*\ Weak\ reference\ to\ remote\ symbol\ for\ compilation.\ */}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#\ \ \ \ pragma\ weak\ remote\_session\_control}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#\ \ \ \ pragma\ weak\ remote\_handle\_control}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#\ \ \ \ pragma\ weak\ remote\_handle64\_control}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#\ \ \ \ pragma\ weak\ fastrpc\_mmap}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#\ \ \ \ pragma\ weak\ fastrpc\_munmap}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#\ \ \ \ pragma\ weak\ rpcmem\_alloc2}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#if\ !defined(\_WIN32)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#\ \ \ \ pragma\ weak\ remote\_system\_request}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ DSPQUEUE\_TIMEOUT\ DSPQUEUE\_TIMEOUT\_NONE}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ DSPQUEUE\_TIMEOUT\ 1000000}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00096\ HTPDRV\_API\ \textcolor{keywordtype}{int}\ htpdrv\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00106\ HTPDRV\_API\ domain\ *\ get\_domain(\textcolor{keywordtype}{int}\ domain\_id);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00117\ HTPDRV\_API\ \textcolor{keywordtype}{int}\ get\_hex\_arch\_ver(\textcolor{keywordtype}{int}\ domain,\ \textcolor{keywordtype}{int}\ *\ arch);}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00120\ \}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

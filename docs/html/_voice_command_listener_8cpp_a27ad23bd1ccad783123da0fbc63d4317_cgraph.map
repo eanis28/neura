@@ -1,0 +1,5 @@
+<map id="extractWeatherLocation" name="extractWeatherLocation">
+<area shape="rect" id="Node000001" title="Extracts a location from a spoken weather query." alt="" coords="5,5,164,31"/>
+<area shape="rect" id="Node000002" href="$_voice_command_listener_8cpp.html#ab5dcb5ce95b02dd9b4fd019c54847303" title="Removes leading and trailing whitespace from a string." alt="" coords="212,5,255,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,16,199,18,193,18,164,21"/>
+</map>

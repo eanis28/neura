@@ -1,0 +1,74 @@
+\doxysection{pre\+\_\+wgsl::\+Preprocessor Class Reference}
+\hypertarget{classpre__wgsl_1_1_preprocessor}{}\label{classpre__wgsl_1_1_preprocessor}\index{pre\_wgsl::Preprocessor@{pre\_wgsl::Preprocessor}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structpre__wgsl_1_1_preprocessor_1_1_cond}{Cond}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_ac27d1789a890ced6ffbaae6f31a94467}\label{classpre__wgsl_1_1_preprocessor_ac27d1789a890ced6ffbaae6f31a94467} 
+{\bfseries Preprocessor} (\doxymbox{\hyperlink{structpre__wgsl_1_1_options}{Options}} opts=\{\})
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_a23c0b8fa59268edcdf1891638ec81d37}\label{classpre__wgsl_1_1_preprocessor_a23c0b8fa59268edcdf1891638ec81d37} 
+std::\+string {\bfseries preprocess\+\_\+file} (const std::\+string \&filename, const std::\+vector$<$ std::\+string $>$ \&additional\+\_\+macros=\{\})
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_a0700449c59f29aa31348dec07898391f}\label{classpre__wgsl_1_1_preprocessor_a0700449c59f29aa31348dec07898391f} 
+std::\+string {\bfseries preprocess} (const std::\+string \&contents, const std::\+vector$<$ std::\+string $>$ \&additional\+\_\+macros=\{\})
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_ac04cc5ee4aa23883ef9c48478f905349}\label{classpre__wgsl_1_1_preprocessor_ac04cc5ee4aa23883ef9c48478f905349} 
+std::\+string {\bfseries preprocess\+\_\+includes\+\_\+file} (const std::\+string \&filename)
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_a9d502be8687925da71a4f336df2c872f}\label{classpre__wgsl_1_1_preprocessor_a9d502be8687925da71a4f336df2c872f} 
+std::\+string {\bfseries preprocess\+\_\+includes} (const std::\+string \&contents)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_a774902e337d92454432e4c13cc49ac4c}\label{classpre__wgsl_1_1_preprocessor_a774902e337d92454432e4c13cc49ac4c} 
+enum class {\bfseries Directive\+Mode} \{ {\bfseries All}
+, {\bfseries Includes\+Only}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_ad94f4eb57dc4baabfc4d80d37d8fb13f}\label{classpre__wgsl_1_1_preprocessor_ad94f4eb57dc4baabfc4d80d37d8fb13f} 
+void {\bfseries parse\+Macro\+Definitions} (const std::\+vector$<$ std::\+string $>$ \&macro\+\_\+defs)
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_aba9104aaaa25aca9f17dcd9555fb0003}\label{classpre__wgsl_1_1_preprocessor_aba9104aaaa25aca9f17dcd9555fb0003} 
+void {\bfseries build\+Macros} (const std::\+vector$<$ std::\+string $>$ \&additional\+\_\+macros, std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ \&macros, std::\+unordered\+\_\+set$<$ std::\+string $>$ \&predefined)
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_a6e91a443964bfa0484387e91a5068ac4}\label{classpre__wgsl_1_1_preprocessor_a6e91a443964bfa0484387e91a5068ac4} 
+std::\+string {\bfseries load\+File} (const std::\+string \&fname)
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_a7c1d5218a205f2ae96fde782f146369d}\label{classpre__wgsl_1_1_preprocessor_a7c1d5218a205f2ae96fde782f146369d} 
+bool {\bfseries cond\+Active} (const std::\+vector$<$ \doxymbox{\hyperlink{structpre__wgsl_1_1_preprocessor_1_1_cond}{Cond}} $>$ \&cond) const
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_a48921f59c436604efa7ce6f171f6131b}\label{classpre__wgsl_1_1_preprocessor_a48921f59c436604efa7ce6f171f6131b} 
+std::\+string {\bfseries process\+File} (const std::\+string \&name, std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ \&macros, const std::\+unordered\+\_\+set$<$ std::\+string $>$ \&predefined\+\_\+macros, std::\+unordered\+\_\+set$<$ std::\+string $>$ \&include\+\_\+stack, Directive\+Mode mode)
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_acdd8b20a104dae9751795c9152d3dcd0}\label{classpre__wgsl_1_1_preprocessor_acdd8b20a104dae9751795c9152d3dcd0} 
+std::\+string {\bfseries process\+Include\+File} (const std::\+string \&fname, std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ \&macros, const std::\+unordered\+\_\+set$<$ std::\+string $>$ \&predefined\+\_\+macros, std::\+unordered\+\_\+set$<$ std::\+string $>$ \&include\+\_\+stack, Directive\+Mode mode)
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_a84df3ee576a1aa8da7e8bba639a42fc0}\label{classpre__wgsl_1_1_preprocessor_a84df3ee576a1aa8da7e8bba639a42fc0} 
+std::\+string {\bfseries process\+String} (const std::\+string \&shader\+\_\+code, std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ \&macros, const std::\+unordered\+\_\+set$<$ std::\+string $>$ \&predefined\+\_\+macros, std::\+unordered\+\_\+set$<$ std::\+string $>$ \&include\+\_\+stack, Directive\+Mode mode)
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_a7a054012dc8d64a9d566fabbbe93e94e}\label{classpre__wgsl_1_1_preprocessor_a7a054012dc8d64a9d566fabbbe93e94e} 
+bool {\bfseries handle\+Directive} (const std::\+string \&t, std::\+stringstream \&out, std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ \&macros, const std::\+unordered\+\_\+set$<$ std::\+string $>$ \&predefined\+\_\+macros, std::\+vector$<$ \doxymbox{\hyperlink{structpre__wgsl_1_1_preprocessor_1_1_cond}{Cond}} $>$ \&cond, std::\+unordered\+\_\+set$<$ std::\+string $>$ \&include\+\_\+stack, Directive\+Mode mode)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_abcecf95bd3ad36e7597d4071056dfabf}\label{classpre__wgsl_1_1_preprocessor_abcecf95bd3ad36e7597d4071056dfabf} 
+\doxymbox{\hyperlink{structpre__wgsl_1_1_options}{Options}} {\bfseries opts\+\_\+}
+\item 
+\Hypertarget{classpre__wgsl_1_1_preprocessor_aeb2f22c11a2456a2aacf736e0e38f1e9}\label{classpre__wgsl_1_1_preprocessor_aeb2f22c11a2456a2aacf736e0e38f1e9} 
+std::\+unordered\+\_\+map$<$ std::\+string, std::\+string $>$ {\bfseries global\+\_\+macros}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+whisper.\+cpp/\+ggml/\+src/\+ggml-\/webgpu/\+pre\+\_\+wgsl.\+hpp\end{DoxyCompactItemize}

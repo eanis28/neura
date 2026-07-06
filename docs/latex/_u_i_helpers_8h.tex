@@ -1,0 +1,275 @@
+\doxysection{UIHelpers.\+h File Reference}
+\hypertarget{_u_i_helpers_8h}{}\label{_u_i_helpers_8h}\index{UIHelpers.h@{UIHelpers.h}}
+
+
+Helper functions for UI rendering and layout calculations.  
+
+
+{\ttfamily \+\#include $<$SFML/\+\+Graphics.\+hpp$>$}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+sf::\+\+Vector2f \doxymbox{\hyperlink{_u_i_helpers_8h_ad764333ef4deff1074b9c73429364608}{centered\+Origin}} (const sf::\+\+Text \&t)
+\begin{DoxyCompactList}\small\item\em Calculates the origin required to center an SFML Text object. \end{DoxyCompactList}\item 
+sf::\+\+Convex\+Shape \doxymbox{\hyperlink{_u_i_helpers_8h_a3d6a4bf0af6b64802c891c7743e3c96b}{make\+Pill}} (float cx, float cy, float w, float h)
+\begin{DoxyCompactList}\small\item\em Creates a pill-\/shaped (capsule) convex shape. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{_u_i_helpers_8h_ae2da3c47d75dba716599b9f63eb664c0}{pill\+Hit}} (float cx, float cy, float w, float h, sf::\+\+Vector2f p)
+\begin{DoxyCompactList}\small\item\em Checks if a point lies within a pill\textquotesingle{}s bounding box. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{_u_i_helpers_8h_a3fd68d865f79c0ce33d956099ed125ce}{draw\+Pill}} (sf::\+\+Render\+Window \&win, float cx, float cy, float w, float h, sf::\+\+Color fill, float outline\+Thick=0.f, sf::\+\+Color outline\+Col=sf::\+\+Color::\+\+White)
+\begin{DoxyCompactList}\small\item\em Draws a pill-\/shaped UI element. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{_u_i_helpers_8h_ae5ebc172fed77a91f7bb72516b3d5333}{draw\+Pill\+Label}} (sf::\+\+Render\+Window \&win, const sf::\+\+Font \&font, float cx, float cy, float h, const std::\+string \&txt, sf::\+\+Color col, float letter\+Spacing=1.f)
+\begin{DoxyCompactList}\small\item\em Draws centered text inside a pill shape. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{_u_i_helpers_8h_aa77c42c5de55bf531a3047519dba503b}{draw\+Text\+Left}} (sf::\+\+Render\+Window \&win, const sf::\+\+Font \&font, const std::\+string \&txt, unsigned size, float x, float y, sf::\+\+Color col, sf::\+\+Text::\+\+Style style=sf::\+\+Text::\+\+Regular, float letter\+Spacing=1.f)
+\begin{DoxyCompactList}\small\item\em Draws left-\/aligned text at a given position. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{_u_i_helpers_8h_af3b7f20e2eb9ad02ee22a4ea3c28850b}{draw\+Text\+Center}} (sf::\+\+Render\+Window \&win, const sf::\+\+Font \&font, const std::\+string \&txt, unsigned size, float cx, float y, sf::\+\+Color col, sf::\+\+Text::\+\+Style style=sf::\+\+Text::\+\+Regular, float letter\+Spacing=1.f)
+\begin{DoxyCompactList}\small\item\em Draws center-\/aligned text at a given position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Helper functions for UI rendering and layout calculations. 
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{_u_i_helpers_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_u_i_helpers_8h_ad764333ef4deff1074b9c73429364608}\index{UIHelpers.h@{UIHelpers.h}!centeredOrigin@{centeredOrigin}}
+\index{centeredOrigin@{centeredOrigin}!UIHelpers.h@{UIHelpers.h}}
+\doxysubsubsection{\texorpdfstring{centeredOrigin()}{centeredOrigin()}}
+{\footnotesize\ttfamily \label{_u_i_helpers_8h_ad764333ef4deff1074b9c73429364608} 
+sf::\+\+Vector2f centered\+Origin (\begin{DoxyParamCaption}\item[{const sf::\+\+Text \&}]{t}{}\end{DoxyParamCaption})}
+
+
+
+Calculates the origin required to center an SFML Text object. 
+
+This function computes the center point of the text\textquotesingle{}s bounding box, allowing it to be positioned using its visual center instead of the default top-\/left origin.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & \doxylink{requirements_The}{The} SFML Text object to center. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+sf::\+\+Vector2f \doxylink{requirements_The}{The} origin coordinates for centering the text.
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+\Hypertarget{_u_i_helpers_8h_a3fd68d865f79c0ce33d956099ed125ce}\index{UIHelpers.h@{UIHelpers.h}!drawPill@{drawPill}}
+\index{drawPill@{drawPill}!UIHelpers.h@{UIHelpers.h}}
+\doxysubsubsection{\texorpdfstring{drawPill()}{drawPill()}}
+{\footnotesize\ttfamily \label{_u_i_helpers_8h_a3fd68d865f79c0ce33d956099ed125ce} 
+void draw\+Pill (\begin{DoxyParamCaption}\item[{sf::\+\+Render\+Window \&}]{win}{, }\item[{float}]{cx}{, }\item[{float}]{cy}{, }\item[{float}]{w}{, }\item[{float}]{h}{, }\item[{sf::\+\+Color}]{fill}{, }\item[{float}]{outline\+Thick}{ = {\ttfamily 0.f}, }\item[{sf::\+\+Color}]{outline\+Col}{ = {\ttfamily sf:\+:\+Color:\+:\+White}}\end{DoxyParamCaption})}
+
+
+
+Draws a pill-\/shaped UI element. 
+
+Renders a capsule shape with optional outline styling.
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & \doxylink{requirements_The}{The} render window to draw to. \\
+\hline
+{\em cx} & X-\/coordinate of the center. \\
+\hline
+{\em cy} & Y-\/coordinate of the center. \\
+\hline
+{\em w} & Width of the pill. \\
+\hline
+{\em h} & Height of the pill. \\
+\hline
+{\em fill} & Fill color of the pill. \\
+\hline
+{\em outline\+Thick} & Thickness of the outline (default 0 = no outline). \\
+\hline
+{\em outline\+Col} & Color of the outline. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+\Hypertarget{_u_i_helpers_8h_ae5ebc172fed77a91f7bb72516b3d5333}\index{UIHelpers.h@{UIHelpers.h}!drawPillLabel@{drawPillLabel}}
+\index{drawPillLabel@{drawPillLabel}!UIHelpers.h@{UIHelpers.h}}
+\doxysubsubsection{\texorpdfstring{drawPillLabel()}{drawPillLabel()}}
+{\footnotesize\ttfamily \label{_u_i_helpers_8h_ae5ebc172fed77a91f7bb72516b3d5333} 
+void draw\+Pill\+Label (\begin{DoxyParamCaption}\item[{sf::\+\+Render\+Window \&}]{win}{, }\item[{const sf::\+\+Font \&}]{font}{, }\item[{float}]{cx}{, }\item[{float}]{cy}{, }\item[{float}]{h}{, }\item[{const std::\+string \&}]{txt}{, }\item[{sf::\+\+Color}]{col}{, }\item[{float}]{letter\+Spacing}{ = {\ttfamily 1.f}}\end{DoxyParamCaption})}
+
+
+
+Draws centered text inside a pill shape. 
+
+Automatically sizes and positions text relative to the pill height, ensuring consistent UI appearance.
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & \doxylink{requirements_The}{The} render window to draw to. \\
+\hline
+{\em font} & Font used for rendering text. \\
+\hline
+{\em cx} & X-\/coordinate of the center. \\
+\hline
+{\em cy} & Y-\/coordinate of the center. \\
+\hline
+{\em h} & Height of the pill (used for text scaling). \\
+\hline
+{\em txt} & \doxylink{requirements_The}{The} text string to display. \\
+\hline
+{\em col} & Text color. \\
+\hline
+{\em letter\+Spacing} & Spacing between characters. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+\Hypertarget{_u_i_helpers_8h_af3b7f20e2eb9ad02ee22a4ea3c28850b}\index{UIHelpers.h@{UIHelpers.h}!drawTextCenter@{drawTextCenter}}
+\index{drawTextCenter@{drawTextCenter}!UIHelpers.h@{UIHelpers.h}}
+\doxysubsubsection{\texorpdfstring{drawTextCenter()}{drawTextCenter()}}
+{\footnotesize\ttfamily \label{_u_i_helpers_8h_af3b7f20e2eb9ad02ee22a4ea3c28850b} 
+void draw\+Text\+Center (\begin{DoxyParamCaption}\item[{sf::\+\+Render\+Window \&}]{win}{, }\item[{const sf::\+\+Font \&}]{font}{, }\item[{const std::\+string \&}]{txt}{, }\item[{unsigned}]{size}{, }\item[{float}]{cx}{, }\item[{float}]{y}{, }\item[{sf::\+\+Color}]{col}{, }\item[{sf::\+\+Text::\+\+Style}]{style}{ = {\ttfamily sf:\+:\+Text:\+:\+Regular}, }\item[{float}]{letter\+Spacing}{ = {\ttfamily 1.f}}\end{DoxyParamCaption})}
+
+
+
+Draws center-\/aligned text at a given position. 
+
+\doxylink{requirements_The}{The} text is horizontally centered at the specified X coordinate, and vertically centered on the Y coordinate.
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & \doxylink{requirements_The}{The} render window to draw to. \\
+\hline
+{\em font} & Font used for rendering text. \\
+\hline
+{\em txt} & \doxylink{requirements_The}{The} text string to display. \\
+\hline
+{\em size} & Character size. \\
+\hline
+{\em cx} & X-\/coordinate (center-\/aligned). \\
+\hline
+{\em y} & Y-\/coordinate (vertical center). \\
+\hline
+{\em col} & Text color. \\
+\hline
+{\em style} & Text style (e.\+g., bold, italic). \\
+\hline
+{\em letter\+Spacing} & Spacing between characters. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+\Hypertarget{_u_i_helpers_8h_aa77c42c5de55bf531a3047519dba503b}\index{UIHelpers.h@{UIHelpers.h}!drawTextLeft@{drawTextLeft}}
+\index{drawTextLeft@{drawTextLeft}!UIHelpers.h@{UIHelpers.h}}
+\doxysubsubsection{\texorpdfstring{drawTextLeft()}{drawTextLeft()}}
+{\footnotesize\ttfamily \label{_u_i_helpers_8h_aa77c42c5de55bf531a3047519dba503b} 
+void draw\+Text\+Left (\begin{DoxyParamCaption}\item[{sf::\+\+Render\+Window \&}]{win}{, }\item[{const sf::\+\+Font \&}]{font}{, }\item[{const std::\+string \&}]{txt}{, }\item[{unsigned}]{size}{, }\item[{float}]{x}{, }\item[{float}]{y}{, }\item[{sf::\+\+Color}]{col}{, }\item[{sf::\+\+Text::\+\+Style}]{style}{ = {\ttfamily sf:\+:\+Text:\+:\+Regular}, }\item[{float}]{letter\+Spacing}{ = {\ttfamily 1.f}}\end{DoxyParamCaption})}
+
+
+
+Draws left-\/aligned text at a given position. 
+
+\doxylink{requirements_The}{The} text is aligned to the left at the specified X coordinate, and vertically centered on the Y coordinate.
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & \doxylink{requirements_The}{The} render window to draw to. \\
+\hline
+{\em font} & Font used for rendering text. \\
+\hline
+{\em txt} & \doxylink{requirements_The}{The} text string to display. \\
+\hline
+{\em size} & Character size. \\
+\hline
+{\em x} & X-\/coordinate (left-\/aligned). \\
+\hline
+{\em y} & Y-\/coordinate (vertical center). \\
+\hline
+{\em col} & Text color. \\
+\hline
+{\em style} & Text style (e.\+g., bold, italic). \\
+\hline
+{\em letter\+Spacing} & Spacing between characters. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+\Hypertarget{_u_i_helpers_8h_a3d6a4bf0af6b64802c891c7743e3c96b}\index{UIHelpers.h@{UIHelpers.h}!makePill@{makePill}}
+\index{makePill@{makePill}!UIHelpers.h@{UIHelpers.h}}
+\doxysubsubsection{\texorpdfstring{makePill()}{makePill()}}
+{\footnotesize\ttfamily \label{_u_i_helpers_8h_a3d6a4bf0af6b64802c891c7743e3c96b} 
+sf::\+\+Convex\+Shape make\+Pill (\begin{DoxyParamCaption}\item[{float}]{cx}{, }\item[{float}]{cy}{, }\item[{float}]{w}{, }\item[{float}]{h}{}\end{DoxyParamCaption})}
+
+
+
+Creates a pill-\/shaped (capsule) convex shape. 
+
+Generates a smooth capsule shape using two semicircles connected by straight edges. \doxylink{requirements_The}{The} shape is centered at the specified coordinates.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cx} & X-\/coordinate of the center. \\
+\hline
+{\em cy} & Y-\/coordinate of the center. \\
+\hline
+{\em w} & Width of the pill. \\
+\hline
+{\em h} & Height of the pill. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+sf::\+\+Convex\+Shape A convex shape representing the pill.
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+\Hypertarget{_u_i_helpers_8h_ae2da3c47d75dba716599b9f63eb664c0}\index{UIHelpers.h@{UIHelpers.h}!pillHit@{pillHit}}
+\index{pillHit@{pillHit}!UIHelpers.h@{UIHelpers.h}}
+\doxysubsubsection{\texorpdfstring{pillHit()}{pillHit()}}
+{\footnotesize\ttfamily \label{_u_i_helpers_8h_ae2da3c47d75dba716599b9f63eb664c0} 
+bool pill\+Hit (\begin{DoxyParamCaption}\item[{float}]{cx}{, }\item[{float}]{cy}{, }\item[{float}]{w}{, }\item[{float}]{h}{, }\item[{sf::\+\+Vector2f}]{p}{}\end{DoxyParamCaption})}
+
+
+
+Checks if a point lies within a pill\textquotesingle{}s bounding box. 
+
+Performs a simple bounding box collision test for a pill-\/shaped UI element. Note that this does not account for curved edges, only the rectangular bounds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cx} & X-\/coordinate of the pill center. \\
+\hline
+{\em cy} & Y-\/coordinate of the pill center. \\
+\hline
+{\em w} & Width of the pill. \\
+\hline
+{\em h} & Height of the pill. \\
+\hline
+{\em p} & \doxylink{requirements_The}{The} point to test. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if the point is inside the bounding box, false otherwise.
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}

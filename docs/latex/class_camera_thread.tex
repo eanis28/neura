@@ -1,0 +1,130 @@
+\doxysection{Camera\+Thread Class Reference}
+\hypertarget{class_camera_thread}{}\label{class_camera_thread}\index{CameraThread@{CameraThread}}
+
+
+Manages background thread for camera frame capture and processing.  
+
+
+
+
+{\ttfamily \+\#include $<$Camera\+Thread.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_camera_thread_ad211746a1634aca32caf4e901e23dd6f}\label{class_camera_thread_ad211746a1634aca32caf4e901e23dd6f} 
+{\bfseries Camera\+Thread} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\Hypertarget{class_camera_thread_ae61825f6372639b7ecd669dd30d32fd4}\label{class_camera_thread_ae61825f6372639b7ecd669dd30d32fd4} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Camera\+Thread} ()
+\begin{DoxyCompactList}\small\item\em Destructor -\/ automatically stops the capture thread. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_camera_thread_a648589297ded97de7b19679232e6ee04}{start}} (unsigned panelW, unsigned panelH)
+\begin{DoxyCompactList}\small\item\em Starts the camera capture thread. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_camera_thread_a472a2dba5a2f18b2d8c717aab9ec3b72}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stops the capture thread and waits for completion. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_camera_thread_ad4b7cff1425ff627dfc15542442cf6f7}{copy\+Latest}} (cv::\+\+Mat \&dst)
+\begin{DoxyCompactList}\small\item\em Retrieves the most recent processed frame. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_camera_thread_a3d8a1368c2f628c6aa457101f9f62acf}{loop}} (unsigned panelW, unsigned panelH)
+\begin{DoxyCompactList}\small\item\em Main capture loop running in background thread. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_camera_thread_a84cc31b2e67d7e2b5ff25cd906c739f9}\label{class_camera_thread_a84cc31b2e67d7e2b5ff25cd906c739f9} 
+cv::\+\+Mat {\bfseries m\+\_\+latest}
+\begin{DoxyCompactList}\small\item\em Most recent processed frame (RGBA). \end{DoxyCompactList}\item 
+\Hypertarget{class_camera_thread_a212ea49fb82284884e8a03f23becdd2d}\label{class_camera_thread_a212ea49fb82284884e8a03f23becdd2d} 
+std::\+mutex {\bfseries m\+\_\+mtx}
+\begin{DoxyCompactList}\small\item\em Protects access to m\+\_\+latest. \end{DoxyCompactList}\item 
+\Hypertarget{class_camera_thread_a5dd0eb409717eae2bdad2792de4b16cf}\label{class_camera_thread_a5dd0eb409717eae2bdad2792de4b16cf} 
+std::\+thread {\bfseries m\+\_\+thread}
+\begin{DoxyCompactList}\small\item\em Background capture thread. \end{DoxyCompactList}\item 
+\Hypertarget{class_camera_thread_a24f6aaa01dd27f289be2b925bd55c5f5}\label{class_camera_thread_a24f6aaa01dd27f289be2b925bd55c5f5} 
+std::\+atomic$<$ bool $>$ {\bfseries m\+\_\+running} \{false\}
+\begin{DoxyCompactList}\small\item\em Thread running state. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages background thread for camera frame capture and processing. 
+
+This class runs a separate thread that continuously captures frames from a camera device, performs transformations (flip, resize, color conversion), and makes the latest processed frame available for rendering. \doxylink{requirements_The}{The} processing includes fitting frames to a target panel size while maintaining aspect ratio. 
+
+\label{doc-func-members}
+\Hypertarget{class_camera_thread_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_camera_thread_ad4b7cff1425ff627dfc15542442cf6f7}\index{CameraThread@{CameraThread}!copyLatest@{copyLatest}}
+\index{copyLatest@{copyLatest}!CameraThread@{CameraThread}}
+\doxysubsubsection{\texorpdfstring{copyLatest()}{copyLatest()}}
+{\footnotesize\ttfamily \label{class_camera_thread_ad4b7cff1425ff627dfc15542442cf6f7} 
+bool Camera\+Thread::\+copy\+Latest (\begin{DoxyParamCaption}\item[{cv::\+\+Mat \&}]{dst}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves the most recent processed frame. 
+
+Thread-\/safe method to copy the latest RGBA frame captured by the background thread. \doxylink{requirements_The}{The} frame is fitted to the panel size specified in \doxylink{class_camera_thread_a648589297ded97de7b19679232e6ee04}{start()} with white borders if aspect ratios don\textquotesingle{}t match.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Destination matrix to receive the frame copy \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if a frame was successfully copied, false if no frame available yet 
+\end{DoxyReturn}
+\Hypertarget{class_camera_thread_a3d8a1368c2f628c6aa457101f9f62acf}\index{CameraThread@{CameraThread}!loop@{loop}}
+\index{loop@{loop}!CameraThread@{CameraThread}}
+\doxysubsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily \label{class_camera_thread_a3d8a1368c2f628c6aa457101f9f62acf} 
+void Camera\+Thread::\+loop (\begin{DoxyParamCaption}\item[{unsigned}]{panelW}{, }\item[{unsigned}]{panelH}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Main capture loop running in background thread. 
+
+Continuously captures frames, applies transformations (flip, resize, color conversion to RGBA), and stores the result with thread-\/safe access.
+
+
+\begin{DoxyParams}{Parameters}
+{\em panelW} & Target panel width in pixels \\
+\hline
+{\em panelH} & Target panel height in pixels \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_camera_thread_a648589297ded97de7b19679232e6ee04}\index{CameraThread@{CameraThread}!start@{start}}
+\index{start@{start}!CameraThread@{CameraThread}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily \label{class_camera_thread_a648589297ded97de7b19679232e6ee04} 
+void Camera\+Thread::\+start (\begin{DoxyParamCaption}\item[{unsigned}]{panelW}{, }\item[{unsigned}]{panelH}{}\end{DoxyParamCaption})}
+
+
+
+Starts the camera capture thread. 
+
+Initializes and starts a background thread that continuously captures and processes camera frames to fit the specified panel dimensions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em panelW} & Target panel width in pixels \\
+\hline
+{\em panelH} & Target panel height in pixels \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_camera_thread_a472a2dba5a2f18b2d8c717aab9ec3b72}\index{CameraThread@{CameraThread}!stop@{stop}}
+\index{stop@{stop}!CameraThread@{CameraThread}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily \label{class_camera_thread_a472a2dba5a2f18b2d8c717aab9ec3b72} 
+void Camera\+Thread::\+stop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops the capture thread and waits for completion. 
+
+Signals the background thread to stop and blocks until it has fully terminated. Safe to call multiple times. 
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_camera_thread_8h}{Camera\+Thread.\+h}}\item 
+\doxymbox{\hyperlink{_camera_thread_8cpp}{Camera\+Thread.\+cpp}}\end{DoxyCompactItemize}

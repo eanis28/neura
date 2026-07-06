@@ -1,0 +1,69 @@
+\doxysection{Landing.\+cpp File Reference}
+\hypertarget{_landing_8cpp}{}\label{_landing_8cpp}\index{Landing.cpp@{Landing.cpp}}
+
+
+Implementation of the Neura application landing page.  
+
+
+{\ttfamily \+\#include "{}Landing.\+h"{}}\newline
+{\ttfamily \+\#include $<$SFML/\+\+Graphics.\+hpp$>$}\newline
+{\ttfamily \+\#include $<$cmath$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include "{}Settings.\+h"{}}\newline
+{\ttfamily \+\#include "{}UIHelpers.\+h"{}}\newline
+{\ttfamily \+\#include "{}UI.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \doxymbox{\hyperlink{_landing_8cpp_a30f7c937432bd385d3c37f9e450f1995}{load\+Landing\+Font}} (sf::\+\+Font \&font)
+\begin{DoxyCompactList}\small\item\em Attempts to load a system font with platform-\/specific fallbacks. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{_landing_8cpp_a8e78e4dc209a56d251b1f702a4bd8043}{run\+Landing\+Page}} ()
+\begin{DoxyCompactList}\small\item\em Displays the application landing page with navigation options. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementation of the Neura application landing page. 
+
+\begin{DoxyAuthor}{Author}
+Kethy 
+\end{DoxyAuthor}
+
+
+\label{doc-func-members}
+\Hypertarget{_landing_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_landing_8cpp_a30f7c937432bd385d3c37f9e450f1995}\index{Landing.cpp@{Landing.cpp}!loadLandingFont@{loadLandingFont}}
+\index{loadLandingFont@{loadLandingFont}!Landing.cpp@{Landing.cpp}}
+\doxysubsubsection{\texorpdfstring{loadLandingFont()}{loadLandingFont()}}
+{\footnotesize\ttfamily \label{_landing_8cpp_a30f7c937432bd385d3c37f9e450f1995} 
+bool load\+Landing\+Font (\begin{DoxyParamCaption}\item[{sf::\+\+Font \&}]{font}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Attempts to load a system font with platform-\/specific fallbacks. 
+
+Tries multiple font paths in order of preference for each platform:\+ mac\+OS uses Avenir, Arial Unicode, or Arial; Windows uses Segoe UI, Arial, or Calibri; Linux uses Deja\+Vu Sans or Liberation Sans.
+
+
+\begin{DoxyParams}{Parameters}
+{\em font} & Font object to load the system font into \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if any font was successfully loaded, false if all attempts failed 
+\end{DoxyReturn}
+\Hypertarget{_landing_8cpp_a8e78e4dc209a56d251b1f702a4bd8043}\index{Landing.cpp@{Landing.cpp}!runLandingPage@{runLandingPage}}
+\index{runLandingPage@{runLandingPage}!Landing.cpp@{Landing.cpp}}
+\doxysubsubsection{\texorpdfstring{runLandingPage()}{runLandingPage()}}
+{\footnotesize\ttfamily \label{_landing_8cpp_a8e78e4dc209a56d251b1f702a4bd8043} 
+bool run\+Landing\+Page (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Displays the application landing page with navigation options. 
+
+Creates and runs a modal window showing the Neura landing screen with buttons for Start, Tutorial, and Settings. \doxylink{requirements_The}{The} window is centered on screen at half the desktop resolution. User can navigate to different parts of the application or close to exit.
+
+\begin{DoxyReturn}{Returns}
+true if user clicked Start or Tutorial (proceed to main app), false if user closed the window or pressed Escape (exit app) 
+\end{DoxyReturn}

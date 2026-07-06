@@ -1,0 +1,61 @@
+\doxysection{convert.\+hpp}
+\hypertarget{convert_8hpp_source}{}\label{convert_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/convert.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/convert.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2025\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_CONVERT\_HPP}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_CONVERT\_HPP}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}common.hpp"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00019\ \textcolor{keyword}{using\ }to\_t\_sycl\_t\ =\ void\ (*)(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ \_\_restrict\_\_\ x,\ T\ *\ \_\_restrict\_\_\ y,\ int64\_t\ k,\ dpct::queue\_ptr\ stream);}
+\DoxyCodeLine{00020\ \textcolor{keyword}{typedef}\ to\_t\_sycl\_t<float>\ \ \ \ \ \ to\_fp32\_sycl\_t;}
+\DoxyCodeLine{00021\ \textcolor{keyword}{typedef}\ to\_t\_sycl\_t<sycl::half>\ to\_fp16\_sycl\_t;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ to\_fp16\_sycl\_t\ ggml\_get\_to\_fp16\_sycl(ggml\_type\ type,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00024\ to\_fp32\_sycl\_t\ ggml\_get\_to\_fp32\_sycl(ggml\_type\ type,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Nc\ =\ Non-\/contiguous}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00028\ \textcolor{keyword}{using\ }to\_t\_nc\_sycl\_t\ =\ void\ (*)(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *\ x,\ T\ *\ y,\ int64\_t\ ne00,\ int64\_t\ ne01,\ int64\_t\ ne02,\ int64\_t\ ne03,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ s01,\ int64\_t\ s02,\ int64\_t\ s03,\ dpct::queue\_ptr\ queue);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{typedef}\ to\_t\_nc\_sycl\_t<sycl::half>\ to\_fp16\_nc\_sycl\_t;}
+\DoxyCodeLine{00032\ to\_fp16\_nc\_sycl\_t\ ggml\_get\_to\_fp16\_nc\_sycl(ggml\_type\ type);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ dst\_t,\ \textcolor{keyword}{typename}\ src\_t>}
+\DoxyCodeLine{00035\ \ \textcolor{keyword}{inline}\ dst\_t\ ggml\_sycl\_cast(src\_t\ x)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<dst\_t,\ src\_t>)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00038\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<dst\_t,\ sycl::ext::oneapi::bfloat16>)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sycl::ext::oneapi::bfloat16(\textcolor{keywordtype}{float}(x));}
+\DoxyCodeLine{00040\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<src\_t,\ sycl::ext::oneapi::bfloat16>)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x);}
+\DoxyCodeLine{00042\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<src\_t,\ sycl::float2>\ \&\&\ std::is\_same\_v<dst\_t,\ sycl::half2>)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x.template\ convert<sycl::half,\ sycl::rounding\_mode::rte>();}
+\DoxyCodeLine{00044\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<src\_t,\ sycl::float2>\ \&\&}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::is\_same\_v<dst\_t,\ sycl::vec<sycl::ext::oneapi::bfloat16,\ 2>>)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{x.x,\ x.y\};}
+\DoxyCodeLine{00047\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}(std::is\_same\_v<dst\_t,\ int32\_t>)\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ int32\_t(x);}
+\DoxyCodeLine{00049\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ float(x);}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GGML\_SYCL\_CONVERT\_HPP}}
+
+\end{DoxyCode}

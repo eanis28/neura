@@ -1,0 +1,1344 @@
+\doxysection{fattn-\/tile.hpp}
+\hypertarget{fattn-tile_8hpp_source}{}\label{fattn-tile_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/fattn-\/tile.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/fattn-\/tile.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ <sycl/sycl.hpp>}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <sycl/ext/oneapi/work\_group\_static.hpp>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}dpct/helper.hpp"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}common.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}fattn-\/common.hpp"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <float.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }syclex\ =\ sycl::ext::oneapi::experimental;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(DKQ\_,\ DV\_,\ ncols\_,\ nthreads,\ occupancy,\ nbatch\_fa,\ nbatch\_K)\ \(\backslash\)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\ \ \ \ if\ (DKQ\ ==\ (DKQ\_)\ \&\&\ DV\ ==\ (DV\_)\ \&\&\ ncols\ ==\ (ncols\_))\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ static\_assert((nthreads)\ \ \ \ \ \ \ \ \ \ <=\ 512,\ "{}bad\ nthreads"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ static\_assert((occupancy)\ \ \ \ \ \ \ \ \ <=\ \ \ 8,\ "{}bad\ occupancy"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ static\_assert((nbatch\_fa)\ \ \ \ \ \ \ \ \ <=\ 256,\ "{}bad\ nbatch\_fa"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ static\_assert((nbatch\_K)\ \ \ \ \ \ \ \ \ \ <=\ 256,\ "{}bad\ nbatch\_K"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ return\ ((nthreads)\ <<\ 0)\ |\ ((occupancy)\ <<\ 10)\ |\ ((nbatch\_fa)\ <<\ 14)\ |\ ((nbatch\_K)\ <<\ 23);\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ ggml\_sycl\_fattn\_tile\_get\_config\_fp16(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 2,\ \ 64,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00023\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00024\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00025\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 16,\ 256,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00026\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 32,\ 256,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 2,\ \ 64,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00029\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00030\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00031\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 16,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00032\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 32,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 2,\ \ 64,\ 2,\ \ 64,\ \ 72)}
+\DoxyCodeLine{00035\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 72)}
+\DoxyCodeLine{00036\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 72)}
+\DoxyCodeLine{00037\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 16,\ 256,\ 2,\ \ 64,\ \ 72)}
+\DoxyCodeLine{00038\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 32,\ 256,\ 2,\ \ 64,\ \ 72)}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 2,\ \ 64,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00041\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00042\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00043\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 16,\ 256,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00044\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 32,\ 256,\ 2,\ \ 64,\ \ 40)}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 2,\ \ 64,\ 2,\ \ 64,\ \ 48)}
+\DoxyCodeLine{00047\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 48)}
+\DoxyCodeLine{00048\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 48)}
+\DoxyCodeLine{00049\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 16,\ 256,\ 2,\ \ 64,\ \ 48)}
+\DoxyCodeLine{00050\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 32,\ 256,\ 2,\ \ 64,\ \ 48)}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 2,\ \ 64,\ 2,\ \ 64,\ \ 56)}
+\DoxyCodeLine{00053\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 56)}
+\DoxyCodeLine{00054\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 56)}
+\DoxyCodeLine{00055\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 16,\ 256,\ 2,\ \ 64,\ \ 56)}
+\DoxyCodeLine{00056\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 32,\ 256,\ 2,\ \ 64,\ \ 56)}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 2,\ \ 64,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00059\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00060\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00061\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 16,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00062\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 32,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 2,\ \ 64,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00065\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00066\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00067\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ 16,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00068\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ 32,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00071\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00072\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ 16,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ return\ 0;}
+\DoxyCodeLine{00075\ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ static\ constexpr\ uint32\_t\ ggml\_sycl\_fattn\_tile\_get\_config\_fp32(const\ \textcolor{keywordtype}{int}\ DKQ,\ const\ \textcolor{keywordtype}{int}\ DV,\ const\ \textcolor{keywordtype}{int}\ ncols)\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00079\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00080\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00081\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 16,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00082\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 32,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 2,\ 128,\ 3,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00085\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 4,\ 128,\ 3,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00086\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 8,\ 128,\ 3,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00087\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 16,\ 128,\ 3,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00088\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 32,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00091\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00092\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00093\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 16,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00094\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 32,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00097\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00098\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00099\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 16,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00100\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 32,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00103\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00104\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00105\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 16,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00106\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 32,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00109\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00110\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00111\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 16,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00112\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 32,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 2,\ 128,\ 3,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00115\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 4,\ 128,\ 3,\ \ 32,\ 128)}
+\DoxyCodeLine{00116\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 8,\ 128,\ 3,\ \ 64,\ 128)}
+\DoxyCodeLine{00117\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 16,\ 128,\ 3,\ \ 32,\ 128)}
+\DoxyCodeLine{00118\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 32,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 2,\ 128,\ 3,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00121\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 4,\ 128,\ 3,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00122\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 8,\ 256,\ 2,\ \ 32,\ 256)}
+\DoxyCodeLine{00123\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ 16,\ 256,\ 2,\ \ 32,\ 128)}
+\DoxyCodeLine{00124\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ 32,\ 256,\ 2,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00127\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00128\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ 16,\ 256,\ 2,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ return\ 0;}
+\DoxyCodeLine{00131\ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ static\ constexpr\ uint32\_t\ ggml\_sycl\_fattn\_tile\_get\_config\_amd(const\ \textcolor{keywordtype}{int}\ DKQ,\ const\ \textcolor{keywordtype}{int}\ DV,\ const\ \textcolor{keywordtype}{int}\ ncols)\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00135\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00136\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00137\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 16,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00138\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 32,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00139\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 64,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 2,\ \ 64,\ 3,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00142\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 4,\ 128,\ 3,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00143\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 8,\ 128,\ 2,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00144\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 16,\ 256,\ 2,\ 128,\ \ 64)}
+\DoxyCodeLine{00145\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 32,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00146\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 64,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00149\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00150\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00151\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 16,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00152\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 32,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00153\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 64,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00156\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00157\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00158\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 16,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00159\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 32,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00160\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 64,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00163\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00164\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00165\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 16,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00166\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 32,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00167\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 64,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00170\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00171\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00172\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 16,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00173\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 32,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00174\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 64,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 2,\ 256,\ 2,\ 128,\ \ 64)}
+\DoxyCodeLine{00177\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 4,\ 128,\ 2,\ \ 64,\ 128)}
+\DoxyCodeLine{00178\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 8,\ 256,\ 2,\ \ 64,\ 128)}
+\DoxyCodeLine{00179\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 16,\ 256,\ 2,\ \ 64,\ 128)}
+\DoxyCodeLine{00180\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 32,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00181\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 64,\ 256,\ 2,\ \ 64,\ \ 32)}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 2,\ 256,\ 2,\ 128,\ \ 64)}
+\DoxyCodeLine{00184\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 4,\ 256,\ 2,\ \ 64,\ 128)}
+\DoxyCodeLine{00185\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 8,\ 256,\ 2,\ \ 64,\ 128)}
+\DoxyCodeLine{00186\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ 16,\ 256,\ 2,\ \ 32,\ 128)}
+\DoxyCodeLine{00187\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ 32,\ 256,\ 2,\ \ 32,\ 128)}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00190\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00191\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ 16,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00192\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ 32,\ 512,\ 1,\ 128,\ \ 64)}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ return\ 0;}
+\DoxyCodeLine{00195\ \}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ static\ constexpr\ uint32\_t\ ggml\_sycl\_fattn\_tile\_get\_config\_amd\_rdna(const\ \textcolor{keywordtype}{int}\ DKQ,\ const\ \textcolor{keywordtype}{int}\ DV,\ const\ \textcolor{keywordtype}{int}\ ncols)\ \{}
+\DoxyCodeLine{00198\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00199\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00200\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00201\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 16,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00202\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 32,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00203\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 40,\ \ 40,\ 64,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 2,\ \ 64,\ 8,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00206\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 4,\ \ 64,\ 8,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00207\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ \ 8,\ 128,\ 5,\ 128,\ \ 64)}
+\DoxyCodeLine{00208\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 16,\ 128,\ 5,\ 128,\ \ 64)}
+\DoxyCodeLine{00209\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 32,\ 128,\ 4,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00210\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 64,\ \ 64,\ 64,\ 128,\ 5,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00213\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00214\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00215\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 16,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00216\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 32,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00217\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 72,\ \ 72,\ 64,\ 256,\ 2,\ \ 32,\ \ 72)}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00220\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00221\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00222\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 16,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00223\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 32,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00224\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 80,\ \ 80,\ 64,\ 256,\ 2,\ \ 32,\ \ 40)}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00227\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00228\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00229\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 16,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00230\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 32,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00231\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(\ 96,\ \ 96,\ 64,\ 256,\ 2,\ \ 32,\ \ 48)}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 2,\ \ 64,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00234\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 4,\ 128,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00235\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ \ 8,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00236\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 16,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00237\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 32,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00238\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(112,\ 112,\ 64,\ 256,\ 2,\ \ 32,\ \ 56)}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 2,\ \ 64,\ 8,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00241\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 4,\ 128,\ 8,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00242\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ \ 8,\ 128,\ 8,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00243\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 16,\ 256,\ 3,\ 128,\ 128)}
+\DoxyCodeLine{00244\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 32,\ 256,\ 3,\ 128,\ \ 64)}
+\DoxyCodeLine{00245\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(128,\ 128,\ 64,\ 256,\ 3,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 2,\ \ 64,\ 8,\ \ 32,\ \ 64)}
+\DoxyCodeLine{00248\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 4,\ 128,\ 6,\ \ 32,\ 256)}
+\DoxyCodeLine{00249\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ \ 8,\ 128,\ 6,\ \ 32,\ 256)}
+\DoxyCodeLine{00250\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ 16,\ 256,\ 5,\ \ 32,\ 256)}
+\DoxyCodeLine{00251\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(256,\ 256,\ 32,\ 256,\ 3,\ \ 64,\ 128)}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ \ 4,\ 128,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00254\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ \ 8,\ 256,\ 2,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00255\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ 16,\ 256,\ 4,\ \ 64,\ \ 64)}
+\DoxyCodeLine{00256\ \ \ \ \ GGML\_SYCL\_FATTN\_TILE\_CONFIG\_CASE(576,\ 512,\ 32,\ 256,\ 2,\ 128,\ \ 64)}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ return\ 0;}
+\DoxyCodeLine{00259\ \}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ static\ constexpr\ uint32\_t\ ggml\_sycl\_fattn\_tile\_get\_config(const\ \textcolor{keywordtype}{int}\ DKQ,\ const\ \textcolor{keywordtype}{int}\ DV,\ const\ \textcolor{keywordtype}{int}\ ncols,\ const\ \textcolor{keywordtype}{int}\ cc)\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keywordflow}{if}(fast\_fp16\_available(cc))}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_sycl\_fattn\_tile\_get\_config\_fp16(DKQ,\ DV,\ ncols);}
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_sycl\_fattn\_tile\_get\_config\_fp32(DKQ,\ DV,\ ncols);}
+\DoxyCodeLine{00266\ \}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ ggml\_sycl\_fattn\_tile\_get\_config(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols)\ \{}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_sycl\_fattn\_tile\_get\_config\_fp16(DKQ,\ DV,\ ncols);}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keywordflow}{return}\ ggml\_sycl\_fattn\_tile\_get\_config\_fp32(DKQ,\ DV,\ ncols);}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00274\ \}}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_fattn\_tile\_get\_nthreads(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ cc)\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{keywordflow}{return}\ (ggml\_sycl\_fattn\_tile\_get\_config(DKQ,\ DV,\ ncols,\ cc)\ >>\ 0)\ \&\ ((1\ <<\ 10)\ -\/\ 1);}
+\DoxyCodeLine{00278\ \}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_fattn\_tile\_get\_nthreads(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols)\ \{}
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keywordflow}{return}\ (ggml\_sycl\_fattn\_tile\_get\_config(DKQ,\ DV,\ ncols)\ >>\ 0)\ \&\ ((1\ <<\ 10)\ -\/\ 1);}
+\DoxyCodeLine{00282\ \}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_fattn\_tile\_get\_occupancy(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ cc)\ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keywordflow}{return}\ (ggml\_sycl\_fattn\_tile\_get\_config(DKQ,\ DV,\ ncols,\ cc)\ >>\ 10)\ \&\ ((1\ <<\ 4)\ -\/\ 1);}
+\DoxyCodeLine{00286\ \}}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_fattn\_tile\_get\_occupancy(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols)\ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{keywordflow}{return}\ (ggml\_sycl\_fattn\_tile\_get\_config(DKQ,\ DV,\ ncols)\ >>\ 10)\ \&\ ((1\ <<\ 4)\ -\/\ 1);}
+\DoxyCodeLine{00290\ \}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_fa(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ cc)\ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{keywordflow}{return}\ (ggml\_sycl\_fattn\_tile\_get\_config(DKQ,\ DV,\ ncols,\ cc)\ >>\ 14)\ \&\ ((1\ <<\ 9)\ -\/\ 1);}
+\DoxyCodeLine{00294\ \}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_fa(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols)\ \{}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keywordflow}{return}\ (ggml\_sycl\_fattn\_tile\_get\_config(DKQ,\ DV,\ ncols)\ >>\ 14)\ \&\ ((1\ <<\ 9)\ -\/\ 1);}
+\DoxyCodeLine{00298\ \}}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ cc)\ \{}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keywordflow}{return}\ (ggml\_sycl\_fattn\_tile\_get\_config(DKQ,\ DV,\ ncols,\ cc)\ >>\ 23)\ \&\ ((1\ <<\ 9)\ -\/\ 1);}
+\DoxyCodeLine{00302\ \}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_K(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ncols)\ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keywordflow}{return}\ (ggml\_sycl\_fattn\_tile\_get\_config(DKQ,\ DV,\ ncols)\ >>\ 23)\ \&\ ((1\ <<\ 9)\ -\/\ 1);}
+\DoxyCodeLine{00306\ \}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ warp\_size,\ \textcolor{keywordtype}{int}\ nwarps,\ \textcolor{keywordtype}{int}\ I,\ \textcolor{keywordtype}{int}\ J,\ \textcolor{keywordtype}{int}\ J\_padding,\ \textcolor{keywordtype}{bool}\ oob\_check>}
+\DoxyCodeLine{00309\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ flash\_attn\_tile\_load\_tile(\textcolor{keyword}{const}\ sycl::half2\ *\ \textcolor{keyword}{const}\ \_\_restrict\_\_\ KV,}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::half2\ *\ \textcolor{keyword}{const}\ \_\_restrict\_\_\ tile\_KV,}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ stride\_KV,}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i\_sup)\ \{}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_nb\ =\ ggml\_sycl\_get\_max\_cpy\_bytes();}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\ =\ cpy\_nb\ /\ 4;}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keyword}{auto}\ load\ =\ [\&]\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n)\ \{}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ item\_ct1\ =\ sycl::ext::oneapi::this\_work\_item::get\_nd\_item<3>();}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ stride\_j\ =\ warp\_size\ >>\ n;}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stride\_j\ ==\ 0)\ \{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j0\_start\ =\ stride\_j\ ==\ warp\_size\ ?\ 0\ :\ ((J/2)/cpy\_ne)\ -\/\ ((J/2)/cpy\_ne)\ \%\ (2*stride\_j);}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j0\_stop\ \ =\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((J/2)/cpy\_ne)\ -\/\ ((J/2)/cpy\_ne)\ \%\ (1*stride\_j);}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ stride\_i\ =\ warp\_size\ /\ stride\_j;}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (j0\_start\ ==\ j0\_stop)\ \{}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ I;\ i0\ +=\ nwarps*stride\_i)\ \{}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i\ =\ i0\ +\ item\_ct1.get\_local\_id(1)\ *\ stride\_i\ +}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (stride\_j\ ==\ warp\_size\ ?\ 0\ :\ item\_ct1.get\_local\_id(2)\ /\ stride\_j);}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i0\ +\ nwarps*stride\_i\ <=\ I\ ||\ i\ <\ I)\ \{}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j0\ =\ j0\_start;\ j0\ <\ j0\_stop;\ j0\ +=\ stride\_j)\ \{}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j\ =\ j0\ *\ cpy\_ne\ +\ (stride\_j\ ==\ warp\_size\ ?\ item\_ct1.get\_local\_id(2)\ :}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\_ct1.get\_local\_id(2)\ \%\ stride\_j)\ *}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpy\_ne;}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \_\_dpct\_align\_\_(16)\ sycl::half2\ zero[cpy\_ne]\ =\ \{}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ 0.0f,\ 0.0f\ \}}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_nb>(}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tile\_KV\ +\ i*(J/2\ +\ J\_padding)\ +\ j,}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !oob\_check\ ||\ i\ <\ i\_sup\ ?\ KV\ +\ i*stride\_KV\ +\ j\ :\ zero);}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00353\ \ \ \ \ \};}
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{comment}{//\ 1:\ max\ 64*16=512\ bytes,\ 512\ half}}
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{comment}{//\ 2:\ max\ 32*16=512\ bytes,\ 256\ half}}
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{comment}{//\ 3:\ max\ 16*16=256\ bytes,\ 128\ half}}
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{comment}{//\ 4:\ max\ \ 8*16=128\ bytes,\ \ 64\ half}}
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{comment}{//\ 5:\ max\ \ 4*16=\ 64\ bytes,\ \ 32\ half}}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{comment}{//\ 6:\ max\ \ 2*16=\ 32\ bytes,\ \ 16\ half}}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{comment}{//\ 7:\ max\ \ 1*16=\ 16\ bytes,\ \ \ 8\ half}}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keyword}{static\_assert}(J\ \%\ 8\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ J"{}});}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keyword}{static\_assert}((J/2)\ \%\ cpy\_ne\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ J"{}});}
+\DoxyCodeLine{00363\ \ \ \ \ \doxymbox{\hyperlink{structggml__sycl__unroll}{ggml\_sycl\_unroll<7>}}\{\}(load);}
+\DoxyCodeLine{00364\ \}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ warp\_size,\ \textcolor{keywordtype}{int}\ nwarps,\ \textcolor{keywordtype}{int}\ I,\ \textcolor{keywordtype}{int}\ J,\ \textcolor{keywordtype}{int}\ J\_padding,\ \textcolor{keywordtype}{bool}\ oob\_check>}
+\DoxyCodeLine{00367\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ flash\_attn\_tile\_load\_tile(\textcolor{keyword}{const}\ sycl::half2\ *\ \textcolor{keyword}{const}\ \_\_restrict\_\_\ KV,}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ \textcolor{keyword}{const}\ \_\_restrict\_\_\ tile\_KV,}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ stride\_KV,}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i\_sup)\ \{}
+\DoxyCodeLine{00371\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_nb\ =\ ggml\_sycl\_get\_max\_cpy\_bytes();}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\ =\ cpy\_nb\ /\ 4;}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keyword}{auto}\ load\ =\ [\&]\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n)\ \{}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ item\_ct1\ =\ sycl::ext::oneapi::this\_work\_item::get\_nd\_item<3>();}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ stride\_j\ =\ warp\_size\ >>\ n;}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stride\_j\ ==\ 0)\ \{}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j0\_start\ =\ stride\_j\ ==\ warp\_size\ ?\ 0\ :\ (J/cpy\_ne)\ -\/\ (J/cpy\_ne)\ \%\ (2*stride\_j);}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j0\_stop\ \ =\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (J/cpy\_ne)\ -\/\ (J/cpy\_ne)\ \%\ (1*stride\_j);}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ stride\_i\ =\ warp\_size\ /\ stride\_j;}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (j0\_start\ ==\ j0\_stop)\ \{}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ I;\ i0\ +=\ nwarps*stride\_i)\ \{}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i\ =\ i0\ +\ item\_ct1.get\_local\_id(1)\ *\ stride\_i\ +}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (stride\_j\ ==\ warp\_size\ ?\ 0\ :\ item\_ct1.get\_local\_id(2)\ /\ stride\_j);}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i0\ +\ nwarps*stride\_i\ <=\ I\ ||\ i\ <\ I)\ \{}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j0\ =\ j0\_start;\ j0\ <\ j0\_stop;\ j0\ +=\ stride\_j)\ \{}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j\ =\ j0\ *\ (cpy\_ne\ /\ 2)\ +\ (stride\_j\ ==\ warp\_size\ ?\ item\_ct1.get\_local\_id(2)\ :}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\_ct1.get\_local\_id(2)\ \%\ stride\_j)\ *}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (cpy\_ne\ /\ 2);}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ zero[cpy\_ne\ /\ 2]\ =\ \{}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ 0.0f,\ 0.0f\ \}}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half2\ tmp\_h2[cpy\_ne\ /\ 2];}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<sizeof(tmp\_h2)>(}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_h2,\ !oob\_check\ ||\ i\ <\ i\_sup\ ?\ KV\ +\ i*stride\_KV\ +\ j\ :\ zero);}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::float2\ tmp\_f2[cpy\_ne\ /\ 2];}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ cpy\_ne/2;\ ++l)\ \{}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_f2[l]\ =\ tmp\_h2[l].template\ convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<sizeof(tmp\_f2)>(tile\_KV\ +\ i*(J\ +\ J\_padding)\ +\ 2*j,\ tmp\_f2);}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00418\ \ \ \ \ \};}
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{comment}{//\ 1:\ max\ 32*16=512\ bytes,\ 128\ float}}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{comment}{//\ 2:\ max\ 16*16=256\ bytes,\ \ 64\ float}}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{comment}{//\ 3:\ max\ \ 8*16=128\ bytes,\ \ 32\ float}}
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{comment}{//\ 4:\ max\ \ 4*16=\ 64\ bytes,\ \ 16\ float}}
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{comment}{//\ 5:\ max\ \ 2*16=\ 32\ bytes,\ \ \ 8\ float}}
+\DoxyCodeLine{00424\ \ \ \ \ \textcolor{keyword}{static\_assert}(J\ \%\ 8\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ J"{}});}
+\DoxyCodeLine{00425\ \ \ \ \ \textcolor{keyword}{static\_assert}(J\ \%\ cpy\_ne\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ J"{}});}
+\DoxyCodeLine{00426\ \ \ \ \ \doxymbox{\hyperlink{structggml__sycl__unroll}{ggml\_sycl\_unroll<5>}}\{\}(load);}
+\DoxyCodeLine{00427\ \}}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \textcolor{comment}{//\ Function\ that\ performs\ a\ single\ iteration\ in\ for\ the\ KQ\ matrix\ multiplication:}}
+\DoxyCodeLine{00430\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ \ warp\_size,}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ nwarps,}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ ncols1,}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ ncols2,}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ DKQ,}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ nbatch\_fa,}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ nbatch\_K,}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_logit\_softcap,}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ oob\_check,}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T\_vec\_dot>}
+\DoxyCodeLine{00440\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ flash\_attn\_tile\_iter\_KQ(T\_vec\_dot\ *\ \textcolor{keyword}{const}\ Q\_tmp,}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ *\ \textcolor{keyword}{const}\ \_\_restrict\_\_\ K\_h2,}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\_vec\_dot\ *\ \textcolor{keyword}{const}\ KV\_tmp,}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ stride\_K2,}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ k\_VKQ\_0,}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ k\_VKQ\_sup,}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ k\_KQ\_0,}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ \ \ \ \ \ \ \ \ \ \ KQ\_acc)\ \{}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ \ \ item\_ct1\ =\ sycl::ext::oneapi::this\_work\_item::get\_nd\_item<3>();}
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_nb\ \ \ =\ ggml\_sycl\_get\_max\_cpy\_bytes();}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\ =\ cpy\_nb\ /\ 4;}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ncols\ =\ ncols1*ncols2;}
+\DoxyCodeLine{00453\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpw\ \ \ =\ ncols\ >\ nwarps\ ?\ ncols/nwarps\ :\ 1;\ \textcolor{comment}{//\ Q\ columns\ per\ warp}}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ np\ \ \ \ =\ nwarps\ >\ ncols\ ?\ nwarps/ncols\ :\ 1;\ \textcolor{comment}{//\ number\ of\ parallel\ warps\ per\ Q\ column}}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \ \ \ \ flash\_attn\_tile\_load\_tile<warp\_size,\ nwarps,\ nbatch\_fa,\ nbatch\_K,\ cpy\_ne,\ oob\_check>}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ (K\_h2\ +\ int64\_t(k\_VKQ\_0)*stride\_K2\ +\ k\_KQ\_0/2,\ KV\_tmp,\ stride\_K2,\ k\_VKQ\_sup);}
+\DoxyCodeLine{00458\ \ \ \ \ item\_ct1.barrier();}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{static\_assert}((nbatch\_K/2)\ \%\ cpy\_ne\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ nbatch\_K"{}});}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\_KQ\_1\ =\ 0;\ k\_KQ\_1\ <\ nbatch\_K/2;\ k\_KQ\_1\ +=\ cpy\_ne)\ \{}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half2\ K\_k[nbatch\_fa\ /\ (np\ *\ warp\_size)][cpy\_ne];}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half2\ Q\_k[cpw][cpy\_ne];}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00467\ \ \ \ \ \textcolor{keyword}{static\_assert}(nbatch\_K\ \%\ cpy\_ne\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ nbatch\_K"{}});}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00469\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\_KQ\_1\ =\ 0;\ k\_KQ\_1\ <\ nbatch\_K;\ k\_KQ\_1\ +=\ cpy\_ne)\ \{}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ float\ K\_k[nbatch\_fa/(np*warp\_size)][cpy\_ne];}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ \textcolor{keywordtype}{float}\ Q\_k[cpw][cpy\_ne];}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_KQ\_0\ =\ 0;\ i\_KQ\_0\ <\ nbatch\_fa;\ i\_KQ\_0\ +=\ np*warp\_size)\ \{}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i\_KQ\ =\ i\_KQ\_0\ +\ (item\_ct1.get\_local\_id(1)\ \%\ np)\ *\ warp\_size\ +\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_nb>(\&K\_k[i\_KQ\_0/(np*warp\_size)],\ \&KV\_tmp[i\_KQ*(nbatch\_K/2\ +\ cpy\_ne)\ +\ k\_KQ\_1]);}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_nb>(\&K\_k[i\_KQ\_0/(np*warp\_size)],\ \&KV\_tmp[i\_KQ*(nbatch\_K\ \ \ +\ cpy\_ne)\ +\ k\_KQ\_1]);}
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc0\ =\ 0;\ jc0\ <\ cpw;\ ++jc0)\ \{}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ jc\ =\ jc0\ +\ (item\_ct1.get\_local\_id(1)\ /\ np)\ *\ cpw;}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_nb>(\&Q\_k[jc0],\ \&Q\_tmp[jc*(DKQ/2)\ +\ k\_KQ\_0/2\ +\ k\_KQ\_1]);}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_nb>(\&Q\_k[jc0],\ \&Q\_tmp[jc*\ DKQ\ \ \ \ +\ k\_KQ\_0\ \ \ +\ k\_KQ\_1]);}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00494\ }
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_KQ\_0\ =\ 0;\ i\_KQ\_0\ <\ nbatch\_fa;\ i\_KQ\_0\ +=\ np*warp\_size)\ \{}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc0\ =\ 0;\ jc0\ <\ cpw;\ ++jc0)\ \{}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ cpy\_ne;\ ++k)\ \{}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_mad(KQ\_acc[i\_KQ\_0/(np*warp\_size)*cpw\ +\ jc0],\ K\_k[i\_KQ\_0/(np*warp\_size)][k],\ Q\_k[jc0][k]);}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00505\ \ \ \ \ \}}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{keywordflow}{if}\ (k\_KQ\_0\ +\ nbatch\_K\ <\ DKQ)\ \{}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ item\_ct1.barrier();\ \ \textcolor{comment}{//\ Sync\ not\ needed\ on\ last\ iteration.}}
+\DoxyCodeLine{00509\ \ \ \ \ \}}
+\DoxyCodeLine{00510\ \}}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \textcolor{comment}{//\ Function\ that\ performs\ a\ single\ iteration\ of\ the\ main\ loop\ over\ up\ to\ nbatch\_fa\ tokens.}}
+\DoxyCodeLine{00513\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ \ warp\_size,}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ nwarps,}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ ncols1,}
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ ncols2,}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ DKQ,}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ DV,}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ nbatch\_fa,}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ nbatch\_K,}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_logit\_softcap,}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ oob\_check,}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T\_vec\_dot,}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T\_KQ,}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T\_acc>}
+\DoxyCodeLine{00526\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00527\ \textcolor{comment}{The\ total\ declared\ local\ variable\ size\ in\ device\ function\ flash\_attn\_tile\_iter\ exceeds\ 128\ bytes\ and\ may\ cause\ high\ register\ pressure.\ Consult\ with\ your\ hardware\ vendor\ to\ find\ the\ total\ register\ size\ available\ and\ adjust\ the\ code,\ or\ use\ smaller\ sub-\/group\ size\ to\ avoid\ high\ register\ pressure.}}
+\DoxyCodeLine{00528\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00529\ \textcolor{keyword}{static}\ \_\_dpct\_inline\_\_\ \textcolor{keywordtype}{void}\ flash\_attn\_tile\_iter(T\_vec\_dot\ *\ \textcolor{keyword}{const}\ Q\_tmp,}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ *\ \textcolor{keyword}{const}\ \_\_restrict\_\_\ K\_h2,}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ *\ \textcolor{keyword}{const}\ \_\_restrict\_\_\ V\_h2,}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half\ *\ \textcolor{keyword}{const}\ \_\_restrict\_\_\ mask,}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::uint3\ ne01,}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ logit\_softcap,}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ slope,}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\_KQ\ *\ \textcolor{keyword}{const}\ \ \ \ \ \ KQ,}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\_vec\_dot\ *\ \textcolor{keyword}{const}\ KV\_tmp,}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ stride\_K2,}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ stride\_V2,}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ stride\_mask,}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ \textcolor{keyword}{const}\ \ \ \ \ KQ\_max,}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ \textcolor{keyword}{const}\ \ \ \ \ KQ\_sum,}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\_acc\ *\ \textcolor{keyword}{const}\ \ \ \ \ VKQ,}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ k\_VKQ\_0,}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ k\_VKQ\_max,}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ col\_Q\_0,}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ \ \ \ \ \ \ \ \ \ \ KQ\_max\_new\_shared)\ \{}
+\DoxyCodeLine{00548\ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ \ \ item\_ct1\ =\ sycl::ext::oneapi::this\_work\_item::get\_nd\_item<3>();}
+\DoxyCodeLine{00549\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_nb\ \ \ =\ ggml\_sycl\_get\_max\_cpy\_bytes();}
+\DoxyCodeLine{00550\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\ =\ cpy\_nb\ /\ 4;}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00552\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ncols\ =\ ncols1*ncols2;}
+\DoxyCodeLine{00553\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpw\ \ \ =\ ncols\ >\ nwarps\ ?\ ncols/nwarps\ :\ 1;\ \textcolor{comment}{//\ Q\ columns\ per\ warp}}
+\DoxyCodeLine{00554\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ np\ \ \ \ =\ nwarps\ >\ ncols\ ?\ nwarps/ncols\ :\ 1;\ \textcolor{comment}{//\ number\ of\ parallel\ warps\ per\ Q\ column}}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ DVp\ =\ (DV\ +\ 2*warp\_size\ -\/\ 1)\ \&\ \string~(2*warp\_size\ -\/\ 1);\ \textcolor{comment}{//\ DV\ padded\ to\ multiple\ of\ 2*warp\_size.}}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ KQ\_cs\ =\ cpw\ <\ 2*cpy\_ne\ ?\ cpw\ :\ 2*cpy\_ne;}
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ KQ\_cs\ =\ cpw\ <\ 1*cpy\_ne\ ?\ cpw\ :\ 1*cpy\_ne;}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00563\ \ \ \ \ \textcolor{keyword}{static\_assert}(cpw\ \%\ KQ\_cs\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ KQ\_cs"{}});}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ k\_VKQ\_sup\ =\ k\_VKQ\_max\ -\/\ k\_VKQ\_0;\ \textcolor{comment}{//\ k\ supremum,\ only\ smaller\ k\ values\ have\ valid\ KV\ data}}
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ \ \ \ \ \textcolor{keywordtype}{float}\ KQ\_max\_new[cpw];}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00568\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc0\ =\ 0;\ jc0\ <\ cpw;\ ++jc0)\ \{}
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ KQ\_max\_new[jc0]\ =\ KQ\_max[jc0];}
+\DoxyCodeLine{00570\ \ \ \ \ \}}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \ \ \ \ \textcolor{keywordtype}{float}\ KQ\_acc[nbatch\_fa/(np*warp\_size)\ *\ cpw]\ =\ \{0.0f\};\ \textcolor{comment}{//\ Accumulators\ for\ KQ\ matrix\ multiplication.}}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \ \ \ \ \textcolor{comment}{//\ KQ\ =\ K\ @\ Q\ matrix\ multiplication:}}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ nbatch\_K\_last\ =\ DKQ\ \%\ nbatch\_K;}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00577\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\_KQ\_0\ =\ 0;\ k\_KQ\_0\ <\ DKQ\ -\/\ nbatch\_K\_last;\ k\_KQ\_0\ +=\ nbatch\_K)\ \{}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ flash\_attn\_tile\_iter\_KQ<warp\_size,\ nwarps,\ ncols1,\ ncols2,\ DKQ,\ nbatch\_fa,\ nbatch\_K,\ use\_logit\_softcap,\ oob\_check>(}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ Q\_tmp,\ K\_h2,\ KV\_tmp,\ stride\_K2,\ k\_VKQ\_0,\ k\_VKQ\_sup,\ k\_KQ\_0,\ KQ\_acc);}
+\DoxyCodeLine{00580\ \ \ \ \ \}}
+\DoxyCodeLine{00581\ \ \ \ \ \textcolor{keywordflow}{if}\ (nbatch\_K\_last\ >\ 0)\ \{}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ k\_KQ\_0\ =\ DKQ\ -\/\ nbatch\_K\_last;}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ flash\_attn\_tile\_iter\_KQ<warp\_size,\ nwarps,\ ncols1,\ ncols2,\ DKQ,\ nbatch\_fa,\ nbatch\_K\_last,\ use\_logit\_softcap,\ oob\_check>(}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \ \ \ \ Q\_tmp,\ K\_h2,\ KV\_tmp,\ stride\_K2,\ k\_VKQ\_0,\ k\_VKQ\_sup,\ k\_KQ\_0,\ KQ\_acc);}
+\DoxyCodeLine{00585\ \ \ \ \ \}}
+\DoxyCodeLine{00586\ }
+\DoxyCodeLine{00587\ \ \ \ \ \textcolor{comment}{//\ Apply\ logit\ softcap\ +\ mask,\ update\ KQ\_max:}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc0\ =\ 0;\ jc0\ <\ cpw;\ ++jc0)\ \{}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j\ =\ fastmodulo(col\_Q\_0\ +\ (jc0\ +\ (item\_ct1.get\_local\_id(1)\ /\ np)\ *\ cpw)\ /\ ncols2,\ ne01);}
+\DoxyCodeLine{00591\ }
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_KQ\_0\ =\ 0;\ i\_KQ\_0\ <\ nbatch\_fa;\ i\_KQ\_0\ +=\ np*warp\_size)\ \{}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i\_KQ\ =\ i\_KQ\_0\ +\ (item\_ct1.get\_local\_id(1)\ \%\ np)\ *\ warp\_size\ +\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00595\ }
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\#if\ defined(SYCL\_FAST\_FP16)\ \&\&\ !defined(GGML\_SYCL\_F16)}}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Without\ the\ v\_dot2\_f32\_f16\ instruction\ there\ is\ a\ higher\ risk\ of\ numerical\ overflow\ in\ the\ KQ\ calculation.}}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Therefore,\ scale\ down\ Q\ values\ and\ apply\ the\ inverse\ scale\ the\ FP32\ KQ\ values\ afterwards\ again.}}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_acc[i\_KQ\_0/(np*warp\_size)*cpw\ +\ jc0]\ *=\ 4.0f;}
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(SYCL\_FAST\_FP16)\ \&\&\ !defined(GGML\_SYCL\_F16)}}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (use\_logit\_softcap)\ \{}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_acc[(i\_KQ\_0\ /\ (np\ *\ warp\_size))\ *\ cpw\ +\ jc0]\ =}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logit\_softcap\ *\ sycl::tanh((\textcolor{keywordtype}{float})\ KQ\_acc[(i\_KQ\_0\ /\ (np\ *\ warp\_size))\ *\ cpw\ +\ jc0]);}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00606\ }
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!oob\_check\ ||\ i\_KQ\ <\ k\_VKQ\_sup)\ \{}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_acc[(i\_KQ\_0\ /\ (np\ *\ warp\_size))\ *\ cpw\ +\ jc0]\ +=}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ncols2\ >\ 1\ ||\ mask)\ ?\ slope\ *\ sycl::vec<sycl::half,\ 1>(mask[j\ *\ stride\_mask\ +\ k\_VKQ\_0\ +\ i\_KQ])}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .convert<float,\ sycl::rounding\_mode::automatic>()[0]\ :}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0.0f;}
+\DoxyCodeLine{00612\ }
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_max\_new[jc0]\ =}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::fmax((\textcolor{keywordtype}{float})\ KQ\_max\_new[jc0],}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})\ (KQ\_acc[(i\_KQ\_0\ /\ (np\ *\ warp\_size))\ *\ cpw\ +\ jc0]\ +\ FATTN\_KQ\_MAX\_OFFSET));}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00618\ }
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ KQ\_max\_new[jc0]\ =\ warp\_reduce\_max<warp\_size>(KQ\_max\_new[jc0]);}
+\DoxyCodeLine{00620\ \ \ \ \ \}}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (np\ ==\ 1)\ \{}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ item\_ct1.barrier();}
+\DoxyCodeLine{00624\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(cpw\ ==\ 1,\ \textcolor{stringliteral}{"{}bad\ cpw"{}});}
+\DoxyCodeLine{00626\ }
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (item\_ct1.get\_local\_id(2)\ ==\ 0)\ \{}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_max\_new\_shared[item\_ct1.get\_local\_id(1)]\ =\ KQ\_max\_new[0];}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ item\_ct1.barrier();}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ KQ\_max\_new[0]\ =\ KQ\_max\_new\_shared[(item\_ct1.get\_local\_id(1)\ \&\ \string~(np\ -\/\ 1))\ +\ item\_ct1.get\_local\_id(2)\ \%\ np];}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ KQ\_max\_new[0]\ =\ warp\_reduce\_max<np>(KQ\_max\_new[0]);}
+\DoxyCodeLine{00633\ \ \ \ \ \}}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ \ \ \ \ \textcolor{comment}{//\ Calculate\ KQ\ softmax,\ write\ to\ shared\ KQ\ buffer,\ re-\/scale\ VKQ\ accumulators:}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00637\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc0\ =\ 0;\ jc0\ <\ cpw;\ jc0\ +=\ KQ\_cs)\ \{}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half\ tmp[nbatch\_fa\ /\ (np\ *\ warp\_size)][KQ\_cs];}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ float\ tmp[nbatch\_fa/(np*warp\_size)][KQ\_cs];}
+\DoxyCodeLine{00642\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc1\ =\ 0;\ jc1\ <\ KQ\_cs;\ ++jc1)\ \{}
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ jc\ =\ jc0\ +\ jc1;}
+\DoxyCodeLine{00647\ }
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ KQ\_max\_scale\ =\ sycl::native::exp((\textcolor{keywordtype}{float})\ (KQ\_max[jc]\ -\/\ KQ\_max\_new[jc]));}
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_max[jc]\ =\ KQ\_max\_new[jc];}
+\DoxyCodeLine{00650\ }
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ KQ\_sum\_add\ =\ 0.0f;}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ nbatch\_fa;\ i0\ +=\ np*warp\_size)\ \{}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ val\ =}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !oob\_check\ ||\ i0\ +\ (item\_ct1.get\_local\_id(1)\ \%\ np)\ *\ warp\_size\ +\ item\_ct1.get\_local\_id(2)\ <}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(k\_VKQ\_sup)\ ?}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::native::exp((\textcolor{keywordtype}{float})\ (KQ\_acc[(i0\ /\ (np\ *\ warp\_size))\ *\ cpw\ +\ jc]\ -\/\ KQ\_max[jc]))\ :}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0.0f;}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_sum\_add\ +=\ val;}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp[i0/(np*warp\_size)][jc1]\ =\ val;}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_sum[jc]\ =\ KQ\_sum[jc]*KQ\_max\_scale\ +\ KQ\_sum\_add;}
+\DoxyCodeLine{00663\ }
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ KQ\_max\_scale\_h2\ =\ sycl::half2(KQ\_max\_scale,\ KQ\_max\_scale);}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size)\ \{}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc*((DVp/2)/warp\_size)\ +\ i0/warp\_size].x()\ *=\ KQ\_max\_scale\_h2.x();}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc*((DVp/2)/warp\_size)\ +\ i0/warp\_size].y()\ *=\ KQ\_max\_scale\_h2.y();}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size)\ \{}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc*((DVp/2)/warp\_size)\ +\ i0/warp\_size].x()\ *=\ KQ\_max\_scale;}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc*((DVp/2)/warp\_size)\ +\ i0/warp\_size].y()\ *=\ KQ\_max\_scale;}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00679\ }
+\DoxyCodeLine{00680\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ nbatch\_fa;\ i0\ +=\ np*warp\_size)\ \{}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i\ =\ i0\ +\ (item\_ct1.get\_local\_id(1)\ \%\ np)\ *\ warp\_size\ +\ item\_ct1.get\_local\_id(2);}
+\DoxyCodeLine{00683\ }
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<sizeof(tmp[0])>(}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\ +\ (jc0\ /\ KQ\_cs\ +\ (item\_ct1.get\_local\_id(1)\ /\ np)\ *\ (cpw\ /\ KQ\_cs))\ *\ (nbatch\_fa\ *\ KQ\_cs)\ +\ i\ *\ KQ\_cs,}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp[i0\ /\ (np\ *\ warp\_size)]);}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00688\ \ \ \ \ \}}
+\DoxyCodeLine{00689\ }
+\DoxyCodeLine{00690\ \ \ \ \ \textcolor{comment}{//\ VKQ\ =\ V\ @\ KQ\ matrix\ multiplication:}}
+\DoxyCodeLine{00691\ \ \ \ \ \textcolor{keyword}{static\_assert}(DV\ <=\ DKQ,\ \textcolor{stringliteral}{"{}bad\ DV"{}});}
+\DoxyCodeLine{00692\ \ \ \ \ \textcolor{keyword}{static\_assert}(DV\ \%\ nbatch\_K\ ==\ 0\ ||\ (nbatch\_K\ \%\ 3\ ==\ 0\ \&\&\ DV\ \%\ (nbatch\_K*2/3)\ ==\ 0),\ \textcolor{stringliteral}{"{}bad\ nbatch\_K"{}});}
+\DoxyCodeLine{00693\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ nbatch\_V\ =\ (DV\ \%\ nbatch\_K\ ==\ 0\ ?\ nbatch\_K\ :\ nbatch\_K*2/3)\ *\ nbatch\_fa\ /\ DV;\ \textcolor{comment}{//\ Number\ of\ V\ columns\ that\ fit\ in\ SRAM\ for\ K.}}
+\DoxyCodeLine{00694\ \ \ \ \ \textcolor{keyword}{static\_assert}(nbatch\_fa\ \%\ nbatch\_V\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ nbatch\_V"{}});}
+\DoxyCodeLine{00695\ \ \ \ \ \textcolor{keyword}{static\_assert}(nbatch\_V\ \%\ np\ ==\ 0,\ \textcolor{stringliteral}{"{}bad\ nbatch\_V"{}});}
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00697\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k0\ =\ 0;\ k0\ <\ nbatch\_fa;\ k0\ +=\ nbatch\_V)\ \{}
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ flash\_attn\_tile\_load\_tile<warp\_size,\ nwarps,\ nbatch\_V,\ DV,\ 0,\ oob\_check>}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \ \ \ \ (V\_h2\ +\ int64\_t(k\_VKQ\_0\ +\ k0)*stride\_V2,\ KV\_tmp,\ stride\_V2,\ k\_VKQ\_sup\ -\/\ k0);}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ item\_ct1.barrier();}
+\DoxyCodeLine{00701\ }
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k1\ =\ 0;\ k1\ <\ nbatch\_V;\ k1\ +=\ np)\ \{}
+\DoxyCodeLine{00705\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half2\ V\_k[(DVp\ /\ 2)\ /\ warp\_size];}
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half2\ KQ\_k[cpw];}
+\DoxyCodeLine{00707\ }
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ \ \ \ \ constexpr\ \textcolor{keywordtype}{int}\ cpy\_ne\_D\ =\ cpy\_ne/2\ <\ (DVp/2)/warp\_size\ ?\ cpy\_ne/2\ :\ (DVp/2)/warp\_size;}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size*cpy\_ne\_D)\ \{}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_ne\_D\ *\ 4>(\&V\_k[i0\ /\ warp\_size],}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&KV\_tmp[(k1\ +\ item\_ct1.get\_local\_id(1)\ \%\ np)\ *\ (DV\ /\ 2)\ +\ i0\ +}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\_ct1.get\_local\_id(2)\ *\ cpy\_ne\_D]);}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc\_VKQ\_0\ =\ 0;\ jc\_VKQ\_0\ <\ cpw;\ jc\_VKQ\_0\ +=\ KQ\_cs)\ \{}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ jc\_KQ\ =\ jc\_VKQ\_0\ /\ KQ\_cs\ +\ (item\_ct1.get\_local\_id(1)\ /\ np)\ *\ (cpw\ /\ KQ\_cs);}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half\ tmp[KQ\_cs];}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<KQ\_cs\ *\ sizeof(sycl::half)>(}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&tmp,\ KQ\ +\ jc\_KQ\ *\ (nbatch\_fa\ *\ KQ\_cs)\ +\ (k0\ +\ k1\ +\ item\_ct1.get\_local\_id(1)\ \%\ np)\ *\ KQ\_cs);}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc\_VKQ\_1\ =\ 0;\ jc\_VKQ\_1\ <\ KQ\_cs;\ ++jc\_VKQ\_1)\ \{}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_k[jc\_VKQ\_0\ +\ jc\_VKQ\_1]\ =\ sycl::half2(tmp[jc\_VKQ\_1]);}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00727\ }
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size)\ \{}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc\_VKQ\_0\ =\ 0;\ jc\_VKQ\_0\ <\ cpw;\ ++jc\_VKQ\_0)\ \{}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc\_VKQ\_0*((DVp/2)/warp\_size)\ +\ i0/warp\_size].x()\ +=}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ V\_k[i0/warp\_size].x()*KQ\_k[jc\_VKQ\_0].x();}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc\_VKQ\_0*((DVp/2)/warp\_size)\ +\ i0/warp\_size].y()\ +=}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ V\_k[i0/warp\_size].y()*KQ\_k[jc\_VKQ\_0].y();}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k1\ =\ 0;\ k1\ <\ nbatch\_V;\ k1\ +=\ np)\ \{}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::float2\ V\_k[(DVp/2)/warp\_size];}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ \textcolor{keywordtype}{float}\ \ KQ\_k[cpw];}
+\DoxyCodeLine{00744\ }
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \ \ \ \ constexpr\ \textcolor{keywordtype}{int}\ cpy\_ne\_D\ =\ cpy\_ne\ <\ DVp/warp\_size\ ?\ cpy\_ne\ :\ DVp/warp\_size;}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp;\ i0\ +=\ warp\_size*cpy\_ne\_D)\ \{}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_ne\_D*4>(\&V\_k[i0/(2*warp\_size)],\ \&KV\_tmp[(k1\ +\ item\_ct1.get\_local\_id(1)\ \%\ np)*DV\ +\ i0\ +\ item\_ct1.get\_local\_id(2)*cpy\_ne\_D]);}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc\_VKQ\_0\ =\ 0;\ jc\_VKQ\_0\ <\ cpw;\ jc\_VKQ\_0\ +=\ KQ\_cs)\ \{}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ jc\_KQ\ =\ jc\_VKQ\_0/KQ\_cs\ +\ (item\_ct1.get\_local\_id(1)\ /\ np)*(cpw/KQ\_cs);}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<KQ\_cs*sizeof(float)>(}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&KQ\_k[jc\_VKQ\_0],\ KQ\ +\ jc\_KQ*(nbatch\_fa*KQ\_cs)\ +\ (k0\ +\ k1\ +\ item\_ct1.get\_local\_id(1)\ \%\ np)*KQ\_cs);}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00757\ }
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size)\ \{}
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc\_VKQ\_0\ =\ 0;\ jc\_VKQ\_0\ <\ cpw;\ ++jc\_VKQ\_0)\ \{}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc\_VKQ\_0*((DVp/2)/warp\_size)\ +\ i0/warp\_size].x()\ +=\ V\_k[i0/warp\_size].x()*KQ\_k[jc\_VKQ\_0];}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc\_VKQ\_0*((DVp/2)/warp\_size)\ +\ i0/warp\_size].y()\ +=\ V\_k[i0/warp\_size].y()*KQ\_k[jc\_VKQ\_0];}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ item\_ct1.barrier();}
+\DoxyCodeLine{00769\ \ \ \ \ \}}
+\DoxyCodeLine{00770\ \}}
+\DoxyCodeLine{00771\ }
+\DoxyCodeLine{00772\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keywordtype}{int}\ ncols1,\ \textcolor{keywordtype}{int}\ ncols2,\ \textcolor{keywordtype}{bool}\ use\_logit\_softcap,\ \textcolor{keywordtype}{int}\ warp\_size>\ \ \textcolor{comment}{//\ D\ ==\ head\ size}}
+\DoxyCodeLine{00773\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00774\ \textcolor{comment}{The\ total\ declared\ local\ variable\ size\ in\ device\ function\ flash\_attn\_tile\ exceeds\ 128\ bytes\ and\ may\ cause\ high\ register\ pressure.\ Consult\ with\ your\ hardware\ vendor\ to\ find\ the\ total\ register\ size\ available\ and\ adjust\ the\ code,\ or\ use\ smaller\ sub-\/group\ size\ to\ avoid\ high\ register\ pressure.}}
+\DoxyCodeLine{00775\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00776\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ flash\_attn\_tile(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ Q,}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ K,}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ V,}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ mask,}
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \ sinks,}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *\ \ KV\_max,}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ \ dst,}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sycl::float2\ *\ \ dst\_meta,}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ scale,}
+\DoxyCodeLine{00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ max\_bias,}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ m0,}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ m1,}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ \ \ \ \ \ \ n\_head\_log2,}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ \ \ \ logit\_softcap,}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne00,}
+\DoxyCodeLine{00791\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::uint3\ \ \ \ ne01,}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne02,}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne03,}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ nb01,}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ nb02,}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ nb03,}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne10,}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne11,}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne12,}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne13,}
+\DoxyCodeLine{00801\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ nb11,}
+\DoxyCodeLine{00802\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ nb12,}
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ \ \ \ \ \ \ \ nb13,}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ nb21,}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ nb22,}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ \ \ \ \ \ \ \ nb23,}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne31,}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne32,}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ ne33,}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ nb31,}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ \ \ \ \ \ \ \ nb32,}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ \ \ \ \ \ \ \ nb33)\ \{}
+\DoxyCodeLine{00813\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FLASH\_ATTN}}
+\DoxyCodeLine{00814\ \ \ \ \ \textcolor{comment}{//\ Skip\ unused\ kernel\ variants\ for\ faster\ compilation:}}
+\DoxyCodeLine{00815\ \ \ \ \ \textcolor{keyword}{auto}\ item\_ct1\ =\ sycl::ext::oneapi::this\_work\_item::get\_nd\_item<3>();}
+\DoxyCodeLine{00816\ \ \ \ \ \textcolor{keywordflow}{if}\ ((use\_logit\_softcap\ \&\&\ !(DV\ ==\ 128\ ||\ DV\ ==\ 256)))\ \{}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ GGML\_UNUSED\_VARS(Q,\ K,\ V,\ mask,\ sinks,\ KV\_max,\ dst,\ dst\_meta,\ scale,}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ \ \ max\_bias,\ m0,\ m1,\ n\_head\_log2,\ logit\_softcap,}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \ \ \ \ ne00,\ ne01,\ ne02,\ ne03,}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb01,\ nb02,\ nb03,}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ ne10,\ ne11,\ ne12,\ ne13,}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb11,\ nb12,\ nb13,}
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb21,\ nb22,\ nb23,}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ne31,\ ne32,\ ne33,}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb31,\ nb32,\ nb33);}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00827\ \ \ \ \ \}}
+\DoxyCodeLine{00828\ }
+\DoxyCodeLine{00829\ \ \ \ \ \textcolor{keyword}{static\_assert}(ggml\_sycl\_fattn\_tile\_get\_config(DKQ,\ DV,\ ncols1*ncols2)\ !=\ 0,\ \textcolor{stringliteral}{"{}kernel\ config\ not\ defined"{}});}
+\DoxyCodeLine{00830\ }
+\DoxyCodeLine{00831\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ncols\ \ \ \ \ =\ ncols1*ncols2;}
+\DoxyCodeLine{00832\ }
+\DoxyCodeLine{00833\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ nwarps\ \ \ \ =\ ggml\_sycl\_fattn\_tile\_get\_nthreads\ (DKQ,\ DV,\ ncols1*ncols2)\ /\ warp\_size;}
+\DoxyCodeLine{00834\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ nbatch\_fa\ =\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_fa(DKQ,\ DV,\ ncols1*ncols2);}
+\DoxyCodeLine{00835\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ nbatch\_K\ \ =\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_K\ (DKQ,\ DV,\ ncols1*ncols2);}
+\DoxyCodeLine{00836\ }
+\DoxyCodeLine{00837\ \ \ \ \ \textcolor{comment}{//\ In\ this\ kernel\ Q,\ K,\ V\ are\ matrices\ while\ i,\ j,\ k\ are\ matrix\ indices.}}
+\DoxyCodeLine{00838\ }
+\DoxyCodeLine{00839\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ col\_Q\_0\ =\ item\_ct1.get\_group(2)\ *\ ncols1;\ \ \textcolor{comment}{//\ Index\ of\ the\ first\ Q\ column\ for\ this\ SYCL\ block\ to\ work\ on.}}
+\DoxyCodeLine{00840\ }
+\DoxyCodeLine{00841\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ sequence\ \ =\ item\_ct1.get\_group(0)\ /\ (ne02\ /\ ncols2);}
+\DoxyCodeLine{00842\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ head0\ \ \ \ \ =\ item\_ct1.get\_group(0)\ *\ ncols2\ -\/\ sequence\ *\ ne02;\ \ \textcolor{comment}{//\ ==\ item\_ct1.get\_group(0)\ \%\ (ne02/ncols2)}}
+\DoxyCodeLine{00843\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ gqa\_ratio\ =\ ne02\ /\ ne12;\ \textcolor{comment}{//\ With\ grouped\ query\ attention\ there\ are\ >\ 1\ Q\ matrices\ per\ K,\ V\ matrix.}}
+\DoxyCodeLine{00844\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ Q\_f\ \ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ (Q\ +\ nb03*sequence\ +\ nb02*\ head0);}
+\DoxyCodeLine{00845\ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ *\ K\_h2\ \ \ \ \ \ =\ (\textcolor{keyword}{const}\ sycl::half2\ *)\ (K\ +\ nb13\ *\ sequence\ +\ nb12\ *\ (head0\ /\ gqa\_ratio));}
+\DoxyCodeLine{00846\ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ *\ V\_h2\ =}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ sycl::half2\ *)\ (V\ +\ nb23\ *\ sequence\ +\ nb22\ *\ (head0\ /\ gqa\_ratio));\ \ \textcolor{comment}{//\ K\ and\ V\ have\ same\ shape}}
+\DoxyCodeLine{00848\ }
+\DoxyCodeLine{00849\ \ \ \ \ \textcolor{keyword}{const}\ sycl::half\ *\ maskh\ =\ mask\ ?\ (\textcolor{keyword}{const}\ sycl::half\ *)\ (mask\ +\ nb33\ *\ (sequence\ \%\ ne33))\ :\ nullptr;}
+\DoxyCodeLine{00850\ }
+\DoxyCodeLine{00851\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ stride\_K2\ \ \ =\ nb11\ /\ \textcolor{keyword}{sizeof}(sycl::half2);}
+\DoxyCodeLine{00852\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ stride\_V2\ \ \ =\ nb21\ /\ \textcolor{keyword}{sizeof}(sycl::half2);}
+\DoxyCodeLine{00853\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ stride\_mask\ =\ nb31\ /\ \textcolor{keyword}{sizeof}(sycl::half);}
+\DoxyCodeLine{00854\ }
+\DoxyCodeLine{00855\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ slope\ =\ ncols2\ ==\ 1\ ?\ get\_alibi\_slope(max\_bias,\ head0,\ n\_head\_log2,\ m0,\ m1)\ :\ 1.0f;}
+\DoxyCodeLine{00856\ }
+\DoxyCodeLine{00857\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_nb\ =\ ggml\_sycl\_get\_max\_cpy\_bytes();}
+\DoxyCodeLine{00858\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\ =\ cpy\_nb\ /\ 4;}
+\DoxyCodeLine{00859\ }
+\DoxyCodeLine{00860\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpw\ =\ ncols\ >\ nwarps\ ?\ ncols/nwarps\ :\ 1;\ \textcolor{comment}{//\ Q\ columns\ per\ warp.}}
+\DoxyCodeLine{00861\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ np\ \ =\ nwarps\ >\ ncols\ ?\ nwarps/ncols\ :\ 1;\ \textcolor{comment}{//\ Number\ of\ parallel\ warps\ per\ Q\ column.}}
+\DoxyCodeLine{00862\ }
+\DoxyCodeLine{00863\ \ \ \ \ \textcolor{keyword}{static\_assert}(cpw\ ==\ 1\ ||\ np\ ==\ 1,\ \textcolor{stringliteral}{"{}bad\ cpw\ /\ np"{}});}
+\DoxyCodeLine{00864\ \ \ \ \ \textcolor{keyword}{static\_assert}(nbatch\_fa\ \%\ (np*warp\_size)\ ==\ 0,\ \textcolor{stringliteral}{"{}nbatch\_fa\ \%\ (np*warp\_size)\ !=\ 0"{}});}
+\DoxyCodeLine{00865\ }
+\DoxyCodeLine{00866\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ DKQp\ =\ (DKQ\ +\ 2*warp\_size\ -\/\ 1)\ \&\ \string~(2*warp\_size\ -\/\ 1);\ \textcolor{comment}{//\ DKQ\ padded\ to\ multiple\ of\ 2*warp\_size.}}
+\DoxyCodeLine{00867\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ DVp\ \ =\ (DV\ \ +\ 2*warp\_size\ -\/\ 1)\ \&\ \string~(2*warp\_size\ -\/\ 1);\ \textcolor{comment}{//\ DV\ \ padded\ to\ multiple\ of\ 2*warp\_size.}}
+\DoxyCodeLine{00868\ }
+\DoxyCodeLine{00869\ \ \ \ \ \textcolor{comment}{//\ Q\_tmp\ ==\ SRAM\ buffer\ to\ hold\ Q\ data\ for\ the\ entire\ lifetime\ of\ the\ kernel.}}
+\DoxyCodeLine{00870\ \ \ \ \ \textcolor{comment}{//\ KV\_tmp\ ==\ SRAM\ buffer\ to\ hold\ fragments\ of\ K/V\ data\ while\ iterating\ over\ ne11.}}
+\DoxyCodeLine{00871\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ KV\_tmp\ is\ padded\ to\ avoid\ memory\ conflicts\ for\ K\ (cpy\_ne)\ and\ OOB\ accesses\ for\ V\ (DVp-\/DV).}}
+\DoxyCodeLine{00872\ \ \ \ \ \textcolor{comment}{//\ KQ\ ==\ SRAM\ buffer\ to\ hold\ KQ\ fragments\ between\ KQ\ and\ VKQ\ matrix\ multiplications.}}
+\DoxyCodeLine{00873\ \ \ \ \ \textcolor{comment}{//\ VKQ\ ==\ Accumulators\ in\ registers\ for\ the\ final\ VKQ\ result.}}
+\DoxyCodeLine{00874\ }
+\DoxyCodeLine{00875\ }
+\DoxyCodeLine{00876\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00877\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ lsm\_size1\ =\ ncols\ *\ DKQ/2\ ;}
+\DoxyCodeLine{00878\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ lsm\_size2\ =\ nbatch\_fa\ *\ (nbatch\_K/2\ +\ cpy\_ne)\ +\ DVp-\/DV\ ;}
+\DoxyCodeLine{00879\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ lsm\_size3\ =\ ncols\ *\ nbatch\_fa;}
+\DoxyCodeLine{00880\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ lsm\_size4\ =\ nwarps;}
+\DoxyCodeLine{00881\ }
+\DoxyCodeLine{00882\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ local\_share\_mem\_size\ =\ lsm\_size1\ *\ \textcolor{keyword}{sizeof}(sycl::half2)\ +}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lsm\_size2\ *\ \textcolor{keyword}{sizeof}(sycl::half2)\ +}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lsm\_size3\ *\ \textcolor{keyword}{sizeof}(sycl::half)\ +}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lsm\_size4\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{00886\ }
+\DoxyCodeLine{00887\ \ \ \ \ syclex::work\_group\_static<char[local\_share\_mem\_size]>\ lsm;}
+\DoxyCodeLine{00888\ }
+\DoxyCodeLine{00889\ \ \ \ \ sycl::half2\ *Q\_tmp\ =\ (sycl::half2\ *)\&lsm;}
+\DoxyCodeLine{00890\ \ \ \ \ sycl::half2\ *KV\_tmp\ =\ (sycl::half2*)(Q\_tmp\ +lsm\_size1);}
+\DoxyCodeLine{00891\ \ \ \ \ sycl::half\ *KQ\ =\ (sycl::half\ *)(KV\_tmp+lsm\_size2);}
+\DoxyCodeLine{00892\ \ \ \ \ \textcolor{keywordtype}{float}\ *KQ\_max\_new\_shared\ =\ (\textcolor{keywordtype}{float}\ *)(KQ+lsm\_size3);}
+\DoxyCodeLine{00893\ }
+\DoxyCodeLine{00894\ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half2\ VKQ[cpw\ *\ ((DVp\ /\ 2)\ /\ warp\_size)]\ =\ \{}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ \{\ 0.0f,\ 0.0f\ \}}
+\DoxyCodeLine{00896\ \ \ \ \ \};}
+\DoxyCodeLine{00897\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00898\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ lsm\_size1\ =\ ncols\ *\ DKQ\ ;}
+\DoxyCodeLine{00899\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ lsm\_size2\ =\ nbatch\_fa\ *\ (nbatch\_K\ +\ cpy\_ne)\ +\ DVp-\/DV;}
+\DoxyCodeLine{00900\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ lsm\_size3\ =\ ncols\ *\ nbatch\_fa;}
+\DoxyCodeLine{00901\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ lsm\_size4\ =\ nwarps;}
+\DoxyCodeLine{00902\ }
+\DoxyCodeLine{00903\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ local\_share\_mem\_size\ =\ (lsm\_size1\ +\ lsm\_size2\ +lsm\_size3\ +\ lsm\_size4)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{00904\ }
+\DoxyCodeLine{00905\ \ \ \ \ syclex::work\_group\_static<char[local\_share\_mem\_size]>\ lsm;}
+\DoxyCodeLine{00906\ }
+\DoxyCodeLine{00907\ \ \ \ \ \textcolor{keywordtype}{float}\ *Q\_tmp\ =\ (\textcolor{keywordtype}{float}\ *)\&lsm;}
+\DoxyCodeLine{00908\ \ \ \ \ \textcolor{keywordtype}{float}\ *KV\_tmp\ =\ Q\_tmp\ +lsm\_size1;}
+\DoxyCodeLine{00909\ \ \ \ \ \textcolor{keywordtype}{float}\ *KQ\ =\ KV\_tmp+lsm\_size2;}
+\DoxyCodeLine{00910\ \ \ \ \ \textcolor{keywordtype}{float}\ *KQ\_max\_new\_shared\ =\ KQ+lsm\_size3;}
+\DoxyCodeLine{00911\ }
+\DoxyCodeLine{00912\ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::float2\ VKQ[cpw\ *\ ((DVp/2)/warp\_size)]\ =\ \{\{0.0f,\ 0.0f\}\};}
+\DoxyCodeLine{00913\ }
+\DoxyCodeLine{00914\ }
+\DoxyCodeLine{00915\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00916\ }
+\DoxyCodeLine{00917\ \ \ \ \ \textcolor{keywordtype}{float}\ KQ\_max[cpw]\ =\ \{\};}
+\DoxyCodeLine{00918\ }
+\DoxyCodeLine{00919\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00920\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j0\ =\ 0;\ j0\ <\ ncols;\ j0\ +=\ nwarps)\ \{}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ KQ\_max[j0/nwarps]\ =\ -\/FLT\_MAX/2.0f;}
+\DoxyCodeLine{00922\ \ \ \ \ \}}
+\DoxyCodeLine{00923\ \ \ \ \ \textcolor{keywordtype}{float}\ KQ\_sum[cpw]\ =\ \{0.0f\};}
+\DoxyCodeLine{00924\ }
+\DoxyCodeLine{00925\ \ \ \ \ \textcolor{comment}{//\ Load\ Q\ data,\ convert\ to\ FP16\ if\ fast:}}
+\DoxyCodeLine{00926\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00927\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc0\ =\ 0;\ jc0\ <\ cpw;\ ++jc0)\ \{}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ jc\ =\ jc0\ +\ (item\_ct1.get\_local\_id(1)\ /\ np)\ *\ cpw;}
+\DoxyCodeLine{00929\ }
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j\ =\ jc\ /\ ncols2;}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ c\ =\ jc\ \%\ ncols2;}
+\DoxyCodeLine{00932\ }
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\_D\ =\ cpy\_ne\ <\ DKQp/warp\_size\ ?\ cpy\_ne\ :\ DKQp/warp\_size;}
+\DoxyCodeLine{00934\ }
+\DoxyCodeLine{00935\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00936\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DKQp;\ i0\ +=\ np*warp\_size*cpy\_ne\_D)\ \{}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i0\ +\ np\ *\ warp\_size\ *\ cpy\_ne\_D\ <=\ DKQ\ ||}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i0\ +\ (item\_ct1.get\_local\_id(1)\ \%\ np)\ *\ (warp\_size\ *\ cpy\_ne\_D)\ +\ item\_ct1.get\_local\_id(2)\ *\ cpy\_ne\_D\ <}
+\DoxyCodeLine{00939\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DKQ)\ \{}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ float\ tmp\_f[cpy\_ne\_D]\ =\ \{\ 0.0f\ \};}
+\DoxyCodeLine{00941\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<sizeof(tmp\_f)>(}
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_f,\ \&Q\_f[c\ *\ (nb02\ /\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}))\ +\ fastmodulo(col\_Q\_0\ +\ j,\ ne01)\ *\ (nb01\ /\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}))\ +}
+\DoxyCodeLine{00943\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i0\ +\ (item\_ct1.get\_local\_id(1)\ \%\ np)\ *\ (warp\_size\ *\ cpy\_ne\_D)\ +}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\_ct1.get\_local\_id(2)\ *\ cpy\_ne\_D]);}
+\DoxyCodeLine{00945\ }
+\DoxyCodeLine{00946\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i1\ =\ 0;\ i1\ <\ cpy\_ne\_D;\ ++i1)\ \{}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_f[i1]\ *=\ scale;}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00950\ }
+\DoxyCodeLine{00951\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half2\ tmp\_h2[cpy\_ne\_D\ /\ 2];}
+\DoxyCodeLine{00953\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i1\ =\ 0;\ i1\ <\ cpy\_ne\_D;\ i1\ +=\ 2)\ \{}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_h2[i1/2]\ =\ make\_half2(tmp\_f[i1\ +\ 0],\ tmp\_f[i1\ +\ 1]);}
+\DoxyCodeLine{00956\ \textcolor{preprocessor}{\#if\ defined(SYCL\_FAST\_FP16)\ \&\&\ !defined(GGML\_SYCL\_F16)}}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Without\ the\ v\_dot2\_f32\_f16\ instruction\ there\ is\ a\ higher\ risk\ of\ numerical\ overflow\ in\ the\ KQ\ calculation.}}
+\DoxyCodeLine{00958\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Therefore,\ scale\ down\ Q\ values\ and\ apply\ the\ inverse\ scale\ the\ FP32\ KQ\ values\ afterwards\ again.}}
+\DoxyCodeLine{00959\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_h2[i1\ /\ 2]\ *=\ sycl::half2(0.25f,\ 0.25f);}
+\DoxyCodeLine{00960\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ defined(SYCL\_FAST\_FP16)\ \&\&\ !defined(GGML\_SYCL\_F16)}}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00962\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<sizeof(tmp\_h2)>(}
+\DoxyCodeLine{00963\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&Q\_tmp[jc\ *\ (DKQ\ /\ 2)\ +\ i0\ /\ 2\ +\ (item\_ct1.get\_local\_id(1)\ \%\ np)\ *\ (warp\_size\ *\ cpy\_ne\_D\ /\ 2)\ +}
+\DoxyCodeLine{00964\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\_ct1.get\_local\_id(2)\ *\ (cpy\_ne\_D\ /\ 2)],}
+\DoxyCodeLine{00965\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_h2);}
+\DoxyCodeLine{00966\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00967\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<sizeof(tmp\_f)>(}
+\DoxyCodeLine{00968\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&Q\_tmp[jc*\ DKQ\ \ \ \ +\ i0\ \ \ +\ (item\_ct1.get\_local\_id(1)\ \%\ np)*(warp\_size*cpy\_ne\_D)\ \ \ +\ item\_ct1.get\_local\_id(2)*\ cpy\_ne\_D],}
+\DoxyCodeLine{00969\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\_f);}
+\DoxyCodeLine{00970\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00973\ \ \ \ \ \}}
+\DoxyCodeLine{00974\ }
+\DoxyCodeLine{00975\ \ \ \ \ item\_ct1.barrier();}
+\DoxyCodeLine{00976\ }
+\DoxyCodeLine{00977\ \ \ \ \ \textcolor{comment}{//\ Main\ loop\ over\ KV\ cache:}}
+\DoxyCodeLine{00978\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ k\_VKQ\_max\ =\ KV\_max\ ?\ KV\_max[sequence\ *\ item\_ct1.get\_group\_range(2)\ +\ item\_ct1.get\_group(2)]\ :\ ne11;}
+\DoxyCodeLine{00979\ \ \ \ \ \textcolor{keywordflow}{if}\ (ncols2\ ==\ 1)\ \{}
+\DoxyCodeLine{00980\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Branch\ with\ out-\/of-\/bounds\ checks.}}
+\DoxyCodeLine{00981\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ k\_VKQ\_0\ =\ item\_ct1.get\_group(1)\ *\ nbatch\_fa;}
+\DoxyCodeLine{00982\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (k\_VKQ\_0\ <\ k\_VKQ\_max\ -\/\ nbatch\_fa)\ \{}
+\DoxyCodeLine{00983\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ oob\_check\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00984\ \ \ \ \ \ \ \ \ \ \ \ \ flash\_attn\_tile\_iter<warp\_size,\ nwarps,\ ncols1,\ ncols2,\ DKQ,\ DV,\ nbatch\_fa,\ nbatch\_K,\ use\_logit\_softcap,}
+\DoxyCodeLine{00985\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ oob\_check>(Q\_tmp,\ K\_h2,\ V\_h2,\ maskh,\ ne01,\ logit\_softcap,\ slope,\ KQ,\ KV\_tmp,\ stride\_K2,}
+\DoxyCodeLine{00986\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stride\_V2,\ stride\_mask,\ KQ\_max,\ KQ\_sum,\ VKQ,\ k\_VKQ\_0,\ k\_VKQ\_max,\ col\_Q\_0,}
+\DoxyCodeLine{00987\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_max\_new\_shared);}
+\DoxyCodeLine{00988\ \ \ \ \ \ \ \ \ \ \ \ \ k\_VKQ\_0\ +=\ item\_ct1.get\_group\_range(1)\ *\ nbatch\_fa;}
+\DoxyCodeLine{00989\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00990\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (k\_VKQ\_0\ <\ k\_VKQ\_max)\ \{}
+\DoxyCodeLine{00991\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ oob\_check\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \ \ \ \ \ \ flash\_attn\_tile\_iter<warp\_size,\ nwarps,\ ncols1,\ ncols2,\ DKQ,\ DV,\ nbatch\_fa,\ nbatch\_K,\ use\_logit\_softcap,}
+\DoxyCodeLine{00993\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ oob\_check>(Q\_tmp,\ K\_h2,\ V\_h2,\ maskh,\ ne01,\ logit\_softcap,\ slope,\ KQ,\ KV\_tmp,\ stride\_K2,}
+\DoxyCodeLine{00994\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stride\_V2,\ stride\_mask,\ KQ\_max,\ KQ\_sum,\ VKQ,\ k\_VKQ\_0,\ k\_VKQ\_max,\ col\_Q\_0,}
+\DoxyCodeLine{00995\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_max\_new\_shared);}
+\DoxyCodeLine{00996\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00997\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00998\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Branch\ without\ out-\/of-\/bounds\ checks.}}
+\DoxyCodeLine{00999\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\_VKQ\_0\ =\ item\_ct1.get\_group(1)\ *\ nbatch\_fa;\ k\_VKQ\_0\ <\ k\_VKQ\_max;}
+\DoxyCodeLine{01000\ \ \ \ \ \ \ \ \ \ \ \ \ \ k\_VKQ\_0\ +=\ item\_ct1.get\_group\_range(1)\ *\ nbatch\_fa)\ \{}
+\DoxyCodeLine{01001\ }
+\DoxyCodeLine{01002\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ oob\_check\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{01003\ \ \ \ \ \ \ \ \ \ \ \ \ flash\_attn\_tile\_iter<warp\_size,\ nwarps,\ ncols1,\ ncols2,\ DKQ,\ DV,\ nbatch\_fa,\ nbatch\_K,\ use\_logit\_softcap,}
+\DoxyCodeLine{01004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ oob\_check>(Q\_tmp,\ K\_h2,\ V\_h2,\ maskh,\ ne01,\ logit\_softcap,\ slope,\ KQ,\ KV\_tmp,\ stride\_K2,}
+\DoxyCodeLine{01005\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stride\_V2,\ stride\_mask,\ KQ\_max,\ KQ\_sum,\ VKQ,\ k\_VKQ\_0,\ k\_VKQ\_max,\ col\_Q\_0,}
+\DoxyCodeLine{01006\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_max\_new\_shared);}
+\DoxyCodeLine{01007\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01008\ \ \ \ \ \}}
+\DoxyCodeLine{01009\ }
+\DoxyCodeLine{01010\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01011\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc0\ =\ 0;\ jc0\ <\ cpw;\ ++jc0)\ \{}
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ KQ\_sum[jc0]\ =\ warp\_reduce\_sum<warp\_size>(KQ\_sum[jc0]);}
+\DoxyCodeLine{01013\ \ \ \ \ \}}
+\DoxyCodeLine{01014\ }
+\DoxyCodeLine{01015\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (np\ >\ 1)\ \{}
+\DoxyCodeLine{01016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(cpw\ ==\ 1,\ \textcolor{stringliteral}{"{}bad\ cpw"{}});}
+\DoxyCodeLine{01017\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(nbatch\_fa*nbatch\_K\ >=\ nwarps*DVp,\ \textcolor{stringliteral}{"{}KV\_tmp\ too\ small"{}});}
+\DoxyCodeLine{01018\ }
+\DoxyCodeLine{01019\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01020\ \ \ \ \ \ \ \ \ sycl::half2\ *\ VKQ\_combine\ =\ (sycl::half2\ *)\ KV\_tmp;}
+\DoxyCodeLine{01021\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01022\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ VKQ\_combine\ \ \ \ =\ (\textcolor{keywordtype}{float}\ *)\ KV\_tmp;}
+\DoxyCodeLine{01023\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01024\ }
+\DoxyCodeLine{01025\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *\ KQ\_sum\_combine\ =\ (\textcolor{keywordtype}{float}\ *)\ Q\_tmp;}
+\DoxyCodeLine{01026\ }
+\DoxyCodeLine{01027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (item\_ct1.get\_local\_id(1)\ \%\ np\ !=\ 0)\ \{}
+\DoxyCodeLine{01028\ }
+\DoxyCodeLine{01029\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\_D\ =\ cpy\_ne\ <\ (DVp/2)/warp\_size\ ?\ cpy\_ne\ :\ (DVp/2)/warp\_size;}
+\DoxyCodeLine{01031\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size*cpy\_ne\_D)\ \{}
+\DoxyCodeLine{01033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_ne\_D\ *\ 4>(}
+\DoxyCodeLine{01034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&VKQ\_combine[item\_ct1.get\_local\_id(1)\ *\ (DVp\ /\ 2)\ +\ i0\ +\ item\_ct1.get\_local\_id(2)\ *\ cpy\_ne\_D],}
+\DoxyCodeLine{01035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&VKQ[i0\ /\ warp\_size]);}
+\DoxyCodeLine{01036\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01037\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01038\ }
+\DoxyCodeLine{01039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\_D\ =\ cpy\_ne\ <\ DVp/warp\_size\ ?\ cpy\_ne\ :\ DVp/warp\_size;}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01041\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp;\ i0\ +=\ warp\_size*cpy\_ne\_D)\ \{}
+\DoxyCodeLine{01043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_ne\_D*4>(}
+\DoxyCodeLine{01044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&VKQ\_combine[item\_ct1.get\_local\_id(1)*DVp\ +\ i0\ +\ item\_ct1.get\_local\_id(2)*cpy\_ne\_D],\ ((\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ VKQ)\ +\ i0/warp\_size);}
+\DoxyCodeLine{01045\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01046\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01047\ }
+\DoxyCodeLine{01048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (item\_ct1.get\_local\_id(2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_sum\_combine[item\_ct1.get\_local\_id(1)]\ =\ KQ\_sum[0];}
+\DoxyCodeLine{01050\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01052\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01053\ }
+\DoxyCodeLine{01054\ \ \ \ \ \ \ \ \ item\_ct1.barrier();}
+\DoxyCodeLine{01055\ }
+\DoxyCodeLine{01056\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ ip\ =\ 1;\ ip\ <\ np;\ ++ip)\ \{}
+\DoxyCodeLine{01058\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\_D\ =\ cpy\_ne\ <\ (DVp/2)/warp\_size\ ?\ cpy\_ne\ :\ (DVp/2)/warp\_size;}
+\DoxyCodeLine{01060\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size*cpy\_ne\_D)\ \{}
+\DoxyCodeLine{01062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::half2\ tmp[cpy\_ne\_D];}
+\DoxyCodeLine{01063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_ne\_D\ *\ 4>(tmp,\ \&VKQ\_combine[(item\_ct1.get\_local\_id(1)\ +\ ip)\ *\ (DVp\ /\ 2)\ +\ i0\ +}
+\DoxyCodeLine{01064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\_ct1.get\_local\_id(2)\ *\ cpy\_ne\_D]);}
+\DoxyCodeLine{01065\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i1\ =\ 0;\ i1\ <\ cpy\_ne\_D;\ ++i1)\ \{}
+\DoxyCodeLine{01067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[i0/warp\_size\ +\ i1]\ +=\ tmp[i1];}
+\DoxyCodeLine{01068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01069\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01070\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\_D\ =\ cpy\_ne\ <\ DVp/warp\_size\ ?\ cpy\_ne\ :\ DVp/warp\_size;}
+\DoxyCodeLine{01072\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp;\ i0\ +=\ warp\_size*cpy\_ne\_D)\ \{}
+\DoxyCodeLine{01074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ float\ tmp[cpy\_ne\_D];}
+\DoxyCodeLine{01075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_ne\_D*4>(tmp,\ \&VKQ\_combine[(item\_ct1.get\_local\_id(1)\ +\ ip)*DVp\ +\ i0\ +\ item\_ct1.get\_local\_id(2)*cpy\_ne\_D]);}
+\DoxyCodeLine{01076\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i1\ =\ 0;\ i1\ <\ cpy\_ne\_D;\ ++i1)\ \{}
+\DoxyCodeLine{01078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{float}\ *)VKQ)[i0/warp\_size\ +\ i1]\ +=\ tmp[i1];}
+\DoxyCodeLine{01079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01080\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01081\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01082\ }
+\DoxyCodeLine{01083\ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_sum[0]\ +=\ KQ\_sum\_combine[item\_ct1.get\_local\_id(1)\ +\ ip];}
+\DoxyCodeLine{01084\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01085\ \ \ \ \ \}}
+\DoxyCodeLine{01086\ }
+\DoxyCodeLine{01087\ \ \ \ \ \textcolor{comment}{//\ Attention\ sink:\ adjust\ KQ\ max\ and\ sum\ only\ for\ the\ first\ of\ all\ parallel\ blocks:}}
+\DoxyCodeLine{01088\ \ \ \ \ \textcolor{keywordflow}{if}\ (sinks\ \&\&\ item\_ct1.get\_group(1)\ ==\ 0)\ \{}
+\DoxyCodeLine{01089\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc0\ =\ 0;\ jc0\ <\ cpw;\ ++jc0)\ \{}
+\DoxyCodeLine{01091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ jc\ \ \ =\ jc0\ +\ (item\_ct1.get\_local\_id(1)\ /\ np)\ *\ cpw;}
+\DoxyCodeLine{01092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ sink\ =\ ((\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ sinks)[head0\ +\ jc\ \%\ ncols2];}
+\DoxyCodeLine{01093\ }
+\DoxyCodeLine{01094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ KQ\_max\_new\_j\ =\ sycl::fmax((\textcolor{keywordtype}{float})\ KQ\_max[jc0],\ sink);}
+\DoxyCodeLine{01095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ KQ\_max\_scale\ =\ sycl::native::exp((\textcolor{keywordtype}{float})\ (KQ\_max[jc0]\ -\/\ KQ\_max\_new\_j));}
+\DoxyCodeLine{01096\ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_max[jc0]\ =\ KQ\_max\_new\_j;}
+\DoxyCodeLine{01097\ }
+\DoxyCodeLine{01098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ val\ =\ sycl::native::exp((\textcolor{keywordtype}{float})\ (sink\ -\/\ KQ\_max[jc0]));}
+\DoxyCodeLine{01099\ \ \ \ \ \ \ \ \ \ \ \ \ KQ\_sum[jc0]\ =\ KQ\_sum[jc0]*KQ\_max\_scale\ +\ val;}
+\DoxyCodeLine{01100\ }
+\DoxyCodeLine{01101\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sycl::half2\ KQ\_max\_scale\_h2\ =\ sycl::half2(KQ\_max\_scale,\ KQ\_max\_scale);}
+\DoxyCodeLine{01103\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size)\ \{}
+\DoxyCodeLine{01105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc0*((DVp/2)/warp\_size)\ +\ i0/warp\_size]\ *=\ KQ\_max\_scale\_h2;}
+\DoxyCodeLine{01106\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01107\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01108\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size)\ \{}
+\DoxyCodeLine{01110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc0*((DVp/2)/warp\_size)\ +\ i0/warp\_size].x()\ *=\ KQ\_max\_scale;}
+\DoxyCodeLine{01111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc0*((DVp/2)/warp\_size)\ +\ i0/warp\_size].y()\ *=\ KQ\_max\_scale;}
+\DoxyCodeLine{01112\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01113\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01114\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01115\ \ \ \ \ \}}
+\DoxyCodeLine{01116\ }
+\DoxyCodeLine{01117\ \ \ \ \ \textcolor{comment}{//\ Write\ back\ results:}}
+\DoxyCodeLine{01118\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01119\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ jc0\ =\ 0;\ jc0\ <\ cpw;\ ++jc0)\ \{}
+\DoxyCodeLine{01120\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ jc\ =\ jc0\ +\ (item\_ct1.get\_local\_id(1)\ /\ np)\ *\ cpw;}
+\DoxyCodeLine{01121\ }
+\DoxyCodeLine{01122\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j\ =\ jc\ /\ ncols2;}
+\DoxyCodeLine{01123\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ c\ =\ jc\ \%\ ncols2;}
+\DoxyCodeLine{01124\ }
+\DoxyCodeLine{01125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ncols1\ >\ 1\ \&\&\ col\_Q\_0\ +\ j\ >=\ \textcolor{keywordtype}{int}(ne01.z()))\ \{}
+\DoxyCodeLine{01126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01127\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01128\ }
+\DoxyCodeLine{01129\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ scale\ =\ item\_ct1.get\_group\_range(1)\ ==\ 1\ ?\ 1.0f\ /\ KQ\_sum[jc0]\ :\ 1.0f;}
+\DoxyCodeLine{01130\ }
+\DoxyCodeLine{01131\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ j\_dst\_unrolled\ =}
+\DoxyCodeLine{01132\ \ \ \ \ \ \ \ \ \ \ \ \ ((sequence\ *\ int(ne01.z())\ +\ col\_Q\_0\ +\ j)\ *\ ne02\ +\ head0\ +\ c)\ *\ item\_ct1.get\_group\_range(1)\ +}
+\DoxyCodeLine{01133\ \ \ \ \ \ \ \ \ \ \ \ \ item\_ct1.get\_group(1);}
+\DoxyCodeLine{01134\ }
+\DoxyCodeLine{01135\ \textcolor{preprocessor}{\#ifdef\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01136\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\_D\ =\ cpy\_ne/2\ <\ (DVp/2)/warp\_size\ ?\ cpy\_ne/2\ :\ (DVp/2)/warp\_size;}
+\DoxyCodeLine{01137\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp/2;\ i0\ +=\ warp\_size*cpy\_ne\_D)\ \{}
+\DoxyCodeLine{01139\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_dpct\_align\_\_(16)\ sycl::float2\ tmp[cpy\_ne\_D];}
+\DoxyCodeLine{01140\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i1\ =\ 0;\ i1\ <\ cpy\_ne\_D;\ ++i1)\ \{}
+\DoxyCodeLine{01142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp[i1]\ =\ VKQ[jc0\ *\ ((DVp\ /\ 2)\ /\ warp\_size)\ +\ i0\ /\ warp\_size\ +\ i1]}
+\DoxyCodeLine{01143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .\textcolor{keyword}{template}\ convert<float,\ sycl::rounding\_mode::automatic>();}
+\DoxyCodeLine{01144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp[i1].x()\ *=\ scale;}
+\DoxyCodeLine{01145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp[i1].y()\ *=\ scale;}
+\DoxyCodeLine{01146\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i0\ +\ warp\_size\ *\ cpy\_ne\_D\ <=\ DV\ /\ 2\ ||\ i0\ +\ item\_ct1.get\_local\_id(2)\ *\ cpy\_ne\_D\ <\ DV\ /\ 2)\ \{}
+\DoxyCodeLine{01148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<sizeof(tmp)>(}
+\DoxyCodeLine{01149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&dst[j\_dst\_unrolled\ *\ DV\ +\ 2\ *\ i0\ +\ item\_ct1.get\_local\_id(2)\ *\ (2\ *\ cpy\_ne\_D)],\ tmp);}
+\DoxyCodeLine{01150\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01151\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01152\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01153\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cpy\_ne\_D\ =\ cpy\_ne\ <\ DVp/warp\_size\ ?\ cpy\_ne\ :\ DVp/warp\_size;}
+\DoxyCodeLine{01154\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i0\ =\ 0;\ i0\ <\ DVp;\ i0\ +=\ warp\_size*cpy\_ne\_D)\ \{}
+\DoxyCodeLine{01156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i0\ +\ warp\_size*cpy\_ne\_D\ <=\ DV\ ||\ i0\ +\ item\_ct1.get\_local\_id(2)*cpy\_ne\_D\ <\ DV)\ \{}
+\DoxyCodeLine{01157\ \textcolor{preprocessor}{\#pragma\ unroll}}
+\DoxyCodeLine{01158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i1\ =\ 0;\ i1\ <\ cpy\_ne\_D/2;\ ++i1)\ \{}
+\DoxyCodeLine{01159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc0*((DVp/2)/warp\_size)\ +\ i0/(2*warp\_size)\ +\ i1].x()\ *=\ scale;}
+\DoxyCodeLine{01160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VKQ[jc0*((DVp/2)/warp\_size)\ +\ i0/(2*warp\_size)\ +\ i1].y()\ *=\ scale;}
+\DoxyCodeLine{01161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ggml\_sycl\_memcpy\_1<cpy\_ne\_D*4>(}
+\DoxyCodeLine{01163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&dst[j\_dst\_unrolled*DV\ +\ i0\ +\ item\_ct1.get\_local\_id(2)*cpy\_ne\_D],}
+\DoxyCodeLine{01164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&VKQ[jc0*((DVp/2)/warp\_size)\ +\ i0/(2*warp\_size)]);}
+\DoxyCodeLine{01165\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01166\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01167\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FAST\_FP16}}
+\DoxyCodeLine{01168\ }
+\DoxyCodeLine{01169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (item\_ct1.get\_group\_range(1)\ !=\ 1\ \&\&\ item\_ct1.get\_local\_id(2)\ ==\ 0)\ \{}
+\DoxyCodeLine{01170\ \ \ \ \ \ \ \ \ \ \ \ \ dst\_meta[j\_dst\_unrolled]\ =\ make\_float2(KQ\_max[jc0],\ KQ\_sum[jc0]);}
+\DoxyCodeLine{01171\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01172\ \ \ \ \ \}}
+\DoxyCodeLine{01173\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01174\ \ \ \ \ GGML\_UNUSED\_VARS(Q,\ K,\ V,\ mask,\ sinks,\ KV\_max,\ dst,\ dst\_meta,\ scale,}
+\DoxyCodeLine{01175\ \ \ \ \ \ \ \ \ max\_bias,\ m0,\ m1,\ n\_head\_log2,\ logit\_softcap,}
+\DoxyCodeLine{01176\ \ \ \ \ \ \ \ \ ne00,\ ne01,\ ne02,\ ne03,}
+\DoxyCodeLine{01177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb01,\ nb02,\ nb03,}
+\DoxyCodeLine{01178\ \ \ \ \ \ \ \ \ ne10,\ ne11,\ ne12,\ ne13,}
+\DoxyCodeLine{01179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb11,\ nb12,\ nb13,}
+\DoxyCodeLine{01180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb21,\ nb22,\ nb23,}
+\DoxyCodeLine{01181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ne31,\ ne32,\ ne33,}
+\DoxyCodeLine{01182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nb31,\ nb32,\ nb33);}
+\DoxyCodeLine{01183\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SYCL\_FLASH\_ATTN}}
+\DoxyCodeLine{01184\ \}}
+\DoxyCodeLine{01185\ }
+\DoxyCodeLine{01186\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keywordtype}{int}\ ncols2,\ \textcolor{keywordtype}{bool}\ use\_logit\_softcap>}
+\DoxyCodeLine{01187\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ launch\_fattn\_tile\_switch\_ncols1(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst)\ \{}
+\DoxyCodeLine{01188\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ Q\ =\ dst-\/>src[0];}
+\DoxyCodeLine{01189\ }
+\DoxyCodeLine{01190\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ \ \ \ \ \ \ \ =\ ggml\_sycl\_get\_device();}
+\DoxyCodeLine{01191\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ cc\ \ \ \ \ \ \ \ =\ ggml\_sycl\_info().devices[id].cc;}
+\DoxyCodeLine{01192\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ warp\_size\ =\ WARP\_32\_SIZE;\ \textcolor{comment}{//can't\ support\ WARP\_16\_SIZE}}
+\DoxyCodeLine{01193\ }
+\DoxyCodeLine{01194\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ nbytes\_shared\ =\ 0;}
+\DoxyCodeLine{01195\ }
+\DoxyCodeLine{01196\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (DV\ <=\ 256)\ \{}
+\DoxyCodeLine{01197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Q-\/>ne[1]\ >\ 16/ncols2)\ \{}
+\DoxyCodeLine{01198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cols\_per\_block\ =\ 32;}
+\DoxyCodeLine{01199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nwarps\ \ \ \ =\ ggml\_sycl\_fattn\_tile\_get\_nthreads\ (DKQ,\ DV,\ cols\_per\_block,\ cc)\ /\ warp\_size;}
+\DoxyCodeLine{01200\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nbatch\_fa\ =\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_fa(DKQ,\ DV,\ cols\_per\_block,\ cc);}
+\DoxyCodeLine{01201\ \ \ \ \ \ \ \ \ \ \ \ \ launch\_fattn<DV,\ cols\_per\_block/ncols2,\ ncols2,}
+\DoxyCodeLine{01202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flash\_attn\_tile<DKQ,\ DV,\ cols\_per\_block\ /\ ncols2,\ ncols2,\ use\_logit\_softcap,\ warp\_size>,\ warp\_size>}
+\DoxyCodeLine{01203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ctx,\ dst,\ nwarps,\ nbytes\_shared,\ nbatch\_fa,\ \textcolor{keyword}{true},\ \textcolor{keyword}{true},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{01204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01205\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01206\ \ \ \ \ \}}
+\DoxyCodeLine{01207\ }
+\DoxyCodeLine{01208\ \ \ \ \ \textcolor{keywordflow}{if}\ (Q-\/>ne[1]\ >\ 8/ncols2)\ \{}
+\DoxyCodeLine{01209\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cols\_per\_block\ =\ 16;}
+\DoxyCodeLine{01210\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nwarps\ \ \ \ =\ ggml\_sycl\_fattn\_tile\_get\_nthreads\ (DKQ,\ DV,\ cols\_per\_block,\ cc)\ /\ warp\_size;}
+\DoxyCodeLine{01211\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nbatch\_fa\ =\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_fa(DKQ,\ DV,\ cols\_per\_block,\ cc);}
+\DoxyCodeLine{01212\ \ \ \ \ \ \ \ \ launch\_fattn<DV,\ cols\_per\_block/ncols2,\ ncols2,}
+\DoxyCodeLine{01213\ \ \ \ \ \ \ \ \ \ \ \ \ flash\_attn\_tile<DKQ,\ DV,\ cols\_per\_block\ /\ ncols2,\ ncols2,\ use\_logit\_softcap,\ warp\_size>,\ warp\_size>}
+\DoxyCodeLine{01214\ \ \ \ \ \ \ \ \ \ \ \ \ (ctx,\ dst,\ nwarps,\ nbytes\_shared,\ nbatch\_fa,\ \textcolor{keyword}{true},\ \textcolor{keyword}{true},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{01215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01216\ \ \ \ \ \}}
+\DoxyCodeLine{01217\ }
+\DoxyCodeLine{01218\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (ncols2\ <=\ 8)\ \{}
+\DoxyCodeLine{01219\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Q-\/>ne[1]\ >\ 4/ncols2)\ \{}
+\DoxyCodeLine{01220\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cols\_per\_block\ =\ 8;}
+\DoxyCodeLine{01221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nwarps\ \ \ \ =\ ggml\_sycl\_fattn\_tile\_get\_nthreads\ (DKQ,\ DV,\ cols\_per\_block,\ cc)\ /\ warp\_size;}
+\DoxyCodeLine{01222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nbatch\_fa\ =\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_fa(DKQ,\ DV,\ cols\_per\_block,\ cc);}
+\DoxyCodeLine{01223\ \ \ \ \ \ \ \ \ \ \ \ \ launch\_fattn<DV,\ cols\_per\_block/ncols2,\ ncols2,}
+\DoxyCodeLine{01224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flash\_attn\_tile<DKQ,\ DV,\ cols\_per\_block\ /\ ncols2,\ ncols2,\ use\_logit\_softcap,\ warp\_size>,\ warp\_size>}
+\DoxyCodeLine{01225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ctx,\ dst,\ nwarps,\ nbytes\_shared,\ nbatch\_fa,\ \textcolor{keyword}{true},\ \textcolor{keyword}{true},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{01226\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01227\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01228\ \ \ \ \ \}}
+\DoxyCodeLine{01229\ }
+\DoxyCodeLine{01230\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (ncols2\ <=\ 4)\ \{}
+\DoxyCodeLine{01231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Q-\/>ne[1]\ >\ 2/ncols2)\ \{}
+\DoxyCodeLine{01232\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cols\_per\_block\ =\ 4;}
+\DoxyCodeLine{01233\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nwarps\ \ \ \ =\ ggml\_sycl\_fattn\_tile\_get\_nthreads\ (DKQ,\ DV,\ cols\_per\_block,\ cc)\ /\ warp\_size;}
+\DoxyCodeLine{01234\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nbatch\_fa\ =\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_fa(DKQ,\ DV,\ cols\_per\_block,\ cc);}
+\DoxyCodeLine{01235\ \ \ \ \ \ \ \ \ \ \ \ \ launch\_fattn<DV,\ cols\_per\_block/ncols2,\ ncols2,}
+\DoxyCodeLine{01236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flash\_attn\_tile<DKQ,\ DV,\ cols\_per\_block\ /\ ncols2,\ ncols2,\ use\_logit\_softcap,\ warp\_size>,\ warp\_size>}
+\DoxyCodeLine{01237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (ctx,\ dst,\ nwarps,\ nbytes\_shared,\ nbatch\_fa,\ \textcolor{keyword}{true},\ \textcolor{keyword}{true},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{01238\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01239\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01240\ \ \ \ \ \}}
+\DoxyCodeLine{01241\ }
+\DoxyCodeLine{01242\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (ncols2\ <=\ 2)\ \{}
+\DoxyCodeLine{01243\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ cols\_per\_block\ =\ 2;}
+\DoxyCodeLine{01244\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nwarps\ \ \ \ =\ ggml\_sycl\_fattn\_tile\_get\_nthreads\ (DKQ,\ DV,\ cols\_per\_block,\ cc)\ /\ warp\_size;}
+\DoxyCodeLine{01245\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nbatch\_fa\ =\ ggml\_sycl\_fattn\_tile\_get\_nbatch\_fa(DKQ,\ DV,\ cols\_per\_block,\ cc);}
+\DoxyCodeLine{01246\ \ \ \ \ \ \ \ \ launch\_fattn<DV,\ cols\_per\_block/ncols2,\ ncols2,}
+\DoxyCodeLine{01247\ \ \ \ \ \ \ \ \ \ \ \ \ flash\_attn\_tile<DKQ,\ DV,\ cols\_per\_block\ /\ ncols2,\ ncols2,\ use\_logit\_softcap,\ warp\_size>,\ warp\_size>}
+\DoxyCodeLine{01248\ \ \ \ \ \ \ \ \ \ \ \ \ (ctx,\ dst,\ nwarps,\ nbytes\_shared,\ nbatch\_fa,\ \textcolor{keyword}{true},\ \textcolor{keyword}{true},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{01249\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01250\ \ \ \ \ \}}
+\DoxyCodeLine{01251\ }
+\DoxyCodeLine{01252\ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}fatal\ error"{}});}
+\DoxyCodeLine{01253\ \}}
+\DoxyCodeLine{01254\ }
+\DoxyCodeLine{01255\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keywordtype}{int}\ DV,\ \textcolor{keywordtype}{bool}\ use\_logit\_softcap>}
+\DoxyCodeLine{01256\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ launch\_fattn\_tile\_switch\_ncols2(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst)\ \{}
+\DoxyCodeLine{01257\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ KQV\ \ =\ dst;}
+\DoxyCodeLine{01258\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ Q\ \ \ \ =\ dst-\/>src[0];}
+\DoxyCodeLine{01259\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ K\ \ \ \ =\ dst-\/>src[1];}
+\DoxyCodeLine{01260\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ mask\ =\ dst-\/>src[3];}
+\DoxyCodeLine{01261\ }
+\DoxyCodeLine{01262\ \ \ \ \ \textcolor{keywordtype}{float}\ max\_bias\ =\ 0.0f;}
+\DoxyCodeLine{01263\ \ \ \ \ memcpy(\&max\_bias,\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ KQV-\/>op\_params\ +\ 1,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}));}
+\DoxyCodeLine{01264\ }
+\DoxyCodeLine{01265\ \ \ \ \ GGML\_ASSERT(Q-\/>ne[2]\ \%\ K-\/>ne[2]\ ==\ 0);}
+\DoxyCodeLine{01266\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ gqa\_ratio\ =\ Q-\/>ne[2]\ /\ K-\/>ne[2];}
+\DoxyCodeLine{01267\ }
+\DoxyCodeLine{01268\ \ \ \ \ \textcolor{comment}{//\ On\ NVIDIA\ (Pascal\ and\ older)\ the\ GQA\ optimizations\ seem\ to\ be\ detrimental\ in\ some\ cases.}}
+\DoxyCodeLine{01269\ \ \ \ \ \textcolor{comment}{//\ However,\ for\ DKQ\ ==\ 576,\ DV\ ==\ 512\ only\ the\ kernel\ variant\ with\ GQA\ optimizations\ is\ implemented.}}
+\DoxyCodeLine{01270\ \ \ \ \ \textcolor{comment}{//const\ bool\ nvidia\ =\ GGML\_SYCL\_CC\_IS\_NVIDIA(ggml\_sycl\_info().devices[ggml\_sycl\_get\_device()].cc);}}
+\DoxyCodeLine{01271\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ gqa\_limit\ =\ gqa\_ratio\ <=\ 4\ \&\&\ DV\ <=\ 256\ ?\ 16\ :\ INT\_MAX;}
+\DoxyCodeLine{01272\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ use\_gqa\_opt\ =\ mask\ \&\&\ max\_bias\ ==\ 0.0f\ \&\&\ Q-\/>ne[1]\ <=\ gqa\_limit\ \&\&\ K-\/>ne[1]\ \%\ FATTN\_KQ\_STRIDE\ ==\ 0;}
+\DoxyCodeLine{01273\ }
+\DoxyCodeLine{01274\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (DV\ ==\ 512)\ \{}
+\DoxyCodeLine{01275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (use\_gqa\_opt\ \&\&\ gqa\_ratio\ \%\ 16\ ==\ 0)\ \{}
+\DoxyCodeLine{01276\ \ \ \ \ \ \ \ \ \ \ \ \ launch\_fattn\_tile\_switch\_ncols1<DKQ,\ DV,\ 16,\ use\_logit\_softcap>(ctx,\ dst);}
+\DoxyCodeLine{01277\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01278\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01279\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (use\_gqa\_opt\ \&\&\ gqa\_ratio\ \%\ 4\ ==\ 0)\ \{}
+\DoxyCodeLine{01280\ \ \ \ \ \ \ \ \ \ \ \ \ launch\_fattn\_tile\_switch\_ncols1<DKQ,\ DV,\ 4,\ use\_logit\_softcap>(ctx,\ dst);}
+\DoxyCodeLine{01281\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01282\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01283\ \ \ \ \ \}}
+\DoxyCodeLine{01284\ }
+\DoxyCodeLine{01285\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (DV\ <=\ 256)\ \{}
+\DoxyCodeLine{01286\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (use\_gqa\_opt\ \&\&\ gqa\_ratio\ \%\ 8\ ==\ 0)\ \{}
+\DoxyCodeLine{01287\ \ \ \ \ \ \ \ \ \ \ \ \ launch\_fattn\_tile\_switch\_ncols1<DKQ,\ DV,\ 8,\ use\_logit\_softcap>(ctx,\ dst);}
+\DoxyCodeLine{01288\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01289\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01290\ }
+\DoxyCodeLine{01291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (use\_gqa\_opt\ \&\&\ gqa\_ratio\ \%\ 4\ ==\ 0)\ \{}
+\DoxyCodeLine{01292\ \ \ \ \ \ \ \ \ \ \ \ \ launch\_fattn\_tile\_switch\_ncols1<DKQ,\ DV,\ 4,\ use\_logit\_softcap>(ctx,\ dst);}
+\DoxyCodeLine{01293\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01294\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01295\ }
+\DoxyCodeLine{01296\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (use\_gqa\_opt\ \&\&\ gqa\_ratio\ \%\ 2\ ==\ 0)\ \{}
+\DoxyCodeLine{01297\ \ \ \ \ \ \ \ \ \ \ \ \ launch\_fattn\_tile\_switch\_ncols1<DKQ,\ DV,\ 2,\ use\_logit\_softcap>(ctx,\ dst);}
+\DoxyCodeLine{01298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01299\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01300\ }
+\DoxyCodeLine{01301\ \ \ \ \ \ \ \ \ launch\_fattn\_tile\_switch\_ncols1<DKQ,\ DV,\ 1,\ use\_logit\_softcap>(ctx,\ dst);}
+\DoxyCodeLine{01302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01303\ \ \ \ \ \}}
+\DoxyCodeLine{01304\ \ \ \ \ GGML\_ABORT(\textcolor{stringliteral}{"{}fatal\ error"{}});}
+\DoxyCodeLine{01305\ \}}
+\DoxyCodeLine{01306\ }
+\DoxyCodeLine{01307\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{int}\ DKQ,\ \textcolor{keywordtype}{int}\ DV>}
+\DoxyCodeLine{01308\ \textcolor{keywordtype}{void}\ ggml\_sycl\_flash\_attn\_ext\_tile\_case(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst)\ \{}
+\DoxyCodeLine{01309\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ KQV\ =\ dst;}
+\DoxyCodeLine{01310\ }
+\DoxyCodeLine{01311\ \ \ \ \ \textcolor{keywordtype}{float}\ logit\_softcap;}
+\DoxyCodeLine{01312\ \ \ \ \ memcpy(\&logit\_softcap,\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *)\ KQV-\/>op\_params\ +\ 2,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}));}
+\DoxyCodeLine{01313\ }
+\DoxyCodeLine{01314\ \ \ \ \ \textcolor{keywordflow}{if}\ (logit\_softcap\ ==\ 0.0f)\ \{}
+\DoxyCodeLine{01315\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ use\_logit\_softcap\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{01316\ \ \ \ \ \ \ \ \ launch\_fattn\_tile\_switch\_ncols2<DKQ,\ DV,\ use\_logit\_softcap>(ctx,\ dst);}
+\DoxyCodeLine{01317\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01318\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ use\_logit\_softcap\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01319\ \ \ \ \ \ \ \ \ launch\_fattn\_tile\_switch\_ncols2<DKQ,\ DV,\ use\_logit\_softcap>(ctx,\ dst);}
+\DoxyCodeLine{01320\ \ \ \ \ \}}
+\DoxyCodeLine{01321\ \}}
+\DoxyCodeLine{01322\ }
+\DoxyCodeLine{01323\ \textcolor{keywordtype}{void}\ ggml\_sycl\_flash\_attn\_ext\_tile(\doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}\ *\ dst);}
+\DoxyCodeLine{01324\ }
+\DoxyCodeLine{01325\ \textcolor{preprocessor}{\#define\ DECL\_FATTN\_TILE\_CASE(DKQ,\ DV)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01326\ \textcolor{preprocessor}{\ \ \ \ template\ void\ ggml\_sycl\_flash\_attn\_ext\_tile\_case\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01327\ \textcolor{preprocessor}{\ \ \ \ <DKQ,\ DV>(ggml\_backend\_sycl\_context\ \&\ ctx,\ ggml\_tensor\ *\ dst)\ \(\backslash\)}}
+\DoxyCodeLine{01328\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{01329\ \textcolor{keyword}{extern}\ DECL\_FATTN\_TILE\_CASE(\ 40,\ \ 40);}
+\DoxyCodeLine{01330\ \textcolor{keyword}{extern}\ DECL\_FATTN\_TILE\_CASE(\ 64,\ \ 64);}
+\DoxyCodeLine{01331\ \textcolor{keyword}{extern}\ DECL\_FATTN\_TILE\_CASE(\ 72,\ \ 72);}
+\DoxyCodeLine{01332\ \textcolor{keyword}{extern}\ DECL\_FATTN\_TILE\_CASE(\ 80,\ \ 80);}
+\DoxyCodeLine{01333\ \textcolor{keyword}{extern}\ DECL\_FATTN\_TILE\_CASE(\ 96,\ \ 96);}
+\DoxyCodeLine{01334\ \textcolor{keyword}{extern}\ DECL\_FATTN\_TILE\_CASE(112,\ 112);}
+\DoxyCodeLine{01335\ \textcolor{keyword}{extern}\ DECL\_FATTN\_TILE\_CASE(128,\ 128);}
+\DoxyCodeLine{01336\ \textcolor{keyword}{extern}\ DECL\_FATTN\_TILE\_CASE(256,\ 256);}
+\DoxyCodeLine{01337\ \textcolor{keyword}{extern}\ DECL\_FATTN\_TILE\_CASE(576,\ 512);}
+\DoxyCodeLine{01338\ }
+
+\end{DoxyCode}

@@ -1,0 +1,92 @@
+\doxysection{hex-\/dump.h}
+\hypertarget{hex-dump_8h_source}{}\label{hex-dump_8h_source}\index{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hex-\/dump.h@{whisper.cpp/ggml/src/ggml-\/hexagon/htp/hex-\/dump.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ HEX\_DUMP\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ HEX\_DUMP\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <HAP\_farf.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hex\_dump\_int8\_line(\textcolor{keywordtype}{char}\ *\ pref,\ \textcolor{keyword}{const}\ int8\_t\ *\ x,\ \textcolor{keywordtype}{int}\ n)\ \{}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{keywordtype}{char}\ str[1024],\ *p\ =\ str,\ *p\_end\ =\ str\ +\ \textcolor{keyword}{sizeof}(str);}
+\DoxyCodeLine{00008\ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%s:\ "{}},\ pref);}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n\ \&\&\ p\ <\ p\_end;\ i++)\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%d,\ "{}},\ x[i]);}
+\DoxyCodeLine{00011\ \ \ \ \ \}}
+\DoxyCodeLine{00012\ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ str);}
+\DoxyCodeLine{00013\ \}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hex\_dump\_uint8\_line(\textcolor{keywordtype}{char}\ *\ pref,\ \textcolor{keyword}{const}\ uint8\_t\ *\ x,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{char}\ str[1024],\ *p\ =\ str,\ *p\_end\ =\ str\ +\ \textcolor{keyword}{sizeof}(str);}
+\DoxyCodeLine{00017\ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%s:\ "{}},\ pref);}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n\ \&\&\ p\ <\ p\_end;\ i++)\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%d,\ "{}},\ x[i]);}
+\DoxyCodeLine{00020\ \ \ \ \ \}}
+\DoxyCodeLine{00021\ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ str);}
+\DoxyCodeLine{00022\ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hex\_dump\_uint32\_line(\textcolor{keywordtype}{char}\ *\ pref,\ \textcolor{keyword}{const}\ uint32\_t\ *\ x,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{char}\ str[1024],\ *p\ =\ str,\ *p\_end\ =\ str\ +\ \textcolor{keyword}{sizeof}(str);}
+\DoxyCodeLine{00026\ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%s:\ "{}},\ pref);}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ i++)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%u,\ "{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\ x[i]);}
+\DoxyCodeLine{00029\ \ \ \ \ \}}
+\DoxyCodeLine{00030\ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ str);}
+\DoxyCodeLine{00031\ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hex\_dump\_int32\_line(\textcolor{keywordtype}{char}\ *\ pref,\ \textcolor{keyword}{const}\ int32\_t\ *\ x,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{char}\ str[1024],\ *p\ =\ str,\ *p\_end\ =\ str\ +\ \textcolor{keyword}{sizeof}(str);}
+\DoxyCodeLine{00035\ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%s:\ "{}},\ pref);}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ i++)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%d,\ "{}},\ (\textcolor{keywordtype}{int})\ x[i]);}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ str);}
+\DoxyCodeLine{00040\ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hex\_dump\_f16\_line(\textcolor{keywordtype}{char}\ *\ pref,\ \textcolor{keyword}{const}\ \_\_fp16\ *\ x,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{char}\ str[1024],\ *p\ =\ str,\ *p\_end\ =\ str\ +\ \textcolor{keyword}{sizeof}(str);}
+\DoxyCodeLine{00044\ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%s:\ "{}},\ pref);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ i++)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%.6f,\ "{}},\ (\textcolor{keywordtype}{float})\ x[i]);}
+\DoxyCodeLine{00047\ \ \ \ \ \}}
+\DoxyCodeLine{00048\ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ str);}
+\DoxyCodeLine{00049\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hex\_dump\_f32\_line(\textcolor{keywordtype}{char}\ *\ pref,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{char}\ str[1024],\ *p\ =\ str,\ *p\_end\ =\ str\ +\ \textcolor{keyword}{sizeof}(str);}
+\DoxyCodeLine{00053\ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%s:\ "{}},\ pref);}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ n;\ i++)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ p\ +=\ snprintf(p,\ p\_end\ -\/\ p,\ \textcolor{stringliteral}{"{}\%.6f,\ "{}},\ x[i]);}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ \ \ \ \ FARF(HIGH,\ \textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ str);}
+\DoxyCodeLine{00058\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hex\_dump\_f32(\textcolor{keywordtype}{char}\ *\ pref,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *\ x,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ uint32\_t\ n0\ =\ n\ /\ 16;}
+\DoxyCodeLine{00062\ \ \ \ \ uint32\_t\ n1\ =\ n\ \%\ 16;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ uint32\_t\ i\ =\ 0;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ i\ <\ n0;\ i++)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ hex\_dump\_f32\_line(pref,\ x\ +\ (16\ *\ i),\ 16);}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordflow}{if}\ (n1)\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ hex\_dump\_f32\_line(pref,\ x\ +\ (16\ *\ i),\ n1);}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ hex\_dump\_f16(\textcolor{keywordtype}{char}\ *\ pref,\ \textcolor{keyword}{const}\ \_\_fp16\ *\ x,\ uint32\_t\ n)\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ uint32\_t\ n0\ =\ n\ /\ 16;}
+\DoxyCodeLine{00075\ \ \ \ \ uint32\_t\ n1\ =\ n\ \%\ 16;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ uint32\_t\ i\ =\ 0;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ i\ <\ n0;\ i++)\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ hex\_dump\_f16\_line(pref,\ x\ +\ (16\ *\ i),\ 16);}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{if}\ (n1)\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ hex\_dump\_f16\_line(pref,\ x\ +\ (16\ *\ i),\ n1);}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HEX\_DUMP\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

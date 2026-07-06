@@ -1,0 +1,39 @@
+\doxysection{mmq.\+hpp}
+\hypertarget{mmq_8hpp_source}{}\label{mmq_8hpp_source}\index{whisper.cpp/ggml/src/ggml-\/sycl/mmq.hpp@{whisper.cpp/ggml/src/ggml-\/sycl/mmq.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ MIT\ license}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (C)\ 2024\ Intel\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Part\ of\ the\ LLVM\ Project,\ under\ the\ Apache\ License\ v2.0\ with\ LLVM\ Exceptions.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ See\ https://llvm.org/LICENSE.txt\ for\ license\ information.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ WITH\ LLVM-\/exception}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ GGML\_SYCL\_MMQ\_HPP}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GGML\_SYCL\_MMQ\_HPP}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}common.hpp"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keywordtype}{void}\ ggml\_sycl\_op\_mul\_mat\_q(}
+\DoxyCodeLine{00019\ \ \ \ \ \doxymbox{\hyperlink{structggml__backend__sycl__context}{ggml\_backend\_sycl\_context}}\ \&\ ctx,}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}*\ src0,}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}*\ src1,}
+\DoxyCodeLine{00022\ \ \ \ \ \doxymbox{\hyperlink{structggml__tensor}{ggml\_tensor}}*\ dst,}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ src0\_dd\_i,}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}*\ src1\_ddf\_i,}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ src1\_ddq\_i,}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{float}*\ dst\_dd\_i,}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ row\_low,}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ row\_high,}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ src1\_ncols,}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ src1\_padded\_row\_size,}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{const}\ dpct::queue\_ptr\&\ stream);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GGML\_SYCL\_MMQ\_HPP}}
+
+\end{DoxyCode}
